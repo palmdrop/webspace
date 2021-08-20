@@ -1,25 +1,56 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
-function App() {
+import MainPage from './pages/main/MainPage';
+
+import './App.scss';
+
+export enum Routes {
+  root = '/',
+  self = '/self',
+  pieces = '/pieces',
+  blog = '/blog',
+  contact = '/contact',
+}
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+
+      <Switch>
+
+        { /* Self Page */ }
+        <Route path={Routes.self}>
+          self
+        </Route>
+
+        { /* Pieces Page */ }
+        <Route path={Routes.pieces}>
+          pieces
+        </Route>
+
+        { /* Blog Page */ }
+        <Route path={Routes.blog}>
+          blog
+        </Route>
+
+        { /* Contact Page */ }
+        <Route path={Routes.contact}>
+          contact
+        </Route>
+
+        { /* Main Page */ }
+        <Route path={Routes.root}>
+          <MainPage />
+        </Route>
+
+      </Switch>
+
+    </Router>
   );
 }
 
