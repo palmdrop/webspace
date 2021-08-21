@@ -1,0 +1,13 @@
+.bars {
+  position: absolute;
+
+  display: flex;
+  flex-direction: row;
+
+  height: 300px;
+
+  .bar {
+    margin: 0.3em;
+    width: 10px;
+  }
+}

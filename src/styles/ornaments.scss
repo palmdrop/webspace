@@ -1,7 +1,7 @@
 @import './colors.scss';
 
 
-$glass-backdrop-filter: blur( 8px );
+$glass-backdrop-filter: blur( 4px );
 
 $box-shadows: (
   'simple-soft': 0px 0px 20px darken( color( 'background' ), 8% ),
@@ -11,4 +11,39 @@ $box-shadows: (
   $shadow-parameters: map-get( $box-shadows, $type );
 
   box-shadow: $shadow-parameters;
+}
+
+@mixin neumorphic-shadow( $distance, $intensity, $type, $background-color ) {
+  $bright-color: lighten( $background-color, $intensity );
+  $dark-color:   darken( $background-color, $intensity );
+
+  @if $type == 'extrude' {
+
+    box-shadow: 
+      $distance / 2.0 
+      $distance / -2.0 
+      $distance 
+      $bright-color,
+
+      $distance / -2.0 
+      $distance / 2.0 
+      $distance 
+      $dark-color;
+
+  } @else {
+
+    box-shadow: 
+      inset 
+      $distance / -2.0 
+      $distance / -2.0 
+      $distance 
+      $bright-color,
+
+      inset 
+      $distance / 2.0 
+      $distance / 2.0 
+      $distance 
+      $dark-color
+
+  }
 }

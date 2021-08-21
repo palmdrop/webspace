@@ -1,0 +1,18 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/ornaments.scss';
+
+.bar {
+  width: 0.6em;
+
+  border-radius: 100px;
+
+  background-color: color( 'background' );
+
+  &--inset {
+    @include neumorphic-shadow( 2px, 15%, 'inset', color( 'background' ) );
+  }
+
+  &--extrude {
+    @include neumorphic-shadow( 2px, 15%, 'extrude', color( 'background' ) );
+  }
+}

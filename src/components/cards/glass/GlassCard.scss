@@ -3,6 +3,7 @@
 
 
 .glass-card {
+  z-index: 2;
   background-color: color( 'glass' );
   backdrop-filter: $glass-backdrop-filter;
 }

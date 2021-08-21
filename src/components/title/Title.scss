@@ -27,6 +27,7 @@ h5 {
 }
 
 .title {
+  z-index: 1;
   color: color( 'primary');
   @include font( 'title' );
 }

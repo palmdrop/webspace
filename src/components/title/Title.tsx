@@ -23,4 +23,4 @@ const Title = ( { level, text } : Props ) : JSX.Element => {
   return createHeadingElement();
 }
 
-export default Title
+export default Title;
