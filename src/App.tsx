@@ -1,11 +1,9 @@
-import React from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
 
-import MainPage from './pages/main/MainPage';
+import MainPage from './pages/main/mainPage';
 
 import './App.scss';
 
@@ -19,38 +17,34 @@ export enum Routes {
 
 const App = () => {
   return (
-    <Router>
+    <Switch>
 
-      <Switch>
+      { /* Self Page */ }
+      <Route path={Routes.self}>
+        self
+      </Route>
 
-        { /* Self Page */ }
-        <Route path={Routes.self}>
-          self
-        </Route>
+      { /* Pieces Page */ }
+      <Route path={Routes.pieces}>
+        pieces
+      </Route>
 
-        { /* Pieces Page */ }
-        <Route path={Routes.pieces}>
-          pieces
-        </Route>
+      { /* Blog Page */ }
+      <Route path={Routes.blog}>
+        blog
+      </Route>
 
-        { /* Blog Page */ }
-        <Route path={Routes.blog}>
-          blog
-        </Route>
+      { /* Contact Page */ }
+      <Route path={Routes.contact}>
+        contact
+      </Route>
 
-        { /* Contact Page */ }
-        <Route path={Routes.contact}>
-          contact
-        </Route>
+      { /* Main Page */ }
+      <Route path={Routes.root}>
+        <MainPage />
+      </Route>
 
-        { /* Main Page */ }
-        <Route path={Routes.root}>
-          <MainPage />
-        </Route>
-
-      </Switch>
-
-    </Router>
+    </Switch>
   );
 }
 

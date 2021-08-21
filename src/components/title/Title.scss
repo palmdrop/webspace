@@ -1,0 +1,32 @@
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+
+h1 {
+  font-size: 5rem;
+  letter-spacing: -0.1rem;
+}
+
+h2 {
+  font-size: 4rem;
+  letter-spacing: 0.0rem;
+}
+
+h3 {
+  font-size: 3rem;
+  letter-spacing: 0.0rem;
+}
+
+h4 {
+  font-size: 2rem;
+  letter-spacing: 0.1rem;
+}
+
+h5 {
+  font-size: 1rem;
+  letter-spacing: 0.2rem;
+}
+
+.title {
+  color: color( 'primary');
+  @include font( 'title' );
+}

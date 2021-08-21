@@ -1,0 +1,40 @@
+/* Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+
+/* Font data */ 
+$fonts: (
+  'title': (
+    'name': 'Poppins',
+    'fallback': serif,
+    'weight': 800
+  ),
+
+  'paragraph': (
+    'name': 'Poppins',
+    'fallback': serif,
+    'weight': 400
+  )
+);
+
+/*
+  This mixin enables easy font usage.
+  By passing the font name, the font-family,
+  fallback font and font-weight will automatically be set.
+
+  The default weight can be overridden by passing a weight value. 
+*/
+@mixin font( $type, $weight : 0 ) {
+  $fontData: map-get( $fonts, $type );
+
+  $name:     map-get( $fontData, 'name' );
+  $fallback: map-get( $fontData, 'fallback' );
+
+  /* Use default weight if no weight is passed */
+  @if $weight == 0 {
+    $weight: map-get( $fontData, 'weight' );
+  }
+
+  font-family: $name, $fallback;
+  font-weight: $weight;
+}

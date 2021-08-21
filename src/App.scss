@@ -1,7 +1,0 @@
-//TODO change to "use" when it's supported
-@import '_design.scss';
-
-@function color($name, $tint) {
-  $colorMap: map-get($colors, $name);
-  @return map-get($colorMap, $tint)
-};

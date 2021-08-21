@@ -1,0 +1,14 @@
+@import './colors.scss';
+
+
+$glass-backdrop-filter: blur( 8px );
+
+$box-shadows: (
+  'simple-soft': 0px 0px 20px darken( color( 'background' ), 8% ),
+);
+
+@mixin box-shadow( $type ) {
+  $shadow-parameters: map-get( $box-shadows, $type );
+
+  box-shadow: $shadow-parameters;
+}

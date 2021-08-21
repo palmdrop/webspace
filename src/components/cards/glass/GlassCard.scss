@@ -1,0 +1,8 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/ornaments.scss';
+
+
+.glass-card {
+  background-color: color( 'glass' );
+  backdrop-filter: $glass-backdrop-filter;
+}

@@ -1,0 +1,30 @@
+$colors: (
+  'background': (
+    300: #9D9191
+  ),
+
+  'primary': #33FF00,
+
+  'foreground': white,
+
+  'glass': #35517B18
+
+);
+
+/* 
+  This function enables me to define colors as either a single color, 
+  or as a map of different shades/tints. 
+*/ 
+@function color( $name, $tint: 300 ) {
+  $colorOrMap: map-get( $colors, $name );
+
+  @if type-of( $colorOrMap ) == color {
+
+    @return $colorOrMap;
+
+  } @else {
+
+    @return map-get( $colorOrMap, $tint );
+
+  }
+};

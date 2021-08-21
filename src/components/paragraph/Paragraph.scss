@@ -1,0 +1,9 @@
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+
+.paragraph {
+  font-size: 1em;
+  @include font( 'paragraph' );
+
+  color: color( 'foreground' );
+}

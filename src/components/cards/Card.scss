@@ -1,0 +1,10 @@
+@import '../../styles/colors.scss';
+@import '../../styles/layout.scss';
+@import '../../styles/ornaments.scss';
+
+.card {
+  padding: $card-padding;
+  background-color: color( 'background' );
+
+  @include box-shadow( 'simple-soft' );
+}
