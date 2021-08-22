@@ -4,6 +4,9 @@ import Title from '../../components/title/Title';
 import Bars from '../../components/ornamental/bars/Bars';
 
 import './mainPage.scss';
+import { Routes } from '../../App';
+
+import NavBar from '../../components/navigation/navbar/NavBar';
 
 const MainPage = () : JSX.Element => {
   return (
@@ -21,6 +24,27 @@ const MainPage = () : JSX.Element => {
         />
 
       </header>
+
+      <NavBar
+        entries={[
+          {
+            path: Routes.self,
+            text: 'About'
+          },
+          {
+            path: Routes.blog,
+            text: 'Blog'
+          },
+          {
+            path: Routes.pieces,
+            text: 'Pieces'
+          },
+          {
+            path: Routes.contact,
+            text: 'Contact'
+          }
+        ]} 
+      />
     </div>
   )
 }

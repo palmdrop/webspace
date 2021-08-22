@@ -1,6 +1,8 @@
 /* Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
+/* Quicksand */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
 
 /* Font data */ 
 $fonts: (
@@ -14,6 +16,12 @@ $fonts: (
     'name': 'Poppins',
     'fallback': serif,
     'weight': 400
+  ),
+
+  'button': (
+    'name': 'Quicksand',
+    'fallback': serif,
+    'weight': 600
   )
 );
 

@@ -1,0 +1,18 @@
+@import '../../../styles/layout.scss';
+
+.nav-bar {
+  padding: 1.0em 1em;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+
+    li {
+      padding-bottom: 1.5em;
+
+      @include medium {
+        padding-bottom: 0.4em;
+      }
+    }
+  }
+}

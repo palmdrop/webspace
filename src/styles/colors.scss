@@ -3,14 +3,18 @@ $colors: (
     300: #9D9191
   ),
 
-  'text-shadow': #FF9C9C7F,
-
-  'primary': #33FF00,
-
+  'primary': (
+    300: #53FF00,
+    //300: #33FF00,
+    400: #73FF00,
+    500: #93FF00
+  ),
+  'accent': #E07D7D,
   'foreground': white,
 
-  'glass': #35517B18
+  'glass': #35517B18,
 
+  'text-shadow': #FF9C9C7F,
 );
 
 /* 

@@ -1,0 +1,27 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/fonts.scss';
+
+.button {
+  background-color: transparent;
+  color: color( 'primary' );
+  border-bottom: 2px solid color( 'background' );
+
+  @include font( 'button' );
+  font-size: 1.3rem;
+  letter-spacing: 0.25rem;
+
+  transition: 0.7s color, 0.2s border-bottom;
+
+  &:hover {
+    color: lighten( color( 'primary' ), 20% );
+    border-bottom: 2px solid color( 'accent' );
+  }
+
+  &--pressed {
+
+  }
+
+  &--pressed:hover {
+
+  }
+}

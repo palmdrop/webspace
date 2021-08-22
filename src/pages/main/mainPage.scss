@@ -5,7 +5,12 @@
   @include page();
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @include medium {
+    flex-direction: row;
+  }
 
   background-color: color("background", 300);
 
@@ -31,8 +36,8 @@
 
       left: 1.2em;
 
-      width: 30em;
-      height: 13em;
+      width: 15em;
+      height: 10em;
     }
 
     .bars {
@@ -40,7 +45,7 @@
       top: -2em;
       left: 4em;
 
-      height: 25em
+      height: 21em
     }
   }
 }
