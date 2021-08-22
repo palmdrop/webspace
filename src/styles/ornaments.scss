@@ -1,14 +1,24 @@
 @import './colors.scss';
 
+@function shadow( $size, $xOffset, $yOffset, $blur, $color ) {
+  $x: $size * $xOffset;
+  $y: $size * $yOffset;
+  $blur: $size * $blur;
+
+  @return $x $y $blur $color;
+}
+
 
 $glass-backdrop-filter: blur( 5px );
+
 
 $box-shadows: (
   'simple-soft': 0px 0px 15px darken( color( 'background' ), 7% ),
 );
 
 $text-shadows: (
-  'title': 0px 0px 20px color( 'text-shadow' )
+  'title': 0px 0px 20px color( 'text-shadow' ),
+  'button': 0px 0px 10px color( 'text-shadow' )
 );
 
 @mixin box-shadow( $type ) {
@@ -22,7 +32,6 @@ $text-shadows: (
 
   text-shadow: $parameters;
 }
-
 
 @mixin neumorphic-shadow( $distance, $intensity, $type, $background-color ) {
   $bright-color: lighten( $background-color, $intensity );

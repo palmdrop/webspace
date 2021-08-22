@@ -7,6 +7,7 @@ import './mainPage.scss';
 import { Routes } from '../../App';
 
 import NavBar from '../../components/navigation/navbar/NavBar';
+import { SoftDisk } from '../../components/ornamental/disk/soft/SoftDisk';
 
 const MainPage = () : JSX.Element => {
   return (
@@ -24,6 +25,9 @@ const MainPage = () : JSX.Element => {
         />
 
       </header>
+
+      <SoftDisk />
+      <SoftDisk />
 
       <NavBar
         entries={[

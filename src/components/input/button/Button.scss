@@ -1,10 +1,13 @@
 @import '../../../styles/colors.scss';
+@import '../../../styles/ornaments.scss';
 @import '../../../styles/fonts.scss';
 
 .button {
   background-color: transparent;
   color: color( 'primary' );
+
   border-bottom: 2px solid color( 'background' );
+  @include text-shadow( 'button' );
 
   @include font( 'button' );
   font-size: 1.3rem;
