@@ -7,11 +7,22 @@ $box-shadows: (
   'simple-soft': 0px 0px 20px darken( color( 'background' ), 8% ),
 );
 
-@mixin box-shadow( $type ) {
-  $shadow-parameters: map-get( $box-shadows, $type );
+$text-shadows: (
+  'title': 0px 0px 20px color( 'text-shadow' )
+);
 
-  box-shadow: $shadow-parameters;
+@mixin box-shadow( $type ) {
+  $parameters: map-get( $box-shadows, $type );
+
+  box-shadow: $parameters;
 }
+
+@mixin text-shadow( $type ) {
+  $parameters: map-get( $text-shadows, $type );
+
+  text-shadow: $parameters;
+}
+
 
 @mixin neumorphic-shadow( $distance, $intensity, $type, $background-color ) {
   $bright-color: lighten( $background-color, $intensity );

@@ -9,10 +9,10 @@
   background-color: color( 'background' );
 
   &--inset {
-    @include neumorphic-shadow( 2px, 15%, 'inset', color( 'background' ) );
+    @include neumorphic-shadow( 2px, 20%, 'inset', color( 'background' ) );
   }
 
   &--extrude {
-    @include neumorphic-shadow( 2px, 15%, 'extrude', color( 'background' ) );
+    @include neumorphic-shadow( 2px, 20%, 'extrude', color( 'background' ) );
   }
 }

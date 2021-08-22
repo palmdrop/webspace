@@ -1,3 +1,5 @@
+@import './styles/layout.scss';
+
 /* Reset */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -15,7 +17,6 @@ time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
 }
@@ -60,3 +61,39 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html {
+	@include fluid-type( $grow-start-width, $grow-stop-width, $min-font-size, $max-font-size );
+}
+
+/*
+@media only screen and ( min-width: 0px ) {
+	body {
+		font-size: 10px;	
+	}
+}
+
+@media only screen and ( min-width: 400px ) {
+	body {
+		font-size: 10px;	
+	}
+}
+
+@media only screen and ( min-width: 600px ) {
+	body {
+		font-size: 12px;	
+	}
+}
+
+@media only screen and ( min-width: 800px ) {
+	body {
+		font-size: 14px;	
+	}
+}
+
+@media only screen and ( min-width: 1200px ) {
+	body {
+		font-size: 16px;	
+	}
+}
+*/

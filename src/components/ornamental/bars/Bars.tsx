@@ -16,12 +16,15 @@ const Bars = ( { amount, first = 'extrude' } : Props ) : JSX.Element => {
       const variant = 
         // Will be true on even indexes if first == 'extrude', 
         // and true on odd indexes if first == 'inset'
-        ( i % 2 == 0 ) == ( first == 'extrude' ) 
+        ( i % 2 === 0 ) === ( first === 'extrude' ) 
         ? 'extrude' 
         : 'inset';
 
       bars.push(
-        <Bar variant={ variant } />
+        <Bar 
+          key={i}
+          variant={ variant } 
+        />
       );
     }
 

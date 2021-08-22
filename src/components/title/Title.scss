@@ -1,33 +1,77 @@
 @import '../../styles/colors.scss';
 @import '../../styles/fonts.scss';
+@import '../../styles/ornaments.scss';
+@import '../../styles/layout.scss';
+@import '../../styles/_utils.scss';
 
-h1 {
-  font-size: 5rem;
-  letter-spacing: -0.1rem;
+$size: 1.0;
+
+@mixin headings($size) {
+  h1 {
+    font-size: pow( $min-heading-multiplier, 4 ) * $size;
+
+    @include fluid-type( 
+      $grow-start-width, 
+      $grow-stop-width, 
+      pow( $min-heading-multiplier, 3 ) * $min-font-size * $size,
+      pow( $max-heading-multiplier, 3 ) * $min-font-size * $size
+    );
+
+    letter-spacing: 0.4rem;
+  }
+
+  h2 {
+    font-size: pow( $min-heading-multiplier, 3 ) * $size;
+
+    @include fluid-type( 
+      $grow-start-width, 
+      $grow-stop-width, 
+      pow( $min-heading-multiplier, 3 ) * $min-font-size * $size,
+      pow( $max-heading-multiplier, 3 ) * $min-font-size * $size
+    );
+
+    letter-spacing: 0.3rem;
+  }
+
+  h3 {
+    font-size: pow( $min-heading-multiplier, 2 ) * $size;
+
+    @include fluid-type( 
+      $grow-start-width, 
+      $grow-stop-width, 
+      pow( $min-heading-multiplier, 2 ) * $min-font-size * $size,
+      pow( $max-heading-multiplier, 2 ) * $min-font-size * $size
+    );
+
+    letter-spacing: 0.0rem;
+  }
+
+  h4 {
+    font-size: pow( $min-heading-multiplier, 1 ) * $size;
+
+    @include fluid-type( 
+      $grow-start-width, 
+      $grow-stop-width, 
+      pow( $min-heading-multiplier, 1 ) * $min-font-size * $size,
+      pow( $max-heading-multiplier, 1 ) * $min-font-size * $size
+    );
+
+    letter-spacing: 0.0rem;
+  }
+
+  h5 {
+    font-size: $min-heading-multiplier * $size;
+    letter-spacing: 0.0rem;
+  }
 }
 
-h2 {
-  font-size: 4rem;
-  letter-spacing: 0.0rem;
-}
-
-h3 {
-  font-size: 3rem;
-  letter-spacing: 0.0rem;
-}
-
-h4 {
-  font-size: 2rem;
-  letter-spacing: 0.1rem;
-}
-
-h5 {
-  font-size: 1rem;
-  letter-spacing: 0.2rem;
-}
+@include headings($size);
 
 .title {
+  position: relative;
   z-index: 1;
+
   color: color( 'primary');
+  @include text-shadow( 'title' );
   @include font( 'title' );
 }

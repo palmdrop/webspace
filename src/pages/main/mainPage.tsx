@@ -1,27 +1,26 @@
-import Card from '../../components/cards/Card';
 import GlassCard from '../../components/cards/glass/GlassCard';
-import Bar from '../../components/ornamental/bars/Bar';
-import Bars from '../../components/ornamental/bars/Bars';
-import Paragraph from '../../components/paragraph/Paragraph';
 import Title from '../../components/title/Title';
+
+import Bars from '../../components/ornamental/bars/Bars';
 
 import './mainPage.scss';
 
 const MainPage = () : JSX.Element => {
   return (
     <div className="main-page">
+      <header className="main-page__header">
 
-      <Bars amount={ 10 } />
+        <Bars amount={ 10 } />
 
-      <Title 
-        level={1}
-        text="OBSCURED"
-      />
+        <GlassCard>
+        </GlassCard>
 
-      <GlassCard>
-      </GlassCard>
+        <Title 
+          level={1}
+          text="OBSCURED"
+        />
 
-
+      </header>
     </div>
   )
 }

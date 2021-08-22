@@ -1,9 +1,111 @@
+/* Responsiveness */
+
+// Font size
+$grow-start-width: 320px;
+$grow-stop-width: 1000px;
+
+$min-font-size: 16px;
+$max-font-size: 22px;
+
+$min-heading-multiplier: 1.4; // mobile
+$max-heading-multiplier: 2.0; // desktop
+
+// credit: https://css-tricks.com/snippets/css/fluid-typography/
+@function strip-unit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+@mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size) {
+  $u1: unit($min-vw);
+  $u2: unit($max-vw);
+  $u3: unit($min-font-size);
+  $u4: unit($max-font-size);
+
+  @if $u1 == $u2 and $u1 == $u3 and $u1 == $u4 {
+
+    & {
+
+      font-size: $min-font-size;
+
+      @media screen and (min-width: $min-vw) {
+        font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
+      }
+      @media screen and (min-width: $max-vw) {
+        font-size: $max-font-size;
+      }
+    }
+  }
+}
+
+// Device widths
+$small-device-width:  400px; 
+$medium-device-width: 700px;
+$large-device-width:  900px;
+$huge-device-width:   1200px;
+
+@mixin small {
+  @media ( min-width: $small-device-width )  {
+    @content;
+  }
+}
+
+@mixin medium {
+  @media ( min-width: $medium-device-width )  {
+    @content;
+  }
+}
+
+@mixin large {
+  @media ( min-width: $large-device-width )  {
+    @content;
+  }
+}
+
+@mixin huge {
+  @media ( min-width: $huge-device-width )  {
+    @content;
+  }
+}
+
+@mixin custom( $device-width ) {
+  @media ( min-width: $device-width ) {
+    @content;
+  }
+}
+
+
+
+/* Padding */
 $card-padding: 2em 4em;
 
+$page-padding-vertical: 4em;
+$page-padding-horizontal: 2em;
+
+@mixin padded-dimensions( $padding-horizontal, $padding-vertical ) {
+  width: #{ 'calc( 100% - 2 * #{ $padding-horizontal } )' };
+  min-height: #{ 'calc( 100vh - 2 * #{ $padding-vertical } )' };
+  padding: $padding-vertical $padding-horizontal;
+}
+
+/* Styled mixins */
+// TODO: just make a page component instead, if all pages share this functionality? or add arguments?
 @mixin page() {
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
+  @include padded-dimensions( 0.4 * $page-padding-horizontal, 0.8 * $page-padding-vertical );
+
+  @include medium {
+    @include padded-dimensions( $page-padding-horizontal, $page-padding-vertical );
+  }
+
+  @include large {
+    @include padded-dimensions( 3 * $page-padding-horizontal, $page-padding-vertical );
+  }
+
+  @include huge {
+    @include padded-dimensions( 6 * $page-padding-horizontal, $page-padding-vertical );
+  }
+
+  //padding: auto;
 
   overflow: auto;
+  overflow-x: hidden;
 }
