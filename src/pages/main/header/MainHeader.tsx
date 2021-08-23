@@ -4,7 +4,11 @@ import Title from '../../../components/title/Title';
 
 import './MainHeader.scss';
 
-const MainHeader = () => {
+type Props = {
+  title: string, 
+}
+
+const MainHeader = ( { title } : Props ) => {
   return (
     <header className="main-header">
 
@@ -14,8 +18,8 @@ const MainHeader = () => {
       </GlassCard>
 
       <Title 
-        level={1}
-        text="PALMDROP"
+        level={ 1 }
+        text={ title }
       />
 
     </header>
