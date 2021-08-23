@@ -35,6 +35,6 @@ $size: 9.0rem;
   @include soft-disk-style( $size * 1.0 );
 
   @include huge {
-    @include soft-disk-style( $size * 1.3 );
+    @include soft-disk-style( $size * 1.1 );
   }
 }
