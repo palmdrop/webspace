@@ -4,24 +4,37 @@
 /* Quicksand */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
 
+/* Snippet */
+@import url('https://fonts.googleapis.com/css2?family=Snippet&display=swap');
+
+/* Epilogue */
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&display=swap');
+
+/* BioRhyme Expanded */
+@import url('https://fonts.googleapis.com/css2?family=BioRhyme+Expanded:wght@400;700;800&display=swap');
+
 /* Font data */ 
 $fonts: (
   'title': (
-    'name': 'Poppins',
-    'fallback': serif,
-    'weight': 800
+    'name': 'BioRhyme Expanded',
+    'fallback': sans-serif,
+    'weight': 800,
+    'style': normal,
   ),
 
   'paragraph': (
     'name': 'Poppins',
-    'fallback': serif,
-    'weight': 400
+    'fallback': sans-serif,
+    'weight': 400,
+    'style': normal
   ),
 
   'button': (
-    'name': 'Quicksand',
-    'fallback': serif,
-    'weight': 600
+    //'name': 'Quicksand',
+    'name': 'Snippet',
+    'fallback': sans-serif,
+    'weight': 600,
+    'style': normal
   )
 );
 
@@ -37,6 +50,7 @@ $fonts: (
 
   $name:     map-get( $fontData, 'name' );
   $fallback: map-get( $fontData, 'fallback' );
+  $style:    map-get( $fontData, 'style' );
 
   /* Use default weight if no weight is passed */
   @if $weight == 0 {
@@ -45,4 +59,5 @@ $fonts: (
 
   font-family: $name, $fallback;
   font-weight: $weight;
+  font-style: $style;
 }

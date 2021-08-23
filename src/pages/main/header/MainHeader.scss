@@ -1,0 +1,45 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/layout.scss';
+
+$height: 21em;
+
+.main-header {
+  position: relative;
+
+  width: 100%;
+  height: $height;
+
+  .title {
+    top: 0.5em;
+  }
+
+  .glass-card {
+    position: absolute;
+    top: 1.5em;
+
+    @include small {
+      top: 2.8em;
+    }
+
+    @include medium {
+      top: 3.5em;
+    }
+
+    @include large {
+      top: 3.8em;
+    }
+
+    left: 1.8em;
+
+    width: 40%;
+    height: $height / 2.1;
+  }
+
+  .bars {
+    position: absolute;
+    top: 0em;
+    left: 4em;
+
+    height: $height;
+  }
+}

@@ -42,38 +42,20 @@
     }
   }
 
-  &__header {
-    position: relative;
-    top: 1em;
+  .main-header {
+    top: -1em;
+  }
 
-    .glass-card {
-      position: absolute;
-      top: 1.5em;
+  &__sharp-disks {
+    position: absolute;
+    top: 50%;
+    margin-left: -2em;
 
-      @include small {
-        top: 1.7em;
+    @for $i from 1 through 3 {
+      .sharp-disk:nth-child( #{ $i } ) {
+        position: absolute;     
+        margin-left: 3em * $i;
       }
-
-      @include medium {
-        top: 2.4em;
-      }
-
-      @include large {
-        top: 2.8em;
-      }
-
-      left: 1.2em;
-
-      width: 15em;
-      height: 10em;
-    }
-
-    .bars {
-      position: absolute;
-      top: -2em;
-      left: 4em;
-
-      height: 21em
     }
   }
 }

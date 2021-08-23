@@ -9,27 +9,23 @@ import { Routes } from '../../App';
 import NavBar from '../../components/navigation/navbar/NavBar';
 import { SoftDisk } from '../../components/ornamental/disk/soft/SoftDisk';
 import HorizonGradient from '../../components/ornamental/gradient/HorizonGradient';
+import SharpDisk from '../../components/ornamental/disk/sharp/SharpDisk';
+import MainHeader from './header/MainHeader';
 
 const MainPage = () : JSX.Element => {
   return (
     <div className="main-page">
-      <header className="main-page__header">
+      <MainHeader />
 
-        <Bars amount={ 10 } />
-
-        <GlassCard>
-        </GlassCard>
-
-        <Title 
-          level={1}
-          text="OBSCURED"
-        />
-
-      </header>
-
-      <div className="main-page__disks">
+      <div className="main-page__soft-disks">
         <SoftDisk />
         <SoftDisk />
+      </div>
+
+      <div className="main-page__sharp-disks">
+        <SharpDisk />
+        <SharpDisk />
+        <SharpDisk />
       </div>
 
       <NavBar
