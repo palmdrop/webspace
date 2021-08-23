@@ -32,6 +32,16 @@
     }
   }
 
+  .horizon-gradient {
+    position: absolute;
+    bottom: 5%;
+    left: 40%;
+
+    @include medium {
+      left: 23%;
+    }
+  }
+
   &__header {
     position: relative;
     top: 1em;

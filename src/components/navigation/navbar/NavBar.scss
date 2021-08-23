@@ -1,6 +1,7 @@
 @import '../../../styles/layout.scss';
 
 .nav-bar {
+  z-index: 1;
   padding: 1.0em 1em;
 
   ul {

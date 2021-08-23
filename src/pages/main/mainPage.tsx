@@ -8,6 +8,7 @@ import { Routes } from '../../App';
 
 import NavBar from '../../components/navigation/navbar/NavBar';
 import { SoftDisk } from '../../components/ornamental/disk/soft/SoftDisk';
+import HorizonGradient from '../../components/ornamental/gradient/HorizonGradient';
 
 const MainPage = () : JSX.Element => {
   return (
@@ -26,8 +27,10 @@ const MainPage = () : JSX.Element => {
 
       </header>
 
-      <SoftDisk />
-      <SoftDisk />
+      <div className="main-page__disks">
+        <SoftDisk />
+        <SoftDisk />
+      </div>
 
       <NavBar
         entries={[
@@ -49,6 +52,8 @@ const MainPage = () : JSX.Element => {
           }
         ]} 
       />
+
+      <HorizonGradient />
     </div>
   )
 }

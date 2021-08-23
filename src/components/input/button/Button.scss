@@ -6,7 +6,7 @@
   background-color: transparent;
   color: color( 'primary' );
 
-  border-bottom: 2px solid color( 'background' );
+  border-bottom: 2px solid transparent;
   @include text-shadow( 'button' );
 
   @include font( 'button' );
