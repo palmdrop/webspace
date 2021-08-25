@@ -3,6 +3,8 @@
 
 .paragraph {
   font-size: 1em;
+  line-height: 1.1em;
+  margin-bottom: 0.8em;
   @include font( 'paragraph' );
 
   color: color( 'foreground' );

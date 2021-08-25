@@ -87,35 +87,3 @@ code {
 html {
 	@include fluid-type( $grow-start-width, $grow-stop-width, $min-font-size, $max-font-size );
 }
-
-/*
-@media only screen and ( min-width: 0px ) {
-	body {
-		font-size: 10px;	
-	}
-}
-
-@media only screen and ( min-width: 400px ) {
-	body {
-		font-size: 10px;	
-	}
-}
-
-@media only screen and ( min-width: 600px ) {
-	body {
-		font-size: 12px;	
-	}
-}
-
-@media only screen and ( min-width: 800px ) {
-	body {
-		font-size: 14px;	
-	}
-}
-
-@media only screen and ( min-width: 1200px ) {
-	body {
-		font-size: 16px;	
-	}
-}
-*/

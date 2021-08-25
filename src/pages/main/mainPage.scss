@@ -4,12 +4,30 @@
 .main-page {
   @include page();
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 0.3fr auto;
+  grid-template-rows:    0.33fr 0.33fr auto;
+  grid-template-areas: 
+    "header header"
+    "navbar main"
+    "navbar main";
 
   @include medium {
-    flex-direction: row;
+    grid-template-columns: 0.49fr 0.49fr auto;
+    grid-template-rows:    0.15fr 0.8fr auto;
+    grid-template-areas: 
+      "header header ."
+      "header header navbar"
+      "main   main   main";
+  }
+
+  @include huge {
+    grid-template-columns: 0.49fr 0.49fr auto;
+    grid-template-rows:    0.33fr 0.33fr auto;
+    grid-template-areas: 
+      "header header navbar"
+      "main   main   main"
+      "main   main   main";
   }
 
   background-color: color("background", 300);
@@ -44,6 +62,24 @@
 
   .main-header {
     top: -1em;
+
+    grid-area: header;
+  }
+
+  .gradient-card {
+    justify-self: center;
+    align-self: center;
+
+    @include small {
+      align-self: flex-start;
+    }
+
+    max-width: 20em;
+    grid-area: main;
+  }
+
+  .nav-bar {
+    grid-area: navbar;
   }
 
   &__sharp-disks {

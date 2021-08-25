@@ -8,13 +8,15 @@ import HorizonGradient from '../../components/ornamental/gradient/HorizonGradien
 import SharpDisk from '../../components/ornamental/disk/sharp/SharpDisk';
 
 import './mainPage.scss';
+import GradientCard from '../../components/cards/gradient/GradientCard';
+import Paragraph from '../../components/paragraph/Paragraph';
 
 const MainPage = () : JSX.Element => {
   return (
     <div className="main-page">
       <MainHeader title="PALMDROP" />
 
-      <div className="main-page__soft-disks">
+      {/*<div className="main-page__soft-disks">
         <SoftDisk />
         <SoftDisk />
       </div>
@@ -24,6 +26,7 @@ const MainPage = () : JSX.Element => {
         <SharpDisk />
         <SharpDisk />
       </div>
+      */}
 
       <NavBar
         entries={ 
@@ -36,7 +39,16 @@ const MainPage = () : JSX.Element => {
         }
       />
 
-      <HorizonGradient />
+      <GradientCard>
+        <Paragraph>
+          Some test text
+        </Paragraph>
+        <Paragraph>
+          Some more test text
+        </Paragraph>
+      </GradientCard>
+
+      { /* <HorizonGradient /> */}
     </div>
   )
 }
