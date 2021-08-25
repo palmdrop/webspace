@@ -1,5 +1,6 @@
 @import '../../styles/colors.scss';
 @import '../../styles/layout.scss';
+@import '../../styles/ornaments.scss';
 
 .main-page {
   @include page();
@@ -14,15 +15,6 @@
 
   @include medium {
     grid-template-columns: 0.49fr 0.49fr auto;
-    grid-template-rows:    0.15fr 0.8fr auto;
-    grid-template-areas: 
-      "header header ."
-      "header header navbar"
-      "main   main   main";
-  }
-
-  @include huge {
-    grid-template-columns: 0.49fr 0.49fr auto;
     grid-template-rows:    0.33fr 0.33fr auto;
     grid-template-areas: 
       "header header navbar"
@@ -30,7 +22,7 @@
       "main   main   main";
   }
 
-  background-color: color("background", 300);
+  background: gradient( 'horizon' );
 
   .soft-disk:first-of-type {
     position: absolute;
@@ -64,6 +56,18 @@
     top: -1em;
 
     grid-area: header;
+  }
+
+  header {
+    div {
+      display: grid;
+      grid-template-columns: 0.5fr 0.5fr;
+      grid-template-rows: 0.5fr 0.5fr;
+
+      * {
+        white-space: nowrap;
+      }
+    }
   }
 
   .gradient-card {

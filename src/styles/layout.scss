@@ -7,8 +7,8 @@ $grow-stop-width: 1000px;
 $min-font-size: 14px;
 $max-font-size: 22px;
 
-$min-heading-multiplier: 1.25; // mobile
-$max-heading-multiplier: 1.8; // desktop
+$min-heading-multiplier: 1.45; // mobile
+$max-heading-multiplier: 2.0; // desktop
 
 // credit: https://css-tricks.com/snippets/css/fluid-typography/
 @function strip-unit($value) {
@@ -78,10 +78,10 @@ $huge-device-width:   1400px;
 /* Padding */
 $card-padding: 2em 4em;
 
-$page-padding-vertical: 4em;
-$page-padding-horizontal: 2em;
+$page-padding-vertical: 1.5em;
+$page-padding-horizontal: 1.0em;
 
-$page-max-width: 1100px;
+$page-max-width: 1400px;
 
 @mixin padded-dimensions( $padding-horizontal, $padding-vertical ) {
   width: #{ 'calc( 100% - 2 * #{ $padding-horizontal } )' };

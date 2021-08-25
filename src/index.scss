@@ -1,5 +1,6 @@
 @import './styles/layout.scss';
 @import './styles/colors.scss';
+@import './styles/ornaments.scss';
 
 /* Reset */
 html, body, div, span, applet, object, iframe,
@@ -76,7 +77,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-	background-color: color( 'background' );
+	//background-color: color( 'background' );
+	background: gradient( 'horizon' );
 }
 
 code {
