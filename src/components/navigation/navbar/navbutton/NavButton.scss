@@ -1,6 +1,14 @@
+@import '../../../../styles/fonts.scss';
+
 .nav-button {
 
   .button {
     padding: 0.3em 0em;
+  }
+
+  &--active {
+    .button {
+      @include font( 'accent' );
+    }
   }
 }

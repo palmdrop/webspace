@@ -8,7 +8,7 @@ $min-font-size: 14px;
 $max-font-size: 22px;
 
 $min-heading-multiplier: 1.55; // mobile
-$max-heading-multiplier: 2.0; // desktop
+$max-heading-multiplier: 2.2; // desktop
 
 // credit: https://css-tricks.com/snippets/css/fluid-typography/
 @function strip-unit($value) {
@@ -40,7 +40,7 @@ $max-heading-multiplier: 2.0; // desktop
 // Device widths
 $small-device-width:  400px; 
 $medium-device-width: 700px;
-$large-device-width:  1000px;
+$large-device-width:  1150px;
 $huge-device-width:   1400px;
 
 @mixin small {
@@ -109,8 +109,6 @@ $page-max-width: $huge-device-width;
     
   }
 
-  //padding: auto;
-
-  overflow: auto;
-  overflow-x: hidden;
+  overflow: hidden;
+  //overflow-x: hidden;
 }

@@ -6,7 +6,7 @@
   background-color: transparent;
   color: color( 'primary' );
 
-  border-bottom: 2px solid transparent;
+  //border-bottom: 2px solid transparent;
   @include text-shadow( 'button' );
 
   @include font( 'button' );
@@ -17,7 +17,7 @@
 
   &:hover {
     color: lighten( color( 'primary' ), 20% );
-    border-bottom: 2px solid color( 'accent' );
+    //border-bottom: 2px solid color( 'accent' );
   }
 
   &--pressed {

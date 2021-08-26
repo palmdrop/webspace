@@ -9,13 +9,15 @@ import './NavButton.scss';
 type Props = {
   text : string,
   path : string,
+  active? : boolean,
   onClick? : ( event : React.MouseEvent ) => void,
   onHover? : ( event : React.MouseEvent ) => void,
 }
 
-const NavButton = ( { text, path, onClick, onHover } : Props ) : JSX.Element => {
+const NavButton = ( { text, path, active = false, onClick, onHover } : Props ) : JSX.Element => {
   return (
-    <li className="nav-button">
+    <li className={ `nav-button ${ active ? 'nav-button--active' : '' } `}
+    >
       <Button
         onClick={ onClick }
         onHover={ onHover }

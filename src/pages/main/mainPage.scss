@@ -18,6 +18,17 @@
 
   @include medium {
     grid-template-columns: 0.99fr auto;
+    grid-template-rows: 0.7fr auto auto;
+
+    grid-template-areas: 
+      "header header"
+      ". navbar"
+      "info info"
+    ;
+  }
+
+  @include large {
+    grid-template-columns: 0.99fr auto;
     grid-template-rows: 0.9fr auto;
 
     grid-template-areas: 

@@ -1,21 +1,33 @@
 import { Routes, pages } from '../../App';
+import { useState } from 'react';
 
-import NavBar from '../../components/navigation/navbar/NavBar';
 import MainHeader from './header/MainHeader';
-
-import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
-import HorizonGradient from '../../components/ornamental/gradient/HorizonGradient';
-import SharpDisk from '../../components/ornamental/disk/sharp/SharpDisk';
+import NavBar, { NavEntry } from '../../components/navigation/navbar/NavBar';
+import Paragraph from '../../components/paragraph/Paragraph';
 
 import './mainPage.scss';
-import GradientCard from '../../components/cards/gradient/GradientCard';
-import Paragraph from '../../components/paragraph/Paragraph';
-import Title from '../../components/title/Title';
 
 const MainPage = () : JSX.Element => {
+  const [ activeNavBarEntry, setActiveNavBarEntry ] = useState<number | null>( null );
+
+  // Create a navbar entries using all pages but the root page
+  // The value is calculated using a function callback to avoid 
+  // recalculating on each page re-render, and to make memoization possible
+  const [ navEntries ] = useState( () => {
+    return pages
+      .filter( ( { route } ) => route !== Routes.root )
+      .map( ( { name, route } ) => {
+        return { path: route, text: name }
+      });
+  });
+
+  const handleNavBarHover = ( entry : NavEntry, index : number ) : void => {
+    setActiveNavBarEntry( index ); 
+  };
+
   return (
     <div className="main-page">
-      <MainHeader />
+      <MainHeader obstacleLocation={ activeNavBarEntry } />
 
       {/*<div className="main-page__sharp-disks">
         <SharpDisk />
@@ -26,13 +38,10 @@ const MainPage = () : JSX.Element => {
 
       <NavBar
         entries={ 
-          /* Create a navbar using all pages but the root page */
-          pages
-          .filter( ( { route } ) => route !== Routes.root )
-          .map( ( { name, route } ) => {
-            return { path: route, text: name }
-          })
+          navEntries
         }
+        activeEntry={ activeNavBarEntry }
+        onHover={ handleNavBarHover }
       />
 
       { /* <HorizonGradient /> */}

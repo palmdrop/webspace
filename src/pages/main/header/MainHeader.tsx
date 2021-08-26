@@ -2,14 +2,14 @@ import Bar from '../../../components/ornamental/bars/Bar';
 import Title from '../../../components/title/Title';
 
 import { ReactComponent as Obstacle } from '../../../assets/svg/obstacle1.svg';
-//import Obstacle from '../../../assets/svg/obstacle1.svg';
 
 import './MainHeader.scss';
 
 type Props = {
+  obstacleLocation? : number | null
 }
 
-const MainHeader = ( {} : Props ) => {
+const MainHeader = ( { obstacleLocation = null } : Props ) => {
   return (
       <header className="main-header">
         <div>
@@ -22,8 +22,10 @@ const MainHeader = ( {} : Props ) => {
             variant="inset"
           />
 
-          <Obstacle className="main-header__obstacle" />
-
+          <Obstacle className={
+            `main-header__obstacle ${ obstacleLocation ? `main-header__obstacle--location${ obstacleLocation }` : '' }`
+          }
+          />
 
           <div>
             <Title
