@@ -1,45 +1,94 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/layout.scss';
 
-$height: 21em;
 
 .main-header {
+  z-index: 1;
   position: relative;
 
-  width: 100%;
-  height: $height;
+  &__obstacle {
+    position: absolute;
+    z-index: 100;
 
-  .title {
-    top: 0.5em;
+    width: 15em;
+    height: auto;
+
+
+    top: -0em;
+    left: 3em;
+
+    /*animation: mainHeaderFloatX 20.0s,
+               mainHeaderFloatY 16.0s,
+               mainHeaderFloatRotation 35.0s;
+    */
+    //animation: mainHeaderFloat 10.0s;
+    animation-iteration-count: infinite;
+    //animation-timing-function: linear;
   }
 
-  .glass-card {
-    position: absolute;
-    top: 1.5em;
+  div {
+    display: inline-block;
 
-    @include small {
-      top: 2.8em;
+    .bar {
+      margin: 0.0em 0.4em 0.2em 0.5em;
+      width: calc(100% - 1.1em);
     }
 
-    @include medium {
-      top: 3.5em;
+    div {
+      box-sizing: border-box;
+      width: 100%;
+
+      display: flex;
+      justify-content: space-between;
+
+      *:first-child {
+        width: 1em;
+        margin-left: 0.5em;
+      }
+
+      *:last-child {
+        width: 25ch;
+        margin-right: 0.2em;
+      }
     }
-
-    @include large {
-      top: 3.8em;
-    }
-
-    left: 1.8em;
-
-    width: 40%;
-    height: $height / 2.1;
   }
+}
 
-  .bars {
-    position: absolute;
+@keyframes mainHeaderFloatRotation {
+  0% {
+    transform: rotate( 0deg );
+  } 
+  33% {
+    transform: rotate( 20deg );
+  } 
+  66% {
+    transform: rotate( -20deg );
+  } 
+  100% {
+    transform: rotate( 0deg );
+  } 
+}
+
+@keyframes mainHeaderFloatX {
+  0% {
+    left: 1em;
+  }
+  50% {
+    left: 5em;
+  }
+  100% {
+    left: 1em;
+  }
+}
+
+@keyframes mainHeaderFloatY {
+  0% {
+    top: -3em;
+  }
+  50% {
     top: 0em;
-    left: 4em;
-
-    height: $height;
+  }
+  100% {
+    top: -3em;
   }
 }

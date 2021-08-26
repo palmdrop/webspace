@@ -1,19 +1,64 @@
 @import '../../../styles/layout.scss';
 
 .nav-bar {
-  z-index: 1;
-  padding: 1.0em 1em;
+  position: relative;
+  width: 100%;
 
-  ul {
-    display: flex;
-    flex-direction: column;
+  @include medium {
+    width: 8em;
+  }
 
-    li {
-      padding-bottom: 1.5em;
+  .glass-card {
+    width: auto;
+    padding: 0.5em;
+
+    @include medium {
+      padding: $card-padding;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: row;
 
       @include medium {
-        padding-bottom: 0.4em;
+        flex-direction: column;
+      }
+
+      li {
+        width: 100%;  
+        padding: 0.5em 0em;
+        text-align: center;
       }
     }
   }
+
+  .soft-disk:first-of-type {
+    position: absolute;
+    z-index: 0;
+
+    top: -0.8em;
+    left: 3em;
+
+    @include medium {
+      top: -1em;
+      left: -3em;
+    }
+  }
+
+  .soft-disk:nth-of-type(2) {
+    position: absolute;
+    z-index: 0;
+
+    top: -2.5em;
+    right: 3em;
+
+    @include medium {
+      top:unset;
+      right:unset;
+
+      left: 5em;
+      bottom: -1em;
+    }
+  }
+
 }

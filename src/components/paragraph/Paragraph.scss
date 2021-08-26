@@ -2,9 +2,9 @@
 @import '../../styles/fonts.scss';
 
 .paragraph {
-  font-size: 1em;
-  line-height: 1.1em;
-  margin-bottom: 0.8em;
+  font-size: 1.0em;
+  line-height: 1.1rem;
+  padding-bottom: 0.6em;
   @include font( 'paragraph' );
 
   color: color( 'foreground' );

@@ -1,28 +1,43 @@
-import GlassCard from '../../../components/cards/glass/GlassCard';
-import Bars from '../../../components/ornamental/bars/Bars';
+import Bar from '../../../components/ornamental/bars/Bar';
 import Title from '../../../components/title/Title';
+
+import { ReactComponent as Obstacle } from '../../../assets/svg/obstacle1.svg';
+//import Obstacle from '../../../assets/svg/obstacle1.svg';
 
 import './MainHeader.scss';
 
 type Props = {
-  title: string, 
 }
 
-const MainHeader = ( { title } : Props ) => {
+const MainHeader = ( {} : Props ) => {
   return (
-    <header className="main-header">
+      <header className="main-header">
+        <div>
+          <Title 
+            level={ 1 }
+            text="OBSCURED"
+          />
+          <Bar
+            direction="horizontal"
+            variant="inset"
+          />
 
-      <Bars amount={ 10 } />
+          <Obstacle className="main-header__obstacle" />
 
-      <GlassCard>
-      </GlassCard>
 
-      <Title 
-        level={ 1 }
-        text={ title }
-      />
+          <div>
+            <Title
+              level={ 5 }
+              text="palm drop"
+            />
+            <Title
+              level={ 5 }
+              text="Experimental webspace, unclear blog and generative art"
+            />
+          </div>
 
-    </header>
+        </div>
+      </header>
   )
 }
 

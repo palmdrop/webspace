@@ -1,12 +1,13 @@
 import './Bar.scss';
 
 type Props = {
+  direction : 'vertical' | 'horizontal',
   variant : 'inset' | 'extrude'
 };
 
-const Bar = ( { variant } : Props ) => {
+const Bar = ( { direction, variant } : Props ) => {
   return (
-    <div className={ `bar bar--${variant}` } />
+    <div className={ `bar ${ direction } bar--${ variant }` } />
   )
 }
 

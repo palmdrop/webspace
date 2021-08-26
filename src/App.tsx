@@ -28,22 +28,22 @@ type Page = {
 
 export const pages : Page[] = [
   {
-    name: 'AbouT',
+    name: 'About',
     route: Routes.self,
     Component: AboutPage
   },
   {
-    name: 'PieceS',
+    name: 'Pieces',
     route: Routes.pieces,
     Component: PiecesPage
   },
   {
-    name: 'BloG',
+    name: 'Blog',
     route: Routes.blog,
     Component: BlogPage
   },
   {
-    name: 'ContacT',
+    name: 'Contact',
     route: Routes.contact,
     Component: ContactPage
   },

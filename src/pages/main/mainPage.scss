@@ -5,86 +5,53 @@
 .main-page {
   @include page();
 
-  display: grid;
-  grid-template-columns: 0.3fr auto;
-  grid-template-rows:    0.33fr 0.33fr auto;
-  grid-template-areas: 
-    "header header"
-    "navbar main"
-    "navbar main";
-
-  @include medium {
-    grid-template-columns: 0.49fr 0.49fr auto;
-    grid-template-rows:    0.33fr 0.33fr auto;
-    grid-template-areas: 
-      "header header navbar"
-      "main   main   main"
-      "main   main   main";
-  }
-
   background: gradient( 'horizon' );
 
-  .soft-disk:first-of-type {
-    position: absolute;
-    right: 10%;
-    bottom: 10%;
-  }
+  display: grid;
+  gap: 1em;
+  grid-template-rows: 0.96fr 0.02fr 0.02fr;
+  grid-template-areas: 
+    "header header"
+    "info info"
+    "navbar navbar"
+  ;
 
-  .soft-disk:last-of-type {
-    position: absolute;
-    right: 30%;
-    bottom: 24%;
+  @include medium {
+    grid-template-columns: 0.99fr auto;
+    grid-template-rows: 0.9fr auto;
 
-    display: none;
-
-    @include medium {
-      display: block;
-    }
-  }
-
-  .horizon-gradient {
-    position: absolute;
-    bottom: 5%;
-    left: 40%;
-
-    @include medium {
-      left: 23%;
-    }
+    grid-template-areas: 
+      "header navbar"
+      "info info"
+    ;
   }
 
   .main-header {
-    top: -1em;
-
     grid-area: header;
-  }
-
-  header {
-    div {
-      display: grid;
-      grid-template-columns: 0.5fr 0.5fr;
-      grid-template-rows: 0.5fr 0.5fr;
-
-      * {
-        white-space: nowrap;
-      }
-    }
-  }
-
-  .gradient-card {
-    justify-self: center;
-    align-self: center;
-
-    @include small {
-      align-self: flex-start;
-    }
-
-    max-width: 20em;
-    grid-area: main;
   }
 
   .nav-bar {
     grid-area: navbar;
+
+    @include medium {
+      padding: 0.4em;
+
+    }
   }
+
+  &__info {
+    grid-area: info;
+
+    padding: 0em 1.0em;
+
+    @include medium {
+      padding: 0em;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+  }
+
 
   &__sharp-disks {
     position: absolute;

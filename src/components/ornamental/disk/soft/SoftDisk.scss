@@ -2,7 +2,7 @@
 @import '../../../../styles/layout.scss';
 @import '../../../../styles/ornaments.scss';
 
-$size: 9.0rem;
+$size: 7.0rem;
 
 @mixin soft-disk-shadows( $size ) {
   box-shadow: 
@@ -30,7 +30,7 @@ $size: 9.0rem;
 
 .soft-disk {
   z-index: 3;
-  background-color: color( 'background' );
+  background-color: color( 'glass' );
 
   @include soft-disk-style( $size * 1.0 );
 

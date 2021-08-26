@@ -24,6 +24,7 @@ const Bars = ( { amount, first = 'extrude' } : Props ) : JSX.Element => {
         <Bar 
           key={i}
           variant={ variant } 
+          direction="vertical"
         />
       );
     }

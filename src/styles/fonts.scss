@@ -13,17 +13,58 @@
 /* BioRhyme Expanded */
 @import url('https://fonts.googleapis.com/css2?family=BioRhyme+Expanded:wght@400;700;800&display=swap');
 
+/* Syne */
+/* Credit: https://gitlab.com/bonjour-monde/fonderie/syne-typeface */
+@font-face {
+  font-family: 'SyneRegular';
+  src: url('/fonts/syne/Syne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SyneBold';
+  src: url('/fonts/syne/Syne-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SyneExtraBold';
+  src: url('/fonts/syne/Syne-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SyneItalic';
+  src: url('/fonts/syne/Syne-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SyneMono';
+  src: url('/fonts/syne/SyneMono-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SyneTactile';
+  src: url('/fonts/syne/SyneTactile-Regular.ttf') format('truetype');
+}
+
+
 /* Font data */ 
 $fonts: (
-  'title': (
+  'heading': (
     'name': 'Quicksand',
+    //'name': 'Quicksand',
+    'fallback': sans-serif,
+    'weight': 300,
+    'style': italic,
+  ),
+  'subheading': (
+    //'name': 'Snippet',
+    'name': 'Snippet',
     'fallback': sans-serif,
     'weight': 300,
     'style': normal,
   ),
 
   'paragraph': (
-    'name': 'Snippet',
+    'name': 'SyneMono',
     'fallback': sans-serif,
     'weight': 500,
     'style': normal
@@ -31,7 +72,7 @@ $fonts: (
 
   'button': (
     //'name': 'Quicksand',
-    'name': 'Snippet',
+    'name': 'SyneMono',
     'fallback': sans-serif,
     'weight': 600,
     'style': normal

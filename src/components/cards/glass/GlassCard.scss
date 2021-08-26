@@ -3,7 +3,17 @@
 
 .glass-card {
   z-index: 2;
+  position: relative;
+
+  box-shadow: 
+    0px -1px 1px #E5B5B5,
+    0px  1px 1px #6F515151,
+    0px  0px 20px #AA5E5E10
+  ;
+  border-radius: 20px;
+
 }
+
 
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
   .glass-card {

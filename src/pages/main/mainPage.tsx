@@ -15,38 +15,9 @@ import Title from '../../components/title/Title';
 const MainPage = () : JSX.Element => {
   return (
     <div className="main-page">
-      {/*<MainHeader title="PALMDROP" /> */}
-      <header>
-        <Title
-          text="OBSCURED"          
-          level={1}
-        />
-        <div>
-          <Title 
-            text="palm"
-            level={5}
-          />
-          <Title 
-            text="Experimental web space"
-            level={5}
-          />
-          <Title 
-            text="drop"
-            level={5}
-          />
-          <Title 
-            text="Blog and entities"
-            level={5}
-          />
-        </div>
-      </header>
+      <MainHeader />
 
-      {/*<div className="main-page__soft-disks">
-        <SoftDisk />
-        <SoftDisk />
-      </div>
-
-      <div className="main-page__sharp-disks">
+      {/*<div className="main-page__sharp-disks">
         <SharpDisk />
         <SharpDisk />
         <SharpDisk />
@@ -65,6 +36,18 @@ const MainPage = () : JSX.Element => {
       />
 
       { /* <HorizonGradient /> */}
+      
+      <div className="main-page__info">
+        <Paragraph>
+          A webspace as developing ideas, thoughts and knowledge.
+        </Paragraph>
+        <Paragraph>
+          Thorugh the centralization of the internet, we lose private spaces.
+        </Paragraph>
+        <Paragraph>
+          Optimization of user interfaces, A/B-testing, digital survailance...
+        </Paragraph>
+      </div>
     </div>
   )
 }
