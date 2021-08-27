@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import Button from "../../../input/button/Button";
 
@@ -15,18 +15,21 @@ type Props = {
 }
 
 const NavButton = ( { text, path, active = false, onClick, onHover } : Props ) : JSX.Element => {
+  const history = useHistory();
+
+  const handleClick = ( event : React.MouseEvent ) => {
+    onClick && onClick( event );
+    history.push( path );
+  };
+
   return (
     <li className={ `nav-button ${ active ? 'nav-button--active' : '' } `}
     >
       <Button
-        onClick={ onClick }
+        onClick={ handleClick }
         onHover={ onHover }
       >
-        <Link
-          to={ path }
-        >
-          { text }
-        </Link>
+        { text }
       </Button>
     </li>
   )
