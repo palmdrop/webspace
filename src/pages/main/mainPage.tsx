@@ -24,7 +24,7 @@ const MainPage = () : JSX.Element => {
     <div className="main-page">
       <MainHeader />
 
-      <NoiseBackground />
+      <NoiseBackground opacity={ 0.5 } />
 
 
       {/*<div className="main-page__sharp-disks">

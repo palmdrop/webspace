@@ -61,11 +61,10 @@ $disk-movement-amount: ( 100% - $disk-offset * 2 ) / $nav-entries;
     }
 
     .glass-card {
-      width: auto;
       padding: 0.5em;
 
       @include medium {
-        padding: $card-padding;
+        padding: 1.0em 0em;
       }
 
       ul {

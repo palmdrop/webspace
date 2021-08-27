@@ -3,7 +3,6 @@
 @import '../../styles/ornaments.scss';
 
 .card {
-  padding: $card-padding;
   background-color: color( 'background' );
 
   @include box-shadow( 'simple-soft' );

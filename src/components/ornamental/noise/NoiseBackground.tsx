@@ -1,10 +1,17 @@
-import React from 'react'
-
 import './NoiseBackground.scss';
 
-const NoiseBackground = () : JSX.Element => {
+type Props = {
+  opacity? : number
+}
+
+const NoiseBackground = ( { opacity = 0.3 } : Props ) : JSX.Element => {
   return (
-    <div className="noise-background" />
+    <div 
+      className="noise-background" 
+      style={ {
+        opacity: opacity
+      }}
+    />
   )
 }
 
