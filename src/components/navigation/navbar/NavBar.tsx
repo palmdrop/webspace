@@ -1,9 +1,13 @@
+import React from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../../state/store/hooks';
+import { selectActiveNavBarEntry, setActiveNavBarEntry } from '../../../state/slices/uiSlice';
+
+import GlassCard from '../../cards/glass/GlassCard';
+import SoftDisk from '../../ornamental/disk/soft/SoftDisk';
 import NavButton from './navbutton/NavButton'
 
 import './NavBar.scss';
-import GlassCard from '../../cards/glass/GlassCard';
-import SoftDisk from '../../ornamental/disk/soft/SoftDisk';
-import React from 'react';
 
 export type NavEntry = {
   text : string,
@@ -13,16 +17,18 @@ export type NavEntry = {
 
 type Props = {
   entries : NavEntry[],
-  activeEntry? : number | null,
   onHover? : ( entry : NavEntry, index : number ) => void
 }
 
-const NavBar = ( { entries, activeEntry = null, onHover } : Props ) : JSX.Element => {
+const NavBar = ( { entries, onHover } : Props ) : JSX.Element => {
+  const dispatch = useAppDispatch();
+  const activeNavBarEntry = useAppSelector( selectActiveNavBarEntry );
+  
   return (
     <div className="nav-bar">
       <nav 
         className={ 
-          `nav-bar__nav ${ activeEntry !== null ? `nav-bar__nav--entry${ activeEntry }` : '' }` 
+          `nav-bar__nav ${ activeNavBarEntry !== null ? `nav-bar__nav--entry${ activeNavBarEntry }` : '' }` 
         }
       >
         <SoftDisk />
@@ -34,12 +40,13 @@ const NavBar = ( { entries, activeEntry = null, onHover } : Props ) : JSX.Elemen
                 key={ `${ entry.text }-${ index }` }
                 path={ entry.path }
                 text={ entry.text }
-                active= { index === activeEntry }
+                active= { index === activeNavBarEntry }
                 onClick={ ( e : React.MouseEvent ) => {
                   entry.callback && entry.callback( entry.path );
                 }}
                 onHover={ ( e : React.MouseEvent ) => {
                   onHover && onHover( entry, index );
+                  dispatch( setActiveNavBarEntry( index ) );
                 }}
               />
             ))
@@ -51,4 +58,4 @@ const NavBar = ( { entries, activeEntry = null, onHover } : Props ) : JSX.Elemen
   )
 }
 
-export default NavBar;
+export default React.memo( NavBar );

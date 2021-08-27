@@ -9,8 +9,6 @@ import './mainPage.scss';
 import NoiseBackground from '../../components/ornamental/noise/NoiseBackground';
 
 const MainPage = () : JSX.Element => {
-  const [ activeNavBarEntry, setActiveNavBarEntry ] = useState<number | null>( null );
-
   // Create a navbar entries using all pages but the root page
   // The value is calculated using a function callback to avoid 
   // recalculating on each page re-render, and to make memoization possible
@@ -22,13 +20,9 @@ const MainPage = () : JSX.Element => {
       });
   });
 
-  const handleNavBarHover = ( entry : NavEntry, index : number ) : void => {
-    setActiveNavBarEntry( index ); 
-  };
-
   return (
     <div className="main-page">
-      <MainHeader obstacleLocation={ activeNavBarEntry } />
+      <MainHeader />
 
       <NoiseBackground />
 
@@ -44,8 +38,6 @@ const MainPage = () : JSX.Element => {
         entries={ 
           navEntries
         }
-        activeEntry={ activeNavBarEntry }
-        onHover={ handleNavBarHover }
       />
 
       { /* <HorizonGradient /> */}
