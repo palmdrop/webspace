@@ -6,6 +6,7 @@ import NavBar, { NavEntry } from '../../components/navigation/navbar/NavBar';
 import Paragraph from '../../components/paragraph/Paragraph';
 
 import './mainPage.scss';
+import NoiseBackground from '../../components/ornamental/noise/NoiseBackground';
 
 const MainPage = () : JSX.Element => {
   const [ activeNavBarEntry, setActiveNavBarEntry ] = useState<number | null>( null );
@@ -28,6 +29,9 @@ const MainPage = () : JSX.Element => {
   return (
     <div className="main-page">
       <MainHeader obstacleLocation={ activeNavBarEntry } />
+
+      <NoiseBackground />
+
 
       {/*<div className="main-page__sharp-disks">
         <SharpDisk />

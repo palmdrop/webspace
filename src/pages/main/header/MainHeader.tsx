@@ -23,7 +23,8 @@ const MainHeader = ( { obstacleLocation = null } : Props ) => {
           />
 
           <Obstacle className={
-            `main-header__obstacle ${ obstacleLocation ? `main-header__obstacle--location${ obstacleLocation }` : '' }`
+            //`main-header__obstacle ${ obstacleLocation ? `main-header__obstacle--location${ obstacleLocation }` : '' }`
+            'main-header__obstacle'
           }
           />
 

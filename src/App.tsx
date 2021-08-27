@@ -1,16 +1,17 @@
+import React from "react";
+
 import {
   Switch,
   Route,
 } from "react-router-dom";
 
 import MainPage from './pages/main/mainPage';
-
-import './App.scss';
-import React from "react";
-import ContactPage from "./pages/contact/ContactPage";
+import AboutPage from "./pages/about/AboutPage";
 import PiecesPage from "./pages/pieces/PiecesPage";
 import BlogPage from "./pages/blog/BlogPage";
-import AboutPage from "./pages/about/AboutPage";
+import ContactPage from "./pages/contact/ContactPage";
+
+import './App.scss';
 
 export enum Routes {
   root = '/',
@@ -48,7 +49,7 @@ export const pages : Page[] = [
     Component: ContactPage
   },
   {
-    name: 'RooT',
+    name: 'Root',
     route: Routes.root,
     Component: MainPage
   }
