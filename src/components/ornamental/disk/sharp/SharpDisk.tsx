@@ -1,10 +1,15 @@
-import React from 'react'
-
+import React from 'react';
 import './SharpDisk.scss';
 
-const SharpDisk = () => {
+type Props = {
+  children? : React.ReactChild | null | never[]
+}
+
+const SharpDisk = ( { children } : Props ) : JSX.Element => {
   return (
-    <div className="sharp-disk" />
+    <div className="sharp-disk">
+      { children }
+    </div>
   )
 }
 

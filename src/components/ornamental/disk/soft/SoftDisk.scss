@@ -29,7 +29,7 @@ $size: 7.0rem;
 }
 
 .soft-disk {
-  z-index: 3;
+  z-index: -1;
   background-color: color( 'glass' );
 
   @include soft-disk-style( $size * 1.0 );

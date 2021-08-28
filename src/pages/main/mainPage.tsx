@@ -7,6 +7,8 @@ import Paragraph from '../../components/paragraph/Paragraph';
 
 import './mainPage.scss';
 import NoiseBackground from '../../components/ornamental/noise/NoiseBackground';
+import SharpDisk from '../../components/ornamental/disk/sharp/SharpDisk';
+import MainFooter from './footer/MainFooter';
 
 const MainPage = () : JSX.Element => {
   // Create a navbar entries using all pages but the root page
@@ -24,15 +26,7 @@ const MainPage = () : JSX.Element => {
     <div className="main-page">
       <MainHeader />
 
-      <NoiseBackground opacity={ 0.5 } />
-
-
-      {/*<div className="main-page__sharp-disks">
-        <SharpDisk />
-        <SharpDisk />
-        <SharpDisk />
-      </div>
-      */}
+      <NoiseBackground opacity={ 0.4 } />
 
       <NavBar
         entries={ 
@@ -40,8 +34,6 @@ const MainPage = () : JSX.Element => {
         }
       />
 
-      { /* <HorizonGradient /> */}
-      
       <div className="main-page__info">
         <Paragraph>
           A webspace as developing ideas, thoughts and knowledge.
@@ -53,6 +45,8 @@ const MainPage = () : JSX.Element => {
           Optimization of user interfaces, A/B-testing, digital survailance...
         </Paragraph>
       </div>
+
+      <MainFooter />
     </div>
   )
 }

@@ -9,12 +9,11 @@ $size: 5.5rem;
   height: $size;
   border-radius: 100%;
 
-  box-shadow: shadow( $size, 0, 0.28, 0.14, rgba(120, 19, 19, 0.25) );
+  box-shadow: shadow( $size, 0.08, 0.18, 0.14, rgba(120, 19, 19, 0.25) );
 }
 
 .sharp-disk {
-  z-index: 3;
-  background-color: color( 'background' );
+  background-color: color( 'glass' );
 
   @include sharp-disk-style( $size * 1.0 );
 

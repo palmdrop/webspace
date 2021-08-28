@@ -3,12 +3,10 @@
 
 
 .main-header {
-  z-index: 1;
   position: relative;
 
   &__obstacle {
     position: absolute;
-    z-index: 100;
 
     width: 15em;
     height: auto;
@@ -18,26 +16,7 @@
 
     transition: 3s top, 3s left, 3s transform;
 
-    &--location0 {
-      top: -0em;
-      left: 3em;
-      transform: rotate( 0deg );
-    }
-    &--location1 {
-      top: -2em;
-      left: 4em;
-      transform: rotate( 20deg );
-    }
-    &--location2 {
-      top:  0em;
-      left: 1em;
-      transform: rotate( -20deg );
-    }
-    &--location3 {
-      top:  1em;
-      left: 4em;
-      transform: rotate( -10deg );
-    }
+    opacity: 0.96;
   }
 
   div {

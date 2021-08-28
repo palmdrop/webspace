@@ -88,3 +88,8 @@ code {
 html {
 	@include fluid-type( $grow-start-width, $grow-stop-width, $min-font-size, $max-font-size );
 }
+
+html, body {
+	overflow: hidden;
+	height: 100%;
+}

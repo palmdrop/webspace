@@ -1,0 +1,43 @@
+@import '../../../styles/colors.scss';
+
+$disk-size: 6em;
+$icon-size: 25%;
+
+.main-footer {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  a {
+    .sharp-disk {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: $disk-size;
+      height: $disk-size;
+
+      transition: 0.6s;
+
+      margin: -1em;
+
+      &:hover {
+        width: $disk-size * 1.2;
+        height: $disk-size * 1.2;
+
+      }
+
+      img {
+        width: $icon-size;
+        height: auto;
+
+        filter: invert(90%) sepia(25%) saturate(408%) hue-rotate(50deg) brightness(98%) contrast(89%);
+      }
+    }
+  }
+}
+
+
+
+
