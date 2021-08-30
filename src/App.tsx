@@ -6,9 +6,9 @@ import {
 } from "react-router-dom";
 
 import { useAppSelector } from "./state/store/hooks";
-import { ColorScheme, selectColorScheme } from "./state/slices/uiSlice";
+import { ColorScheme, selectColorScheme, selectNextPageRoute } from "./state/slices/uiSlice";
 
-import PageWrapper from "./pages/Page";
+import PageWrapper, { PageProps } from "./pages/PageWrapper";
 
 import MainPage from './pages/main/mainPage';
 import AboutPage from "./pages/about/AboutPage";
@@ -21,7 +21,7 @@ import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
 import './App.scss';
 
-export enum Routes {
+export enum PageRoute {
   root = '/',
   self = '/self',
   pieces = '/pieces',
@@ -29,48 +29,49 @@ export enum Routes {
   contact = '/contact',
 }
 
-type Page = {
+export type Page = {
   name: string,
-  route: Routes,
+  route: PageRoute,
   colorScheme: ColorScheme,
-  Component: React.FunctionComponent,
+  Component: React.FunctionComponent<PageProps>
 }
 
 export const pages : Page[] = [
   {
     name: 'About',
-    route: Routes.self,
+    route: PageRoute.self,
     colorScheme: ColorScheme.swamp,
     Component: AboutPage,
   },
   {
     name: 'Pieces',
-    route: Routes.pieces,
+    route: PageRoute.pieces,
     colorScheme: ColorScheme.swamp,
     Component: PiecesPage
   },
   {
     name: 'Blog',
-    route: Routes.blog,
+    route: PageRoute.blog,
     colorScheme: ColorScheme.swamp,
     Component: BlogPage
   },
   {
     name: 'Contact',
-    route: Routes.contact,
+    route: PageRoute.contact,
     colorScheme: ColorScheme.swamp,
     Component: ContactPage
   },
   {
     name: 'Root',
-    route: Routes.root,
+    route: PageRoute.root,
     colorScheme: ColorScheme.horizon,
     Component: MainPage
   }
-]
+];
 
 const App = () => {
   const colorScheme = useAppSelector( selectColorScheme );
+  const nextPageRoute = useAppSelector( selectNextPageRoute );
 
   return (
     <div className={ `app app--${ colorScheme }` }>
@@ -83,8 +84,14 @@ const App = () => {
           key={ page.route }
           path={ page.route }
         >
-          <PageWrapper colorScheme={ page.colorScheme }>
-            <page.Component />
+          <PageWrapper 
+            route={ page.route }
+            colorScheme={ page.colorScheme }
+          >
+            <page.Component 
+              route={ page.route }
+              fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
+            />
           </PageWrapper>
         </Route>
 

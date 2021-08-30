@@ -1,43 +1,54 @@
 import React from "react";
 
 import { useHistory } from "react-router-dom";
+import { setActiveNavBarEntry, setColorScheme, setNextPageRoute } from "../../../../state/slices/uiSlice";
+import { useAppDispatch } from "../../../../state/store/hooks";
 
 import Button from "../../../input/button/Button";
+import { NavEntry } from "../NavBar";
 
 import './NavButton.scss';
 
 type Props = {
-  text : string,
-  path : string,
-  active? : boolean,
-  onClick? : ( event : React.MouseEvent ) => void,
-  onHover? : ( event : React.MouseEvent ) => void,
-  redirectionDelay? : number
+  navEntry : NavEntry,
+  active : boolean,
+  index : number,
 }
 
-const NavButton = ( { text, path, active = false, onClick, onHover, redirectionDelay } : Props ) : JSX.Element => {
+const NavButton = ( { navEntry, active = false, index } : Props ) : JSX.Element => {
   const history = useHistory();
+  const dispatch = useAppDispatch();
 
   const handleClick = ( event : React.MouseEvent ) => {
-    onClick && onClick( event );
+    navEntry.colorScheme && dispatch( setColorScheme( navEntry.colorScheme ));
+      
+    dispatch( setNextPageRoute( navEntry.route ) );
 
-    if( redirectionDelay ) {
+    navEntry.onClick?.( navEntry, index, event );
+
+    if( navEntry.redirectionDelay ) {
       setTimeout( () => {
-        history.push( path );
-      }, redirectionDelay );
+        history.push( navEntry.route );
+      }, navEntry.redirectionDelay );
     } else {
-      history.push( path );
+      history.push( navEntry.route );
     }
   };
 
+  const handleHover = ( event : React.MouseEvent ) => {
+    dispatch( setActiveNavBarEntry( index ) );
+
+    navEntry.onHover?.( navEntry, index, event );
+  }
+
   return (
-    <li className={ `nav-button ${ active ? 'nav-button--active' : '' } `}
+    <li className={ `nav-button ${ active ? 'nav-button--active' : '' }` }
     >
       <Button
         onClick={ handleClick }
-        onHover={ onHover }
+        onHover={ handleHover }
       >
-        { text }
+        { navEntry.text }
       </Button>
     </li>
   )

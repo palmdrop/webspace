@@ -1,8 +1,10 @@
 import React from 'react'
 
+import './AboutPage.scss';
+
 const AboutPage = () : JSX.Element => {
   return (
-    <div>
+    <div className="about-page">
       About Page 
     </div>
   )

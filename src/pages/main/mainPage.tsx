@@ -1,31 +1,21 @@
-import { Routes, pages } from '../../App';
-import { useState } from 'react';
-
+import { PageProps } from '../PageWrapper';
+import { useNavBar } from '../../components/navigation/navbar/NavBar';
 import MainHeader from './header/MainHeader';
-import NavBar from '../../components/navigation/navbar/NavBar';
-import Paragraph from '../../components/paragraph/Paragraph';
-
 import MainFooter from './footer/MainFooter';
+import Paragraph from '../../components/paragraph/Paragraph';
 
 import './mainPage.scss';
 
-const MainPage = () : JSX.Element => {
-  // Create a navbar entries using all pages but the root page
-  // The value is calculated using a function callback to avoid 
-  // recalculating on each page re-render, and to make memoization possible
-  const [ navEntries ] = useState( () => 
-    pages
-    .filter( ( { route } ) => route !== Routes.root )
-    .map( ( { name, route } ) => ( { path: route, text: name } ) )
-  );
+const MainPage = ( { route, fadeOut } : PageProps ) : JSX.Element => {
+  const navBar = useNavBar( route );
 
   return (
-    <div className="main-page">
+    <div 
+      className={ `main-page ${ fadeOut ? 'main-page--fade-out' : '' }` }
+    >
       <MainHeader />
 
-      <NavBar
-        entries={ navEntries }
-      />
+      { navBar }
 
       <div className="main-page__info">
         <Paragraph>
@@ -44,4 +34,4 @@ const MainPage = () : JSX.Element => {
   )
 }
 
-export default MainPage
+export default MainPage;

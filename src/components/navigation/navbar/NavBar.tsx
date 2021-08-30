@@ -1,7 +1,10 @@
 import React from 'react';
+import { useState } from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../../state/store/hooks';
-import { selectActiveNavBarEntry, setActiveNavBarEntry } from '../../../state/slices/uiSlice';
+import { useAppSelector } from '../../../state/store/hooks';
+import { ColorScheme, selectActiveNavBarEntry } from '../../../state/slices/uiSlice';
+
+import { Page, PageRoute, pages } from '../../../App';
 
 import GlassCard from '../../cards/glass/GlassCard';
 import SoftDisk from '../../ornamental/disk/soft/SoftDisk';
@@ -11,17 +14,20 @@ import './NavBar.scss';
 
 export type NavEntry = {
   text : string,
-  path : string,
-  callback? : ( path : string ) => void
+  route : PageRoute,
+  colorScheme? : ColorScheme,
+  redirectionDelay? : number,
+  onClick? : NavEntryCallback,
+  onHover? : NavEntryCallback
 }
+
+type NavEntryCallback = ( entry : NavEntry, index : number, event : React.MouseEvent ) => void;
 
 type Props = {
   entries : NavEntry[],
-  onHover? : ( entry : NavEntry, index : number ) => void
 }
 
-const NavBar = ( { entries, onHover } : Props ) : JSX.Element => {
-  const dispatch = useAppDispatch();
+const NavBar = ( { entries } : Props ) : JSX.Element => {
   const activeNavBarEntry = useAppSelector( selectActiveNavBarEntry );
   
   return (
@@ -38,16 +44,9 @@ const NavBar = ( { entries, onHover } : Props ) : JSX.Element => {
           { entries.map( ( entry, index ) => (
             <NavButton
               key={ `${ entry.text }-${ index }` }
-              path={ entry.path }
-              text={ entry.text }
-              active= { index === activeNavBarEntry }
-              onClick={ ( e : React.MouseEvent ) => {
-                entry.callback && entry.callback( entry.path );
-              }}
-              onHover={ ( e : React.MouseEvent ) => {
-                onHover && onHover( entry, index );
-                dispatch( setActiveNavBarEntry( index ) );
-              }}
+              active={ index === activeNavBarEntry }
+              navEntry={ entry }
+              index={ index }
             />)
           )}
           </ul>
@@ -56,5 +55,50 @@ const NavBar = ( { entries, onHover } : Props ) : JSX.Element => {
     </div>
   )
 }
+
+// Helper function for creating an array of navbar entires
+export const createNavEntries = ( 
+  pages : Page[],
+  redirectionDelay : number,
+  currentRoute? : PageRoute, 
+  onClick? : NavEntryCallback, 
+) : NavEntry[] => {
+
+  // Create navbar entries using all pages EXCEPT the current page (if supplied)
+  return pages
+
+    // Filter out the root page
+    .filter( ( { route } ) => {
+      if( !currentRoute ) return true;
+      else return route !== currentRoute
+    })
+
+    // Map the Page data to a NavEntry
+    .map( ( { name, route, colorScheme } : Page ) : NavEntry => ( { 
+      text: name, 
+      route,
+      colorScheme,
+      redirectionDelay,
+      onClick,
+    }));
+}
+
+// Custom hook for creating a navbar and storing the navbar entries
+export const useNavBar = ( 
+  currentRoute? : PageRoute, 
+  onClick? : NavEntryCallback,
+) : JSX.Element => {
+  // The navbar entires are calculated using a function callback to avoid 
+  // recalculating on each page re-render, and to make memoization possible
+  const [ navEntries ] = useState( () => createNavEntries(
+    pages, 500, currentRoute, onClick
+  ));
+
+  return (
+    <NavBar
+      entries={ navEntries }
+    />
+  );
+} 
 
 export default React.memo( NavBar );
