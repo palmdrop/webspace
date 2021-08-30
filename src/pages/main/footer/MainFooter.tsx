@@ -5,6 +5,7 @@ import githubIcon from '../../../assets/svg/github.svg';
 import mailIcon from '../../../assets/svg/email.svg';
 
 import './MainFooter.scss';
+import ExternalLink from '../../../components/link/ExternalLink';
 
 type IconEntry = {
   src: string,
@@ -34,13 +35,15 @@ const MainFooter = (): JSX.Element => {
   return (
     <footer className="main-footer">
       {icons.map(({ src, alt, link }, index) => (
-        <a href={link} target="_blank">
+        <ExternalLink 
+          key={`${alt}-${index}`}
+          link={ link }
+        >
           <SharpDisk
-            key={`${alt}-${index}`}
           >
             <img src={src} alt={alt} />
           </SharpDisk>
-        </a>
+        </ExternalLink>
       ))}
     </footer>
   );
