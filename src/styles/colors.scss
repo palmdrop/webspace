@@ -5,19 +5,33 @@ $colors: (
 
   'primary': (
     300: #53FF00,
-    //300: #33FF00,
     400: #73FF00,
     500: #93FF00
   ),
 
   'secondary': #91949D,
   'accent': #E07D7D,
+
   'foreground': #FFFDEE,
 
   'glass': #9D919125,
   'glass-fallback': #928994D8,
 
   'text-shadow': #FF9C9C7F,
+);
+
+/* Gradients */
+$gradients: (
+  'horizon': linear-gradient(
+    180deg, 
+    color( 'secondary' ) 0%, 
+    color( 'accent' ) 100%
+  ),
+  'swamp': linear-gradient(
+    180deg, 
+    #A79A78 0%, 
+    #1B674C 100% 
+  ),
 );
 
 /* 
@@ -37,3 +51,19 @@ $colors: (
 
   }
 };
+
+@function gradient( $type ) {
+  $parameters: map-get( $gradients, $type );
+  @return $parameters;
+}
+
+// Use this to convert color scheme to a set of css variables
+// https://stackoverflow.com/questions/50202991/unable-to-set-scss-variable-to-css-variable
+
+@mixin colorScheme( $name ) {
+  @if $name == 'horizon' {
+    --gradient: #{ gradient( 'horizon' ) };
+  } @else {
+    --gradient: #{ gradient( 'swamp' ) };
+  }
+}

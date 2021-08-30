@@ -5,9 +5,9 @@ import MainHeader from './header/MainHeader';
 import NavBar from '../../components/navigation/navbar/NavBar';
 import Paragraph from '../../components/paragraph/Paragraph';
 
-import './mainPage.scss';
-import NoiseBackground from '../../components/ornamental/noise/NoiseBackground';
 import MainFooter from './footer/MainFooter';
+
+import './mainPage.scss';
 
 const MainPage = () : JSX.Element => {
   // Create a navbar entries using all pages but the root page
@@ -23,12 +23,8 @@ const MainPage = () : JSX.Element => {
     <div className="main-page">
       <MainHeader />
 
-      <NoiseBackground opacity={ 0.4 } />
-
       <NavBar
-        entries={ 
-          navEntries
-        }
+        entries={ navEntries }
       />
 
       <div className="main-page__info">

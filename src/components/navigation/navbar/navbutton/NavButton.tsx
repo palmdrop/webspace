@@ -12,14 +12,22 @@ type Props = {
   active? : boolean,
   onClick? : ( event : React.MouseEvent ) => void,
   onHover? : ( event : React.MouseEvent ) => void,
+  redirectionDelay? : number
 }
 
-const NavButton = ( { text, path, active = false, onClick, onHover } : Props ) : JSX.Element => {
+const NavButton = ( { text, path, active = false, onClick, onHover, redirectionDelay } : Props ) : JSX.Element => {
   const history = useHistory();
 
   const handleClick = ( event : React.MouseEvent ) => {
     onClick && onClick( event );
-    history.push( path );
+
+    if( redirectionDelay ) {
+      setTimeout( () => {
+        history.push( path );
+      }, redirectionDelay );
+    } else {
+      history.push( path );
+    }
   };
 
   return (

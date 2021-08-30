@@ -5,11 +5,9 @@
 .main-page {
   @include page();
 
-  position: relative;
-
   display: grid;
   gap: 1em;
-  grid-template-rows: 1.1fr 0.1fr 0.1fr;
+  grid-template-rows: 0.1fr 1.1fr 0.1fr;
   grid-template-areas: 
     "header header"
     "info info"
@@ -52,6 +50,7 @@
 
   &__info {
     grid-area: info;
+    align-self: flex-end;
 
     padding: 0em 1.0em;
 

@@ -1,0 +1,17 @@
+@import './styles/colors.scss';
+@import './styles/ornaments.scss';
+
+.app {
+	overflow: hidden;
+	height: 100vh;
+
+  &--horizon {
+    @include colorScheme( 'horizon' );
+  }
+
+  &--swamp {
+    @include colorScheme( 'swamp' );
+  }
+
+  transition: 1s background-image;
+}

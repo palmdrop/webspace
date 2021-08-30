@@ -67,17 +67,3 @@ $text-shadows: (
 
 /* Filters */
 $glass-backdrop-filter: blur( 8px );
-
-/* Gradients */
-$gradients: (
-  'horizon': linear-gradient(
-    180deg, 
-    color( 'secondary' ) 0%, 
-    color( 'accent' ) 100%
-  )
-);
-
-@function gradient( $type ) {
-  $parameters: map-get( $gradients, $type );
-  @return $parameters;
-}

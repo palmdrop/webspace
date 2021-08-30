@@ -4,6 +4,7 @@
 
 .main-header {
   position: relative;
+  z-index: 1;
 
   &__obstacle {
     position: absolute;

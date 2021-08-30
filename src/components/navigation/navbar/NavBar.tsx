@@ -36,21 +36,20 @@ const NavBar = ( { entries, onHover } : Props ) : JSX.Element => {
         <GlassCard>
           <ul>
           { entries.map( ( entry, index ) => (
-              <NavButton
-                key={ `${ entry.text }-${ index }` }
-                path={ entry.path }
-                text={ entry.text }
-                active= { index === activeNavBarEntry }
-                onClick={ ( e : React.MouseEvent ) => {
-                  entry.callback && entry.callback( entry.path );
-                }}
-                onHover={ ( e : React.MouseEvent ) => {
-                  onHover && onHover( entry, index );
-                  dispatch( setActiveNavBarEntry( index ) );
-                }}
-              />
-            ))
-          }
+            <NavButton
+              key={ `${ entry.text }-${ index }` }
+              path={ entry.path }
+              text={ entry.text }
+              active= { index === activeNavBarEntry }
+              onClick={ ( e : React.MouseEvent ) => {
+                entry.callback && entry.callback( entry.path );
+              }}
+              onHover={ ( e : React.MouseEvent ) => {
+                onHover && onHover( entry, index );
+                dispatch( setActiveNavBarEntry( index ) );
+              }}
+            />)
+          )}
           </ul>
         </GlassCard>
       </nav>
