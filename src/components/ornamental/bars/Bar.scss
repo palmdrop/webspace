@@ -8,11 +8,11 @@
   background-color: color( 'glass' );
 
   &--inset {
-    @include neumorphic-shadow( 2px, 10%, 'inset', color( 'background' ) );
+    @include neumorphic-shadow( 2px, 80%, 'inset', color( 'glass' ) );
   }
 
   &--extrude {
-    @include neumorphic-shadow( 2px, 10%, 'extrude', color( 'background' ) );
+    @include neumorphic-shadow( 2px, 80%, 'extrude', color( 'glass' ) );
   }
 }
 

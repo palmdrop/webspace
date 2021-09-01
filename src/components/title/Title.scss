@@ -49,7 +49,7 @@ $size: 1.0;
 
     letter-spacing: 0.0rem;
 
-    @include font( 'subheading' );
+    @include font( 'heading' );
   }
 
   h4 {
@@ -78,6 +78,7 @@ $size: 1.0;
 @include headings( $size );
 
 .title {
-  color: color( 'primary');
+  transition: 1.0s color;
+  color: var(--primary-color-300);
   @include text-shadow( 'title' );
 }

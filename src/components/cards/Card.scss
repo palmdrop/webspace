@@ -3,7 +3,5 @@
 @import '../../styles/ornaments.scss';
 
 .card {
-  background-color: color( 'background' );
-
   @include box-shadow( 'simple-soft' );
 }

@@ -4,7 +4,7 @@
 
 .button {
   background-color: transparent;
-  color: color( 'primary' );
+  color: var( --primary-color-300 );
 
   //border-bottom: 2px solid transparent;
   @include text-shadow( 'button' );
@@ -16,8 +16,7 @@
   transition: 0.7s color, 0.2s border-bottom;
 
   &:hover {
-    color: lighten( color( 'primary' ), 20% );
-    //border-bottom: 2px solid color( 'accent' );
+    color: var( --primary-color-500 );
   }
 
   &--pressed {

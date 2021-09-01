@@ -1,69 +1,111 @@
-$colors: (
-  'background': (
-    300: darken(#9D9191, 5%)
-  ),
-
-  'primary': (
-    300: #53FF00,
-    400: #73FF00,
-    500: #93FF00
-  ),
-
-  'secondary': #91949D,
-  'accent': #E07D7D,
-
+// Colors used for all pages
+$general-colors: (
   'foreground': #FFFDEE,
 
   'glass': #9D919125,
   'glass-fallback': #928994D8,
 
-  'text-shadow': #FF9C9C7F,
+  'text-shadow': #FF9C9C7F
 );
 
-/* Gradients */
+// Colors for specific pages / themes
+$themed-colors: (
+
+  'horizon': (
+    'primary': (
+      300: #53FF00,
+      400: #73FF00,
+      500: #93FF00
+    ),
+
+    'secondary': #91949D,
+    'accent': #E07D7D,
+  ),
+
+  'swamp': (
+    'primary': (
+      300: #00FFD1,
+      400: #10FFA1,
+      500: #20FFF1,
+    ),
+    
+    'secondary': #A79A78,
+    'accent': #1B674C,
+  ),
+);
+
+// Background gradients
 $gradients: (
   'horizon': linear-gradient(
     180deg, 
-    color( 'secondary' ) 0%, 
-    color( 'accent' ) 100%
+    color( 'secondary', 'horizon' ) 0%, 
+    color( 'accent', 'horizon' ) 100%
   ),
   'swamp': linear-gradient(
     180deg, 
-    #A79A78 0%, 
-    #1B674C 100% 
+    color( 'secondary', 'swamp' ) 0%, 
+    color( 'accent', 'swamp' ) 100% 
   ),
 );
-
-/* 
-  This function enables me to define colors as either a single color, 
-  or as a map of different shades/tints. 
-*/ 
-@function color( $name, $tint: 300 ) {
-  $colorOrMap: map-get( $colors, $name );
-
-  @if type-of( $colorOrMap ) == color {
-
-    @return $colorOrMap;
-
-  } @else {
-
-    @return map-get( $colorOrMap, $tint );
-
-  }
-};
 
 @function gradient( $type ) {
   $parameters: map-get( $gradients, $type );
   @return $parameters;
 }
 
-// Use this to convert color scheme to a set of css variables
-// https://stackoverflow.com/questions/50202991/unable-to-set-scss-variable-to-css-variable
 
-@mixin colorScheme( $name ) {
-  @if $name == 'horizon' {
-    --gradient: #{ gradient( 'horizon' ) };
+@function getColorTint( $color-or-map, $tint ) {
+  @if type-of( $color-or-map ) == color {
+
+    @return $color-or-map;
+
   } @else {
-    --gradient: #{ gradient( 'swamp' ) };
+
+    @return map-get( $color-or-map, $tint );
+
   }
+}
+
+@function color( $name, $theme: 'horizon', $tint: 300 ) {
+  $color-or-map: map-get( $general-colors, $name );
+
+  @if $color-or-map != null {
+
+    @return getColorTint( $color-or-map, $tint );
+
+  } @else {
+
+    $theme: map-get( $themed-colors, $theme );
+    @return getColorTint( map-get( $theme, $name ), $tint );
+  }
+};
+
+// Converts a color map to css variables
+// This allows for a simple color theme switch when using 
+// the regular css variables instead of the scss variables
+@mixin colorsToCSSVars( $colors, $prefix: 'color' ) {
+
+  @each $name, $color-or-map in $colors {
+
+    @if type-of( $color-or-map ) == color {
+
+      --#{$name}-#{$prefix}: #{$color-or-map};
+
+    } @else {
+
+      @each $tint, $color in $color-or-map {
+        @if $tint == 300 {
+          --#{$name}-#{$prefix}: #{$color};
+        }
+
+        --#{$name}-#{$prefix}-#{$tint}: #{$color};
+      }
+    }
+  }
+}
+
+// Use a specific colorscheme
+@mixin colorScheme( $theme ) {
+  @include colorsToCSSVars( $general-colors );
+  @include colorsToCSSVars( map-get( $themed-colors, $theme ) );
 }
