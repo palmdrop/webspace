@@ -23,13 +23,13 @@ $size: 1.0;
   }
 
   h2 {
-    font-size: pow( $min-heading-multiplier, 3 ) * $size;
+    font-size: pow( $min-heading-multiplier, 2 ) * $size;
 
     @include fluid-type( 
       $grow-start-width, 
       $grow-stop-width, 
-      pow( $min-heading-multiplier, 3 ) * $min-font-size * $size,
-      pow( $max-heading-multiplier, 3 ) * $min-font-size * $size
+      pow( $min-heading-multiplier, 2.0 ) * $min-font-size * $size,
+      pow( $max-heading-multiplier, 2.5 ) * $min-font-size * $size
     );
 
     letter-spacing: 0.3rem;
@@ -75,7 +75,7 @@ $size: 1.0;
   }
 }
 
-@include headings($size);
+@include headings( $size );
 
 .title {
   color: color( 'primary');

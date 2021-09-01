@@ -1,11 +1,16 @@
 import React from 'react'
+import Header from '../../components/header/Header';
 
 import './AboutPage.scss';
 
 const AboutPage = () : JSX.Element => {
   return (
     <div className="about-page">
-      About Page 
+      <Header 
+        mainTitle="About"
+        firstSubtitle="by Anton Hildingsson"
+        mainLevel={ 2 }
+      />
     </div>
   )
 }

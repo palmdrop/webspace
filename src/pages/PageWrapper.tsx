@@ -16,6 +16,7 @@ const PageWrapper = ( { route, colorScheme, children } : Props ) : JSX.Element =
   useEffect( () => {
     dispatch( setNextPageRoute( route ) );
     dispatch( setColorScheme( colorScheme ) );
+
   }, [ colorScheme ] );
 
   return (

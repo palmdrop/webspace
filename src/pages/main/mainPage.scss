@@ -6,6 +6,7 @@
   @include page();
 
   display: grid;
+
   gap: 1em;
   grid-template-rows: 0.1fr 1.1fr 0.1fr;
   grid-template-areas: 
@@ -85,9 +86,6 @@
       right: -5%;
     }
   }
-
-
-
 
   transition: 0.5s opacity;
   opacity: 1;

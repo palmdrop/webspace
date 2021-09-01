@@ -3,44 +3,19 @@ import Title from '../../../components/title/Title';
 
 import { ReactComponent as Obstacle } from '../../../assets/svg/obstacle1.svg';
 
+import Header from '../../../components/header/Header';
+
 import './MainHeader.scss';
 
-type Props = {
-  obstacleLocation? : number | null
-}
-
-const MainHeader = ( { obstacleLocation = null } : Props ) => {
+const MainHeader = () => {
   return (
-      <header className="main-header">
-        <div>
-          <Title 
-            level={ 1 }
-            text="OBSCURED"
-          />
-          <Bar
-            direction="horizontal"
-            variant="inset"
-          />
-
-          <Obstacle className={
-            //`main-header__obstacle ${ obstacleLocation ? `main-header__obstacle--location${ obstacleLocation }` : '' }`
-            'main-header__obstacle'
-          }
-          />
-
-          <div>
-            <Title
-              level={ 5 }
-              text="palm drop"
-            />
-            <Title
-              level={ 5 }
-              text="Experimental webspace, unclear blog and generative art"
-            />
-          </div>
-
-        </div>
-      </header>
+    <Header 
+      mainTitle="OBSCURED"
+      firstSubtitle="palm drop"
+      secondSubtitle="Experimental webspace, unclear blog and generative art"
+    >
+      <Obstacle className="header__obstacle" />
+    </Header>
   )
 }
 
