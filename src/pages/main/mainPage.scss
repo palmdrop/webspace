@@ -21,7 +21,7 @@
 
     grid-template-areas: 
       "header header"
-      ". navbar"
+      "navbar navbar"
       "info info"
     ;
   }
@@ -43,7 +43,9 @@
   .nav-bar {
     grid-area: navbar;
 
+
     @include medium {
+      justify-self: flex-end;
       padding: 0.4em;
 
     }
