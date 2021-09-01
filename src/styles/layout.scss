@@ -121,4 +121,10 @@ $page-max-width: $huge-device-width;
 
   animation: fadeIn 0.7s;
   opacity: 1;
+
+  transition: 0.5s opacity;
+  opacity: 1;
+  &--fade-out {
+    opacity: 0;
+  }
 }
