@@ -1,7 +1,7 @@
 import React from "react";
 
-import { useHistory } from "react-router-dom";
-import { setActiveNavBarEntry, setColorScheme, setNextPageRoute } from "../../../../state/slices/uiSlice";
+import { useNavigation } from "../../../../App";
+import { setActiveNavBarEntry } from "../../../../state/slices/uiSlice";
 import { useAppDispatch } from "../../../../state/store/hooks";
 
 import Button from "../../../input/button/Button";
@@ -16,29 +16,17 @@ type Props = {
 }
 
 const NavButton = ( { navEntry, active = false, index } : Props ) : JSX.Element => {
-  const history = useHistory();
   const dispatch = useAppDispatch();
+  const navigateTo = useNavigation();
 
   const handleClick = ( event : React.MouseEvent ) => {
-    navEntry.colorScheme && dispatch( setColorScheme( navEntry.colorScheme ));
-      
-    dispatch( setNextPageRoute( navEntry.route ) );
-
     navEntry.onClick?.( navEntry, index, event );
-
-    if( navEntry.redirectionDelay ) {
-      setTimeout( () => {
-        history.push( navEntry.route );
-      }, navEntry.redirectionDelay );
-    } else {
-      history.push( navEntry.route );
-    }
+    navigateTo( navEntry.route );
   };
 
   const handleHover = ( event : React.MouseEvent ) => {
-    dispatch( setActiveNavBarEntry( index ) );
-
     navEntry.onHover?.( navEntry, index, event );
+    dispatch( setActiveNavBarEntry( index ) );
   }
 
   return (

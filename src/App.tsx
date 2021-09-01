@@ -3,10 +3,11 @@ import React from "react";
 import {
   Switch,
   Route,
+  useHistory,
 } from "react-router-dom";
 
-import { useAppSelector } from "./state/store/hooks";
-import { ColorScheme, selectColorScheme, selectNextPageRoute } from "./state/slices/uiSlice";
+import { useAppDispatch, useAppSelector } from "./state/store/hooks";
+import { ColorScheme, selectColorScheme, selectNextPageRoute, setColorScheme, setNextPageRoute } from "./state/slices/uiSlice";
 
 import PageWrapper, { PageProps } from "./pages/PageWrapper";
 
@@ -68,6 +69,33 @@ export const pages : Page[] = [
     Component: MainPage
   }
 ];
+
+// Also store the page data in a map for easy access using path
+const routePageMap : Map<string, Page> = new Map(
+  pages.map( page => [ page.route, page ])
+);
+
+// Delay (for animation) before navigating to another page
+export const REDIRECTION_DELAY = 500;
+
+// Navigation hook that encapsulates the actions required to smoothly transition to another page
+// The purpose of this hook is to make it easy for any element to trigger a smooth page transition
+export const useNavigation = () => {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
+
+  const navigateTo = ( route : PageRoute ) => {
+    const page = routePageMap.get( route );
+    page && dispatch( setColorScheme( page.colorScheme ));
+
+    dispatch( setNextPageRoute( route ) );
+    setTimeout( () => {
+      history.push( route );
+    }, REDIRECTION_DELAY );
+  };
+
+  return navigateTo;
+};
 
 const App = () => {
   const colorScheme = useAppSelector( selectColorScheme );

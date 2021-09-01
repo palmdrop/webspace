@@ -5,13 +5,9 @@
 	overflow: hidden;
 	height: 100vh;
 
-  &--horizon {
-    @include colorScheme( 'horizon' );
+  @each $theme, $_ in $themed-colors {
+    &--#{$theme} {
+      @include colorScheme( $theme );
+    }
   }
-
-  &--swamp {
-    @include colorScheme( 'swamp' );
-  }
-
-  transition: 1s background-image;
 }

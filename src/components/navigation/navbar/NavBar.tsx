@@ -88,6 +88,7 @@ export const useNavBar = (
   currentRoute? : PageRoute, 
   onClick? : NavEntryCallback,
 ) : JSX.Element => {
+
   // The navbar entires are calculated using a function callback to avoid 
   // recalculating on each page re-render, and to make memoization possible
   const [ navEntries ] = useState( () => createNavEntries(
