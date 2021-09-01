@@ -1,0 +1,15 @@
+@import '../../../styles/fonts.scss';
+
+.faded-header {
+  header {
+    position: relative;
+    .title {
+      @include font( 'subheading' );
+      font-style: italic;
+      color: var( --foreground-color );
+
+      font-size: 8em;
+      opacity: 0.1;
+    }
+  }
+}
