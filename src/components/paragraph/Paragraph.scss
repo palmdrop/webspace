@@ -2,10 +2,22 @@
 @import '../../styles/fonts.scss';
 
 .paragraph {
-  font-size: 1.0em;
   line-height: 1.1rem;
   padding-bottom: 0.6em;
-  @include font( 'paragraph' );
 
   color: color( 'foreground' );
+
+
+  &--normal {
+    font-size: 1.0rem;
+    @include font( 'paragraph' );
+  }
+
+  &--bold {
+    text-transform: uppercase;
+    line-height: 1.4rem;
+    @include font( 'button' );
+  }
+
+  //width: 55ch;
 }

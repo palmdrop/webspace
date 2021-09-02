@@ -4,6 +4,8 @@ import { PageRoute } from '../App';
 import { ColorScheme, setColorScheme, setNextPageRoute } from '../state/slices/uiSlice';
 import { useAppDispatch } from '../state/store/hooks';
 
+import './PageWrapper.scss';
+
 type Props = {
   route : PageRoute,
   colorScheme : ColorScheme,
@@ -20,7 +22,7 @@ const PageWrapper = ( { route, colorScheme, children } : Props ) : JSX.Element =
   }, [ colorScheme ] );
 
   return (
-    <div className="page">
+    <div className="page-wrapper">
       { children }
     </div>
   )
