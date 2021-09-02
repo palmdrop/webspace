@@ -1,9 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import {
   Switch,
   Route,
   useHistory,
+  BrowserRouter as Router,
 } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "./state/store/hooks";
@@ -11,16 +12,17 @@ import { ColorScheme, selectColorScheme, selectNextPageRoute, setColorScheme, se
 
 import PageWrapper, { PageProps } from "./pages/PageWrapper";
 
-import MainPage from './pages/main/mainPage';
-import AboutPage from "./pages/about/AboutPage";
-import PiecesPage from "./pages/pieces/PiecesPage";
-import BlogPage from "./pages/blog/BlogPage";
-import ContactPage from "./pages/contact/ContactPage";
-
 import GradientBackground from "./components/ornamental/gradient/GradientBackground";
 import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
 import './App.scss';
+
+// Use lazy loading to load each page
+const MainPage = React.lazy( () => import("./pages/main/mainPage") );
+const AboutPage = React.lazy( () => import("./pages/about/AboutPage") );
+const PiecesPage = React.lazy( () => import("./pages/pieces/PiecesPage") );
+const BlogPage = React.lazy( () => import("./pages/blog/BlogPage") );
+const ContactPage = React.lazy( () => import("./pages/contact/ContactPage") );
 
 export enum PageRoute {
   root = '/',
@@ -31,10 +33,11 @@ export enum PageRoute {
 }
 
 export type Page = {
-  name: string,
-  route: PageRoute,
-  colorScheme: ColorScheme,
-  Component: React.FunctionComponent<PageProps>
+  name : string,
+  route : PageRoute,
+  colorScheme : ColorScheme,
+  scroll : boolean,
+  Component : React.FunctionComponent<PageProps>
 }
 
 export const pages : Page[] = [
@@ -42,30 +45,35 @@ export const pages : Page[] = [
     name: 'About',
     route: PageRoute.self,
     colorScheme: ColorScheme.swamp,
+    scroll: true,
     Component: AboutPage,
   },
   {
     name: 'Pieces',
     route: PageRoute.pieces,
     colorScheme: ColorScheme.swamp,
+    scroll: false,
     Component: PiecesPage
   },
   {
     name: 'Blog',
     route: PageRoute.blog,
     colorScheme: ColorScheme.swamp,
+    scroll: true,
     Component: BlogPage
   },
   {
     name: 'Contact',
     route: PageRoute.contact,
     colorScheme: ColorScheme.swamp,
+    scroll: false,
     Component: ContactPage
   },
   {
     name: 'Root',
     route: PageRoute.root,
     colorScheme: ColorScheme.horizon,
+    scroll: false,
     Component: MainPage
   }
 ];
@@ -105,26 +113,30 @@ const App = () => {
     <div className={ `app app--${ colorScheme }` }>
       <GradientBackground />
       <NoiseBackground opacity={ 0.4 } />
-      <Switch>
-      { pages.map( page => (
 
-        <Route 
-          key={ page.route }
-          path={ page.route }
-        >
-          <PageWrapper 
-            route={ page.route }
-            colorScheme={ page.colorScheme }
-          >
-            <page.Component 
-              route={ page.route }
-              fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
-            />
-          </PageWrapper>
-        </Route>
-
-      ))}
-      </Switch>
+      <Suspense fallback={ null }>
+        <Router>
+          <Switch>
+          { pages.map( page => (
+            <Route 
+              key={ page.route }
+              path={ page.route }
+            >
+              <PageWrapper 
+                route={ page.route }
+                colorScheme={ page.colorScheme }
+                scroll={ page.scroll }
+              >
+                <page.Component 
+                  route={ page.route }
+                  fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
+                />
+              </PageWrapper>
+            </Route>
+          ))}
+          </Switch>
+        </Router>
+      </Suspense>
     </div>
   );
 }

@@ -2,7 +2,6 @@
 @import './styles/ornaments.scss';
 
 .app {
-	overflow: hidden;
 	height: 100vh;
 
   @each $theme, $_ in $themed-colors {

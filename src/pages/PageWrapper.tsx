@@ -9,10 +9,11 @@ import './PageWrapper.scss';
 type Props = {
   route : PageRoute,
   colorScheme : ColorScheme,
+  scroll? : boolean,
   children : React.ReactChild | React.ReactChild[] 
 }
 
-const PageWrapper = ( { route, colorScheme, children } : Props ) : JSX.Element => {
+const PageWrapper = ( { route, colorScheme, scroll = true, children } : Props ) : JSX.Element => {
   const dispatch = useAppDispatch();
 
   useEffect( () => {
@@ -22,7 +23,7 @@ const PageWrapper = ( { route, colorScheme, children } : Props ) : JSX.Element =
   }, [ colorScheme ] );
 
   return (
-    <div className="page-wrapper">
+    <div className={ `page-wrapper ${ scroll ? 'page-wrapper--scroll' : '' }` }>
       { children }
     </div>
   )

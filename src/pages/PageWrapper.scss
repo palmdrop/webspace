@@ -1,4 +1,10 @@
 .page-wrapper {
-  overflow-y: auto;
-  scroll-behavior: smooth;
+  display: flex;
+  overflow: hidden;
+
+
+  &--scroll {
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
 }
