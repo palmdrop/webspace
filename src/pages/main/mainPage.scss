@@ -57,6 +57,10 @@
 
     padding: 0em 1.0em;
 
+    .paragraph {
+      max-width: 70ch;
+    }
+
     @include medium {
       padding: 0em;
       display: flex;

@@ -18,5 +18,5 @@
     @include font( 'button' );
   }
 
-  max-width: 55ch;
+  max-width: calc( min( 95vw, 55ch ) );
 }
