@@ -19,14 +19,16 @@ import { createNavEntry } from '../../components/navigation/navbar/NavBar';
 
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
+import GlassCard from '../../components/cards/glass/GlassCard';
 
-const AboutPage = ( { fadeOut, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
+// TODO text with link on top of each image? link to project piece, if existing
+
+const AboutPage = ( { route, fadeOut, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
   const [ rootNavEntry ] = useState( () => {
     const page = routePageMap.get( PageRoute.root );
     if( !page ) return null;
-    return createNavEntry( page, "home" );
+    return createNavEntry( page, "Go back" );
   });
-
 
   const createLazyImage = ( src : string, alt : string, height : number ) : JSX.Element => {
     let left : string | undefined;
@@ -44,6 +46,7 @@ const AboutPage = ( { fadeOut, scrollPosition } : PageProps & { scrollPosition :
 
     return (
       <div 
+        key={ src }
         className="about-page__lazy-image-container"
         style={ {
           left: left,
@@ -81,7 +84,7 @@ const AboutPage = ( { fadeOut, scrollPosition } : PageProps & { scrollPosition :
       }
 
       content.push(
-        <Paragraph>
+        <Paragraph key={ `paragraph-${ i }` }>
           { paragraphs[ i ] }
         </Paragraph>
       )
@@ -123,11 +126,18 @@ const AboutPage = ( { fadeOut, scrollPosition } : PageProps & { scrollPosition :
       </main>
 
       { rootNavEntry ? 
-        <NavButton 
-          navEntry={ rootNavEntry }
-          active={ false }
-          index={ 0 }
-        />
+
+        <aside className="about-page__aside">
+          <nav>
+            <GlassCard>
+              <NavButton 
+                navEntry={ rootNavEntry }
+                index={ 0 }
+              />
+            </GlassCard>
+          </nav>
+        </aside>
+
         : null
       }
     </div>
