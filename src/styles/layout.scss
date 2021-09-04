@@ -84,6 +84,7 @@ $page-max-width: $huge-device-width;
 @mixin padded-dimensions( $padding-horizontal, $padding-vertical ) {
   width: #{ 'calc( 100% - 2 * #{ $padding-horizontal } )' };
   min-height: #{ 'calc( 100vh - 2 * #{ $padding-vertical } )' };
+  max-width: 100%;
   padding: $padding-vertical $padding-horizontal;
 }
 
@@ -117,7 +118,6 @@ $page-max-width: $huge-device-width;
   position: relative;
 
   animation: fadeIn 0.7s;
-  opacity: 1;
 
   transition: 0.5s opacity;
   opacity: 1;

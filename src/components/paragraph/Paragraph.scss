@@ -7,7 +7,6 @@
 
   color: color( 'foreground' );
 
-
   &--normal {
     font-size: 1.0rem;
     @include font( 'paragraph' );
@@ -19,5 +18,5 @@
     @include font( 'button' );
   }
 
-  //width: 55ch;
+  max-width: 55ch;
 }

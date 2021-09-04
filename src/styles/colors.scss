@@ -34,7 +34,7 @@ $themed-colors: (
   ),
 );
 
-// Background gradients
+// Gradients
 $gradients: (
   'horizon': linear-gradient(
     180deg, 
@@ -46,6 +46,12 @@ $gradients: (
     color( 'secondary', 'swamp' ) 0%, 
     color( 'accent', 'swamp' ) 100% 
   ),
+
+
+  'swamp-blue': linear-gradient(
+    180deg, 
+    color( 'secondary' ) 0%, 
+    rgba(47, 148, 108, 0.1) 100%)
 );
 
 @function gradient( $type ) {

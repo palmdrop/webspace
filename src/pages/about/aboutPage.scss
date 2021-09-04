@@ -1,4 +1,6 @@
 @import '../../styles/layout.scss';
+@import '../../styles/colors.scss';
+@import '../../styles/ornaments.scss';
 
 .about-page {
   @include page();
@@ -7,10 +9,6 @@
 
   grid-template-rows: 
     10.0em 10em 0.0fr 0.0fr
-  ;
-
-  grid-template-columns: 
-    0.5fr 1.0fr 0.5fr
   ;
 
   grid-template-areas: 
@@ -90,15 +88,40 @@
   &__aside {
     position: fixed;
     bottom: 0;
-    padding: 1em;
+    padding: 1em 0em;
 
-    .glass-card {
+    nav {
+      position: relative;
+
       display: flex;
       flex-direction: row;
       justify-content: center;
 
-      width: 7em;
       padding: 1em;
+      width: 10em;
+
+      .nav-button {
+        * {
+          font-size: 1.2em;
+        }
+      }
+    }
+    .soft-disk {
+      position: absolute;
+
+      left: 50%;
+      top: 50%;
+
+      transform: translate3d( -50%, -50%, 0 );
+
+      width: 11em;
+      height: 4.0em;
+
+      backdrop-filter: $glass-backdrop-filter;
+
+      &:hover {
+        height: 11em;
+      }
     }
   }
 }

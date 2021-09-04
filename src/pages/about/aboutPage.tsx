@@ -20,6 +20,7 @@ import { createNavEntry } from '../../components/navigation/navbar/NavBar';
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
 import GlassCard from '../../components/cards/glass/GlassCard';
+import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
 
 // TODO text with link on top of each image? link to project piece, if existing
 
@@ -128,14 +129,15 @@ const AboutPage = ( { route, fadeOut, scrollPosition } : PageProps & { scrollPos
       { rootNavEntry ? 
 
         <aside className="about-page__aside">
-          <nav>
-            <GlassCard>
+          <div>
+            <SoftDisk />
+            <nav>
               <NavButton 
                 navEntry={ rootNavEntry }
                 index={ 0 }
               />
-            </GlassCard>
-          </nav>
+            </nav>
+          </div>
         </aside>
 
         : null
