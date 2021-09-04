@@ -32,6 +32,7 @@ $icon-size: 25%;
         width: $icon-size;
         height: auto;
 
+        // Filter created using https://codepen.io/sosuke/pen/Pjoqqp
         filter: invert(90%) sepia(25%) saturate(408%) hue-rotate(50deg) brightness(98%) contrast(89%);
       }
     }

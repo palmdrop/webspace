@@ -20,7 +20,7 @@ const PageWrapper = ( { route, colorScheme, scroll = true, children } : Props ) 
     dispatch( setNextPageRoute( route ) );
     dispatch( setColorScheme( colorScheme ) );
 
-  }, [ colorScheme ] );
+  }, [ colorScheme, dispatch, route ] );
 
   return (
     <div className={ `page-wrapper ${ scroll ? 'page-wrapper--scroll' : '' }` }>

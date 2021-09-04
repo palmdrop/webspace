@@ -2,7 +2,6 @@ import { PageRoute } from '../../../App';
 import { ReactComponent as Obstacle } from '../../../assets/svg/obstacle1.svg';
 
 import Header from '../../../components/header/Header';
-import NavButton from '../../../components/navigation/navbar/navbutton/NavButton';
 
 import './MainHeader.scss';
 

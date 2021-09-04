@@ -9,9 +9,12 @@ const GradientBackground = () : JSX.Element => {
   return (
     <div className="gradient-background">
     { Object.values( ColorScheme ).map( colorScheme => (
-        <div className={ 
-          `gradient-background__${ colorScheme } ${ activeColorScheme === colorScheme ? 'gradient-background--active' : '' }` 
-        }/>
+        <div 
+          key={ colorScheme }
+          className={ 
+            `gradient-background__${ colorScheme } ${ activeColorScheme === colorScheme ? 'gradient-background--active' : '' }` 
+          }
+        />
       )
     )}
     </div>
