@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAppSelector } from '../../../state/store/hooks';
 import { ColorScheme, selectActiveNavBarEntry } from '../../../state/slices/uiSlice';
 
-import { Page, PageRoute, pages } from '../../../App';
+import { Page, PageRoute, pages, REDIRECTION_DELAY } from '../../../App';
 
 import GlassCard from '../../cards/glass/GlassCard';
 import SoftDisk from '../../ornamental/disk/soft/SoftDisk';
@@ -56,10 +56,21 @@ const NavBar = ( { entries } : Props ) : JSX.Element => {
   )
 }
 
+export const createNavEntry = ( page : Page, text? : string, onClick? : NavEntryCallback ) : NavEntry => {
+  const { name, route, colorScheme } = page; 
+  
+  return { 
+    text: text || name, 
+    route,
+    colorScheme,
+    redirectionDelay : REDIRECTION_DELAY,
+    onClick,
+  };
+}
+
 // Helper function for creating an array of navbar entires
-export const createNavEntries = ( 
+const createNavEntries = ( 
   pages : Page[],
-  redirectionDelay : number,
   currentRoute? : PageRoute, 
   onClick? : NavEntryCallback, 
 ) : NavEntry[] => {
@@ -78,7 +89,7 @@ export const createNavEntries = (
       text: name, 
       route,
       colorScheme,
-      redirectionDelay,
+      redirectionDelay : REDIRECTION_DELAY,
       onClick,
     }));
 }
@@ -92,7 +103,7 @@ export const useNavBar = (
   // The navbar entires are calculated using a function callback to avoid 
   // recalculating on each page re-render, and to make memoization possible
   const [ navEntries ] = useState( () => createNavEntries(
-    pages, 500, currentRoute, onClick
+    pages, currentRoute, onClick
   ));
 
   return (

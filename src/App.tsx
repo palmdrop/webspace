@@ -19,10 +19,10 @@ import './App.scss';
 
 // Use lazy loading to load each page
 const MainPage = React.lazy( () => import("./pages/main/mainPage") );
-const AboutPage = React.lazy( () => import("./pages/about/AboutPage") );
-const PiecesPage = React.lazy( () => import("./pages/pieces/PiecesPage") );
-const BlogPage = React.lazy( () => import("./pages/blog/BlogPage") );
-const ContactPage = React.lazy( () => import("./pages/contact/ContactPage") );
+const AboutPage = React.lazy( () => import("./pages/about/aboutPage") );
+const PiecesPage = React.lazy( () => import("./pages/pieces/piecesPage") );
+const BlogPage = React.lazy( () => import("./pages/blog/blogPage") );
+const ContactPage = React.lazy( () => import("./pages/contact/contactPage") );
 
 export enum PageRoute {
   root = '/',
@@ -79,7 +79,7 @@ export const pages : Page[] = [
 ];
 
 // Also store the page data in a map for easy access using path
-const routePageMap : Map<string, Page> = new Map(
+export const routePageMap : Map<string, Page> = new Map(
   pages.map( page => [ page.route, page ])
 );
 

@@ -1,0 +1,10 @@
+.lazy-image {
+  position: relative;
+  opacity: 0;
+
+  transition: 1s opacity;
+
+  &--loaded {
+    opacity: 1;
+  }
+}

@@ -3,10 +3,12 @@
 .about-page {
   @include page();
 
+  position: relative;
+
   display: grid;
 
   grid-template-rows: 
-    10.0em 8em 0.0fr 0.0fr
+    10.0em 10em 0.0fr 0.0fr
   ;
 
   grid-template-columns: 
@@ -59,4 +61,41 @@
   &__main {
     grid-area: main;
   }
+
+  &__lazy-image-container {
+    position: relative;
+    padding: 2em 0em;
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    @include large {
+      //position: absolute;
+    }
+
+    .lazy-image {
+      position: absolute;
+      transform: translate(-0%);
+      transition: 1s opacity;
+
+      z-index: -1;
+
+      &--loaded {
+        animation: about-page-slide 1s;
+      }
+    }
+  }
+}
+
+@keyframes about-page-slide {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+  
 }
