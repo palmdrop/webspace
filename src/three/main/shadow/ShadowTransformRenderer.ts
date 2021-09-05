@@ -18,7 +18,8 @@ export class ShadowTransformRenderer {
     scene : THREE.Scene, 
     camera : THREE.Camera,
     renderer : THREE.WebGLRenderer,
-    blurKernels : number[] = [ 1, 2, 3, 4 ],
+    //blurKernels : number[] = [ 1, 1, 2, 3, 5, 7 ],
+    blurKernels : number[] = [ 1, 2 ],
     renderTarget? : THREE.WebGLRenderTarget | undefined | null
   ) {
 

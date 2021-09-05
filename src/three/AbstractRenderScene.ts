@@ -2,12 +2,14 @@ import * as THREE from 'three';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 
-import { AnimationLoop, RenderScene, Resizer } from "./core";
+import { AnimationLoop, RenderScene, Resizer, VoidCallback } from "./core";
 import { SimpleAnimationLoop } from './systems/AnimationLoop';
 import { SimpleResizer } from './systems/Resizer';
 
 export abstract class AbstractRenderScene implements RenderScene {
   canvas : HTMLCanvasElement;
+  onLoad? : VoidCallback;
+
   protected loop : AnimationLoop;
   protected resizer : Resizer;
 
@@ -17,8 +19,9 @@ export abstract class AbstractRenderScene implements RenderScene {
 
   protected composer? : EffectComposer;
 
-  constructor( canvas : HTMLCanvasElement ) {
+  constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     this.canvas = canvas;
+    this.onLoad = onLoad;
     this.loop = this.createLoop();
 
     this.renderer = this.createRenderer();

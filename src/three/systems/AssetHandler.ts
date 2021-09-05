@@ -43,7 +43,7 @@ class AssetHandler {
     }
 
 
-    onLoad( onProgress : ProgressCallback, onLoad : LoadedCallback ) {
+    onLoad( onProgress? : ProgressCallback, onLoad? : LoadedCallback ) {
         if( onLoad ) this.loadManager.onLoad = onLoad;
         if( onProgress ) this.onProgress = onProgress;
 

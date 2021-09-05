@@ -19,6 +19,7 @@ export interface Resizer {
 export interface RenderScene extends AnimationLoop {
 
   canvas : HTMLCanvasElement;
+  onLoad? : VoidCallback;
 
   render( delta : number, now : number ) : void;
   update( delta : number, now : number ) : void;
@@ -26,16 +27,16 @@ export interface RenderScene extends AnimationLoop {
   resize() : void;
 }
 
-export type RenderSceneConstructor = 
-  new( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) => RenderScene;
+export type RenderSceneConstructor<T extends RenderScene> = 
+  new( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) => T;
   
 
 /* Helper functions */
 
-export const createRenderScene = ( 
-  renderSceneConstructor : RenderSceneConstructor, 
+export const createRenderScene = <T extends RenderScene>( 
+  renderSceneConstructor : RenderSceneConstructor<T>, 
   canvas : HTMLCanvasElement,
   onLoad? : VoidCallback
-) : RenderScene => {
+) : T => {
   return new renderSceneConstructor( canvas, onLoad );
 }

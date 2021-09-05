@@ -72,7 +72,7 @@ export const pages : Page[] = [
     scroll: false,
     Component: ContactPage
   },
-  {
+  /*{
     name: 'Test',
     route: PageRoute.test,
     colorScheme: ColorScheme.horizon,
@@ -80,7 +80,7 @@ export const pages : Page[] = [
     Component: () => (<div className="test-page">
       <AnimationCanvas renderSceneConstructor={ MainRenderScene }/>
     </div>)
-  },
+  },*/
   {
     name: 'Root',
     route: PageRoute.root,
