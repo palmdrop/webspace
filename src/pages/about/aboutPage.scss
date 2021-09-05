@@ -71,17 +71,34 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-content: center;
+
+    height: 350px;
+
+    @include medium {
+      height: 350px * 1.3;
+    }
 
     @include large {
-      //position: absolute;
+      height: 350px * 1.7;
     }
 
     .lazy-image {
       position: absolute;
-      transform: translate(-0%);
+      transform: translate(0%);
       transition: 1s opacity;
 
       z-index: -1;
+
+      * {
+        @include medium {
+          transform: scale( 1.3 ) translateY( 30px );
+        }
+
+        @include large {
+          transform: scale( 1.7 ) translateY( 60px );
+        }
+      }
 
       &--loaded {
         animation: about-page-slide 1s;
@@ -133,7 +150,7 @@
       width: 11em;
       height: 4.0em;
 
-      backdrop-filter: $glass-backdrop-filter;
+      @include use-glass();
     }
   }
 }

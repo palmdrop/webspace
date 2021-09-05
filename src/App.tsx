@@ -16,6 +16,8 @@ import GradientBackground from "./components/ornamental/gradient/GradientBackgro
 import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
 import './App.scss';
+import AnimationCanvas from "./components/canvas/AnimationCanvas";
+import { MainRenderScene } from "./three/main/MainRenderScene";
 
 // Use lazy loading to load each page
 const MainPage = React.lazy( () => import("./pages/main/mainPage") );
@@ -30,6 +32,7 @@ export enum PageRoute {
   pieces = '/pieces',
   blog = '/blog',
   contact = '/contact',
+  test = '/test',
 }
 
 export type Page = {
@@ -68,6 +71,15 @@ export const pages : Page[] = [
     colorScheme: ColorScheme.swamp,
     scroll: false,
     Component: ContactPage
+  },
+  {
+    name: 'Test',
+    route: PageRoute.test,
+    colorScheme: ColorScheme.horizon,
+    scroll: false,
+    Component: () => (<div className="test-page">
+      <AnimationCanvas renderSceneConstructor={ MainRenderScene }/>
+    </div>)
   },
   {
     name: 'Root',

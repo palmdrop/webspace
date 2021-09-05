@@ -65,5 +65,17 @@ $text-shadows: (
   }
 }
 
-/* Filters */
+/* Glass */
 $glass-backdrop-filter: blur( 8px );
+
+@mixin use-glass {
+  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    background-color: var(--glass-color);
+    backdrop-filter: $glass-backdrop-filter;
+  }
+
+  @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    background-color: var(--glass-color);
+    backdrop-filter: $glass-backdrop-filter;
+  }
+}

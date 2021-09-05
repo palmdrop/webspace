@@ -1,26 +1,26 @@
 import React, { useState } from 'react'
 
-import { PageRoute, routePageMap } from '../../App';
-import { PageProps } from '../PageWrapper';
-
 import { ScrollPosition, trackWindowScroll } from 'react-lazy-load-image-component';
 import LazyImage from '../../components/media/image/LazyImage';
 
-
-import FadedHeader from '../../components/header/faded/FadedHeader';
-import Header from '../../components/header/Header';
-import Paragraph, { ParagraphType } from '../../components/paragraph/Paragraph';
-
-import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
-import { images, introduction, paragraphs } from './content';
+import { PageRoute, routePageMap } from '../../App';
+import { PageProps } from '../PageWrapper';
 
 import NavButton from '../../components/navigation/navbar/navbutton/NavButton';
 import { createNavEntry } from '../../components/navigation/navbar/NavBar';
 
+import FadedHeader from '../../components/header/faded/FadedHeader';
+import Header from '../../components/header/Header';
+import Paragraph, { ParagraphType } from '../../components/paragraph/Paragraph';
+import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
+
+import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
+
+import { images, introduction, paragraphs } from './content';
+
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
-import GlassCard from '../../components/cards/glass/GlassCard';
-import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
+
 
 // TODO text with link on top of each image? link to project piece, if existing
 
@@ -50,9 +50,9 @@ const AboutPage = ( { route, fadeOut, scrollPosition } : PageProps & { scrollPos
         key={ src }
         className="about-page__lazy-image-container"
         style={ {
-          left: left,
-          right: right,
-          height: height,
+          //left: left,
+          //right: right,
+          //height: height,
         }}
       >
         <LazyImage 
@@ -78,7 +78,7 @@ const AboutPage = ( { route, fadeOut, scrollPosition } : PageProps & { scrollPos
 
       if( i % paragraphsPerImage === 0 ) {
         content.push(
-          createLazyImage( images[ imageIndex ], "image", 500 )
+          createLazyImage( images[ imageIndex ], "image", 350 )
         );
 
         imageIndex++;

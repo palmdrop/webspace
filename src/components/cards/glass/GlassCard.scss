@@ -15,18 +15,6 @@
   ;
 
   border-radius: 20%;
-}
 
-@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-  .glass-card {
-    background-color: var(--glass-color);
-    backdrop-filter: $glass-backdrop-filter;
-  }
-}
-
-@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-  .glass-card {
-    background-color: var(--glass-color);
-    backdrop-filter: $glass-backdrop-filter;
-  }
+  @include use-glass();
 }

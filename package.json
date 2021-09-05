@@ -20,6 +20,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "three": "^0.131.3",
+    "three-kawase-blur": "github:ycw/three-kawase-blur",
     "typescript": "^4.3.5",
     "web-vitals": "^1.1.2"
   },
