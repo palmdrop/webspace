@@ -9,7 +9,6 @@ import Paragraph from '../../components/paragraph/Paragraph';
 import './mainPage.scss';
 import AnimationCanvas from '../../components/canvas/AnimationCanvas';
 import { MainRenderScene } from '../../three/main/MainRenderScene';
-import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 const rotationSpeed = 0.0005;
 

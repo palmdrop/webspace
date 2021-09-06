@@ -76,7 +76,7 @@ const ShadowTransformShader : THREE.Shader = {
     'opacity': { value: 2.9 },
     'offset': { value: new THREE.Vector2( -0, 0 ) },
 
-    'staticAmount': { value: 0.03 },
+    'staticAmount': { value: 0.07 },
 
     'zoom': { value: 1.0 },
     'zoomOrigin': { value: new THREE.Vector2( 0.5, 0.5 ) }
