@@ -1,14 +1,14 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { PageRoute } from '../App';
-import { ColorScheme, setColorScheme, setNextPageRoute } from '../state/slices/uiSlice';
+import { ColorThemes, setColorScheme, setNextPageRoute } from '../state/slices/uiSlice';
 import { useAppDispatch } from '../state/store/hooks';
 
 import './PageWrapper.scss';
 
 type Props = {
   route : PageRoute,
-  colorScheme : ColorScheme,
+  colorScheme : ColorThemes,
   scroll? : boolean,
   children : React.ReactChild | React.ReactChild[] 
 }

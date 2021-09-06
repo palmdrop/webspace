@@ -25,33 +25,55 @@ $themed-colors: (
   'swamp': (
     'primary': (
       300: #00FFD1,
-      400: #10FFA1,
+      400: #10FFE1,
       500: #20FFF1,
     ),
     
     'secondary': #A79A78,
     'accent': #1B674C,
   ),
+
+  'dirty': (
+    'primary': (
+      300: #D00000,
+      400: #E01010,
+      500: #F02020,
+    ),
+
+    'secondary': #947FB7, 
+    'accent': #978F43,
+  )
+
 );
 
 // Gradients
 $gradients: (
+
+  // Horizon
   'horizon': linear-gradient(
     180deg, 
     color( 'secondary', 'horizon' ) 0%, 
     color( 'accent', 'horizon' ) 100%
   ),
+
+  // Swamp
   'swamp': linear-gradient(
     180deg, 
     color( 'secondary', 'swamp' ) 0%, 
     color( 'accent', 'swamp' ) 100% 
   ),
-
-
   'swamp-blue': linear-gradient(
     180deg, 
     color( 'secondary' ) 0%, 
-    rgba(47, 148, 108, 0.1) 100%)
+    rgba(47, 148, 108, 0.1) 100%
+  ),
+
+  // Dirty
+  'dirty': linear-gradient(
+    180deg,
+    color( 'secondary', 'dirty' ) 0%,
+    color( 'accent', 'dirty' ) 100%,
+  )
 );
 
 @function gradient( $type ) {

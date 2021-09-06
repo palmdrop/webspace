@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import { useAppSelector } from '../../../state/store/hooks';
-import { ColorScheme, selectActiveNavBarEntry } from '../../../state/slices/uiSlice';
+import { ColorThemes, selectActiveNavBarEntry } from '../../../state/slices/uiSlice';
 
 import { Page, PageRoute, pages, REDIRECTION_DELAY } from '../../../App';
 
@@ -15,7 +15,7 @@ import './NavBar.scss';
 export type NavEntry = {
   text : string,
   route : PageRoute,
-  colorScheme? : ColorScheme,
+  colorScheme? : ColorThemes,
   redirectionDelay? : number,
   onClick? : NavEntryCallback,
   onHover? : NavEntryCallback

@@ -1,4 +1,4 @@
-import { ColorScheme, selectColorScheme } from '../../../state/slices/uiSlice';
+import { ColorThemes, selectColorScheme } from '../../../state/slices/uiSlice';
 import { useAppSelector } from '../../../state/store/hooks';
 
 import './GradientBackground.scss';
@@ -8,7 +8,7 @@ const GradientBackground = () : JSX.Element => {
 
   return (
     <div className="gradient-background">
-    { Object.values( ColorScheme ).map( colorScheme => (
+    { Object.values( ColorThemes ).map( colorScheme => (
         <div 
           key={ colorScheme }
           className={ 

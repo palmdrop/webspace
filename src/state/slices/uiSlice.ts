@@ -2,20 +2,22 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PageRoute } from "../../App";
 import { RootState } from "../store/store";
 
-export enum ColorScheme {
+export enum ColorThemes {
   horizon = 'horizon',
   swamp = 'swamp', 
+  dirty = 'dirty',
 };
+
 
 export interface UIState {
   activeNavBarEntry : number | null,
-  colorScheme : ColorScheme,
+  colorScheme : ColorThemes,
   nextPageRoute : PageRoute | null
 }
 
 const initialState : UIState = {
   activeNavBarEntry : null,
-  colorScheme : ColorScheme.horizon,
+  colorScheme : ColorThemes.horizon,
   nextPageRoute : null
 };
 
@@ -28,7 +30,7 @@ export const uiSlice = createSlice( {
     setActiveNavBarEntry : ( state, action : PayloadAction<number | null> ) => {
       state.activeNavBarEntry = action.payload;
     },
-    setColorScheme : ( state, action : PayloadAction<ColorScheme> ) => {
+    setColorScheme : ( state, action : PayloadAction<ColorThemes> ) => {
       state.colorScheme = action.payload;
     },
     setNextPageRoute : ( state, action : PayloadAction<PageRoute | null> ) => {

@@ -23,12 +23,10 @@
     @include fullscreen();
   }
 
-  &__horizon {
-    background-image: gradient( 'horizon' );
-  }
-
-  &__swamp {
-    background-image: gradient( 'swamp' );
+  @each $theme-name, $_ in $themed-colors {
+    &__#{$theme-name} {
+      background-image: gradient( $theme-name );
+    }
   }
 
   &--active {

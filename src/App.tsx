@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "./state/store/hooks";
-import { ColorScheme, selectColorScheme, selectNextPageRoute, setColorScheme, setNextPageRoute } from "./state/slices/uiSlice";
+import { ColorThemes, selectColorScheme, selectNextPageRoute, setColorScheme, setNextPageRoute } from "./state/slices/uiSlice";
 
 import PageWrapper, { PageProps } from "./pages/PageWrapper";
 
@@ -16,8 +16,6 @@ import GradientBackground from "./components/ornamental/gradient/GradientBackgro
 import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
 import './App.scss';
-import AnimationCanvas from "./components/canvas/AnimationCanvas";
-import { MainRenderScene } from "./three/main/MainRenderScene";
 
 // Use lazy loading to load each page
 const MainPage = React.lazy( () => import("./pages/main/mainPage") );
@@ -38,7 +36,7 @@ export enum PageRoute {
 export type Page = {
   name : string,
   route : PageRoute,
-  colorScheme : ColorScheme,
+  colorScheme : ColorThemes,
   scroll : boolean,
   Component : React.FunctionComponent<PageProps>
 }
@@ -47,28 +45,28 @@ export const pages : Page[] = [
   {
     name: 'About',
     route: PageRoute.self,
-    colorScheme: ColorScheme.swamp,
+    colorScheme: ColorThemes.swamp,
     scroll: true,
     Component: AboutPage,
   },
   {
     name: 'Pieces',
     route: PageRoute.pieces,
-    colorScheme: ColorScheme.swamp,
+    colorScheme: ColorThemes.dirty,
     scroll: false,
     Component: PiecesPage
   },
   {
     name: 'Blog',
     route: PageRoute.blog,
-    colorScheme: ColorScheme.swamp,
+    colorScheme: ColorThemes.swamp,
     scroll: true,
     Component: BlogPage
   },
   {
     name: 'Contact',
     route: PageRoute.contact,
-    colorScheme: ColorScheme.swamp,
+    colorScheme: ColorThemes.swamp,
     scroll: false,
     Component: ContactPage
   },
@@ -84,7 +82,7 @@ export const pages : Page[] = [
   {
     name: 'Root',
     route: PageRoute.root,
-    colorScheme: ColorScheme.horizon,
+    colorScheme: ColorThemes.horizon,
     scroll: false,
     Component: MainPage
   }
