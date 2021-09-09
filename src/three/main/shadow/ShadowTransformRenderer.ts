@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass';
 import { KawaseBlurPass } from '../../effects/kawaseBlur/KawaseBlurPass';
 
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
@@ -15,34 +15,40 @@ export class ShadowTransformRenderer {
   renderTarget : THREE.WebGLRenderTarget;
 
   constructor( 
-    scene : THREE.Scene, 
-    camera : THREE.Camera,
     renderer : THREE.WebGLRenderer,
-    //blurKernels : number[] = [ 1, 1, 2, 3, 5, 7 ],
-    blurKernels : number[] = [ 1, 2 ],
-    renderTarget? : THREE.WebGLRenderTarget | undefined | null
+    texture : THREE.Texture,
+    blurKernels : number[] = [ 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
   ) {
 
-    if( renderTarget ) {
-      this.renderTarget = renderTarget;
-    } else {
-      this.renderTarget = new THREE.WebGLRenderTarget( 
-        renderer.domElement.width, renderer.domElement.height, {
-        }
-      );
-    }
+    this.renderTarget = new THREE.WebGLRenderTarget( 
+      renderer.domElement.width, renderer.domElement.height, {
+    });
 
-    this.composer = new EffectComposer( renderer, this.renderTarget );
-
-    const renderPass = new RenderPass( scene, camera );
+    this.composer = 
+      new EffectComposer( renderer, this.renderTarget );
 
     this.kawaseBlurPass = new KawaseBlurPass( { renderer, kernels: blurKernels } );
 
     this.shadowTransformPass = new ShaderPass( ShadowTransformShader );
+    this.shadowTransformPass.uniforms[ 'offset' ].value.set(
+      -60, 90
+    );
+    this.shadowTransformPass.uniforms[ 'darkness' ].value = -1.0;
+    this.shadowTransformPass.uniforms[ 'opacity' ].value = 0.5;
+    this.shadowTransformPass.uniforms[ 'staticAmount' ].value = 0.04;
+
+    this.shadowTransformPass.uniforms[ 'zoom' ].value = 0.9;
+
+    this.shadowTransformPass.uniforms[ 'tint' ].value.setRGB(
+      2.3, 0.3, 1.1
+    );
+
 
     const copyPass = new ShaderPass( CopyShader );
 
-    this.composer.addPass( renderPass );
+    const renderTexturePass = new TexturePass( texture );
+    this.composer.addPass( renderTexturePass );
+
     this.composer.addPass( this.kawaseBlurPass );
     this.composer.addPass( this.shadowTransformPass );
     this.composer.addPass( copyPass );

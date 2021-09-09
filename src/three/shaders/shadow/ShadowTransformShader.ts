@@ -21,6 +21,8 @@ const fragmentShader = `
   uniform float zoom;
   uniform vec2 zoomOrigin;
 
+  uniform vec3 tint;
+
   uniform sampler2D tDiffuse;
   varying vec2 vUv;
 
@@ -64,12 +66,15 @@ const fragmentShader = `
     color = applyStatic( color, vUv );
     color -= vec3( darkness );
 
+    color *= tint;
+
     gl_FragColor = opacity * vec4( color * texel.a, texel.a );
   }
 `;
 
 const ShadowTransformShader : THREE.Shader = {
   uniforms: {
+    'tDiffuse': { value: null },
     'viewport': { value: new THREE.Vector2() },
 
     'darkness': { value: -0.2 },
@@ -79,7 +84,9 @@ const ShadowTransformShader : THREE.Shader = {
     'staticAmount': { value: 0.07 },
 
     'zoom': { value: 1.0 },
-    'zoomOrigin': { value: new THREE.Vector2( 0.5, 0.5 ) }
+    'zoomOrigin': { value: new THREE.Vector2( 0.5, 0.5 ) },
+
+    'tint': { value: new THREE.Color().setRGB( 1.0, 1.0, 1.0 ) }
   },
   vertexShader: vertexShader,
   fragmentShader: fragmentShader,

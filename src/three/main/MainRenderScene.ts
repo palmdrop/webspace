@@ -3,11 +3,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from '../effects/unrealBloom/UnrealBloomPass';
 
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls'
-
 import { VoidCallback } from "../core";
 import { AbstractRenderScene } from '../AbstractRenderScene';
-import { ShadowTransformRenderer } from './shadow/ShadowTransformRenderer';
 
 import { ASSETHANDLER } from '../systems/AssetHandler';
 
@@ -15,16 +12,68 @@ import t1 from '../../assets/texture/t2.png';
 import t2 from '../../assets/texture/t3.png';
 import t3 from '../../assets/texture/t1.png';
 import { random, randomElement } from '../../utils/Random';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { ShadowTransformShader } from '../shaders/shadow/ShadowTransformShader';
 
 type ObjectData = {
   object : THREE.Object3D,
   rotationSpeed : THREE.Vector3
 };
 
-export class MainRenderScene extends AbstractRenderScene {
-  private controls : TrackballControls;
+class BaseRenderer {
+  private composer : EffectComposer;
+  private transformPass : ShaderPass;
 
-  private shadowTransformRenderer : ShadowTransformRenderer;
+  renderTarget : THREE.WebGLRenderTarget;
+
+  constructor(
+    scene : THREE.Scene,
+    camera : THREE.Camera,
+    renderer : THREE.WebGLRenderer,
+    renderTarget? : THREE.WebGLRenderTarget | undefined | null
+  ) {
+    if( renderTarget ) {
+      this.renderTarget = renderTarget;
+    } else {
+      this.renderTarget = new THREE.WebGLRenderTarget( 
+        renderer.domElement.width, renderer.domElement.height, {
+        }
+      );
+    }
+
+    this.composer = new EffectComposer( renderer, this.renderTarget );
+
+    const renderPass = new RenderPass( scene, camera );
+
+    this.transformPass = new ShaderPass( ShadowTransformShader );
+    this.transformPass.uniforms[ 'darkness' ].value = -0.2;
+    this.transformPass.uniforms[ 'opacity' ].value = 2.9;
+    this.transformPass.uniforms[ 'offset' ].value.set( 0, 0 );
+    this.transformPass.uniforms[ 'staticAmount' ].value = 0.07;
+
+    const bloomPass = new UnrealBloomPass( renderer.getSize( new THREE.Vector2() ), 2.0, 0.3, 0.7 );
+
+    this.composer.addPass( renderPass );
+    this.composer.addPass( this.transformPass );
+    this.composer.addPass( bloomPass );
+
+  }
+
+  render( delta : number, now : number ) {
+    this.composer.render( delta );
+  }
+
+  setSize( width : number, height : number ) {
+    this.composer.setSize( width, height );
+
+    this.transformPass.uniforms[ 'viewport' ].value.set(
+      width, height
+    );
+  }
+}
+
+export class MainRenderScene extends AbstractRenderScene {
+  private baseRenderer : BaseRenderer;
 
   private sceneContent : THREE.Group;
   private lights : THREE.Object3D;
@@ -34,24 +83,19 @@ export class MainRenderScene extends AbstractRenderScene {
 
   private objects : ObjectData[];
 
+  private trueTransparency : boolean;
+
+  private rotationSpeed : number;
+  private rotationVelocity : THREE.Vector2;
+  private rotationAcceleration : THREE.Vector2;
+  private rotationFriction : number;
+
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     super( canvas, onLoad );
 
-    this.controls = new TrackballControls(
-      this.camera,
-      this.canvas
-    );
-
-    this.controls.rotateSpeed = 1;
-    this.controls.dynamicDampingFactor = 0.15;
-
-    this.composer = this.createPostProcessing();
-
-    this.shadowTransformRenderer = new ShadowTransformRenderer(
+    this.baseRenderer = new BaseRenderer(
       this.scene, this.camera, this.renderer,
     );
-
-    this.scene.background = this.shadowTransformRenderer.renderTarget.texture;
 
     this.sceneContent = new THREE.Group();
     this.lights = new THREE.Group();
@@ -60,20 +104,16 @@ export class MainRenderScene extends AbstractRenderScene {
     this.geometries = [];
     this.objects = [];
 
+    this.trueTransparency = false;
+
+    this.rotationSpeed = 0.05;
+    this.rotationVelocity = new THREE.Vector2();
+    this.rotationAcceleration = new THREE.Vector2();
+    this.rotationFriction = 0.12;
+
     this.populateScene();
 
     ASSETHANDLER.onLoad( undefined, this.onLoad );
-  }
-
-  private createPostProcessing() : EffectComposer {
-    const composer = new EffectComposer( this.renderer );
-    const renderPass = new RenderPass( this.scene, this.camera );
-    const bloomPass = new UnrealBloomPass( this.renderer.getSize( new THREE.Vector2() ), 1.4, 1.0, 0.7 );
-
-    composer.addPass( renderPass );
-    composer.addPass( bloomPass );
-
-    return composer;
   }
 
   private createLights() : void {
@@ -96,8 +136,8 @@ export class MainRenderScene extends AbstractRenderScene {
   private createMaterials() : void {
     for( let i = 0; i < 5; i++) {
       const color = new THREE.Color().setHSL(
-        random( 0.4, 0.3 ),
-        random( 0.7, 0.9 ),
+        random( 0.3, 0.4 ) + ( random( 0.0, 1.0 ) > 0.8 ? -0.35 : 0.0 ),
+        random( 0.5, 1.0 ),
         random( 0.4, 0.6 ),
       );
 
@@ -109,21 +149,21 @@ export class MainRenderScene extends AbstractRenderScene {
 
       const material = new THREE.MeshStandardMaterial( { 
           color: color,
-          transparent: false,
-          opacity: 0.4,
+          transparent: this.trueTransparency,
+          opacity: random( 0.25, 0.4 ),
 
-          metalness: 0,
-          roughness: random( 0, 1 ),
+          metalness: random( 0, 0.8 ),
+          roughness: random( 0.3, 1.0 ),
 
           bumpMap: texture,
-          bumpScale: 0.4,
+          bumpScale: random( 0.1, 0.25 ),
 
           alphaMap: texture,
 
           side: THREE.DoubleSide,
 
-          depthTest: false,
-          depthWrite: false,
+          depthTest: this.trueTransparency,
+          depthWrite: this.trueTransparency,
       });
 
       this.materials.push( material );
@@ -133,8 +173,9 @@ export class MainRenderScene extends AbstractRenderScene {
   private createGeometries() : void {
     this.geometries.push(
       new THREE.SphereBufferGeometry( 1.0, 30, 30, 30 ),
-      new THREE.TorusBufferGeometry( 1.0, 0.1, 3, 40 ),
-      new THREE.BoxBufferGeometry( 1.0, 1.0, 1.0 ),
+      new THREE.TorusBufferGeometry( 1.0, random( 0.03, 0.1 ), 3, 40 ),
+      //new THREE.BoxBufferGeometry( 1.0, 1.0, 1.0 ),
+      new THREE.DodecahedronBufferGeometry( 0.5, 0.0 )
     );
   }
 
@@ -152,7 +193,6 @@ export class MainRenderScene extends AbstractRenderScene {
       random( 0.1, 2.0 ),
       random( 0.1, 2.0 ),
     );
-     
 
     mesh.position.set(
       random( -0.5, 0.5 ),
@@ -173,8 +213,7 @@ export class MainRenderScene extends AbstractRenderScene {
 
     this.camera.lookAt( 0, 0, 0 );
 
-
-    for( let i = 0; i < 10; i++ ) {
+    for( let i = 0; i < Math.floor( random( 10, 20 ) ); i++ ) {
       const object = this.createObject();
       this.sceneContent.add(
         object
@@ -215,11 +254,11 @@ export class MainRenderScene extends AbstractRenderScene {
 
     this.createLights();
     this.scene.add( this.lights );
+
+    //this.scene.fog = new THREE.Fog( new THREE.Color( '#553311' ), 2.3, 8.0 );
   }
 
   update( delta : number, now : number ) : void {
-    this.controls.update();
-
     this.lights.rotation.x += 0.8 * delta;
     this.lights.rotation.y -= 0.6 * delta;
 
@@ -229,29 +268,27 @@ export class MainRenderScene extends AbstractRenderScene {
       objectData.object.rotation.y += objectData.rotationSpeed.y * delta;
       objectData.object.rotation.z += objectData.rotationSpeed.z * delta;
     }
+
+    this.sceneContent.rotation.x += this.rotationVelocity.x;
+    this.sceneContent.rotation.y += this.rotationVelocity.y;
+
+    this.rotationVelocity.add( this.rotationAcceleration );
+    this.rotationAcceleration.multiplyScalar( 1.0 - this.rotationFriction );
+    this.rotationVelocity.multiplyScalar( 1.0 - this.rotationFriction );
   }
 
   render( delta : number, now : number ) {
-    const background = this.scene.background;
-    this.scene.background = null;
-    this.sceneContent.visible = true;
-    this.shadowTransformRenderer.render( delta, now );
-
-    this.scene.background = background;
-    this.sceneContent.visible = false;
-    super.render( delta, now );
+    this.baseRenderer.render( delta, now );
   }
 
   resize() {
     super.resize();
 
-    this.shadowTransformRenderer.setSize( this.canvas.width, this.canvas.height );
-
-    this.composer?.setSize( this.canvas.width, this.canvas.height );
+    this.baseRenderer.setSize( this.canvas.width, this.canvas.height );
   }
 
   rotate( deltaX : number, deltaY : number ) {
-    this.sceneContent.rotation.y += deltaX;
-    this.sceneContent.rotation.x += deltaY;
+    this.rotationAcceleration.y += this.rotationSpeed * deltaX;
+    this.rotationAcceleration.x += this.rotationSpeed * deltaY;
   }
 }
