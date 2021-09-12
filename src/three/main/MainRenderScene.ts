@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { SSAARenderPass } from 'three/examples/jsm/postprocessing/SSAARenderPass';
 import { UnrealBloomPass } from '../effects/unrealBloom/UnrealBloomPass';
 
 import { VoidCallback } from "../core";
@@ -44,6 +45,7 @@ class BaseRenderer {
     this.composer = new EffectComposer( renderer, this.renderTarget );
 
     const renderPass = new RenderPass( scene, camera );
+    //const renderPass = new SSAARenderPass( scene, camera, 'black', 0 );
 
     this.transformPass = new ShaderPass( ShadowTransformShader );
     this.transformPass.uniforms[ 'darkness' ].value = -0.2;
@@ -174,7 +176,6 @@ export class MainRenderScene extends AbstractRenderScene {
     this.geometries.push(
       new THREE.SphereBufferGeometry( 1.0, 30, 30, 30 ),
       new THREE.TorusBufferGeometry( 1.0, random( 0.03, 0.1 ), 3, 40 ),
-      //new THREE.BoxBufferGeometry( 1.0, 1.0, 1.0 ),
       new THREE.DodecahedronBufferGeometry( 0.5, 0.0 )
     );
   }
@@ -254,8 +255,6 @@ export class MainRenderScene extends AbstractRenderScene {
 
     this.createLights();
     this.scene.add( this.lights );
-
-    //this.scene.fog = new THREE.Fog( new THREE.Color( '#553311' ), 2.3, 8.0 );
   }
 
   update( delta : number, now : number ) : void {
@@ -268,6 +267,9 @@ export class MainRenderScene extends AbstractRenderScene {
       objectData.object.rotation.y += objectData.rotationSpeed.y * delta;
       objectData.object.rotation.z += objectData.rotationSpeed.z * delta;
     }
+
+    this.sceneContent.rotation.x += 0.0005;
+    this.sceneContent.rotation.y += -0.0002;
 
     this.sceneContent.rotation.x += this.rotationVelocity.x;
     this.sceneContent.rotation.y += this.rotationVelocity.y;
