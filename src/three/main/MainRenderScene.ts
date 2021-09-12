@@ -106,10 +106,10 @@ export class MainRenderScene extends AbstractRenderScene {
 
     this.trueTransparency = false;
 
-    this.rotationSpeed = 0.05;
+    this.rotationSpeed = 0.00002;
     this.rotationVelocity = new THREE.Vector2();
     this.rotationAcceleration = new THREE.Vector2();
-    this.rotationFriction = 0.12;
+    this.rotationFriction = 0.15;
 
     this.populateScene();
 

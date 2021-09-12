@@ -12,13 +12,15 @@ export enum ColorThemes {
 export interface UIState {
   activeNavBarEntry : number | null,
   colorScheme : ColorThemes,
-  nextPageRoute : PageRoute | null
+  nextPageRoute : PageRoute | null,
+  activePiece : number | null
 }
 
 const initialState : UIState = {
   activeNavBarEntry : null,
   colorScheme : ColorThemes.horizon,
-  nextPageRoute : null
+  nextPageRoute : null,
+  activePiece : null,
 };
 
 export const uiSlice = createSlice( {
@@ -35,14 +37,18 @@ export const uiSlice = createSlice( {
     },
     setNextPageRoute : ( state, action : PayloadAction<PageRoute | null> ) => {
       state.nextPageRoute = action.payload;
+    },
+    setActivePiece : ( state, action : PayloadAction<number | null> ) => {
+      state.activePiece = action.payload;
     }
   }
 });
 
-export const { setActiveNavBarEntry, setColorScheme, setNextPageRoute } = uiSlice.actions;
+export const { setActiveNavBarEntry, setColorScheme, setNextPageRoute, setActivePiece } = uiSlice.actions;
 
 export const selectActiveNavBarEntry = ( state : RootState ) => state.ui.activeNavBarEntry;
 export const selectColorScheme = ( state : RootState ) => state.ui.colorScheme;
 export const selectNextPageRoute = ( state : RootState ) => state.ui.nextPageRoute;
+export const selectActivePiece = ( state : RootState ) => state.ui.activePiece;
 
 export default uiSlice.reducer;

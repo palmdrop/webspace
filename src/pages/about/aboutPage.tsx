@@ -20,6 +20,7 @@ import { images, introduction, paragraphs } from './content';
 
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
+import HomeBar from '../../components/navigation/home/HomeBar';
 
 
 // TODO text with link on top of each image? link to project piece, if existing
@@ -126,22 +127,9 @@ const AboutPage = ( { route, fadeOut, scrollPosition } : PageProps & { scrollPos
         { mainContent }
       </main>
 
-      { rootNavEntry ? 
-
-        <aside className="about-page__aside">
-          <div>
-            <SoftDisk />
-            <nav>
-              <NavButton 
-                navEntry={ rootNavEntry }
-                index={ 0 }
-              />
-            </nav>
-          </div>
-        </aside>
-
-        : null
-      }
+      <aside className="about-page__aside" >
+        <HomeBar />
+      </aside>
     </div>
   )
 }

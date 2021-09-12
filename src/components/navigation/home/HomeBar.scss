@@ -1,0 +1,36 @@
+@import '../../../styles/ornaments.scss';
+
+.home-bar {
+  position: relative;
+
+  nav {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    padding: 1em;
+    width: 10em;
+
+    .nav-button {
+      * {
+        font-size: 1.2em;
+      }
+    }
+  }
+
+  .soft-disk {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate3d( -50%, -50%, 0 );
+
+    width: 11em;
+    height: 4.0em;
+
+    @include use-glass();
+  }
+}

@@ -10,8 +10,6 @@ import './mainPage.scss';
 import AnimationCanvas from '../../components/canvas/AnimationCanvas';
 import { MainRenderScene } from '../../three/main/MainRenderScene';
 
-const rotationSpeed = 0.0005;
-
 const MainPage = ( { route, fadeOut } : PageProps ) : JSX.Element => {
   const mousePosition = useRef<{ x : number, y : number } | null>( null );
 
@@ -38,7 +36,7 @@ const MainPage = ( { route, fadeOut } : PageProps ) : JSX.Element => {
     const deltaX = event.clientX - previousX;
     const deltaY = event.clientY - previousY;
 
-    renderScene.rotate( rotationSpeed * deltaX, rotationSpeed * deltaY );
+    renderScene.rotate( deltaX, deltaY );
 
     mousePosition.current.x = event.clientX;
     mousePosition.current.y = event.clientY;

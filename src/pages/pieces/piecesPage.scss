@@ -1,0 +1,77 @@
+@import '../../styles/colors.scss';
+@import '../../styles/ornaments.scss';
+@import '../../styles/layout.scss';
+@import '../../styles/fonts.scss';
+
+.pieces-page {
+  @include page();
+
+  display: grid;
+
+  grid-template-rows: 
+    10.0em 10em 1.0fr 1.0fr
+  ;
+
+  grid-template-columns: 
+    0.5fr 0.1fr 0.5fr
+  ;
+
+  grid-template-areas: 
+    "header header header"
+    ". main ."
+    ". main ."
+    "pieces pieces pieces"
+  ;
+
+  .header {
+    grid-area: header;
+
+    .title {
+      width: 100%;
+    }
+  }
+
+  .information-display {
+    grid-area: main;
+
+    .faded-header {
+      .title {
+        width: 100%;
+      }
+
+      &__obstacle {
+        position: absolute;
+
+        width: 20em;
+        height: auto;
+
+        top:  -4.5em;
+        left: 17em;
+
+        transition: 3s top, 3s left, 3s transform;
+
+        opacity: 1.0;
+      }
+    }
+  }
+
+  &__aside {
+    position: fixed;
+    bottom: 10%;
+    left: 0;
+
+    padding: 1em;
+
+    @include medium {
+      left: unset;
+      right: 68%;
+    }
+
+    @include large {
+      left: unset;
+      right: 75%;
+    }
+  }
+
+
+}

@@ -53,7 +53,7 @@ export const pages : Page[] = [
     name: 'Pieces',
     route: PageRoute.pieces,
     colorScheme: ColorThemes.dirty,
-    scroll: false,
+    scroll: true,
     Component: PiecesPage
   },
   {
