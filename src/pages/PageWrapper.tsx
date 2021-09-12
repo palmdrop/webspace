@@ -9,11 +9,12 @@ import './PageWrapper.scss';
 type Props = {
   route : PageRoute,
   colorScheme : ColorThemes,
+  fadeOut : boolean,
   scroll? : boolean,
   children : React.ReactChild | React.ReactChild[] 
 }
 
-const PageWrapper = ( { route, colorScheme, scroll = true, children } : Props ) : JSX.Element => {
+const PageWrapper = ( { route, colorScheme, scroll = true, fadeOut, children } : Props ) : JSX.Element => {
   const dispatch = useAppDispatch();
 
   useEffect( () => {
@@ -23,15 +24,20 @@ const PageWrapper = ( { route, colorScheme, scroll = true, children } : Props ) 
   }, [ colorScheme, dispatch, route ] );
 
   return (
-    <div className={ `page-wrapper ${ scroll ? 'page-wrapper--scroll' : '' }` }>
+    <div 
+      className={ 
+        `page-wrapper 
+        ${ scroll ? 'page-wrapper--scroll' : '' } 
+        ${ fadeOut ? 'page-wrapper--fade-out' : '' }` 
+      }
+    >
       { children }
     </div>
   )
 }
 
 export type PageProps = {
-  route : PageRoute,
-  fadeOut : boolean
+  route : PageRoute
 }
 
 export default React.memo( PageWrapper );

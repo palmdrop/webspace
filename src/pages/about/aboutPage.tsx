@@ -25,7 +25,7 @@ import HomeBar from '../../components/navigation/home/HomeBar';
 
 // TODO text with link on top of each image? link to project piece, if existing
 
-const AboutPage = ( { route, fadeOut, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
+const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
   const [ rootNavEntry ] = useState( () => {
     const page = routePageMap.get( PageRoute.root );
     if( !page ) return null;
@@ -98,7 +98,7 @@ const AboutPage = ( { route, fadeOut, scrollPosition } : PageProps & { scrollPos
   const [ mainContent ] = useState( () => createMainContent() );
 
   return (
-    <div className={ `about-page ${ fadeOut ? 'about-page--fade-out' : '' }` }>
+    <div className={ `about-page` }>
       { /* Headers */ }
       <Header 
         mainTitle="OBSCURED"

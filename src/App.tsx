@@ -135,12 +135,10 @@ const App = () => {
               <PageWrapper 
                 route={ page.route }
                 colorScheme={ page.colorScheme }
+                fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
                 scroll={ page.scroll }
               >
-                <page.Component 
-                  route={ page.route }
-                  fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
-                />
+                <page.Component route={ page.route } />
               </PageWrapper>
             </Route>
           ))}

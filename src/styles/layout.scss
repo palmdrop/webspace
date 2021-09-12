@@ -89,15 +89,6 @@ $page-max-width: $huge-device-width;
 }
 
 /* Styled mixins */
-// TODO: just make a page component instead, if all pages share this functionality? or add arguments?
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  } 
-  to {
-    opacity: 1;
-  }
-}
 
 @mixin page() {
   @include padded-dimensions( 0.4 * $page-padding-horizontal, 0.8 * $page-padding-vertical );
@@ -116,12 +107,4 @@ $page-max-width: $huge-device-width;
   }
 
   position: relative;
-
-  animation: fadeIn 0.7s;
-
-  transition: 0.5s opacity;
-  opacity: 1;
-  &--fade-out {
-    opacity: 0;
-  }
 }

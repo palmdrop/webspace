@@ -10,7 +10,7 @@ import './mainPage.scss';
 import AnimationCanvas from '../../components/canvas/AnimationCanvas';
 import { MainRenderScene } from '../../three/main/MainRenderScene';
 
-const MainPage = ( { route, fadeOut } : PageProps ) : JSX.Element => {
+const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const mousePosition = useRef<{ x : number, y : number } | null>( null );
 
   const navBar = useNavBar( route );
@@ -45,8 +45,7 @@ const MainPage = ( { route, fadeOut } : PageProps ) : JSX.Element => {
   return (
     <div 
       className={ 
-        `main-page ${ fadeOut ? 'main-page--fade-out' : '' }` + 
-        ` ${ animationLoaded ? 'main-page--loaded' : '' }`
+        `main-page ${ animationLoaded ? 'main-page--loaded' : '' }`
       }
     >
       <MainHeader />
