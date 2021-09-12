@@ -65,7 +65,10 @@ const PiecesPage = () : JSX.Element => {
         subLevel={ 5 }
         linkTo={ PageRoute.root }
       />
-      { getMainContent() }
+      <main>
+        { getMainContent() }
+      </main>
+
       <PiecesList 
         pieces={ pieces }
       />

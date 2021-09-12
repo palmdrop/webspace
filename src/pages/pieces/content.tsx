@@ -2,11 +2,21 @@ export type Piece = {
   name : string,
   description : string[],
 
-  tags: string[],
-  index: number,
+  tags : string[],
+  index : number,
+
+  component: React.FunctionComponent
 }
 
 export const pieces : Piece[] = [];
+
+const c = () : JSX.Element => {
+  return (
+    <div>
+      fejifjei
+    </div>
+  )
+}
 
 for( let i = 0; i < 10; i++ ) {
   pieces.push( {
@@ -18,7 +28,9 @@ for( let i = 0; i < 10; i++ ) {
     ],
 
     tags: [ i + " tag1", i + " tag2" ],
-    index: i
+    index: i,
+
+    component: c
   })
 }
 

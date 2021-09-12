@@ -9,11 +9,11 @@
   display: grid;
 
   grid-template-rows: 
-    10.0em 10em 1.0fr 1.0fr
+    7.0em 10em 1.0fr 1.0fr
   ;
 
   grid-template-columns: 
-    0.5fr 0.1fr 0.5fr
+    0.5fr 0.5fr 0.5fr
   ;
 
   grid-template-areas: 
@@ -31,45 +31,50 @@
     }
   }
 
-  .information-display {
+  main {
     grid-area: main;
+    width: calc( min( 30em, 90vw ) );
+    .information-display {
 
-    .faded-header {
-      .title {
-        width: 100%;
-      }
+      .faded-header {
+        .title {
+          width: 100%;
+        }
 
-      &__obstacle {
-        position: absolute;
+        &__obstacle {
+          position: absolute;
 
-        width: 20em;
-        height: auto;
+          width: 20em;
+          height: auto;
 
-        top:  -4.5em;
-        left: 17em;
+          top:  -4.5em;
+          left: 17em;
 
-        transition: 3s top, 3s left, 3s transform;
+          transition: 3s top, 3s left, 3s transform;
 
-        opacity: 1.0;
+          opacity: 1.0;
+        }
       }
     }
   }
 
   &__aside {
     position: fixed;
-    bottom: 10%;
-    left: 0;
+    top: 0;
+    right: 0;
+
+    z-index: 1;
 
     padding: 1em;
 
     @include medium {
-      left: unset;
-      right: 68%;
+      right: unset;
+      left: 68%;
     }
 
     @include large {
-      left: unset;
-      right: 75%;
+      right: unset;
+      left: 75%;
     }
   }
 
