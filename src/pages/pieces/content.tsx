@@ -1,26 +1,26 @@
-export type Piece = {
+import React from 'react';
+
+import { ColorTheme } from "../../state/slices/uiSlice";
+import { Piece, PieceProps } from './pieces/pieces';
+import RetroCorePiece from "./pieces/retroCore/RetroCorePiece";
+
+export type PieceData = {
   name : string,
   description : string[],
 
   tags : string[],
   index : number,
 
-  component: React.FunctionComponent
+  Component: Piece,
+
+  colorTheme? : ColorTheme
 }
 
-export const pieces : Piece[] = [];
-
-const c = () : JSX.Element => {
-  return (
-    <div>
-      fejifjei
-    </div>
-  )
-}
+export const pieces : PieceData[] = [];
 
 for( let i = 0; i < 10; i++ ) {
   pieces.push( {
-    name: "Piece " + i,
+    name: "Wave wave",
 
     description: [
       "This is a short description of a digital 3d experiment, generative art or whatever, etc etc",
@@ -30,7 +30,8 @@ for( let i = 0; i < 10; i++ ) {
     tags: [ i + " tag1", i + " tag2" ],
     index: i,
 
-    component: c
+    Component: React.lazy( () => import( './pieces/retroCore/RetroCorePiece' ) ), 
+    colorTheme: ColorTheme.horizon
   })
 }
 

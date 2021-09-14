@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import { useAppSelector } from '../../../state/store/hooks';
-import { ColorThemes, selectActiveNavBarEntry } from '../../../state/slices/uiSlice';
+import { ColorTheme, selectActiveNavBarEntry } from '../../../state/slices/uiSlice';
 
 import { Page, PageRoute, pages, REDIRECTION_DELAY } from '../../../App';
 
@@ -15,7 +15,7 @@ import './NavBar.scss';
 export type NavEntry = {
   text : string,
   route : PageRoute,
-  colorScheme? : ColorThemes,
+  colorTheme? : ColorTheme,
   redirectionDelay? : number,
   onClick? : NavEntryCallback,
   onHover? : NavEntryCallback
@@ -59,12 +59,12 @@ const NavBar = ( { entries } : Props ) : JSX.Element => {
 }
 
 export const createNavEntry = ( page : Page, text? : string, onClick? : NavEntryCallback ) : NavEntry => {
-  const { name, route, colorScheme } = page; 
+  const { name, route, colorTheme } = page; 
   
   return { 
     text: text || name, 
     route,
-    colorScheme,
+    colorTheme,
     redirectionDelay : REDIRECTION_DELAY,
     onClick,
   };
@@ -87,10 +87,10 @@ const createNavEntries = (
     })
 
     // Map the Page data to a NavEntry
-    .map( ( { name, route, colorScheme } : Page ) : NavEntry => ( { 
+    .map( ( { name, route, colorTheme: colorScheme } : Page ) : NavEntry => ( { 
       text: name, 
       route,
-      colorScheme,
+      colorTheme: colorScheme,
       redirectionDelay : REDIRECTION_DELAY,
       onClick,
     }));

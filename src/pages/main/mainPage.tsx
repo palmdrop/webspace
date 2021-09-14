@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { PageProps } from '../PageWrapper';
 import { useNavBar } from '../../components/navigation/navbar/NavBar';
@@ -6,13 +6,14 @@ import MainHeader from './header/MainHeader';
 import MainFooter from './footer/MainFooter';
 import Paragraph from '../../components/paragraph/Paragraph';
 
-import './mainPage.scss';
 import AnimationCanvas from '../../components/canvas/AnimationCanvas';
 import { MainRenderScene } from '../../three/main/MainRenderScene';
 
-const MainPage = ( { route } : PageProps ) : JSX.Element => {
-  const mousePosition = useRef<{ x : number, y : number } | null>( null );
+import './mainPage.scss';
+import RetroCorePiece from '../pieces/pieces/retroCore/RetroCorePiece';
+import { MainPieceComponent, PieceWrapper } from '../pieces/pieces/pieces';
 
+const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const navBar = useNavBar( route );
 
   const [ animationLoaded, setAnimationLoaded ] = useState( false );
@@ -20,27 +21,6 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const onAnimationLoad = () : void => {
     setAnimationLoaded( true );
   }
-
-  const onMouseMove = ( event : MouseEvent, renderScene : MainRenderScene) => {
-    let previousX, previousY;
-
-    if( mousePosition.current === null ) {
-      previousX = event.clientX;
-      previousY = event.clientY;
-      mousePosition.current = { x : 0, y : 0 };
-    } else {
-      previousX = mousePosition.current.x;
-      previousY = mousePosition.current.y;
-    }
-
-    const deltaX = event.clientX - previousX;
-    const deltaY = event.clientY - previousY;
-
-    renderScene.rotate( deltaX, deltaY );
-
-    mousePosition.current.x = event.clientX;
-    mousePosition.current.y = event.clientY;
-  };
 
   return (
     <div 
@@ -64,10 +44,8 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
         </Paragraph>
       </div>
 
-      <AnimationCanvas 
-        renderSceneConstructor={ MainRenderScene }
-        onLoad={ onAnimationLoad }
-        onMouseMove={ onMouseMove }
+      <PieceWrapper 
+        PieceComponent={ MainPieceComponent }
       />
 
       <MainFooter />

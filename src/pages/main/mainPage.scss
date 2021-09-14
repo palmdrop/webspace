@@ -70,7 +70,8 @@
     }
   }
 
-  .animation-canvas {
+  
+  .piece > .animation-canvas {
     z-index: -1;
 
     $size: calc(min(80vh, 80vw));
@@ -98,12 +99,12 @@
 
     transform: translate3d( -50%, -50%, 0 );
 
-    opacity: 0;
+    opacity: 1;
     transition: 1.0s opacity;
   }
 
   &--loaded {
-    .animation-canvas {
+    .piece > .animation-canvas {
       opacity: 1;
     }
   }

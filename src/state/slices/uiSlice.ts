@@ -2,23 +2,22 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PageRoute } from "../../App";
 import { RootState } from "../store/store";
 
-export enum ColorThemes {
+export enum ColorTheme {
   horizon = 'horizon',
   swamp = 'swamp', 
   dirty = 'dirty',
 };
 
-
 export interface UIState {
   activeNavBarEntry : number | null,
-  colorScheme : ColorThemes,
+  colorTheme : ColorTheme,
   nextPageRoute : PageRoute | null,
   activePiece : number | null
 }
 
 const initialState : UIState = {
   activeNavBarEntry : null,
-  colorScheme : ColorThemes.horizon,
+  colorTheme : ColorTheme.horizon,
   nextPageRoute : null,
   activePiece : null,
 };
@@ -32,8 +31,8 @@ export const uiSlice = createSlice( {
     setActiveNavBarEntry : ( state, action : PayloadAction<number | null> ) => {
       state.activeNavBarEntry = action.payload;
     },
-    setColorScheme : ( state, action : PayloadAction<ColorThemes> ) => {
-      state.colorScheme = action.payload;
+    setColorTheme : ( state, action : PayloadAction<ColorTheme> ) => {
+      state.colorTheme = action.payload;
     },
     setNextPageRoute : ( state, action : PayloadAction<PageRoute | null> ) => {
       state.nextPageRoute = action.payload;
@@ -44,10 +43,10 @@ export const uiSlice = createSlice( {
   }
 });
 
-export const { setActiveNavBarEntry, setColorScheme, setNextPageRoute, setActivePiece } = uiSlice.actions;
+export const { setActiveNavBarEntry, setColorTheme, setNextPageRoute, setActivePiece } = uiSlice.actions;
 
 export const selectActiveNavBarEntry = ( state : RootState ) => state.ui.activeNavBarEntry;
-export const selectColorScheme = ( state : RootState ) => state.ui.colorScheme;
+export const selectColorTheme = ( state : RootState ) => state.ui.colorTheme;
 export const selectNextPageRoute = ( state : RootState ) => state.ui.nextPageRoute;
 export const selectActivePiece = ( state : RootState ) => state.ui.activePiece;
 

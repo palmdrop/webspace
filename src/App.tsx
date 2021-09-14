@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "./state/store/hooks";
-import { ColorThemes, selectColorScheme, selectNextPageRoute, setColorScheme, setNextPageRoute } from "./state/slices/uiSlice";
+import { ColorTheme, selectColorTheme, selectNextPageRoute, setColorTheme, setNextPageRoute } from "./state/slices/uiSlice";
 
 import PageWrapper, { PageProps } from "./pages/PageWrapper";
 
@@ -18,11 +18,11 @@ import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 import './App.scss';
 
 // Use lazy loading to load each page
-const MainPage = React.lazy( () => import("./pages/main/mainPage") );
-const AboutPage = React.lazy( () => import("./pages/about/aboutPage") );
-const PiecesPage = React.lazy( () => import("./pages/pieces/piecesPage") );
-const BlogPage = React.lazy( () => import("./pages/blog/blogPage") );
-const ContactPage = React.lazy( () => import("./pages/contact/contactPage") );
+const MainPage    = React.lazy( () => import( "./pages/main/mainPage" ) );
+const AboutPage   = React.lazy( () => import( "./pages/about/aboutPage" ) );
+const PiecesPage  = React.lazy( () => import( "./pages/pieces/piecesPage" ) );
+const BlogPage    = React.lazy( () => import( "./pages/blog/blogPage" ) );
+const ContactPage = React.lazy( () => import( "./pages/contact/contactPage" ) );
 
 export enum PageRoute {
   root = '/',
@@ -36,7 +36,7 @@ export enum PageRoute {
 export type Page = {
   name : string,
   route : PageRoute,
-  colorScheme : ColorThemes,
+  colorTheme : ColorTheme,
   scroll : boolean,
   Component : React.FunctionComponent<PageProps>
 }
@@ -45,44 +45,35 @@ export const pages : Page[] = [
   {
     name: 'About',
     route: PageRoute.self,
-    colorScheme: ColorThemes.swamp,
+    colorTheme: ColorTheme.swamp,
     scroll: true,
     Component: AboutPage,
   },
   {
     name: 'Pieces',
     route: PageRoute.pieces,
-    colorScheme: ColorThemes.dirty,
+    colorTheme: ColorTheme.dirty,
     scroll: true,
     Component: PiecesPage
   },
   {
     name: 'Blog',
     route: PageRoute.blog,
-    colorScheme: ColorThemes.swamp,
+    colorTheme: ColorTheme.swamp,
     scroll: true,
     Component: BlogPage
   },
   {
     name: 'Contact',
     route: PageRoute.contact,
-    colorScheme: ColorThemes.swamp,
+    colorTheme: ColorTheme.swamp,
     scroll: false,
     Component: ContactPage
   },
-  /*{
-    name: 'Test',
-    route: PageRoute.test,
-    colorScheme: ColorScheme.horizon,
-    scroll: false,
-    Component: () => (<div className="test-page">
-      <AnimationCanvas renderSceneConstructor={ MainRenderScene }/>
-    </div>)
-  },*/
   {
     name: 'Root',
     route: PageRoute.root,
-    colorScheme: ColorThemes.horizon,
+    colorTheme: ColorTheme.horizon,
     scroll: false,
     Component: MainPage
   }
@@ -90,7 +81,7 @@ export const pages : Page[] = [
 
 // Also store the page data in a map for easy access using path
 export const routePageMap : Map<string, Page> = new Map(
-  pages.map( page => [ page.route, page ])
+  pages.map( page => [ page.route, page ] )
 );
 
 // Delay (for animation) before navigating to another page
@@ -104,7 +95,7 @@ export const useNavigation = () => {
 
   const navigateTo = ( route : PageRoute ) => {
     const page = routePageMap.get( route );
-    page && dispatch( setColorScheme( page.colorScheme ));
+    page && dispatch( setColorTheme( page.colorTheme ));
 
     dispatch( setNextPageRoute( route ) );
     setTimeout( () => {
@@ -116,14 +107,15 @@ export const useNavigation = () => {
 };
 
 const App = () => {
-  const colorScheme = useAppSelector( selectColorScheme );
+  const colorTheme = useAppSelector( selectColorTheme );
   const nextPageRoute = useAppSelector( selectNextPageRoute );
 
   return (
-    <div className={ `app app--${ colorScheme }` }>
-      <GradientBackground />
+    <div className={ `app app--${ colorTheme }` }>
+      <GradientBackground colorTheme={ colorTheme } />
       <NoiseBackground opacity={ 0.4 } />
 
+      { /* No fallback, just display background while loading */ }
       <Suspense fallback={ null }>
         <Router>
           <Switch>
@@ -134,7 +126,7 @@ const App = () => {
             >
               <PageWrapper 
                 route={ page.route }
-                colorScheme={ page.colorScheme }
+                colorTheme={ page.colorTheme }
                 fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
                 scroll={ page.scroll }
               >

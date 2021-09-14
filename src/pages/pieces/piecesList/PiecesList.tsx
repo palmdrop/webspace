@@ -1,25 +1,23 @@
 import React, { useRef, useState } from "react";
+import { useHistory } from "react-router";
 import Button from "../../../components/input/button/Button";
 import { useAnimationFrame } from "../../../hooks/useAnimationFrame";
 import { useMousePosition } from "../../../hooks/useMousePosition";
 import { setActivePiece } from "../../../state/slices/uiSlice";
 import { useAppDispatch } from "../../../state/store/hooks";
 import { insideRect } from "../../../utils/geometry";
-import { Piece } from "../content";
+import { PieceData } from "../content";
 
 import './PiecesList.scss';
 
-const scrollSpeed = 400.0;
-const scrollFriction = 0.016;
-const scrollEdgeDamping = 30;
-const scrollThresholdSpeed = 1.0;
+type PieceClickCallback = ( piece : PieceData, event : React.MouseEvent ) => void;
 
-const scrollMaxSpeed = 1500.0;
+type EntryProps = {
+  piece : PieceData,
+  onClick : PieceClickCallback
+}
 
-const mousePlateau = 0.4;
-const mouseScrollSpeed = 0.04;
-
-export const PieceEntry = ( { piece } : { piece : Piece } ) : JSX.Element => {
+export const PieceEntry = ( { piece, onClick } : EntryProps ) : JSX.Element => {
   const dispatch = useAppDispatch();
 
   const handleHover = ( event : React.MouseEvent ) => {
@@ -32,9 +30,8 @@ export const PieceEntry = ( { piece } : { piece : Piece } ) : JSX.Element => {
   }
 
   const handleClick = ( event : React.MouseEvent ) => {
-    
+    onClick( piece, event );
   }
-
 
   return (
     <div className="piece-entry"
@@ -59,7 +56,22 @@ export const PieceEntry = ( { piece } : { piece : Piece } ) : JSX.Element => {
   )
 }
 
-export const PiecesList = ( { pieces } : { pieces : Piece[] } ) : JSX.Element => {
+const scrollSpeed = 400.0;
+const scrollFriction = 0.016;
+const scrollEdgeDamping = 30;
+const scrollThresholdSpeed = 1.0;
+
+const scrollMaxSpeed = 1500.0;
+
+const mousePlateau = 0.4;
+const mouseScrollSpeed = 0.04;
+
+type ListProps = {
+  pieces : PieceData[],
+  onPieceClick : PieceClickCallback
+}
+
+export const PiecesList = ( { pieces, onPieceClick } : ListProps ) : JSX.Element => {
   const mainContainerRef = useRef<HTMLDivElement>( null );
   const scrollVelocity = useRef( 0 );
   const scrollAcceleration = useRef( 0 );
@@ -72,6 +84,7 @@ export const PiecesList = ( { pieces } : { pieces : Piece[] } ) : JSX.Element =>
       <PieceEntry 
         key={ `${ piece.name }-${ piece.index }` }
         piece={ piece } 
+        onClick={ onPieceClick }
       />
     ))
   );
@@ -155,7 +168,6 @@ export const PiecesList = ( { pieces } : { pieces : Piece[] } ) : JSX.Element =>
       className="pieces-list"
       onWheel={ handleScroll }
     >
-
       <div 
         ref={ mainContainerRef }
         style={ {
