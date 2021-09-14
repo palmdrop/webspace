@@ -17,16 +17,15 @@ import Header from '../../components/header/Header';
 import HomeBar from '../../components/navigation/home/HomeBar';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Paragraph from '../../components/paragraph/Paragraph';
-import GradientBackground from '../../components/ornamental/gradient/GradientBackground';
 
-import { PieceData, pieces } from './content';
+import { pieces } from './pieces/pieces';
 import { PiecesList } from './piecesList/PiecesList';
 import { introduction } from './content';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
 import './piecesPage.scss';
-import { PieceWrapper } from './pieces/pieces';
+import { PieceData, PieceWrapper } from './pieces/pieces';
 
 const InformationDisplay = ( { title, paragraphs } : { title : string, paragraphs: string[] } ) : JSX.Element => {
   return (
@@ -49,8 +48,8 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
   const activePieceIndex = useSelector( selectActivePiece );
   const history = useHistory();
 
-  const handlePieceClick = ( piece : PieceData, event : React.MouseEvent ) : void => {
-    history.push( `${ route }/${ piece.index + 1 }` );
+  const handlePieceClick = ( piece : PieceData, index : number, event : React.MouseEvent ) : void => {
+    history.push( `${ route }/${ index + 1 }` );
   }
 
   const getMainContent = () : JSX.Element => {
@@ -79,11 +78,11 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
       <Suspense fallback={ null }>
         <Switch>
           { /* Piece routes */ }
-          { pieces.map( piece => {
+          { pieces.map( ( piece, index ) => {
             return (
               <Route
-                key={ piece.index }
-                path={ `${ route }/${ piece.index + 1 }` as string }
+                key={ index }
+                path={ `${ route }/${ index + 1 }` as string }
               >
                 <PieceWrapper
                   PieceComponent={ piece.Component } 

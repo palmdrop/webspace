@@ -1,5 +1,4 @@
 import AnimationCanvas from '../../../../components/canvas/AnimationCanvas';
-import { ColorTheme } from '../../../../state/slices/uiSlice';
 import { MainRenderScene } from '../../../../three/main/MainRenderScene';
 import { Piece } from '../pieces';
 

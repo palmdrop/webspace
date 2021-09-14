@@ -4,7 +4,6 @@
 @import '../../../styles/fonts.scss';
 
 .piece-entry {
-  margin: 0.0em;
   padding: 0.0em;
 
   display: flex;
@@ -26,16 +25,18 @@
       color: var(--primary-color-300);
       opacity: 0.4;
 
-      margin-right: 1.0em;
+      margin-left: 1.0em;
+      margin-right: 0.0em;
       margin-bottom: 0.5em;
     }
   }
 
   & > .button {
-    letter-spacing: 0.1em;
+    letter-spacing: 0.0em;
 
     font-size: 1.3em;
     width: 8em;
+    margin: 0em 0.5em;
     text-align: start;
 
     @include medium {
@@ -45,15 +46,9 @@
 
     &:hover {
       @include font( 'accent' );
-      letter-spacing: 0.23em;
+      letter-spacing: 0.13em;
     }
   }
-
-  /*transition: 0.3s transform;
-
-  &:hover {
-    transform: translateY(-50px);
-  }*/
 }
 
 .pieces-list {
@@ -66,6 +61,4 @@
     display: flex;
     justify-content: space-around;
   }
-
-  grid-area: pieces;
 }

@@ -9,7 +9,7 @@
   display: grid;
 
   grid-template-rows: 
-    7.0em 10em 1.0fr 1.0fr
+    7.0em 10em 0.0fr 1.0fr
   ;
 
   grid-template-columns: 
@@ -78,5 +78,7 @@
     }
   }
 
-
+  .pieces-list {
+    grid-area: pieces;
+  }
 }

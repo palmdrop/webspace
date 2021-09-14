@@ -11,7 +11,7 @@ import { MainRenderScene } from '../../three/main/MainRenderScene';
 
 import './mainPage.scss';
 import RetroCorePiece from '../pieces/pieces/retroCore/RetroCorePiece';
-import { MainPieceComponent, PieceWrapper } from '../pieces/pieces/pieces';
+import { FeaturedPieceComponent, PieceWrapper } from '../pieces/pieces/pieces';
 
 const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const navBar = useNavBar( route );
@@ -45,7 +45,7 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
       </div>
 
       <PieceWrapper 
-        PieceComponent={ MainPieceComponent }
+        PieceComponent={ FeaturedPieceComponent }
       />
 
       <MainFooter />

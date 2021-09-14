@@ -6,23 +6,23 @@ import { useMousePosition } from "../../../hooks/useMousePosition";
 import { setActivePiece } from "../../../state/slices/uiSlice";
 import { useAppDispatch } from "../../../state/store/hooks";
 import { insideRect } from "../../../utils/geometry";
-import { PieceData } from "../content";
+import { PieceData } from "../pieces/pieces";
 
 import './PiecesList.scss';
 
-type PieceClickCallback = ( piece : PieceData, event : React.MouseEvent ) => void;
+type PieceClickCallback = ( piece : PieceData, index : number, event : React.MouseEvent ) => void;
 
 type EntryProps = {
   piece : PieceData,
+  index : number,
   onClick : PieceClickCallback
 }
 
-export const PieceEntry = ( { piece, onClick } : EntryProps ) : JSX.Element => {
+export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Element => {
   const dispatch = useAppDispatch();
 
   const handleHover = ( event : React.MouseEvent ) => {
-
-    dispatch( setActivePiece( piece.index ) );
+    dispatch( setActivePiece( index ) );
   }
 
   const handleLeave = ( event : React.MouseEvent ) => {
@@ -30,7 +30,7 @@ export const PieceEntry = ( { piece, onClick } : EntryProps ) : JSX.Element => {
   }
 
   const handleClick = ( event : React.MouseEvent ) => {
-    onClick( piece, event );
+    onClick( piece, index, event );
   }
 
   return (
@@ -39,18 +39,25 @@ export const PieceEntry = ( { piece, onClick } : EntryProps ) : JSX.Element => {
       onMouseLeave={ handleLeave }
     >
       <div className="piece-entry__tags">
-        { piece.tags.map( tag => (
-          <Button 
-            key={ `${ tag }` }
-          >
-            { tag }
-          </Button>
-        ))}
+        { piece.tags.map( ( tag, index ) => {
+          let tagText = tag;
+          if( index !== piece.tags.length - 1 ) {
+            tagText += ','
+          }
+
+          return (
+            <Button 
+              key={ `${ tag }` }
+            >
+              { tagText }
+            </Button>
+          )
+        })}
       </div>
       <Button
         onClick={ handleClick }
       >
-        { `${ piece.index + 1 }. ${ piece.name }` }
+        { `${ index + 1 }. ${ piece.name }` }
       </Button>
     </div>
   )
@@ -80,10 +87,11 @@ export const PiecesList = ( { pieces, onPieceClick } : ListProps ) : JSX.Element
   const mousePosition = useMousePosition( mainContainerRef.current );
 
   const [ pieceEntries, ] = useState<JSX.Element[]>( () => 
-    pieces.map( piece => (
+    pieces.map( ( piece, index ) => (
       <PieceEntry 
-        key={ `${ piece.name }-${ piece.index }` }
+        key={ `${ piece.name }-${ index + 1 }` }
         piece={ piece } 
+        index={ index }
         onClick={ onPieceClick }
       />
     ))
