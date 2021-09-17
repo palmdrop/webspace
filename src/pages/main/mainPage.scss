@@ -103,12 +103,6 @@
     transition: 1.0s opacity;
   }
 
-  &--loaded {
-    .piece > .animation-canvas {
-      opacity: 1;
-    }
-  }
-
   .main-footer {
     position: absolute;
 

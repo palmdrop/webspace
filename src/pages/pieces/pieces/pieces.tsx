@@ -2,6 +2,8 @@ import React, { Suspense, useState } from "react";
 import GradientBackground from "../../../components/ornamental/gradient/GradientBackground";
 import { ColorTheme } from "../../../state/slices/uiSlice";
 
+import retroCoreImage from '../../../assets/content/pieces/retro-core/img1.png';
+
 import './pieces.scss';
 
 export type PieceProps = { onLoad : (() => void ) | undefined };
@@ -9,8 +11,8 @@ export type Piece = React.FunctionComponent<PieceProps>;
 export type PieceData = {
   name : string,
   description : string[],
-
   tags : string[],
+  image? : string,
 
   Component: React.LazyExoticComponent<Piece>,
 
@@ -38,13 +40,26 @@ export const pieces : PieceData[] = Array( 7 ).fill(
     tags : [
       "3d", "Geometry"
     ],
+    image: retroCoreImage,
+
     Component: React.lazy( () => import( './retroCore/RetroCorePiece' ) ),
     colorTheme: ColorTheme.horizon
   }
 );
 
-export const FeaturedPieceComponent = pieces[ 0 ].Component;
+pieces[ 1 ] = {
+  name: "Solar Chrome",
+  description: [
+    "Dummy"
+  ],
+  tags : [
+    "3d", "Warp"
+  ],
 
+  Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
+}
+
+export const FeaturedPieceComponent = pieces[ 0 ].Component;
 
 type PieceWrapperProps = {
   PieceComponent : Piece,

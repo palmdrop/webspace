@@ -37,7 +37,7 @@ export abstract class AbstractRenderScene implements RenderScene {
     });
   }
 
-  private createRenderer() : THREE.WebGLRenderer {
+  protected createRenderer() : THREE.WebGLRenderer {
     const renderer = new THREE.WebGLRenderer( {
       canvas: this.canvas,
       antialias: true,

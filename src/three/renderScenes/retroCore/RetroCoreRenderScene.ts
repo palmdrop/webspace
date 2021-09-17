@@ -1,20 +1,19 @@
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { SSAARenderPass } from 'three/examples/jsm/postprocessing/SSAARenderPass';
-import { UnrealBloomPass } from '../effects/unrealBloom/UnrealBloomPass';
+import { UnrealBloomPass } from '../../effects/unrealBloom/UnrealBloomPass';
 
-import { VoidCallback } from "../core";
-import { AbstractRenderScene } from '../AbstractRenderScene';
+import { VoidCallback } from "../../core";
+import { AbstractRenderScene } from '../../AbstractRenderScene';
 
-import { ASSETHANDLER } from '../systems/AssetHandler';
+import { ASSETHANDLER } from '../../systems/AssetHandler';
 
-import t1 from '../../assets/texture/t2.png';
-import t2 from '../../assets/texture/t3.png';
-import t3 from '../../assets/texture/t1.png';
-import { random, randomElement } from '../../utils/Random';
+import t1 from '../../../assets/texture/t2.png';
+import t2 from '../../../assets/texture/t3.png';
+import t3 from '../../../assets/texture/t1.png';
+import { random, randomElement } from '../../../utils/Random';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { ShadowTransformShader } from '../shaders/shadow/ShadowTransformShader';
+import { ShadowTransformShader } from '../../shaders/shadow/ShadowTransformShader';
 
 type ObjectData = {
   object : THREE.Object3D,
@@ -74,7 +73,7 @@ class BaseRenderer {
   }
 }
 
-export class MainRenderScene extends AbstractRenderScene {
+export class RetroCoreRenderScene extends AbstractRenderScene {
   private baseRenderer : BaseRenderer;
 
   private sceneContent : THREE.Group;

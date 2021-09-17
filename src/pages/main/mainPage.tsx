@@ -6,27 +6,15 @@ import MainHeader from './header/MainHeader';
 import MainFooter from './footer/MainFooter';
 import Paragraph from '../../components/paragraph/Paragraph';
 
-import AnimationCanvas from '../../components/canvas/AnimationCanvas';
-import { MainRenderScene } from '../../three/main/MainRenderScene';
-
 import './mainPage.scss';
-import RetroCorePiece from '../pieces/pieces/retroCore/RetroCorePiece';
 import { FeaturedPieceComponent, PieceWrapper } from '../pieces/pieces/pieces';
 
 const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const navBar = useNavBar( route );
 
-  const [ animationLoaded, setAnimationLoaded ] = useState( false );
-
-  const onAnimationLoad = () : void => {
-    setAnimationLoaded( true );
-  }
-
   return (
     <div 
-      className={ 
-        `main-page ${ animationLoaded ? 'main-page--loaded' : '' }`
-      }
+      className="main-page"
     >
       <MainHeader />
 

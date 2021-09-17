@@ -24,22 +24,48 @@ import { introduction } from './content';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
-import './piecesPage.scss';
 import { PieceData, PieceWrapper } from './pieces/pieces';
+import LazyImage from '../../components/media/image/LazyImage';
 
-const InformationDisplay = ( { title, paragraphs } : { title : string, paragraphs: string[] } ) : JSX.Element => {
+import './piecesPage.scss';
+import Title from '../../components/title/Title';
+
+type InformationDisplayProps = { 
+  title : string, 
+  paragraphs : string[], 
+  imagePath? : string, 
+  topHeader? : boolean 
+};
+
+const InformationDisplay = ( { title, paragraphs, imagePath, topHeader = false } : InformationDisplayProps ) => {
   return (
     <main className="information-display">
-      <FadedHeader
-        title={ title } 
-      >
-        <Obstacle className="faded-header__obstacle" />
-      </FadedHeader>
+      { topHeader ? (
+        <Title
+          level={ 4 }
+          text={ title }
+        />
+      ) : (
+        <FadedHeader
+          title={ title } 
+        >
+          <Obstacle className="faded-header__obstacle" />
+        </FadedHeader>
+      )}
       { paragraphs.map( paragraph => (
         <Paragraph>
           { paragraph }
         </Paragraph>
       ))}
+      { imagePath && (
+        <LazyImage 
+          src={ imagePath }
+          alt={ "" }
+          width={ 400 }
+          height={ 400 }
+          placeholder={ <div></div> }
+        />
+      )}
     </main>
   )
 }
@@ -66,10 +92,16 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
     }
 
     return (
-      <InformationDisplay
-        title={ title } 
-        paragraphs={ paragraphs }
-      />
+      <>
+        <InformationDisplay
+          title={ title } 
+          paragraphs={ paragraphs }
+          imagePath={ 
+            activePieceIndex !== null ? pieces[ activePieceIndex ].image : undefined 
+          }
+          topHeader={ activePieceIndex !== null }
+        />
+      </>
     )
   }
 

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass';
-import { KawaseBlurPass } from '../../effects/kawaseBlur/KawaseBlurPass';
+import { KawaseBlurPass } from '../kawaseBlur/KawaseBlurPass';
 
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
 import { ShadowTransformShader } from '../../shaders/shadow/ShadowTransformShader';

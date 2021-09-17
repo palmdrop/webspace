@@ -32,7 +32,6 @@ export type RenderSceneConstructor<T extends RenderScene> =
   
 
 /* Helper functions */
-
 export const createRenderScene = <T extends RenderScene>( 
   renderSceneConstructor : RenderSceneConstructor<T>, 
   canvas : HTMLCanvasElement,

@@ -1,32 +1,20 @@
 import React from 'react';
 
-import { ColorTheme } from "../../state/slices/uiSlice";
-import { PieceData } from './pieces/pieces';
-
-/*
-export const pieces : PieceData[] = [];
-
-for( let i = 0; i < 10; i++ ) {
-  pieces.push( {
-    name: "Wave wave",
-
-    description: [
-      "This is a short description of a digital 3d experiment, generative art or whatever, etc etc",
-      (""+i).repeat( 30 )
-    ],
-
-    tags: [ i + " tag1", i + " tag2" ],
-
-    Component: React.lazy( () => import( './pieces/retroCore/RetroCorePiece' ) ), 
-    colorTheme: ColorTheme.horizon
-  })
-}
-*/
-
 export const introduction = {
   title: "Pieces",
   description: [ 
-    "a short description of what I do, the areas of work, artistic ideas, experience, interests,", 
-    "what I've done before the purpose of this page, and so on" 
+    `
+    I here gather various web-based experiments and pieces. I enjoy exploring the possibilities
+    and aesthetics of the digital visual language. I also use generative techniques to procedurally
+    generate much of these.
+    `,
+    `
+    These things are brought to the web to make them as accessible to others as possible, and to not
+    be reduced to mere images and documentation placed on third-party platforms. Instagram or NFT
+    platforms ought not to have shared monopolies on art.
+    `,
+    `
+    The internet can once again be a interconnected web of personal nodes.
+    `
   ]
 }
