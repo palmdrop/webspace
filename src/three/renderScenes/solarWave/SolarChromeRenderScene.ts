@@ -1,28 +1,25 @@
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
-import { makeNoise3D } from 'fast-simplex-noise';
-
 import { AbstractRenderScene } from "../../AbstractRenderScene";
 import { VoidCallback } from "../../core";
+import { domainWarp, geometryWarp, twistWarp } from '../../geometry/warp/warp';
 
-const noise = makeNoise3D();
-type Position = { x : number, y : number, z : number };
-const getNoise = ( 
-  position : Position, 
-  offset : Position, 
-  frequency : number, 
-  min : number = -0.3, 
-  max : number = 0.3 
-) => {
-  return min + ( max - min ) * noise( 
-    position.x * frequency + offset.x, 
-    position.y * frequency + offset.y, 
-    position.z * frequency + offset.z );
-}
+import { ASSETHANDLER } from '../../systems/AssetHandler';
+
+import { random } from '../../../utils/Random';
+
+import noiseTexturePath from '../../../assets/noise/rgb/rgb-noise.jpg';
+import normalTexturePath from '../../../assets/normal/normal-texture1.jpg';
+import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 
 export class SolarChromeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
+
+  private object? : THREE.Object3D;
+
+  private materials? : THREE.Material[];
+  private geometries? : THREE.BufferGeometry[];
 
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     super( canvas, onLoad );
@@ -36,17 +33,17 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     this.controls = controls;
 
+    this.materials = [];
+    this.geometries = [];
 
     this.populateScene();
-
-    onLoad?.();
   }
 
   protected createRenderer() {
     const renderer = new THREE.WebGLRenderer({
         canvas: this.canvas,
         powerPreference: 'high-performance',
-        antialias: false,
+        antialias: true,
         depth: true,
         stencil: false,
         alpha: true
@@ -66,65 +63,78 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
   }
 
   private populateScene() {
+    this.camera.position.set( 0, 0, 8 );
+
     this.scene.background = new THREE.Color( '#632356' );
 
-    const xOffset = new THREE.Vector3( 100.0, 31.0, 51.0 );
-    const yOffset = new THREE.Vector3( -31.0, 0.0, 3.0 );
-    const zOffset = new THREE.Vector3( 38.0, -25.0, 10.0 );
+    const geometry = new THREE.SphereBufferGeometry( 1.0, 128, 128 );
 
-    const sphereGeometry = new THREE.SphereBufferGeometry( 1.0, 128, 128 );
+    geometryWarp( 
+      geometry,
 
-    const positionAttribute = sphereGeometry.attributes.position;
-    let frequency = 0.7;
-    let stretch = 0.1;
-    const iterations = 3;
-    
-    const averagePosition = new THREE.Vector3();
-    for(let k = 0; k < iterations; k++) {
-      for(let i = 0; i < positionAttribute.count; i++ ) {
-        let x = positionAttribute.getX( i );
-        let y = positionAttribute.getY( i );
-        let z = positionAttribute.getZ( i );
+      //0.7,
+      new THREE.Vector3( 0.1, 0.1, 0.1 ), // Frequency
+      0.5, // Amount
+      3,  // Octaves
+      2.0, // Lacunarity
+      0.6, // Persistance
 
-        let nx = x + getNoise( { x, y, z }, xOffset, frequency, -stretch, stretch );
-        let ny = y + getNoise( { x, y, z }, yOffset, frequency, -stretch, stretch );
-        let nz = z + getNoise( { x, y, z }, zOffset, frequency, -stretch, stretch );
-
-        positionAttribute.setXYZ( i, nx, ny, nz );
-
-        if(k === iterations - 1 ) {
-          averagePosition.x += nx;
-          averagePosition.y += ny;
-          averagePosition.z += nz;
+      [
+        { 
+          warpFunction : domainWarp,
+        }, 
+        {
+          warpFunction : twistWarp,
+          args : {
+            twistAmount : new THREE.Vector3( 1.0 * Math.random(), 1.0 * Math.random(), 1.0 * Math.random() ),
+            falloff : random( 0.8, 1.2 ),
+            anchor : new THREE.Vector3( 0.0 )
+          }
         }
-      }
-      frequency *= 2.0;
-      stretch *= -0.6;
-    }
+      ],
 
-    averagePosition.divideScalar( positionAttribute.count );
-
-    sphereGeometry.computeVertexNormals();
-
-    sphereGeometry.translate( -averagePosition.x, -averagePosition.y, -averagePosition.z );
-
-    const sphereMaterial = new THREE.MeshStandardMaterial( {
-      color: 'white',
-      roughness: 0.0,
-      metalness: 0.4,
-      side: THREE.DoubleSide
-    })
-    //const sphereMaterial = new THREE.MeshNormalMaterial();
-
-    const sphereMesh = new THREE.Mesh(
-      sphereGeometry,
-      sphereMaterial
+      true,
     );
 
-    sphereMesh.scale.set( 1.0, 2.3, 1.0 );
+    //TODO generate 4-5 shapes,then use geometri instancing to generate A LOT of shapes in the scene! change rotation, scale (stretch, morph) and ofc position
 
-    sphereMesh.castShadow = true;
-    sphereMesh.receiveShadow = true;
+    const material = 
+      new THREE.MeshStandardMaterial( {
+        color: 'white',
+        roughness: 0.3,
+        metalness: 0.7,
+
+        side: THREE.DoubleSide
+      })
+
+    ASSETHANDLER.loadTexture( normalTexturePath, false, ( texture ) => {
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.minFilter = THREE.NearestFilter;
+      texture.magFilter = THREE.LinearFilter;
+
+      texture.repeat.set( 10.0, 10.0 );
+
+      material.normalMap = texture;
+      material.normalScale = new THREE.Vector2( 0.1 );
+    });
+
+    ASSETHANDLER.loadHDR( this.renderer, hdriPath, ( hdri ) => {
+      material.envMap = hdri;
+      material.envMapIntensity = 0.9;
+    });
+
+    const mesh = new THREE.Mesh(
+      geometry,
+      material
+    );
+
+    mesh.scale.set( 1.5, 2.0, 1.5 );
+
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    this.object = mesh;
 
 
     const plane = new THREE.Mesh(
@@ -140,28 +150,34 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     plane.scale.set( 40, 40, 1.0 );
     plane.position.set( 0, 0, -6 );
 
-    this.scene.add( sphereMesh, plane );
+    this.scene.add( mesh, plane );
 
     const directionalLight = new THREE.DirectionalLight(
-      'white', 3.0
+      'white', 2.5
     );
 
-    directionalLight.position.set( 0, 3, 2 );
+    directionalLight.position.set( 0, 10, 10 );
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 48;
-    directionalLight.shadow.mapSize.height = 48;
+    directionalLight.shadow.mapSize.width = 512;
+    directionalLight.shadow.mapSize.height = 512;
     directionalLight.shadow.bias = -0.01;
 
-    const ambientLight = new THREE.AmbientLight( 'white', 1.0 );
+    const ambientLight = new THREE.AmbientLight( 'white', 0.7 );
 
     const hemisphereLight = new THREE.HemisphereLight( 'blue', 'brown', 5 );
 
     this.scene.add( directionalLight, hemisphereLight, ambientLight );
 
-    // this._createPostProcessing();
+    ASSETHANDLER.onLoad( undefined, () => {
+      material.needsUpdate = true;
+      this.onLoad?.();
+    });
   }
 
   update(delta: number, now: number): void {
     this.controls?.update();
+    if( this.object ) {
+      this.object.rotation.y += delta * 0.2;
+    }
   }
 }

@@ -7,7 +7,7 @@ import MainFooter from './footer/MainFooter';
 import Paragraph from '../../components/paragraph/Paragraph';
 
 import './mainPage.scss';
-import { FeaturedPieceComponent, PieceWrapper } from '../pieces/pieces/pieces';
+import { FeautredPiece, PieceWrapper } from '../pieces/pieces/pieces';
 
 const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const navBar = useNavBar( route );
@@ -33,7 +33,7 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
       </div>
 
       <PieceWrapper 
-        PieceComponent={ FeaturedPieceComponent }
+        pieceData={ FeautredPiece }
       />
 
       <MainFooter />

@@ -61,8 +61,7 @@ const InformationDisplay = ( { title, paragraphs, imagePath, topHeader = false }
         <LazyImage 
           src={ imagePath }
           alt={ "" }
-          width={ 400 }
-          height={ 400 }
+          height={ 300 }
           placeholder={ <div></div> }
         />
       )}
@@ -117,7 +116,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
                 path={ `${ route }/${ index + 1 }` as string }
               >
                 <PieceWrapper
-                  PieceComponent={ piece.Component } 
+                  pieceData={ piece }
                   backgroundColorTheme={ piece.colorTheme }
                 />
               </Route>

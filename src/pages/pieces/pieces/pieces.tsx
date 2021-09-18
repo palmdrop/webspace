@@ -19,7 +19,6 @@ export type PieceData = {
   colorTheme? : ColorTheme
 }
 
-
 export const pieces : PieceData[] = Array( 7 ).fill(
   {
     name: "Retro Core",
@@ -59,15 +58,15 @@ pieces[ 1 ] = {
   Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
 }
 
-export const FeaturedPieceComponent = pieces[ 0 ].Component;
+export const FeautredPiece = pieces[ 0 ];
 
 type PieceWrapperProps = {
-  PieceComponent : Piece,
+  pieceData : PieceData,
   backgroundColorTheme? : ColorTheme,
   onLoad? : () => void
 } 
 
-export const PieceWrapper = React.memo( ( { PieceComponent, backgroundColorTheme, onLoad } : PieceWrapperProps ) => {
+export const PieceWrapper = React.memo( ( { pieceData, backgroundColorTheme, onLoad } : PieceWrapperProps ) => {
   const [ isLoaded, setIsLoaded ] = useState( false );
 
   const handleLoad = () : void => {
@@ -77,11 +76,17 @@ export const PieceWrapper = React.memo( ( { PieceComponent, backgroundColorTheme
 
   return (
     <div className={ `piece-wrapper ${ isLoaded ? 'piece-wrapper--loaded' : '' }` }>
+      { !isLoaded && (
+        <div>
+          Loading 
+        </div>
+      )}
+
       { backgroundColorTheme && (
         <GradientBackground colorTheme={ backgroundColorTheme } /> 
       )}
       <Suspense fallback={ null }>
-        <PieceComponent 
+        <pieceData.Component 
           onLoad={ handleLoad }
         />
       </Suspense>
