@@ -1,3 +1,5 @@
+@import '../../../styles/fonts.scss';
+
 .piece {
   .animation-canvas {
     width: 100vw;
@@ -6,15 +8,73 @@
 }
 
 .piece-wrapper {
+  $root: #{ & };
+
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
 
-  opacity: 0;
-  transition: 1.0s opacity;
+  &__content {
+    opacity: 0;
+    transition: 1.0s opacity;
+  }
 
-  &--loaded {
+  &--loaded > &__content {
     opacity: 1;
   }
+
+  &__loading {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .title {
+      font-weight: 400;
+    }
+  }
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+
+    opacity: 0;
+    transition: 1s opacity;
+    pointer-events: none;
+
+    padding: 1.0em;
+
+    .title {
+      @include font( 'paragraph' );
+      font-style: italic;
+      font-size: 2em;
+
+      pointer-events: all;
+    }
+
+    .button {
+      pointer-events: all;
+
+      padding: 0.5em 0em;
+      padding-left: 0.15em;
+    }
+
+    #{ $root }__previous-button {
+      padding-right: 5em;
+    }
+
+    #{ $root }__next-button {
+
+    }
+  }
+
+  &--loaded > &__overlay {
+    opacity: 1;
+  }
+
 }

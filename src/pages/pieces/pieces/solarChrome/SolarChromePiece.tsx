@@ -1,5 +1,5 @@
 import AnimationCanvas from '../../../../components/canvas/AnimationCanvas';
-import { SolarChromeRenderScene } from '../../../../three/renderScenes/solarWave/SolarChromeRenderScene';
+import { SolarChromeRenderScene } from '../../../../three/renderScenes/solarChrome/SolarChromeRenderScene';
 import { Piece } from '../pieces';
 
 import '../pieces.scss';

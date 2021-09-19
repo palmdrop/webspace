@@ -5,7 +5,7 @@ import { AbstractRenderScene } from "../../AbstractRenderScene";
 import { VoidCallback } from "../../core";
 import { domainWarp, geometryWarp, twistWarp } from '../../geometry/warp/warp';
 
-import { ASSETHANDLER } from '../../systems/AssetHandler';
+import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
 import { random } from '../../../utils/Random';
 
@@ -73,11 +73,11 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
       geometry,
 
       //0.7,
-      new THREE.Vector3( 0.1, 0.1, 0.1 ), // Frequency
-      0.5, // Amount
+      new THREE.Vector3( 0.03, 0.03, 0.03 ), // Frequency
+      0.8, // Amount
       3,  // Octaves
-      2.0, // Lacunarity
-      0.6, // Persistance
+      3.0, // Lacunarity
+      0.7, // Persistance
 
       [
         { 
@@ -119,9 +119,11 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
       material.normalScale = new THREE.Vector2( 0.1 );
     });
 
-    ASSETHANDLER.loadHDR( this.renderer, hdriPath, ( hdri ) => {
-      material.envMap = hdri;
+    ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
+      material.envMap = dataTextureToEnvironmentMap( this.renderer, hdri );
       material.envMapIntensity = 0.9;
+
+      material.needsUpdate = true;
     });
 
     const mesh = new THREE.Mesh(
@@ -135,7 +137,6 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     mesh.receiveShadow = true;
 
     this.object = mesh;
-
 
     const plane = new THREE.Mesh(
       new THREE.PlaneBufferGeometry( 1.0, 1.0 ),
@@ -157,7 +158,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     );
 
     directionalLight.position.set( 0, 10, 10 );
-    directionalLight.castShadow = true;
+    //directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 512;
     directionalLight.shadow.mapSize.height = 512;
     directionalLight.shadow.bias = -0.01;

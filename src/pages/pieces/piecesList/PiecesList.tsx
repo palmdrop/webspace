@@ -6,16 +6,14 @@ import { useMousePosition } from "../../../hooks/useMousePosition";
 import { setActivePiece } from "../../../state/slices/uiSlice";
 import { useAppDispatch } from "../../../state/store/hooks";
 import { insideRect } from "../../../utils/geometry";
-import { PieceData } from "../pieces/pieces";
+import { PieceData, PieceNavigationFunction } from "../pieces/pieces";
 
 import './PiecesList.scss';
-
-type PieceClickCallback = ( piece : PieceData, index : number, event : React.MouseEvent ) => void;
 
 type EntryProps = {
   piece : PieceData,
   index : number,
-  onClick : PieceClickCallback
+  onClick : PieceNavigationFunction
 }
 
 export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Element => {
@@ -30,7 +28,7 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
   }
 
   const handleClick = ( event : React.MouseEvent ) => {
-    onClick( piece, index, event );
+    onClick( index, event );
   }
 
   return (
@@ -75,7 +73,7 @@ const mouseScrollSpeed = 0.04;
 
 type ListProps = {
   pieces : PieceData[],
-  onPieceClick : PieceClickCallback
+  onPieceClick : PieceNavigationFunction
 }
 
 export const PiecesList = ( { pieces, onPieceClick } : ListProps ) : JSX.Element => {

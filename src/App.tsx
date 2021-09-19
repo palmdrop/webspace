@@ -30,7 +30,6 @@ export enum PageRoute {
   pieces = '/pieces',
   blog = '/blog',
   contact = '/contact',
-  test = '/test',
 }
 
 export type Page = {

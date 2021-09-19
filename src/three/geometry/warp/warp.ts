@@ -40,7 +40,6 @@ export const domainWarp : TransformFunction = ( point, offset, frequency, amount
   }
 
   return noiseWarp( point, o, frequency, amount );
-  //return warpedPoint;
 }
 
 export const noiseWarp : TransformFunction = ( point, offset, frequency, amount, args = {} ) => {
@@ -53,22 +52,19 @@ export const noiseWarp : TransformFunction = ( point, offset, frequency, amount,
     sample.z += offset.z;
   }
 
-  let nx = x + getNoise3D( sample, xOffset, frequency, -amount, amount );
-  let ny = y + getNoise3D( sample, yOffset, frequency, -amount, amount );
-  let nz = z + getNoise3D( sample, zOffset, frequency, -amount, amount );
-
-  return { x : nx, y : ny, z : nz };
+  return {
+    x : x + getNoise3D( sample, xOffset, frequency, -amount, amount ),
+    y : y + getNoise3D( sample, yOffset, frequency, -amount, amount ),
+    z : z + getNoise3D( sample, zOffset, frequency, -amount, amount )
+  }
 }
 
 export const twistWarp : TransformFunction = ( point, offset, frequency, amount, args = {
   twistAmount : new THREE.Vector3( 0.0, 0.5, 0.0 ),
   falloff : 0.9,
-  anchor : new THREE.Vector3( 0.0 )
 } ) => {
-  const vector = tempVector1.subVectors( 
-    tempVector2.set( point.x, point.y, point.z ),
-    args.anchor as THREE.Vector3 
-  );
+  const vector = tempVector1.set( point.x, point.y, point.z );
+  tempVector2.copy( tempVector1 );
 
   const { x, y, z } = vector;
 
@@ -76,8 +72,8 @@ export const twistWarp : TransformFunction = ( point, offset, frequency, amount,
   vector.y *= Math.pow( args.falloff as number, Math.sqrt( x * x + z * z ) );
   vector.z *= Math.pow( args.falloff as number, Math.sqrt( x * x + y * y ) );
 
-  const amountVector = vector.multiply( args.twistAmount as THREE.Vector3 );
-  const euler = tempEuler.setFromVector3( amountVector );
+  vector.multiply( args.twistAmount as THREE.Vector3 );
+  const euler = tempEuler.setFromVector3( vector );
 
   tempVector2.applyEuler( euler );
 
@@ -116,14 +112,6 @@ export const geometryWarp = (
       let y = positionAttribute.getY( i );
       let z = positionAttribute.getZ( i );
 
-      /*
-      let warp =
-        domainWarp( { x, y, z }, null, frequency, amount );
-      warp = 
-        twistWarp( warp, null, frequency, amount );
-
-        */
-
       let warp = { x, y, z };
       for( let w = 0; w < warpEntries.length; w++ ) {
         const { 
@@ -134,7 +122,6 @@ export const geometryWarp = (
         warp = warpFunction( warp, null, frequency, amount, args );
       }
 
-      //positionAttribute.setXYZ( i, nx, ny, nz );
       positionAttribute.setXYZ( i, warp.x, warp.y, warp.z );
 
       if(k === octaves - 1 ) {

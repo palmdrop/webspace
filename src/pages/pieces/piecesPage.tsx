@@ -18,7 +18,7 @@ import HomeBar from '../../components/navigation/home/HomeBar';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Paragraph from '../../components/paragraph/Paragraph';
 
-import { pieces } from './pieces/pieces';
+import { PieceNavigationFunction, pieces } from './pieces/pieces';
 import { PiecesList } from './piecesList/PiecesList';
 import { introduction } from './content';
 
@@ -73,7 +73,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
   const activePieceIndex = useSelector( selectActivePiece );
   const history = useHistory();
 
-  const handlePieceClick = ( piece : PieceData, index : number, event : React.MouseEvent ) : void => {
+  const handlePieceNavigation : PieceNavigationFunction = ( index : number, event : React.MouseEvent ) : void => {
     history.push( `${ route }/${ index + 1 }` );
   }
 
@@ -116,8 +116,11 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
                 path={ `${ route }/${ index + 1 }` as string }
               >
                 <PieceWrapper
-                  pieceData={ piece }
+                  pieceIndex={ index }
                   backgroundColorTheme={ piece.colorTheme }
+                  showLoadingPage={ true }
+                  showOverlay={ true }
+                  handlePieceNavigation={ handlePieceNavigation }
                 />
               </Route>
             )
@@ -142,7 +145,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
 
             <PiecesList 
               pieces={ pieces }
-              onPieceClick={ handlePieceClick }
+              onPieceClick={ handlePieceNavigation }
             />
 
             <aside className="pieces-page__aside">

@@ -9,7 +9,13 @@ type LoadedCallback = () => void;
 
 type LoadMethod = ( path : string ) => any;
 
-type TextureLoadCallback = ( texture : THREE.Texture ) => void;
+type LoadCallback<T> = ( data : T ) => void;
+
+export const dataTextureToEnvironmentMap = ( renderer : THREE.WebGLRenderer, dataTexture : THREE.DataTexture ) => {
+    const pmremGenerator = new THREE.PMREMGenerator( renderer );
+    pmremGenerator.compileCubemapShader();
+    return pmremGenerator.fromEquirectangular( dataTexture ).texture;
+}
 
 class AssetHandler {
     loadManager: THREE.LoadingManager;
@@ -20,6 +26,9 @@ class AssetHandler {
     toLoad: number;
     loaded: number;
     onProgress: ProgressCallback | null;
+
+    renderer? : THREE.WebGLRenderer;
+    pmremGenerator? : THREE.PMREMGenerator;
 
     constructor() {
         this.loadManager = new THREE.LoadingManager();
@@ -55,15 +64,20 @@ class AssetHandler {
         return this;
     }
 
-    _loaded( path : string ) {
+    _loaded<T>( path : string, asset : T ) {
         this.loaded++;
         this.onProgress && this.onProgress( path, this.loaded, this.toLoad );
+
+        // And add the asset to the cache
+        this.cache.set( path, asset );
     }
 
-    _load( path : string, method : LoadMethod ) {
+    _load<T>( path : string, method : LoadMethod, callback? : LoadCallback<T> ) {
         // If asset is already loaded, return cached instance
         if( this.cache.has(path) ) {
-            return this.cache.get( path );
+            const data = this.cache.get( path );
+            callback?.( data );
+            return data;
         }
 
         // Increment number of assets to load
@@ -72,22 +86,19 @@ class AssetHandler {
         // Otherwise, load asset
         const asset = method( path );
 
-        // And add the asset to the cache
-        this.cache.set( path, asset );
-
         // And return the final asset
         return asset;
     }
 
-    loadTexture( path : string, useSRGB : boolean, callback? : TextureLoadCallback ) : THREE.Texture {
+    loadTexture( path : string, useSRGB : boolean, callback? : LoadCallback<THREE.Texture> ) : THREE.Texture {
         return this._load(path, (p) => { 
             const texture = this.textureLoader.load(p, texture => {
-                callback && callback( texture );
-                this._loaded( path );
+                callback?.( texture );
+                this._loaded( path, texture );
             });
             if( useSRGB ) texture.encoding = THREE.sRGBEncoding;
             return texture;
-        });
+        }, callback);
     }
 
     /*async loadGLTF(path) {
@@ -100,33 +111,14 @@ class AssetHandler {
         });
     }*/
 
-    loadHDR( renderer : THREE.WebGLRenderer, path : string, onLoad : TextureLoadCallback ) {
-        const pmremGenerator = new THREE.PMREMGenerator( renderer );
-        pmremGenerator.compileCubemapShader();
-
+    loadHDR( path : string, callback? : LoadCallback<THREE.DataTexture> ) {
         return this._load( path, p => {
             return this.rgbeLoader.load( p, ( texture ) => {
-                const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
-                onLoad( envMap );
-                this._loaded( path );
+                callback?.( texture );
+                this._loaded( path, texture );
             });
-        });
+        }, callback);
     }
-
-    /* loadImageHDRI(renderer, path, onLoad) {
-        return this._load(path, (p) => {
-            const texture = this.textureLoader.load(p, () => {
-                const rt = new THREE.WebGLCubeRenderTarget(texture.image.height);
-                rt.fromEquirectangularTexture(renderer, texture);
-
-                onLoad && onLoad(rt.texture);
-
-                return rt.texture;
-            });
-            this._loaded(path);
-            return texture;
-        });
-    } */
 };
 
 const ASSETHANDLER = new AssetHandler();
