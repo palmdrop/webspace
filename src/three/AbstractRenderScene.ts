@@ -6,12 +6,17 @@ import { AnimationLoop, RenderScene, Resizer, VoidCallback } from "./core";
 import { SimpleAnimationLoop } from './systems/AnimationLoop';
 import { SimpleResizer } from './systems/Resizer';
 
+type Resizeable = {
+  setSize : ( width : number, height : number ) => void
+}
+
 export abstract class AbstractRenderScene implements RenderScene {
   canvas : HTMLCanvasElement;
   onLoad? : VoidCallback;
 
   protected loop : AnimationLoop;
   protected resizer : Resizer;
+  protected resizeables : Resizeable[];
 
   protected renderer : THREE.WebGLRenderer;
   protected scene : THREE.Scene;
@@ -28,6 +33,7 @@ export abstract class AbstractRenderScene implements RenderScene {
     this.scene = this.createScene();
     this.camera = this.createCamera();
     this.resizer = this.createResizer();
+    this.resizeables = [];
   }
 
   private createLoop() : AnimationLoop {
@@ -90,6 +96,7 @@ export abstract class AbstractRenderScene implements RenderScene {
   resize(): void {
     this.resizer.resize( ( width : number, height : number ) => {
       this.composer?.setSize( width, height );
+      this.resizeables.forEach( resizeable => resizeable.setSize( width, height ) );
     });
   }
 

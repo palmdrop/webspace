@@ -91,16 +91,14 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
     }
 
     return (
-      <>
-        <InformationDisplay
-          title={ title } 
-          paragraphs={ paragraphs }
-          imagePath={ 
-            activePieceIndex !== null ? pieces[ activePieceIndex ].image : undefined 
-          }
-          topHeader={ activePieceIndex !== null }
-        />
-      </>
+      <InformationDisplay
+        title={ title } 
+        paragraphs={ paragraphs }
+        imagePath={ 
+          activePieceIndex !== null ? pieces[ activePieceIndex ].image : undefined 
+        }
+        topHeader={ activePieceIndex !== null }
+      />
     )
   }
 

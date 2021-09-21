@@ -12,14 +12,22 @@ import { random } from '../../../utils/Random';
 import noiseTexturePath from '../../../assets/noise/rgb/rgb-noise.jpg';
 import normalTexturePath from '../../../assets/normal/normal-texture1.jpg';
 import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
+import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
+import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
 
 export class SolarChromeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
 
-  private object? : THREE.Object3D;
+  private object : THREE.Object3D;
 
-  private materials? : THREE.Material[];
-  private geometries? : THREE.BufferGeometry[];
+  private rotationSpeed : number;
+  private rotationVelocity : THREE.Vector2;
+  private rotationAcceleration : THREE.Vector2;
+  private rotationFriction : number;
+
+  private backgroundRenderer : FullscreenQuadRenderer;
+  private backgroundColors : THREE.Color[];
+  private background : THREE.Texture;
 
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     super( canvas, onLoad );
@@ -33,10 +41,40 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     this.controls = controls;
 
-    this.materials = [];
-    this.geometries = [];
+    this.rotationSpeed = 0.00002;
+    this.rotationVelocity = new THREE.Vector2();
+    this.rotationAcceleration = new THREE.Vector2();
+    this.rotationFriction = 0.1;
 
-    this.populateScene();
+    const backgroundMaterial = new THREE.ShaderMaterial( createWarpGradientShader( 3 ) );
+    this.backgroundRenderer = new FullscreenQuadRenderer(
+      this.renderer,
+      backgroundMaterial,
+      new THREE.WebGLRenderTarget( canvas.width, canvas.height, {
+
+      })
+    );
+
+    this.backgroundColors = [
+      /*new THREE.Color( '30ffdf' ),
+      new THREE.Color( '#32ff33' ),
+      new THREE.Color( '#af30ff' ),
+      */
+      new THREE.Color( 'blue' ),
+      new THREE.Color( 'brown' ),
+      new THREE.Color( 'white' ),
+    ];
+
+    backgroundMaterial.uniforms[ 'colors' ].value = this.backgroundColors;
+    backgroundMaterial.uniforms[ 'frequency' ].value = 0.5;
+    backgroundMaterial.uniforms[ 'contrast' ].value = 1.9;
+    backgroundMaterial.uniforms[ 'brightness' ].value = 2.0;
+
+    this.resizeables.push( this.backgroundRenderer );
+
+    this.background = this.backgroundRenderer.renderTarget.texture;
+
+    this.object = this.populateScene();
   }
 
   protected createRenderer() {
@@ -49,13 +87,6 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
         alpha: true
     });
 
-    // SHADOWS
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    // COLOR AND LIGHTING
-    // if( this.useSRGB ) renderer.outputEncoding = THREE.sRGBEncoding;
-
     // enable the physically correct lighting model
     renderer.physicallyCorrectLights = true;
 
@@ -63,21 +94,25 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
   }
 
   private populateScene() {
-    this.camera.position.set( 0, 0, 8 );
-
-    this.scene.background = new THREE.Color( '#632356' );
+    this.scene.background = new THREE.Color( '#976cb8' );
 
     const geometry = new THREE.SphereBufferGeometry( 1.0, 128, 128 );
+
+    const maxFrequency = new THREE.Vector3( 0.2 );
+    const frequency = new THREE.Vector3( 
+      random( 0.05, maxFrequency.x ),
+      random( 0.05, maxFrequency.y ),
+      random( 0.05, maxFrequency.z )
+    );
 
     geometryWarp( 
       geometry,
 
-      //0.7,
-      new THREE.Vector3( 0.03, 0.03, 0.03 ), // Frequency
-      0.8, // Amount
+      frequency, // Frequency
+      ( maxFrequency.length() - frequency.length() ) * random( 10.0, 13.0 ) + 0.2, // Amount
       3,  // Octaves
-      3.0, // Lacunarity
-      0.7, // Persistance
+      random( 1.7, 2.5 ), // Lacunarity
+      random( 0.4, 0.6 ), // Persistance
 
       [
         { 
@@ -86,9 +121,12 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
         {
           warpFunction : twistWarp,
           args : {
-            twistAmount : new THREE.Vector3( 1.0 * Math.random(), 1.0 * Math.random(), 1.0 * Math.random() ),
-            falloff : random( 0.8, 1.2 ),
-            anchor : new THREE.Vector3( 0.0 )
+            twistAmount : new THREE.Vector3( 
+              1.2 * Math.random(), 
+              1.2 * Math.random(), 
+              1.2 * Math.random() 
+            ),
+            falloff : random( 0.8, 1.0 ),
           }
         }
       ],
@@ -133,39 +171,41 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     mesh.scale.set( 1.5, 2.0, 1.5 );
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.rotation.order = 'XYZ';
+
+    // Set camera to appropriate distance from object
+    const boundingBox = new THREE.Box3().setFromObject( mesh );
+    const maxSize = Math.max(
+      boundingBox.max.x - boundingBox.min.x,
+      boundingBox.max.y - boundingBox.min.y,
+      boundingBox.max.z - boundingBox.min.z,
+    );
+
+    this.camera.position.set( 0, 0, maxSize / 2.0 + 4 );
 
     this.object = mesh;
 
-    const plane = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry( 1.0, 1.0 ),
-      new THREE.MeshStandardMaterial( {
-        color: 'gray'
-      })
-    );
-
-    plane.receiveShadow = true;
-    plane.castShadow = true;
-
-    plane.scale.set( 40, 40, 1.0 );
-    plane.position.set( 0, 0, -6 );
-
-    this.scene.add( mesh, plane );
+    this.scene.add( mesh );
+    this.scene.background = this.background;
 
     const directionalLight = new THREE.DirectionalLight(
-      'white', 2.5
+      this.backgroundColors[ 2 ],
+      0.5
     );
 
     directionalLight.position.set( 0, 10, 10 );
-    //directionalLight.castShadow = true;
+    directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 512;
     directionalLight.shadow.mapSize.height = 512;
     directionalLight.shadow.bias = -0.01;
 
-    const ambientLight = new THREE.AmbientLight( 'white', 0.7 );
+    const ambientLight = new THREE.AmbientLight( 'white', 0.4 );
 
-    const hemisphereLight = new THREE.HemisphereLight( 'blue', 'brown', 5 );
+    //const hemisphereLight = new THREE.HemisphereLight( 'blue', 'brown', 5 );
+    const hemisphereLight = new THREE.HemisphereLight( 
+      this.backgroundColors[ 0 ],
+      this.backgroundColors[ 1 ],
+    5 );
 
     this.scene.add( directionalLight, hemisphereLight, ambientLight );
 
@@ -173,12 +213,32 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
       material.needsUpdate = true;
       this.onLoad?.();
     });
+
+    return mesh;
+  }
+
+  rotate( deltaX : number, deltaY : number ) {
+    this.rotationAcceleration.y += this.rotationSpeed * deltaX;
+    this.rotationAcceleration.x += this.rotationSpeed * deltaY;
   }
 
   update(delta: number, now: number): void {
     this.controls?.update();
-    if( this.object ) {
-      this.object.rotation.y += delta * 0.2;
-    }
+
+    this.object.rotation.y += delta * 0.14;
+
+    this.object.rotation.x += this.rotationVelocity.x;
+    this.object.rotation.y += this.rotationVelocity.y;
+
+    this.rotationVelocity.add( this.rotationAcceleration );
+    this.rotationAcceleration.multiplyScalar( 1.0 - this.rotationFriction );
+    this.rotationVelocity.multiplyScalar( 1.0 - this.rotationFriction );
+  }
+
+  resize() {
+    super.resize();
+
+    this.backgroundRenderer.render();
+    this.renderer.setRenderTarget( null );
   }
 }

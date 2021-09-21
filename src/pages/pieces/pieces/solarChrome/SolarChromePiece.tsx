@@ -6,7 +6,7 @@ import '../pieces.scss';
 
 const SolarChromePiece : Piece = ( { onLoad } ) : JSX.Element => {
   const onMouseMove = ( x : number, y : number, deltaX : number, deltaY : number, renderScene : SolarChromeRenderScene ) => {
-    //renderScene.rotate( deltaX, deltaY );
+    renderScene.rotate( deltaX, deltaY );
   };
 
   return (

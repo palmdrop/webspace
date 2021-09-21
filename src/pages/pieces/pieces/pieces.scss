@@ -39,42 +39,119 @@
     }
   }
 
-  &__overlay {
+  &__overlay-icon {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+
+    padding: 0.5em;
+    z-index: 100;
 
     opacity: 0;
-    transition: 1s opacity;
+    transform: translateX( -100% );
+    transition: 1s transform, 0.5s opacity;
+
+    &--visible {
+      opacity: 0.5;
+      transform: translateX( 0% );
+    }
+
+    @include font( 'paragraph' );
+    font-size: 1.5em;
+    color: var(--primary-color-300);
+
+    cursor: pointer;
+  }
+
+  &__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    visibility: 0;
+    opacity: 0;
     pointer-events: none;
+
+    transform: translateX( -20% );
+    transition: 1s transform, 0.5s opacity;
+
+    &--visible {
+      opacity: 1;
+      transform: translateX( 0 );
+      pointer-events: all;
+    }
 
     padding: 1.0em;
 
     .title {
       @include font( 'paragraph' );
       font-style: italic;
-      font-size: 2em;
+      font-size: 2.3em;
+    }
 
-      pointer-events: all;
+    .bar {
+      margin: 0.3em 0.0em;
     }
 
     .button {
-      pointer-events: all;
+      padding: 0.1em 0em;
+      font-size: 1.2em;
 
-      padding: 0.5em 0em;
-      padding-left: 0.15em;
+      &:hover {
+        @include font( 'accent' );
+        letter-spacing: 0.3em;
+      }
     }
 
-    #{ $root }__previous-button {
-      padding-right: 5em;
+
+    #{ $root }__index-back-home {
+      display: flex;
+      justify-content: center;
+
+      #{ $root }__back-button {
+        padding: 0.2em 0.0em;
+
+        color: var(--foreground-color);
+        opacity: 0.8;
+      }
     }
 
-    #{ $root }__next-button {
 
+    #{ $root }__piece-nav {
+      display: flex;
+
+      #{ $root }__previous-button {
+      }
+
+      #{ $root }__next-button {
+        margin-left: auto;
+      }
+    }
+
+    #{ $root }__overlay-close-button {
     }
   }
 
   &--loaded > &__overlay {
-    opacity: 1;
+    visibility: 1;
+  }
+
+  &__description {
+    margin-top: 1em;
+    width: 27ch;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100vh;
+      z-index: -1;
+      opacity: 0.1;
+
+      background-color: black;
+    }
   }
 
 }
