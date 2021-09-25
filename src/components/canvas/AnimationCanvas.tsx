@@ -4,14 +4,21 @@ import { useRef, useEffect } from 'react';
 import { createRenderScene, RenderScene, RenderSceneConstructor, VoidCallback } from '../../three/core';
 
 type MouseMoveCallback<T extends RenderScene> = ( x : number, y : number, deltaX : number, deltaY : number, renderScene : T ) => void;
+type MouseScrollCallback<T extends RenderScene> = ( deltaScroll : number, renderScene : T ) => void;
 
 type Props<T extends RenderScene> = {
   renderSceneConstructor : RenderSceneConstructor<T>,
   onLoad? : VoidCallback,
   onMouseMove? : MouseMoveCallback<T>,
+  onScroll? : MouseScrollCallback<T>,
 };
 
-const AnimationCanvas = <T extends RenderScene>( { renderSceneConstructor, onLoad, onMouseMove } : Props<T> ) : JSX.Element => {
+const AnimationCanvas = <T extends RenderScene>( { 
+  renderSceneConstructor, 
+  onLoad, 
+  onMouseMove,
+  onScroll
+} : Props<T> ) : JSX.Element => {
   const [ renderScene, setRenderScene ] = useState<T | null>( null );
   const mousePosition = useRef<{ x : number, y : number } | null>( null );
   const canvasRef = useRef<HTMLCanvasElement>( null );
@@ -41,15 +48,24 @@ const AnimationCanvas = <T extends RenderScene>( { renderSceneConstructor, onLoa
     mousePosition.current.y = event.clientY;
   };
 
+  const handleMouseScroll = ( event : React.WheelEvent ) => {
+    let deltaScroll = Math.sign( -event.deltaY );
+
+    renderScene && onScroll?.( deltaScroll, renderScene );
+  }
+
   const addListeners = () : void => {
     window.addEventListener( 'resize', handleResize );
+
     onMouseMove && window.addEventListener( 'mousemove', handleMouseMove );
+    //onScroll && window.addEventListener( '')
 
     handleResize();
   }
 
   const removeListeners = () : void => {
     window.removeEventListener( 'resize', handleResize );
+
     onMouseMove && window.removeEventListener( 'mousemove', handleMouseMove );
   }
 
@@ -78,6 +94,7 @@ const AnimationCanvas = <T extends RenderScene>( { renderSceneConstructor, onLoa
     <canvas
       className="animation-canvas"
       ref={ canvasRef }
+      onWheel={ handleMouseScroll }
     />
   )
 }

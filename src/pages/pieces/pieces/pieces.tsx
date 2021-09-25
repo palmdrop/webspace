@@ -1,16 +1,8 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
-import GradientBackground from "../../../components/ornamental/gradient/GradientBackground";
+import React from "react";
 import { ColorTheme } from "../../../state/slices/uiSlice";
 
 import retroCoreImage from '../../../assets/content/pieces/retro-core/img1.png';
-
-import './pieces.scss';
-import Title from "../../../components/title/Title";
-import Button from "../../../components/input/button/Button";
-import Bar from "../../../components/ornamental/bars/Bar";
-import { PageRoute } from "../../../App";
-import { useHistory } from "react-router";
-import Paragraph from "../../../components/paragraph/Paragraph";
+import solarChromeImage from '../../../assets/content/pieces/solar-chrome/img1.png';
 
 export type PieceProps = { onLoad : (() => void ) | undefined };
 export type Piece = React.FunctionComponent<PieceProps>;
@@ -60,178 +52,29 @@ export const pieces : PieceData[] = Array( 7 ).fill(
 pieces[ 1 ] = {
   name: "Solar Chrome",
   description: [
-    "Dummy"
+    "Generative geometry is exciting. Chrome is hip and cool. Modern and punk.",
+    `
+      I've been for a long time developing personal techniques based on perlin/simplex noise, domain warping,
+      recursion, and so on. Combining these with 3d creates interesting results. Simple geometrical shapes, like
+      spheres, are distorted using some underlying noise field. The result is alien.
+    `,
+    `
+      I especiall like the moments when the smooth, polished surface breaks down under too much distortion, and 
+      reveals the underlying digital geometry -- the mesh of triangles, a sense of something being unveiled. 
+    `,
+    `
+      In addition to this, I'd like to explore something futuristic, something not necessarily hopeful, but other.
+      Modern popular aesthetics seem to resort to the retro, and although this surely can be extremely striking and imaginative,
+      it's in certain ways always retrograde. I don't want to be feel stuck in a loop.
+    `
   ],
   tags : [
     "3d", "Warp"
   ],
 
+  image: solarChromeImage,
+
   Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
 }
 
 export const FeaturedPieceIndex = 0;
-
-type PieceWrapperProps = {
-  pieceIndex : number,
-  backgroundColorTheme? : ColorTheme,
-  onLoad? : () => void,
-  showLoadingPage? : boolean,
-  showOverlay? : boolean,
-  handlePieceNavigation? : PieceNavigationFunction
-} 
-
-export const PieceWrapper = React.memo( ( { 
-  pieceIndex, 
-  backgroundColorTheme, 
-  onLoad, 
-  showLoadingPage = false,
-  showOverlay = false,
-  handlePieceNavigation
-} : PieceWrapperProps ) => {
-  const fadeOutRef = useRef<NodeJS.Timeout | null>( null );
-
-  const [ isLoaded, setIsLoaded ] = useState( false );
-  const [ pieceData ] = useState( pieces[ pieceIndex ] );
-
-  const [ overlayVisible, setOverlayVisible ] = useState( true );
-
-  const history = useHistory();
-  
-  useEffect( ( ) => {
-    if( isLoaded ) {
-      handleOverlayBlur();
-    }
-  }, [ isLoaded ] );
-
-  const cancelFadeOut = () => {
-    if( fadeOutRef.current ) {
-      clearTimeout( fadeOutRef.current );
-    }
-  }
-
-  const handleOverlayFocus = () => {
-    cancelFadeOut();
-    setOverlayVisible( true );
-  }
-  
-  const handleOverlayBlur = () => {
-    cancelFadeOut();
-    fadeOutRef.current = setTimeout( () => {
-      setOverlayVisible( false );
-    }, 1500 );
-  }
-
-  const handleLoad = () : void => {
-    setIsLoaded( true );
-    onLoad?.();
-  }
-
-  const handlePrevious = ( event : React.MouseEvent ) => {
-    handlePieceNavigation?.( pieceIndex - 1, event );
-  }
-
-  const handleNext = ( event : React.MouseEvent ) => {
-    handlePieceNavigation?.( pieceIndex + 1, event );
-  }
-
-  const handleGoBack = ( event : React.MouseEvent ) => {
-    history.push( PageRoute.pieces );
-  }
-
-  return (
-    <div className={ `piece-wrapper ${ isLoaded ? 'piece-wrapper--loaded' : '' }` }>
-      { !isLoaded && showLoadingPage && (
-        <div className="piece-wrapper__loading">
-          <Title 
-            level={ 3 }
-            text={ `Loading ${ pieceData.name }...` }
-          />
-        </div>
-      )}
-
-      <div className="piece-wrapper__content">
-        { backgroundColorTheme && (
-          <GradientBackground colorTheme={ backgroundColorTheme } /> 
-        )}
-        <Suspense fallback={ null }>
-          <pieceData.Component 
-            onLoad={ handleLoad }
-          />
-        </Suspense>
-      </div>
-
-      { isLoaded && showOverlay && handlePieceNavigation && (
-        <div
-          className={ `piece-wrapper__overlay-icon ${ !overlayVisible ? "piece-wrapper__overlay-icon--visible" : "" }` }
-          onClick={ handleOverlayFocus }
-          onMouseEnter={ handleOverlayFocus }
-        >
-          { ">" }
-        </div>
-      )}
-
-      { ( isLoaded && showOverlay && handlePieceNavigation ) && (
-        <div 
-          className={ `piece-wrapper__overlay ${ overlayVisible ? "piece-wrapper__overlay--visible" : "" }` }
-          //onMouseEnter={ handleOverlayFocus }
-          onMouseLeave={ handleOverlayBlur }
-        >
-          <nav className="piece-wrapper__index-back-home">
-            <Button 
-              additionalClasses="piece-wrapper__back-button"
-              onClick={ handleGoBack }
-            >
-              { "<<< index <<<" }
-            </Button>
-          </nav>
-
-          <Title
-            level={ 3 }
-            text={ `${ pieceIndex + 1 }. ${ pieceData.name }` }
-          />
-
-          <Bar 
-            direction="horizontal"
-            variant="inset"
-          />
-
-          <nav className="piece-wrapper__piece-nav">
-            { ( pieceIndex !== 0 ) && (
-              <Button 
-                additionalClasses="piece-wrapper__previous-button"
-                onClick={ handlePrevious }
-              >
-                { "< previous" }
-              </Button>
-            )}
-            { ( pieceIndex !== pieces.length - 1 ) && (
-              <Button 
-                additionalClasses="piece-wrapper__next-button"
-                onClick={ handleNext }
-              >
-                { "next >" }
-              </Button>
-            )}
-          </nav>
-
-          <section className="piece-wrapper__description">
-            { pieceData.description.map( ( paragraph, index ) => (
-              <Paragraph
-                key={ `paragraph-${ index }` }
-              >
-                { paragraph }
-              </Paragraph>
-            ))}
-          </section>
-
-          <Button
-            additionalClasses="piece-wrapper__overlay-close-button"
-            onClick={ () => setOverlayVisible( false ) }
-          >
-            { "<<<" }
-          </Button>
-        </div>
-      )}
-    </div>
-  )
-})

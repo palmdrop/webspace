@@ -60,5 +60,26 @@
 
     display: flex;
     justify-content: space-around;
+
+    padding: 1em 1em;
+
+
+    &:before {
+      content: '';
+
+      top: -100%;
+      bottom: 0;
+      left: -100%;
+      right: -100%;
+
+      z-index: -1;
+      position: absolute;
+      background: linear-gradient(
+        180deg,
+        transparent,
+        var(--accent-color)
+      );
+    }
+
   }
 }

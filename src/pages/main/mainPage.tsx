@@ -6,8 +6,10 @@ import MainHeader from './header/MainHeader';
 import MainFooter from './footer/MainFooter';
 import Paragraph from '../../components/paragraph/Paragraph';
 
+import PieceWrapper from '../pieces/wrapper/PieceWrapper';
+import { FeaturedPieceIndex } from '../pieces/pieces/pieces';
+
 import './mainPage.scss';
-import { FeaturedPieceIndex, PieceWrapper } from '../pieces/pieces/pieces';
 
 const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const navBar = useNavBar( route );

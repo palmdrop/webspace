@@ -19,16 +19,16 @@ import FadedHeader from '../../components/header/faded/FadedHeader';
 import Paragraph from '../../components/paragraph/Paragraph';
 
 import { PieceNavigationFunction, pieces } from './pieces/pieces';
-import { PiecesList } from './piecesList/PiecesList';
+import { PiecesList } from './list/PiecesList';
 import { introduction } from './content';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
-import { PieceData, PieceWrapper } from './pieces/pieces';
 import LazyImage from '../../components/media/image/LazyImage';
 
 import './piecesPage.scss';
 import Title from '../../components/title/Title';
+import PieceWrapper from './wrapper/PieceWrapper';
 
 type InformationDisplayProps = { 
   title : string, 
@@ -61,7 +61,7 @@ const InformationDisplay = ( { title, paragraphs, imagePath, topHeader = false }
         <LazyImage 
           src={ imagePath }
           alt={ "" }
-          height={ 300 }
+          height={ 250 }
           placeholder={ <div></div> }
         />
       )}

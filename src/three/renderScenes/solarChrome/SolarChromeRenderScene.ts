@@ -3,7 +3,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 
 import { AbstractRenderScene } from "../../AbstractRenderScene";
 import { VoidCallback } from "../../core";
-import { domainWarp, geometryWarp, twistWarp } from '../../geometry/warp/warp';
+import { domainWarp, geometryWarp, noiseWarp, twistWarp } from '../../geometry/warp/warp';
 
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
@@ -14,6 +14,7 @@ import normalTexturePath from '../../../assets/normal/normal-texture1.jpg';
 import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
+import { clamp } from 'three/src/math/MathUtils';
 
 export class SolarChromeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
@@ -29,22 +30,38 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
   private backgroundColors : THREE.Color[];
   private background : THREE.Texture;
 
+  private minZ : number;
+  private maxZ : number;
+  private zoomSpeed : number;
+  private zoomVelocity : number;
+
+  private zoomFriction : number;
+  private zoomLimitThreshold : number;
+
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     super( canvas, onLoad );
 
-    const controls = new TrackballControls( this.camera,
+    this.zoomSpeed = 0.12;
+    this.zoomVelocity = 0.0;
+    this.zoomFriction = 0.07;
+    this.zoomLimitThreshold = 0.3;
+
+    this.camera.far = 10000;
+
+    /*const controls = new TrackballControls( this.camera,
       canvas
-    );
+    );*/
 
-    controls.rotateSpeed = 1;
-    controls.dynamicDampingFactor = 0.15;
+    //controls.rotateSpeed = 1;
+    //controls.dynamicDampingFactor = 0.15;
 
-    this.controls = controls;
+    //this.controls = controls;
 
     this.rotationSpeed = 0.00002;
     this.rotationVelocity = new THREE.Vector2();
     this.rotationAcceleration = new THREE.Vector2();
     this.rotationFriction = 0.1;
+
 
     const backgroundMaterial = new THREE.ShaderMaterial( createWarpGradientShader( 3 ) );
     this.backgroundRenderer = new FullscreenQuadRenderer(
@@ -56,13 +73,9 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     );
 
     this.backgroundColors = [
-      /*new THREE.Color( '30ffdf' ),
-      new THREE.Color( '#32ff33' ),
-      new THREE.Color( '#af30ff' ),
-      */
-      new THREE.Color( 'blue' ),
-      new THREE.Color( 'brown' ),
-      new THREE.Color( 'white' ),
+      new THREE.Color().setHSL( Math.random(), 0.3, random( 0.2, 0.6 ) ),
+      new THREE.Color().setHSL( Math.random(), 0.5, random( 0.2, 0.6 ) ),
+      new THREE.Color().setHSL( Math.random(), 0.3, random( 0.2, 0.6 ) ),
     ];
 
     backgroundMaterial.uniforms[ 'colors' ].value = this.backgroundColors;
@@ -74,6 +87,8 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     this.background = this.backgroundRenderer.renderTarget.texture;
 
+    this.minZ = 0;
+    this.maxZ = 0;
     this.object = this.populateScene();
   }
 
@@ -98,35 +113,35 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     const geometry = new THREE.SphereBufferGeometry( 1.0, 128, 128 );
 
-    const maxFrequency = new THREE.Vector3( 0.2 );
+    const maxFrequency = new THREE.Vector3( 0.5 );
     const frequency = new THREE.Vector3( 
-      random( 0.05, maxFrequency.x ),
-      random( 0.05, maxFrequency.y ),
-      random( 0.05, maxFrequency.z )
+      random( 0.15, maxFrequency.x ),
+      random( 0.15, maxFrequency.y ),
+      random( 0.15, maxFrequency.z )
     );
 
     geometryWarp( 
       geometry,
 
       frequency, // Frequency
-      ( maxFrequency.length() - frequency.length() ) * random( 10.0, 13.0 ) + 0.2, // Amount
+      ( maxFrequency.length() - frequency.length() ) * random( 3.0, 4.0 ) + 0.1, // Amount
       3,  // Octaves
-      random( 1.7, 2.5 ), // Lacunarity
-      random( 0.4, 0.6 ), // Persistance
+      random( 1.5, 2.5 ), // Lacunarity
+      random( 0.4, 0.5 ), // Persistance
 
       [
         { 
-          warpFunction : domainWarp,
+          warpFunction : noiseWarp,
         }, 
         {
           warpFunction : twistWarp,
           args : {
             twistAmount : new THREE.Vector3( 
-              1.2 * Math.random(), 
-              1.2 * Math.random(), 
-              1.2 * Math.random() 
+              0.8 * Math.random(), 
+              0.8 * Math.random(), 
+              0.8 * Math.random() 
             ),
-            falloff : random( 0.8, 1.0 ),
+            falloff : random( 0.5, 1.0 ),
           }
         }
       ],
@@ -139,11 +154,26 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     const material = 
       new THREE.MeshStandardMaterial( {
         color: 'white',
-        roughness: 0.3,
+        //roughness: 0.3,
+        roughness: random( 0.15, 0.4 ),
+        //metalness: random( 0.6, 0.9 ),
         metalness: 0.7,
 
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+
+        transparent: true,
       })
+
+    material.onBeforeCompile = ( shader ) => {
+      shader.fragmentShader = shader.fragmentShader.replace(
+        'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
+        `
+        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+        // gl_FragColor.a *= pow( gl_FragCoord.w, 0.5 );
+        // gl_FragColor.rgb = vec3( gl_FragCoord.w );
+        `
+      );
+    }
 
     ASSETHANDLER.loadTexture( normalTexturePath, false, ( texture ) => {
       texture.wrapS = THREE.RepeatWrapping;
@@ -159,7 +189,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
       material.envMap = dataTextureToEnvironmentMap( this.renderer, hdri );
-      material.envMapIntensity = 0.9;
+      material.envMapIntensity = 0.7;
 
       material.needsUpdate = true;
     });
@@ -169,7 +199,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
       material
     );
 
-    mesh.scale.set( 1.5, 2.0, 1.5 );
+    mesh.scale.set( 2.5, 2.5, 2.5 );
 
     mesh.rotation.order = 'XYZ';
 
@@ -181,7 +211,10 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
       boundingBox.max.z - boundingBox.min.z,
     );
 
-    this.camera.position.set( 0, 0, maxSize / 2.0 + 4 );
+    this.camera.position.set( 0, 0, maxSize / 2.0 + 5 );
+
+    this.minZ = maxSize / 2.0;
+    this.maxZ = maxSize / 2.0 + 20;
 
     this.object = mesh;
 
@@ -194,14 +227,13 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     );
 
     directionalLight.position.set( 0, 10, 10 );
-    directionalLight.castShadow = true;
+    /*directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 512;
     directionalLight.shadow.mapSize.height = 512;
-    directionalLight.shadow.bias = -0.01;
+    directionalLight.shadow.bias = -0.01;*/
 
-    const ambientLight = new THREE.AmbientLight( 'white', 0.4 );
+    const ambientLight = new THREE.AmbientLight( 'white', 0.3 );
 
-    //const hemisphereLight = new THREE.HemisphereLight( 'blue', 'brown', 5 );
     const hemisphereLight = new THREE.HemisphereLight( 
       this.backgroundColors[ 0 ],
       this.backgroundColors[ 1 ],
@@ -222,7 +254,13 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     this.rotationAcceleration.x += this.rotationSpeed * deltaY;
   }
 
-  update(delta: number, now: number): void {
+  zoom( deltaZoom : number ) {
+
+    this.zoomVelocity += deltaZoom * this.zoomSpeed;
+
+  }
+
+  update(delta : number, now : number): void {
     this.controls?.update();
 
     this.object.rotation.y += delta * 0.14;
@@ -233,6 +271,32 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     this.rotationVelocity.add( this.rotationAcceleration );
     this.rotationAcceleration.multiplyScalar( 1.0 - this.rotationFriction );
     this.rotationVelocity.multiplyScalar( 1.0 - this.rotationFriction );
+
+
+    if( Math.abs( this.zoomVelocity ) > 0.01 ) {
+      const thresholdDistance = ( this.maxZ - this.minZ ) * this.zoomLimitThreshold;
+      const z = this.camera.position.z;
+
+      let zoomAmount = 1;
+
+      if ( ( z - this.minZ ) < thresholdDistance && this.zoomVelocity < 0 ) {
+        zoomAmount = 
+          Math.pow( 
+            clamp( ( z - this.minZ ) / thresholdDistance, 0.0, 1.0 ),
+            1.1
+          );
+      } else if( ( this.maxZ - z ) < thresholdDistance && this.zoomVelocity > 0 ) {
+        zoomAmount = 
+          Math.pow( 
+            clamp( ( this.maxZ - z ) / thresholdDistance, 0.0, 1.0 ),
+            1.1
+          );
+      }
+
+      this.camera.position.z = clamp( z + zoomAmount * this.zoomVelocity, this.minZ, this.maxZ );
+
+      this.zoomVelocity *= ( 1.0 - this.zoomFriction );
+    }
   }
 
   resize() {
