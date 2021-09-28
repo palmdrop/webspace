@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { random } from '../../../utils/Random';
 
 import { getNoise3D, Vector3 } from "../../utils/noise"
 
@@ -84,7 +85,7 @@ export const twistWarp : TransformFunction = ( point, offset, frequency, amount,
   };
 }
 
-type WarpEntry = {
+export type WarpEntry = {
   warpFunction : TransformFunction,
   args? : TransformFunctionArgs
 }
@@ -103,6 +104,12 @@ export const geometryWarp = (
   correctOffset : boolean = true
 ) => {
 
+  const noiseOffset = new THREE.Vector3(
+    random( -100, 100 ),
+    random( -100, 100 ),
+    random( -100, 100 )
+  );
+
   const averageOffset = new THREE.Vector3();
 
   const positionAttribute = geometry.attributes.position;
@@ -119,7 +126,7 @@ export const geometryWarp = (
           args
         } = warpEntries[ w ];
 
-        warp = warpFunction( warp, null, frequency, amount, args );
+        warp = warpFunction( warp, noiseOffset, frequency, amount, args );
       }
 
       positionAttribute.setXYZ( i, warp.x, warp.y, warp.z );

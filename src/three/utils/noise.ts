@@ -30,6 +30,6 @@ export const getNoise3D = (
     y += offset.y;
     z += offset.z;
   }
-
-  return min + ( max - min ) * noise3D( x, y, z );
+  const n = ( noise3D( x, y, z ) + 1.0 ) / 2.0;
+  return min + ( max - min ) * n;
 }

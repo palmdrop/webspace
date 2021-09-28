@@ -22,7 +22,7 @@ export type PieceNavigationFunction = (
   event : React.MouseEvent 
 ) => void;
 
-export const pieces : PieceData[] = Array( 7 ).fill(
+export const pieces : PieceData[] = [
   {
     name: "Retro Core",
     description: [
@@ -46,35 +46,61 @@ export const pieces : PieceData[] = Array( 7 ).fill(
 
     Component: React.lazy( () => import( './retroCore/RetroCorePiece' ) ),
     colorTheme: ColorTheme.horizon
+  },
+  {
+    name: "Solar Chrome",
+    description: [
+      "Generative geometry is exciting. Chrome is hip and cool. Modern and punk.",
+      `
+        I've been for a long time developing personal techniques based on perlin/simplex noise, domain warping,
+        recursion, and so on. Combining these with 3d creates interesting results. Simple geometrical shapes, like
+        spheres, are distorted using some underlying noise field. The result is alien.
+      `,
+      `
+        I especiall like the moments when the smooth, polished surface breaks down under too much distortion, and 
+        reveals the underlying digital geometry -- the mesh of triangles, a sense of something being unveiled. 
+      `,
+      `
+        In addition to this, I'd like to explore something futuristic, something not necessarily hopeful, but other.
+        Modern popular aesthetics seem to resort to the retro, and although this surely can be extremely striking and imaginative,
+        it's in certain ways always retrograde. I don't want to be feel stuck in a loop.
+      `
+    ],
+    tags : [
+      "3d", "Warp"
+    ],
+
+    image: solarChromeImage,
+
+    Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
+  },
+  {
+    name: "Solar Landscape",
+    description: [
+      "Generative geometry is exciting. Chrome is hip and cool. Modern and punk.",
+      `
+        I've been for a long time developing personal techniques based on perlin/simplex noise, domain warping,
+        recursion, and so on. Combining these with 3d creates interesting results. Simple geometrical shapes, like
+        spheres, are distorted using some underlying noise field. The result is alien.
+      `,
+      `
+        I especiall like the moments when the smooth, polished surface breaks down under too much distortion, and 
+        reveals the underlying digital geometry -- the mesh of triangles, a sense of something being unveiled. 
+      `,
+      `
+        In addition to this, I'd like to explore something futuristic, something not necessarily hopeful, but other.
+        Modern popular aesthetics seem to resort to the retro, and although this surely can be extremely striking and imaginative,
+        it's in certain ways always retrograde. I don't want to be feel stuck in a loop.
+      `
+    ],
+    tags : [
+      "3d", "Warp"
+    ],
+
+    image: solarChromeImage,
+
+    Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
   }
-);
-
-pieces[ 1 ] = {
-  name: "Solar Chrome",
-  description: [
-    "Generative geometry is exciting. Chrome is hip and cool. Modern and punk.",
-    `
-      I've been for a long time developing personal techniques based on perlin/simplex noise, domain warping,
-      recursion, and so on. Combining these with 3d creates interesting results. Simple geometrical shapes, like
-      spheres, are distorted using some underlying noise field. The result is alien.
-    `,
-    `
-      I especiall like the moments when the smooth, polished surface breaks down under too much distortion, and 
-      reveals the underlying digital geometry -- the mesh of triangles, a sense of something being unveiled. 
-    `,
-    `
-      In addition to this, I'd like to explore something futuristic, something not necessarily hopeful, but other.
-      Modern popular aesthetics seem to resort to the retro, and although this surely can be extremely striking and imaginative,
-      it's in certain ways always retrograde. I don't want to be feel stuck in a loop.
-    `
-  ],
-  tags : [
-    "3d", "Warp"
-  ],
-
-  image: solarChromeImage,
-
-  Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
-}
+]
 
 export const FeaturedPieceIndex = 0;

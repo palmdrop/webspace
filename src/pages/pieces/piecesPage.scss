@@ -34,7 +34,7 @@
 
   main {
     grid-area: main;
-    width: calc( min( 20em, 90vw ) );
+    width: calc( min( 25em, 90vw ) );
 
     .information-display {
 
@@ -49,8 +49,8 @@
       .faded-header {
         .title {
           position: absolute;
-          top: 2em;
-          left: -0.5em;
+          top: 1.8em;
+          left: -0.3em;
         }
 
         &__obstacle {
@@ -59,7 +59,7 @@
           width: 20em;
           height: auto;
 
-          top: 13.5em;
+          top: 11.5em;
           left: 14em;
 
           transition: 3s top, 3s left, 3s transform;

@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { useHistory } from "react-router";
 import Button from "../../../components/input/button/Button";
 import { useAnimationFrame } from "../../../hooks/useAnimationFrame";
 import { useMousePosition } from "../../../hooks/useMousePosition";

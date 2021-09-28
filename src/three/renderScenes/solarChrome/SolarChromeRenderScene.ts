@@ -3,18 +3,17 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 
 import { AbstractRenderScene } from "../../AbstractRenderScene";
 import { VoidCallback } from "../../core";
-import { domainWarp, geometryWarp, noiseWarp, twistWarp } from '../../geometry/warp/warp';
 
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
 import { random } from '../../../utils/Random';
 
-import noiseTexturePath from '../../../assets/noise/rgb/rgb-noise.jpg';
-import normalTexturePath from '../../../assets/normal/normal-texture1.jpg';
-import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
 import { clamp } from 'three/src/math/MathUtils';
+import { SolarChromeMaterialPrefab, SolarChromeGeometryPrefab } from '../../prefabs/prefabs';
+
+import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 
 export class SolarChromeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
@@ -47,15 +46,6 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     this.zoomLimitThreshold = 0.3;
 
     this.camera.far = 10000;
-
-    /*const controls = new TrackballControls( this.camera,
-      canvas
-    );*/
-
-    //controls.rotateSpeed = 1;
-    //controls.dynamicDampingFactor = 0.15;
-
-    //this.controls = controls;
 
     this.rotationSpeed = 0.00002;
     this.rotationVelocity = new THREE.Vector2();
@@ -111,88 +101,8 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
   private populateScene() {
     this.scene.background = new THREE.Color( '#976cb8' );
 
-    const geometry = new THREE.SphereBufferGeometry( 1.0, 128, 128 );
-
-    const maxFrequency = new THREE.Vector3( 0.5 );
-    const frequency = new THREE.Vector3( 
-      random( 0.15, maxFrequency.x ),
-      random( 0.15, maxFrequency.y ),
-      random( 0.15, maxFrequency.z )
-    );
-
-    geometryWarp( 
-      geometry,
-
-      frequency, // Frequency
-      ( maxFrequency.length() - frequency.length() ) * random( 3.0, 4.0 ) + 0.1, // Amount
-      3,  // Octaves
-      random( 1.5, 2.5 ), // Lacunarity
-      random( 0.4, 0.5 ), // Persistance
-
-      [
-        { 
-          warpFunction : noiseWarp,
-        }, 
-        {
-          warpFunction : twistWarp,
-          args : {
-            twistAmount : new THREE.Vector3( 
-              0.8 * Math.random(), 
-              0.8 * Math.random(), 
-              0.8 * Math.random() 
-            ),
-            falloff : random( 0.5, 1.0 ),
-          }
-        }
-      ],
-
-      true,
-    );
-
-    //TODO generate 4-5 shapes,then use geometri instancing to generate A LOT of shapes in the scene! change rotation, scale (stretch, morph) and ofc position
-
-    const material = 
-      new THREE.MeshStandardMaterial( {
-        color: 'white',
-        //roughness: 0.3,
-        roughness: random( 0.15, 0.4 ),
-        //metalness: random( 0.6, 0.9 ),
-        metalness: 0.7,
-
-        side: THREE.DoubleSide,
-
-        transparent: true,
-      })
-
-    material.onBeforeCompile = ( shader ) => {
-      shader.fragmentShader = shader.fragmentShader.replace(
-        'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
-        `
-        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-        // gl_FragColor.a *= pow( gl_FragCoord.w, 0.5 );
-        // gl_FragColor.rgb = vec3( gl_FragCoord.w );
-        `
-      );
-    }
-
-    ASSETHANDLER.loadTexture( normalTexturePath, false, ( texture ) => {
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.minFilter = THREE.NearestFilter;
-      texture.magFilter = THREE.LinearFilter;
-
-      texture.repeat.set( 10.0, 10.0 );
-
-      material.normalMap = texture;
-      material.normalScale = new THREE.Vector2( 0.1 );
-    });
-
-    ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
-      material.envMap = dataTextureToEnvironmentMap( this.renderer, hdri );
-      material.envMapIntensity = 0.7;
-
-      material.needsUpdate = true;
-    });
+    const geometry = SolarChromeGeometryPrefab( {} );
+    const material = SolarChromeMaterialPrefab( { renderer : this.renderer } );
 
     const mesh = new THREE.Mesh(
       geometry,
@@ -227,10 +137,6 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     );
 
     directionalLight.position.set( 0, 10, 10 );
-    /*directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 512;
-    directionalLight.shadow.mapSize.height = 512;
-    directionalLight.shadow.bias = -0.01;*/
 
     const ambientLight = new THREE.AmbientLight( 'white', 0.3 );
 
@@ -240,6 +146,10 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     5 );
 
     this.scene.add( directionalLight, hemisphereLight, ambientLight );
+
+    ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
+      this.scene.environment = dataTextureToEnvironmentMap( this.renderer, hdri );
+    });
 
     ASSETHANDLER.onLoad( undefined, () => {
       material.needsUpdate = true;
