@@ -1,4 +1,5 @@
 @import '../../styles/layout.scss';
+@import '../../styles/fonts.scss';
 @import '../../styles/colors.scss';
 @import '../../styles/ornaments.scss';
 
@@ -8,7 +9,7 @@
   display: grid;
 
   grid-template-rows: 
-    10.0em 10em 0.0fr 0.0fr
+    10.0em 1px 1fr
   ;
 
   grid-template-columns: 
@@ -17,9 +18,6 @@
 
   grid-template-areas: 
     "header header header"
-    ". page-header ."
-    ". intro . "
-    ". main ."
     ". main ."
   ;
 
@@ -31,35 +29,31 @@
     }
   }
 
-  .faded-header {
-    grid-area: page-header;
-
-    .title {
-      width: 100%;
-    }
-
-    &__obstacle {
-      position: absolute;
-
-      width: 20em;
-      height: auto;
-
-      top:  -4.5em;
-      left: 17em;
-
-      transform: rotate(25deg);
-      transition: 3s top, 3s left, 3s transform;
-
-      opacity: 0.7;
-    }
-  }
-
-  &__intro {
-    grid-area: intro;
-  }
-
   &__main {
     grid-area: main;
+
+    .faded-header {
+      grid-area: page-header;
+
+      .title {
+        width: 100%;
+      }
+
+      &__obstacle {
+        position: absolute;
+
+        width: 20em;
+        height: auto;
+
+        top:  -4.5em;
+        left: 17em;
+
+        transform: rotate(25deg);
+        transition: 3s top, 3s left, 3s transform;
+
+        opacity: 0.9;
+      }
+    }
   }
 
   &__lazy-image-container {
@@ -104,6 +98,19 @@
         animation: about-page-slide 1s;
       }
     }
+
+    label {
+      position: absolute;
+      color: var(--primary-color-300);
+      bottom: 13%;
+      left: 50%;
+
+      font-size: 1.3em;
+
+      transform: translateX(-50%);
+
+      @include font( 'accent' );
+    }
   }
 
   &__aside {
@@ -124,6 +131,78 @@
       left: 75%;
     }
   }
+
+  &__link-section {
+    position: relative;
+
+    padding: 2em 0em;
+
+    @include medium {
+      position: fixed;
+      bottom: 0%;
+      right: 0;
+
+      z-index: 1;
+
+      padding: 1em;
+
+      right: 1em;
+    }
+
+    @include large {
+      right: unset;
+      left: 80%;
+    }
+
+    div {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+
+      @include medium {
+        flex-direction: column;
+      }
+
+      a {
+        padding: 0.5em;
+        position: relative;
+
+        @include font( 'accent' );
+
+        font-size: 1.1rem;
+
+        color: var(--primary-color);
+      }
+    }
+
+    .soft-disk {
+      position: absolute;
+      @include use-glass();
+    }
+
+    .soft-disk:nth-child(1) {
+      right: -10%;
+      top: -10%;
+      z-index: 100;
+
+      @include medium {
+        top: -43%;
+        right: -40%;
+      }
+    }
+
+    .soft-disk:nth-child(2) {
+      left: -10%;
+      bottom: 10;
+      z-index: -1;
+
+      @include medium {
+        bottom: -43%;
+        left: -20%;
+      }
+    }
+  }
+
 }
 
 @keyframes about-page-slide {

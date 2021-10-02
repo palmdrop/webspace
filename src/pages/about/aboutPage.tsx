@@ -16,23 +16,17 @@ import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
 
-import { images, introduction, paragraphs } from './content';
+import { ImageData, introduction, sections, links } from './content';
 
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
 import HomeBar from '../../components/navigation/home/HomeBar';
+import ExternalLink from '../../components/link/ExternalLink';
+import Bar from '../../components/ornamental/bars/Bar';
 
-
-// TODO text with link on top of each image? link to project piece, if existing
 
 const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
-  const [ rootNavEntry ] = useState( () => {
-    const page = routePageMap.get( PageRoute.root );
-    if( !page ) return null;
-    return createNavEntry( page, "Go back" );
-  });
-
-  const createLazyImage = ( src : string, alt : string, height : number ) : JSX.Element => {
+  const createLazyImage = ( { src, alt, width, height, link } : ImageData ) : JSX.Element => {
     let left : string | undefined;
     let right : string | undefined;
 
@@ -59,43 +53,75 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
         <LazyImage 
           src={ src }
           alt={ alt }
+          width={ width }
           height={ height }
           scrollPosition={ scrollPosition }
           placeholder={
             <span>Loading...</span>
           }
         />
+        <label>
+          { alt }
+        </label>
       </div>
     );
   }
 
   const createMainContent = () : JSX.Element[] => {
-    const paragraphsPerImage = Math.ceil( paragraphs.length / images.length );
+    return sections.map( ( section, sectionIndex ) => (
+      <section 
+        key={ `section-${ sectionIndex }` }
+        className="about-page__section"
+      >
+        { section.title && (
+          <Header 
+            mainTitle={ section.title }
+            mainLevel={ 4 }
+          />
+        )}
+        { section.content.map( ( contentPiece, contentPieceIndex ) => (
+          typeof contentPiece === 'string' ? (
+            <Paragraph key={ `paragraph-${ contentPieceIndex }` }>
+              { contentPiece }
+            </Paragraph>
+          ) : (
+            createLazyImage( contentPiece )
+          )
+        ))}
+      </section>
+    ))
+  }
 
-    const content : JSX.Element[] = [];
+  const createLinkSection = () : JSX.Element => {
+    return (
+      <section
+        className="about-page__link-section"
+      >
+        <SoftDisk />
+        <SoftDisk />
+        <Bar 
+          direction="horizontal"
+          variant="inset"
+        />
+        <div>
+          { links.map( ( { text, path }, index ) => (
+            <ExternalLink link={ path }>
+              { text }
+            </ExternalLink>
+          ))
+          }
+        </div>
+        <Bar 
+          direction="horizontal"
+          variant="inset"
+        />
 
-    let imageIndex = 0;
-    for( let i = 0; i < paragraphs.length; i++ ) {
-
-      if( i % paragraphsPerImage === 0 ) {
-        content.push(
-          createLazyImage( images[ imageIndex ], "image", 350 )
-        );
-
-        imageIndex++;
-      }
-
-      content.push(
-        <Paragraph key={ `paragraph-${ i }` }>
-          { paragraphs[ i ] }
-        </Paragraph>
-      )
-    }
-
-    return content;
+      </section>
+    )
   }
 
   const [ mainContent ] = useState( () => createMainContent() );
+  const [ linkSection ] = useState( () => createLinkSection() );
 
   return (
     <div className={ `about-page` }>
@@ -107,31 +133,37 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
         subLevel={ 5 }
         linkTo={ PageRoute.root }
       />
-      <FadedHeader 
-        title="ABOUT"
-      >
-        <Obstacle className="faded-header__obstacle" />
-      </FadedHeader>
 
-      { /* Page introduction */ }
-      <div className="about-page__intro">
-
-        <Paragraph type={ ParagraphType.bold }>
-          { introduction }
-        </Paragraph>
-
-      </div>
-
-      { /* Main page content */ }
       <main className="about-page__main">
+        <FadedHeader 
+          title="ABOUT"
+        >
+          <Obstacle className="faded-header__obstacle" />
+        </FadedHeader>
+
+        { /* Page introduction */ }
+        <section className="about-page__intro">
+
+          <Paragraph type={ ParagraphType.bold }>
+            { introduction }
+          </Paragraph>
+
+        </section>
+
+        { /* Main page content */ }
         { mainContent }
+
+        { linkSection }
       </main>
+      
 
       <aside className="about-page__aside" >
         <HomeBar />
       </aside>
+
     </div>
   )
 }
 
+//export default React.memo( trackWindowScroll( AboutPage ) );
 export default React.memo( trackWindowScroll( AboutPage ) );
