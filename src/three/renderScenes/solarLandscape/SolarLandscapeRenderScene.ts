@@ -167,12 +167,24 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
         material.map = texture;
       });*/
 
+      const frequency = 
+        new THREE.Vector3(
+          0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
+          0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
+          0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
+        );
+      const warp = 0.8;
+      const rf = random( 0.2, 0.8 );
+      const gf = random( 0.2, 0.8 );
+      const bf = random( 0.2, 0.8 );
       setVertexColors( geometry, ( i, x, y, z ) => {
-        const n = getNoise3D( { x, y, z }, null, 0.3, 0.3, 1.0 );
+        const ox = warp * getNoise3D( { x : x + 103, y, z }, null, frequency, -1.0, 1.0 );
+        const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, -1.0, 1.0 );
+        const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, -1.0, 1.0 );
         return { 
-          r : n,
-          g : n,
-          b : n
+          r : 1.0 - rf * n,
+          g : 1.0 - gf * n,
+          b : 1.0 - bf * n 
         }
       });
 
