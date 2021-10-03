@@ -97,13 +97,13 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
       <section
         className="about-page__link-section"
       >
-        <SoftDisk />
-        <SoftDisk />
         <Bar 
           direction="horizontal"
           variant="inset"
         />
         <div>
+          <SoftDisk />
+          <SoftDisk />
           { links.map( ( { text, path }, index ) => (
             <ExternalLink link={ path }>
               { text }
@@ -115,7 +115,6 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
           direction="horizontal"
           variant="inset"
         />
-
       </section>
     )
   }
@@ -160,10 +159,8 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
       <aside className="about-page__aside" >
         <HomeBar />
       </aside>
-
     </div>
   )
 }
 
-//export default React.memo( trackWindowScroll( AboutPage ) );
 export default React.memo( trackWindowScroll( AboutPage ) );
