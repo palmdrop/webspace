@@ -39,7 +39,7 @@ const materialPrefabs = [
   SolarChromeMaterialPrefab,
   SolarLandscapeMaterial1Prefab,
   SolarLandscapeMaterial2Prefab,
-  //SolarLandscapeMaterial3Prefab
+  // SolarLandscapeMaterial3Prefab
 ];
 
 const geometryPrefabs = [
@@ -106,15 +106,15 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     );
 
     this.backgroundColors = [
-      new THREE.Color().setHSL( Math.random(), 0.3, random( 0.15, 0.3 ) ),
-      new THREE.Color().setHSL( Math.random(), 0.5, random( 0.15, 0.4 ) ),
-      new THREE.Color().setHSL( Math.random(), 0.3, random( 0.15, 0.4 ) ),
+      new THREE.Color().setHSL( Math.random(), 0.3, random( 0.15, 0.6 ) ),
+      new THREE.Color().setHSL( Math.random(), 0.5, random( 0.15, 0.6 ) ),
+      new THREE.Color().setHSL( Math.random(), 0.3, random( 0.15, 0.6 ) ),
     ];
 
     backgroundMaterial.uniforms[ 'colors' ].value = this.backgroundColors;
-    backgroundMaterial.uniforms[ 'frequency' ].value = 0.5;
-    backgroundMaterial.uniforms[ 'contrast' ].value = 1.0;
-    backgroundMaterial.uniforms[ 'brightness' ].value = 0.6;
+    backgroundMaterial.uniforms[ 'frequency' ].value = 0.6;
+    backgroundMaterial.uniforms[ 'contrast' ].value = 1.6;
+    backgroundMaterial.uniforms[ 'brightness' ].value = 0.4;
 
     this.resizeables.push( this.backgroundRenderer );
 
@@ -151,17 +151,18 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     for( let i = 0; i < 5; i++ ) {
       const geometry = randomElement( geometryPrefabs )( {} );
       const material = randomElement( materialPrefabs )( { 
-        //renderer : this.renderer,
+        geometry : geometry,
         color : new THREE.Color( 'gray' )
       });
-      material.dithering = true;
 
-      material.onBeforeCompile = ( shader ) => {
+      material.dithering = true;
+      material.vertexColors = true;
+
+      /*material.onBeforeCompile = ( shader ) => {
         console.log( shader.fragmentShader );
         console.log( shader.uniforms );
-      }
+      }*/
 
-      material.vertexColors = true;
 
       /*ASSETHANDLER.loadTexture( randomElement( textures ), false, ( texture ) => {
         material.map = texture;
@@ -173,6 +174,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
           0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
           0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
         );
+
       const warp = 0.8;
       const rf = random( 0.2, 0.8 );
       const gf = random( 0.2, 0.8 );
@@ -218,10 +220,17 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
           random( -range, range ),
         );
 
+        /*const rotation = new THREE.Euler(
+          random( 0, Math.PI * 2 ),
+          random( 0, Math.PI * 2 ),
+          random( 0, Math.PI * 2 ),
+        );*/
+
+        const f = 0.03;
         const rotation = new THREE.Euler(
-          random( 0, Math.PI * 2 ),
-          random( 0, Math.PI * 2 ),
-          random( 0, Math.PI * 2 ),
+          getNoise3D( position, { x : 100, y : 0, z : 0 }, f, -Math.PI, Math.PI ),
+          getNoise3D( position, { x : 0, y : 100, z : 0 }, f, -Math.PI, Math.PI ),
+          getNoise3D( position, { x : 0, y : 0, z : 100 }, f, -Math.PI, Math.PI ),
         );
 
         const matrix = new THREE.Matrix4().compose( 

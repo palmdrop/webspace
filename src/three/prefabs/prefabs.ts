@@ -3,9 +3,13 @@ import { random } from '../../utils/Random';
 import { noiseWarp, twistWarp } from '../geometry/warp/warp';
 import { generateWarpGeometryPrefab } from './WarpGeometryPrefab';
 
-import solarChromeNormalTexturePath from '../../assets/normal/normal-texture1.jpg';
-import solarChromeHdriPath from '../../assets/hdri/decor_shop_4k.hdr';
-import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../systems/AssetHandler';
+import { ASSETHANDLER } from '../systems/AssetHandler';
+import { textureFromSmoothGeometry } from '../material/textureFromVertices';
+import { getNoise3D } from '../utils/noise';
+
+import normalTexturePathX1 from '../../assets/normal/normal-texture1.jpg';
+import normalTexturePathX2 from '../../assets/normal/normal-texture1_x2.jpg';
+import normalTexturePathX4 from '../../assets/normal/normal-texture1_x4.jpg';
 
 export type Prefab<T, A> = ( args : A ) => T;
 export type MaterialPrefab = Prefab<THREE.Material, {}>;
@@ -71,7 +75,7 @@ export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
   )
 })();
 
-export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, {}> = () => {
+/*export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, {}> = () => {
   const material = new THREE.MeshStandardMaterial( {
     color: 'white',
     roughness: random( 0.15, 0.4 ),
@@ -89,6 +93,52 @@ export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, {}> 
     texture.magFilter = THREE.LinearFilter;
 
     texture.repeat.set( 10.0, 10.0 );
+
+    material.normalMap = texture;
+    material.normalScale = new THREE.Vector2( 0.1 );
+    material.needsUpdate = true;
+  });
+
+  return material;
+}*/
+
+export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { geometry : THREE.BufferGeometry }> = ( { geometry } ) => {
+  const material = new THREE.MeshStandardMaterial( {
+    color: 'white',
+    roughness: random( 0.15, 0.4 ),
+    metalness: 0.7,
+
+    side: THREE.DoubleSide,
+  });
+
+  const roughnessMap = textureFromSmoothGeometry( 
+    geometry,
+    ( x, y, z, u, v ) => {
+      const n = getNoise3D( { x, y, z }, null, 0.8, 0.5, 1.0 );
+      return new THREE.Color( n, n, n )
+    },
+    new THREE.Color( 'red' )
+  );
+
+  const metalnessMap = textureFromSmoothGeometry( 
+    geometry,
+    ( x, y, z, u, v ) => {
+      const n = getNoise3D( { x, y, z }, { x : 100, y : 0, z : 0 }, 1.0, 0.8, 1.0 );
+      return new THREE.Color( n, n, n )
+    },
+    new THREE.Color( 'red' )
+  );
+  
+  material.roughnessMap = roughnessMap;
+  material.metalnessMap = metalnessMap;
+
+  material.envMapIntensity = 0.7;
+
+  ASSETHANDLER.loadTexture( normalTexturePathX4, false, ( texture ) => {
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.LinearFilter;
 
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( 0.1 );
@@ -171,7 +221,7 @@ export const SolarLandscapeGeometry2Prefab : GeometryPrefab = ( () => {
   return generateWarpGeometryPrefab(
     // Geometry
     () => {
-      return new THREE.TorusGeometry( 1.0, random( 0.1, 0.5 ), 20, 228 );
+      return new THREE.TorusGeometry( 1.0, random( 0.1, 0.5 ), 128, 128 );
     },
 
     // Frequency
@@ -296,13 +346,13 @@ export const SolarLandscapeMaterial1Prefab : Prefab<THREE.MeshStandardMaterial, 
 
   material.envMapIntensity = 0.4;
 
-  ASSETHANDLER.loadTexture( solarChromeNormalTexturePath, false, ( texture ) => {
+  ASSETHANDLER.loadTexture( normalTexturePathX2, false, ( texture ) => {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.LinearFilter;
 
-    texture.repeat.set( 7.0, 7.0 );
+    // texture.repeat.set( 7.0, 7.0 );
 
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.0, 0.08 ) );
@@ -325,14 +375,14 @@ export const SolarLandscapeMaterial2Prefab : Prefab<THREE.MeshStandardMaterial, 
   
   material.envMapIntensity = 0.5;
 
-  ASSETHANDLER.loadTexture( solarChromeNormalTexturePath, false, ( texture ) => {
+  ASSETHANDLER.loadTexture( normalTexturePathX2, false, ( texture ) => {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.LinearFilter;
 
-    const textureRepeat = random( 5.0, 7.0 );
-    texture.repeat.set( textureRepeat, textureRepeat );
+    // const textureRepeat = random( 5.0, 7.0 );
+    // texture.repeat.set( textureRepeat, textureRepeat );
 
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.2, 0.6 ) );
@@ -357,14 +407,14 @@ export const SolarLandscapeMaterial3Prefab : Prefab<THREE.MeshStandardMaterial, 
   
   material.envMapIntensity = 0.5;
 
-  ASSETHANDLER.loadTexture( solarChromeNormalTexturePath, false, ( texture ) => {
+  ASSETHANDLER.loadTexture( normalTexturePathX2, false, ( texture ) => {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.LinearFilter;
 
-    const textureRepeat = random( 5.0, 7.0 );
-    texture.repeat.set( textureRepeat, textureRepeat );
+    // const textureRepeat = random( 5.0, 7.0 );
+    // texture.repeat.set( textureRepeat, textureRepeat );
 
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.1, 0.5 ) );

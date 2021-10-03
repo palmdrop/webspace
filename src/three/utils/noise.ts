@@ -1,4 +1,5 @@
 import { makeNoise3D } from 'fast-simplex-noise';
+import { clamp } from 'three/src/math/MathUtils';
 
 export type Vector3 = { x : number, y : number, z : number };
 
@@ -31,5 +32,5 @@ export const getNoise3D = (
     z += offset.z;
   }
   const n = ( noise3D( x, y, z ) + 1.0 ) / 2.0;
-  return min + ( max - min ) * n;
+  return clamp( min + ( max - min ) * n, min, max );
 }
