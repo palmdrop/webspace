@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLayoutEffect } from 'react';
 import { useRef, useEffect } from 'react';
+import useRenderSceneShortcuts from '../../hooks/useRenderSceneShortcuts';
 import { createRenderScene, RenderScene, RenderSceneConstructor, VoidCallback } from '../../three/core';
 
 type MouseMoveCallback<T extends RenderScene> = ( x : number, y : number, deltaX : number, deltaY : number, renderScene : T ) => void;
@@ -58,7 +59,6 @@ const AnimationCanvas = <T extends RenderScene>( {
     window.addEventListener( 'resize', handleResize );
 
     onMouseMove && window.addEventListener( 'mousemove', handleMouseMove );
-    //onScroll && window.addEventListener( '')
 
     handleResize();
   }
@@ -89,6 +89,8 @@ const AnimationCanvas = <T extends RenderScene>( {
       removeListeners();
     }
   });
+
+  useRenderSceneShortcuts( renderScene );
 
   return (
     <canvas

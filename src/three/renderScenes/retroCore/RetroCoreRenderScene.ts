@@ -11,7 +11,7 @@ import { ASSETHANDLER } from '../../systems/AssetHandler';
 import t1 from '../../../assets/texture/t2.png';
 import t2 from '../../../assets/texture/t3.png';
 import t3 from '../../../assets/texture/t1.png';
-import { random, randomElement } from '../../../utils/Random';
+import { random, randomElement } from '../../../utils/random';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { ShadowTransformShader } from '../../shaders/shadow/ShadowTransformShader';
 
@@ -282,10 +282,10 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
     this.baseRenderer.render( delta, now );
   }
 
-  resize() {
-    super.resize();
+  resize( width? : number, height? : number ) {
+    super.resize( width, height );
 
-    this.baseRenderer.setSize( this.canvas.width, this.canvas.height );
+    this.baseRenderer.setSize( width ?? this.canvas.width, height ?? this.canvas.height );
   }
 
   rotate( deltaX : number, deltaY : number ) {

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { ResizeCallback } from '../core';
+import { ResizeCallback, Resizer } from '../core';
 
-export class SimpleResizer {
+export class SimpleResizer implements Resizer {
   private container : HTMLElement;
   private camera : THREE.PerspectiveCamera;
   private renderer : THREE.WebGLRenderer;
@@ -14,9 +14,9 @@ export class SimpleResizer {
     this.useDevicePixelRatio = useDevicePixelRatio;
   }
 
-  resize( callback? : ResizeCallback ) {
-    const width = this.container.clientWidth;
-    const height = this.container.clientHeight;
+  resize( callback? : ResizeCallback, width? : number, height? : number ) {
+    if( !width ) width = this.container.clientWidth;
+    if( !height ) height = this.container.clientHeight;
 
     const currentSize = this.renderer.getSize( new THREE.Vector2() );
     const newSize = new THREE.Vector2(width, height);

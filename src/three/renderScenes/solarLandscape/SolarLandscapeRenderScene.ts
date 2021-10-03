@@ -13,7 +13,7 @@ import { VoidCallback } from "../../core";
 
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
-import { random, randomElement } from '../../../utils/Random';
+import { random, randomElement } from '../../../utils/random';
 
 import { setVertexColors } from '../../geometry/color/color';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
@@ -485,8 +485,8 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     }
   }
 
-  resize() {
-    super.resize();
+  resize( width? : number, height? : number ) {
+    super.resize( width, height );
 
     this.backgroundRenderer.render();
     this.renderer.setRenderTarget( null );

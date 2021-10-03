@@ -5,6 +5,7 @@ export const MILLI_SECONDS_PER_SECOND = 1000;
 export type VoidCallback = () => void;
 export type AnimationCallback = ( delta : number, now : number ) => void;
 export type ResizeCallback = ( width : number, height : number ) => void;
+export type DataURLCallback = ( dataURL : string ) => void;
 
 export interface AnimationLoop {
   start() : void;
@@ -12,9 +13,8 @@ export interface AnimationLoop {
 }
 
 export interface Resizer {
-  resize( callback? : ResizeCallback ) : void;
+  resize( callback? : ResizeCallback, width? : number, height? : number ) : void;
 }
-
 
 export interface RenderScene extends AnimationLoop {
 
@@ -24,7 +24,10 @@ export interface RenderScene extends AnimationLoop {
   render( delta : number, now : number ) : void;
   update( delta : number, now : number ) : void;
 
-  resize() : void;
+  resize( width? : number, height? : number ) : void;
+
+  captureFrame( dataCallback : DataURLCallback ) : void;
+  setCaptureFrameResolutionMultiplier( resolutionMultiplier : number ) : void;
 }
 
 export type RenderSceneConstructor<T extends RenderScene> = 

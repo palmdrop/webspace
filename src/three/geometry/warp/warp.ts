@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { random } from '../../../utils/Random';
+import { random } from '../../../utils/random';
 
 import { getNoise3D, Vector3 } from "../../utils/noise"
 

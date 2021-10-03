@@ -6,7 +6,7 @@ import { VoidCallback } from "../../core";
 
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
-import { random } from '../../../utils/Random';
+import { random } from '../../../utils/random';
 
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
@@ -209,8 +209,8 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     }
   }
 
-  resize() {
-    super.resize();
+  resize( width? : number, height? : number ) {
+    super.resize( width, height );
 
     this.backgroundRenderer.render();
     this.renderer.setRenderTarget( null );

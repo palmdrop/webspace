@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { random } from '../../utils/Random';
+import { random } from '../../utils/random';
 import { noiseWarp, twistWarp } from '../geometry/warp/warp';
 import { generateWarpGeometryPrefab } from './WarpGeometryPrefab';
 

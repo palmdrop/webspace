@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { noop } from '../utils/general';
 
-import { AnimationLoop, RenderScene, Resizer, VoidCallback } from "./core";
+import { AnimationLoop, DataURLCallback, RenderScene, Resizer, VoidCallback } from "./core";
 import { SimpleAnimationLoop } from './systems/AnimationLoop';
 import { SimpleResizer } from './systems/Resizer';
 
@@ -24,6 +25,10 @@ export abstract class AbstractRenderScene implements RenderScene {
 
   protected composer? : EffectComposer;
 
+  private captureNext : boolean;
+  private dataCallback? : DataURLCallback;
+  private captureFrameResolutionMultiplier : number;
+
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     this.canvas = canvas;
     this.onLoad = onLoad;
@@ -34,12 +39,18 @@ export abstract class AbstractRenderScene implements RenderScene {
     this.camera = this.createCamera();
     this.resizer = this.createResizer();
     this.resizeables = [];
+
+    this.captureNext = false;
+    this.dataCallback = undefined;
+    this.captureFrameResolutionMultiplier = 2.0;
   }
 
   private createLoop() : AnimationLoop {
     return new SimpleAnimationLoop( ( now : number, delta : number ) : void => {
+      this.preRender();
       this.update( now, delta );
       this.render( now, delta );
+      this.postRender();
     });
   }
 
@@ -93,11 +104,32 @@ export abstract class AbstractRenderScene implements RenderScene {
 
   abstract update( delta : number, now : number ): void;
 
-  resize(): void {
+  private preRender() : void {
+    if( this.captureNext && this.dataCallback ) {
+      this.canvas.width *= this.captureFrameResolutionMultiplier;
+      this.canvas.height *= this.captureFrameResolutionMultiplier;
+      // this.canvas.style.width = '' + this.canvas.width;
+      // this.canvas.style.height = '' + this.canvas.width;
+
+      this.resize( this.canvas.width, this.canvas.height );
+    }
+  }
+
+  private postRender() : void {
+    if( this.captureNext && this.dataCallback ) {
+      this.captureNext = false;
+      this.dataCallback( this.canvas.toDataURL( 'image/url' ) );
+
+      this.canvas.width /= this.captureFrameResolutionMultiplier;
+      this.canvas.height /= this.captureFrameResolutionMultiplier;
+    }
+  }
+
+  resize( width? : number, height? : number ) : void {
     this.resizer.resize( ( width : number, height : number ) => {
       this.composer?.setSize( width, height );
       this.resizeables.forEach( resizeable => resizeable.setSize( width, height ) );
-    });
+    }, width, height );
   }
 
   start(): void {
@@ -108,4 +140,12 @@ export abstract class AbstractRenderScene implements RenderScene {
     this.loop.stop();
   }
 
+  captureFrame( dataCallback : DataURLCallback ) {
+    this.captureNext = true;
+    this.dataCallback = dataCallback;
+  }
+
+  setCaptureFrameResolutionMultiplier( resolutionMultiplier : number ) {
+    this.captureFrameResolutionMultiplier = resolutionMultiplier;
+  }
 }
