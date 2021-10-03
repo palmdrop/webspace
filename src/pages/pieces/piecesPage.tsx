@@ -131,7 +131,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
           >
             <Header 
               mainTitle="OBSCURED"
-              firstSubtitle="by Anton Hildingsson"
+              firstSubtitle="Digital art"
               mainLevel={ 3 }
               subLevel={ 5 }
               linkTo={ PageRoute.root }

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { PageProps } from '../PageWrapper';
 import { useNavBar } from '../../components/navigation/navbar/NavBar';
 import MainHeader from './header/MainHeader';

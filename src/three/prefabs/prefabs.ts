@@ -7,7 +7,7 @@ import { ASSETHANDLER } from '../systems/AssetHandler';
 import { textureFromSmoothGeometry } from '../material/textureFromVertices';
 import { getNoise3D } from '../utils/noise';
 
-import normalTexturePathX1 from '../../assets/normal/normal-texture1.jpg';
+// import normalTexturePathX1 from '../../assets/normal/normal-texture1.jpg';
 import normalTexturePathX2 from '../../assets/normal/normal-texture1_x2.jpg';
 import normalTexturePathX4 from '../../assets/normal/normal-texture1_x4.jpg';
 

@@ -28,6 +28,8 @@ export interface RenderScene extends AnimationLoop {
 
   captureFrame( dataCallback : DataURLCallback ) : void;
   setCaptureFrameResolutionMultiplier( resolutionMultiplier : number ) : void;
+
+  dispose? : () => void;
 }
 
 export type RenderSceneConstructor<T extends RenderScene> = 

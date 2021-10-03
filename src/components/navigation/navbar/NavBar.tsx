@@ -37,10 +37,8 @@ const NavBar = ( { entries } : Props ) : JSX.Element => {
           `nav-bar__nav ${ activeNavBarEntry !== null ? `nav-bar__nav--entry${ activeNavBarEntry }` : '' }` 
         }
       >
-        { /*
         <SoftDisk />
         <SoftDisk />
-        */ }
         <GlassCard>
           <ul>
           { entries.map( ( entry, index ) => (

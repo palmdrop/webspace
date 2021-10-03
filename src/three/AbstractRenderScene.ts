@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { noop } from '../utils/general';
 
 import { AnimationLoop, DataURLCallback, RenderScene, Resizer, VoidCallback } from "./core";
 import { SimpleAnimationLoop } from './systems/AnimationLoop';
@@ -108,9 +107,6 @@ export abstract class AbstractRenderScene implements RenderScene {
     if( this.captureNext && this.dataCallback ) {
       this.canvas.width *= this.captureFrameResolutionMultiplier;
       this.canvas.height *= this.captureFrameResolutionMultiplier;
-      // this.canvas.style.width = '' + this.canvas.width;
-      // this.canvas.style.height = '' + this.canvas.width;
-
       this.resize( this.canvas.width, this.canvas.height );
     }
   }
@@ -122,6 +118,7 @@ export abstract class AbstractRenderScene implements RenderScene {
 
       this.canvas.width /= this.captureFrameResolutionMultiplier;
       this.canvas.height /= this.captureFrameResolutionMultiplier;
+      this.resize( this.canvas.width, this.canvas.height );
     }
   }
 

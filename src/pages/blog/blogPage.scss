@@ -1,0 +1,50 @@
+@import '../../styles/layout.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/colors.scss';
+@import '../../styles/ornaments.scss';
+
+.blog-page {
+  @include page();
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    .title {
+      padding-bottom: 0.2em;
+    }
+
+    .paragraph {
+      padding-left: 0.5em;
+
+      a {
+        @include font( 'accent' );
+
+        letter-spacing: 0.1em;
+        color: var( --primary-color-300 )
+      }
+    }
+  }
+
+  &__aside {
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    z-index: 1;
+
+    padding: 1em;
+
+    @include medium {
+      right: unset;
+      left: 68%;
+    }
+
+    @include large {
+      left: 75%;
+    }
+  }
+
+}

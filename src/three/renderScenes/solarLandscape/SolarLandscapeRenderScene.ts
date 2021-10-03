@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-//import { SSAOPass, SSAOPassOUTPUT } from 'three/examples/jsm/postprocessing/SSAOPass';
-import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass';
 import { UnrealBloomPass } from '../../effects/unrealBloom/UnrealBloomPass';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
@@ -24,16 +22,7 @@ import { SolarChromeGeometryPrefab, SolarChromeMaterialPrefab, SolarLandscapeGeo
 
 import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 
-import t1 from '../../../assets/texture/ridges1.png';
-import t2 from '../../../assets/texture/whirl1.png';
-import t3 from '../../../assets/texture/whirl3.png';
 import { getNoise3D } from '../../utils/noise';
-
-const textures = [
-  t1,
-  t2,
-  t3
-];
 
 const materialPrefabs = [
   SolarChromeMaterialPrefab,
@@ -349,37 +338,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     bloomFolder.add( bloomPass, 'threshold' ).min( 0.0 ).max( 1.0 );
 
     this.composer.addPass( bloomPass );*/
-
-    /*const ssaoPass = new SSAOPass( this.scene, this.camera, this.canvas.width, this.canvas.height );
-
-    ssaoPass.minDistance = 0.01;
-    ssaoPass.maxDistance = 0.25;
-    ssaoPass.kernelRadius = 9;*/
-
-    /*const saoPass = new SAOPass( this.scene, this.camera );
-    saoPass.params.saoBias = 1.0;
-    saoPass.params.saoIntensity = 0.002;
-    saoPass.params.saoScale = 9.1;
-    saoPass.params.saoKernelRadius = 6;
-    saoPass.params.saoMinResolution = 0;
-    saoPass.params.saoBlur = true;
-    saoPass.params.saoBlurRadius = 8;
-    saoPass.params.saoBlurStdDev = 4;
-    saoPass.params.saoBlurDepthCutoff = 0.01;
-
-    const saoFolder = this.gui.addFolder( 'sao' );
-
-    saoFolder.add( saoPass.params, 'saoBias', - 1, 1 );
-    saoFolder.add( saoPass.params, 'saoIntensity', 0, 0.003 );
-    saoFolder.add( saoPass.params, 'saoScale', 0, 10 );
-    saoFolder.add( saoPass.params, 'saoKernelRadius', 1.0, 100.0 );
-    saoFolder.add( saoPass.params, 'saoMinResolution', 0.0, 1.1 );
-    saoFolder.add( saoPass.params, 'saoBlur' );
-    saoFolder.add( saoPass.params, 'saoBlurRadius', 0, 200 );
-    saoFolder.add( saoPass.params, 'saoBlurStdDev', 0.5, 150 );
-    saoFolder.add( saoPass.params, 'saoBlurDepthCutoff', 0.0, 0.1 );
-
-    this.composer.addPass( saoPass );*/
   }
 
   private populateScene() {
@@ -490,5 +448,11 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
     this.backgroundRenderer.render();
     this.renderer.setRenderTarget( null );
+  }
+
+  dispose() {
+    if( this.gui ) {
+      this.gui.destroy();
+    }
   }
 }

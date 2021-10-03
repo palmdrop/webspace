@@ -3,11 +3,8 @@ import React, { useState } from 'react'
 import { ScrollPosition, trackWindowScroll } from 'react-lazy-load-image-component';
 import LazyImage from '../../components/media/image/LazyImage';
 
-import { PageRoute, routePageMap } from '../../App';
+import { PageRoute } from '../../App';
 import { PageProps } from '../PageWrapper';
-
-import NavButton from '../../components/navigation/navbar/navbutton/NavButton';
-import { createNavEntry } from '../../components/navigation/navbar/NavBar';
 
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
@@ -16,39 +13,22 @@ import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
 
-import { ImageData, introduction, sections, links } from './content';
-
-import 'react-lazy-load-image-component/src/effects/opacity.css';
-import './aboutPage.scss';
 import HomeBar from '../../components/navigation/home/HomeBar';
 import ExternalLink from '../../components/link/ExternalLink';
 import Bar from '../../components/ornamental/bars/Bar';
 
+import { ImageData, introduction, sections, links } from './content';
+
+import 'react-lazy-load-image-component/src/effects/opacity.css';
+import './aboutPage.scss';
+
 
 const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
   const createLazyImage = ( { src, alt, width, height, link } : ImageData ) : JSX.Element => {
-    let left : string | undefined;
-    let right : string | undefined;
-
-    const getOffset = () : string => {
-      return `${ Math.random() * 20 }%`;
-    }
-
-    if( Math.random() < 0.5 ) {
-      left = getOffset();
-    } else {
-      right = getOffset();
-    }
-
     return (
       <div 
         key={ src }
         className="about-page__lazy-image-container"
-        style={ {
-          //left: left,
-          //right: right,
-          //height: height,
-        }}
       >
         <LazyImage 
           src={ src }
@@ -127,7 +107,7 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
       { /* Headers */ }
       <Header 
         mainTitle="OBSCURED"
-        firstSubtitle="by Anton Hildingsson"
+        firstSubtitle="About the site"
         mainLevel={ 3 }
         subLevel={ 5 }
         linkTo={ PageRoute.root }
@@ -152,6 +132,7 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
         { /* Main page content */ }
         { mainContent }
 
+        { /* Links */ }
         { linkSection }
       </main>
       

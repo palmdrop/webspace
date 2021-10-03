@@ -82,7 +82,7 @@ const createWarpGradientShader = (
       'opacity': { value: 1.0 },
       'colorMode': { value: ColorModes.RGB },
       'colors': { value: [ 
-        new THREE.Color( '30ffdf' ),
+        new THREE.Color( '#30ffdf' ),
         new THREE.Color( '#32ff33' ),
         new THREE.Color( '#af30ff' ),
       ] },

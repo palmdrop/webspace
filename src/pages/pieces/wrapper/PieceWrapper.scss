@@ -167,14 +167,9 @@
 
       &:before {
         inset: 0;
-        position: absolute;
-
-        height: 130%;
-
         content: '';
-
-        mix-blend-mode: multiply;
-
+        position: absolute;
+        height: 130%;
       }
 
       width: 100%;
@@ -197,15 +192,13 @@
       right: 0;
       height: 100vh;
       z-index: -1;
-      opacity: 0.5;
+      opacity: 0.4;
 
-      background-color: black;
+      background-color: var(--secondary-color);
     }
   }
 
   &--loaded > &__overlay {
     visibility: 1;
   }
-
-
 }

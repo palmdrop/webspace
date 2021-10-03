@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import { useHistory } from "react-router";
 
@@ -40,35 +40,35 @@ const PieceWrapper = React.memo( ( {
   const [ overlayVisible, setOverlayVisible ] = useState( true );
 
   const history = useHistory();
+
+  const cancelFadeOut = useCallback( () => {
+    if( fadeOutRef.current ) {
+      clearTimeout( fadeOutRef.current );
+    }
+  }, [] );
+
+  const handleOverlayBlur = useCallback( () => {
+    cancelFadeOut();
+    fadeOutRef.current = setTimeout( () => {
+      setOverlayVisible( false );
+    }, 1500 );
+  }, [ setOverlayVisible, cancelFadeOut ] );
   
   useEffect( ( ) => {
     if( isLoaded ) {
       handleOverlayBlur();
     }
-  }, [ isLoaded ] );
-
-  const cancelFadeOut = () => {
-    if( fadeOutRef.current ) {
-      clearTimeout( fadeOutRef.current );
-    }
-  }
+  }, [ isLoaded, handleOverlayBlur ] );
 
   const handleOverlayFocus = () => {
     cancelFadeOut();
     setOverlayVisible( true );
   }
   
-  const handleOverlayBlur = () => {
-    cancelFadeOut();
-    fadeOutRef.current = setTimeout( () => {
-      setOverlayVisible( false );
-    }, 1500 );
-  }
-
-  const handleLoad = () : void => {
+  const handleLoad = useCallback( () => {
     setIsLoaded( true );
     onLoad?.();
-  }
+  }, [ setIsLoaded, onLoad ] );
 
   const handlePrevious = ( event : React.MouseEvent ) => {
     handlePieceNavigation?.( pieceIndex - 1, event );
@@ -78,7 +78,7 @@ const PieceWrapper = React.memo( ( {
     handlePieceNavigation?.( pieceIndex + 1, event );
   }
 
-  const handleGoBack = ( event : React.MouseEvent ) => {
+  const handleGoBack = () => {
     history.push( PageRoute.pieces );
   }
 

@@ -5,7 +5,7 @@ $general-colors: (
   'glass': #9D919125,
   'glass-fallback': #928994D8,
 
-  'text-shadow': #FF9C9C7F
+  'text-shadow': #66666677 // #FF9C9C7F
 );
 
 // Colors for specific pages / themes
@@ -35,7 +35,7 @@ $themed-colors: (
 
   'dirty': (
     'primary': (
-      300: #D00000,
+      300: #E00000,
       400: #E01010,
       500: #F02020,
     ),

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Button from "../../../components/input/button/Button";
 import { useAnimationFrame } from "../../../hooks/useAnimationFrame";
 import { useMousePosition } from "../../../hooks/useMousePosition";
@@ -18,11 +18,11 @@ type EntryProps = {
 export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Element => {
   const dispatch = useAppDispatch();
 
-  const handleHover = ( event : React.MouseEvent ) => {
+  const handleHover = () => {
     dispatch( setActivePiece( index ) );
   }
 
-  const handleLeave = ( event : React.MouseEvent ) => {
+  const handleLeave = () => {
     dispatch( setActivePiece( null ) );
   }
 
@@ -60,28 +60,41 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
   )
 }
 
-const scrollSpeed = 400.0;
-const scrollFriction = 0.016;
-const scrollEdgeDamping = 30;
-const scrollThresholdSpeed = 1.0;
-
-const scrollMaxSpeed = 1500.0;
-
-const mousePlateau = 0.4;
-const mouseScrollSpeed = 0.04;
-
 type ListProps = {
   pieces : PieceData[],
-  onPieceClick : PieceNavigationFunction
+  onPieceClick : PieceNavigationFunction,
+
+  scrollSpeed? : number,
+  scrollMaxSpeed? : number,
+  scrollFriction? : number,
+  scrollThresholdSpeed? : number,
+
+  scrollEdgeDamping? : number,
+
+  mousePlateau? : number,
+  mouseScrollSpeed? : number,
 }
 
-export const PiecesList = ( { pieces, onPieceClick } : ListProps ) : JSX.Element => {
+export const PiecesList = ( { 
+  pieces, 
+  onPieceClick,
+
+  scrollSpeed = 400.0,
+  scrollMaxSpeed = 1500.0,
+  scrollFriction = 0.016,
+  scrollThresholdSpeed = 1.0,
+
+  scrollEdgeDamping = 30,
+
+  mousePlateau = 0.4,
+  mouseScrollSpeed = 0.04
+} : ListProps ) : JSX.Element => {
   const mainContainerRef = useRef<HTMLDivElement>( null );
   const scrollVelocity = useRef( 0 );
   const scrollAcceleration = useRef( 0 );
   const [ scrollAmount, setScrollAmount ] = useState( window.innerWidth / 3.0 );
 
-  const mousePosition = useMousePosition( mainContainerRef.current );
+  const mousePosition = useMousePosition();
 
   const [ pieceEntries, ] = useState<JSX.Element[]>( () => 
     pieces.map( ( piece, index ) => (
@@ -98,7 +111,7 @@ export const PiecesList = ( { pieces, onPieceClick } : ListProps ) : JSX.Element
     scrollAcceleration.current = scrollSpeed * Math.sign( -event.deltaY );
   }
 
-  useAnimationFrame( ( delta, now ) => {
+  const animationCallback = useCallback( ( delta : number, now : number ) => {
     const applyAcceleration = () => {
       scrollVelocity.current += scrollAcceleration.current;        
     }
@@ -166,7 +179,18 @@ export const PiecesList = ( { pieces, onPieceClick } : ListProps ) : JSX.Element
 
       return scrollAmount + delta * scrollVelocity.current;
     })
-  });
+  }, [ 
+    mousePlateau, 
+    mousePosition, 
+    mouseScrollSpeed, 
+    scrollEdgeDamping, 
+    scrollFriction, 
+    scrollMaxSpeed, 
+    scrollSpeed, 
+    scrollThresholdSpeed 
+  ] );
+
+  useAnimationFrame( animationCallback );
 
   return (
     <div 

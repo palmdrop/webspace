@@ -14,8 +14,8 @@ $box-shadows: (
 );
 
 $text-shadows: (
-  'title': 0px 0px 20px color( 'text-shadow' ),
-  'button': 0px 0px 10px color( 'text-shadow' )
+  'title': 0px 0px 10px color( 'text-shadow' ),
+  'button': 0px 0px 5px color( 'text-shadow' )
 );
 
 @mixin box-shadow( $type ) {

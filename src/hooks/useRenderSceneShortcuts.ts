@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { selectIsAdmin } from '../state/slices/adminSlice';
 import { useAppSelector } from '../state/store/hooks';
 import { RenderScene } from '../three/core';
@@ -9,21 +9,21 @@ import { promptDownload } from '../utils/file';
 const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
   const isAdmin = useAppSelector( selectIsAdmin );
 
-  const handleCaptureFrame = () => {
+  const handleCaptureFrame = useCallback( () => {
     if( !isAdmin || !renderScene ) return;
 
     renderScene.captureFrame( ( dataURL ) => {
       promptDownload( dataURL, 'canvas.png' );
     });
-  }
+  }, [ isAdmin, renderScene ] );
 
-  const handleKeyDown = ( event : KeyboardEvent ) => {
+  const handleKeyDown = useCallback( ( event : KeyboardEvent ) => {
     if( event.type !== 'keydown' ) return;
 
     switch( event.key ) {
       case 'c': handleCaptureFrame(); break;
     }
-  }
+  }, [ handleCaptureFrame ] );
 
   useEffect( () => {
     if( !renderScene ) return;
@@ -33,7 +33,7 @@ const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
     return () => {
       window.removeEventListener( 'keydown', handleKeyDown );
     }
-  }, [ renderScene ] );
+  }, [ renderScene, handleKeyDown ] );
 }
 
 export default useRenderSceneShortcuts;

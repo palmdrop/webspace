@@ -78,9 +78,10 @@ const AnimationCanvas = <T extends RenderScene>( {
 
       return () => {
         renderScene.stop();
+        renderScene.dispose && renderScene.dispose();
       }
     }
-  }, [ renderSceneConstructor ]);
+  }, [ renderSceneConstructor, onLoad ]);
 
   useLayoutEffect( () => {
     addListeners()

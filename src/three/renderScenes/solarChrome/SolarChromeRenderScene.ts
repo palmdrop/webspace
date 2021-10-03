@@ -11,7 +11,7 @@ import { random } from '../../../utils/random';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
 import { clamp } from 'three/src/math/MathUtils';
-import { SolarChromeMaterialPrefab, SolarChromeGeometryPrefab, SolarLandscapeGeometry3Prefab, SolarLandscapeGeometry2Prefab } from '../../prefabs/prefabs';
+import { SolarChromeMaterialPrefab, SolarChromeGeometryPrefab } from '../../prefabs/prefabs';
 
 import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 
