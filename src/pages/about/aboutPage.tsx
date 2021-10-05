@@ -103,7 +103,7 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
   const [ linkSection ] = useState( () => createLinkSection() );
 
   return (
-    <div className={ `about-page` }>
+    <div className="about-page">
       { /* Headers */ }
       <Header 
         mainTitle="OBSCURED"

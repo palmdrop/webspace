@@ -5,7 +5,9 @@ $general-colors: (
   'glass': #9D919125,
   'glass-fallback': #928994D8,
 
-  'text-shadow': #66666677 // #FF9C9C7F
+  'text-shadow': #66666677, // #FF9C9C7F
+
+  'warning': #BB1020
 );
 
 // Colors for specific pages / themes
@@ -42,8 +44,18 @@ $themed-colors: (
 
     'secondary': #947FB7, 
     'accent': #978F43,
-  )
+  ),
 
+  'vapor': (
+    'primary': (
+      300: #FAFF00,
+      400: #FFFF20,
+      500: #FFFF40,
+    ),
+
+    'secondary': #CA7281,
+    'accent': #438397
+  )
 );
 
 // Gradients
@@ -73,6 +85,13 @@ $gradients: (
     180deg,
     color( 'secondary', 'dirty' ) 0%,
     color( 'accent', 'dirty' ) 100%,
+  ),
+
+  // Vapor
+  'vapor': linear-gradient(
+    180deg,
+    color( 'secondary', 'vapor' ) 0%,
+    color( 'accent', 'vapor' ) 100%,
   )
 );
 

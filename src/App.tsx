@@ -65,7 +65,7 @@ export const pages : Page[] = [
   {
     name: 'Contact',
     route: PageRoute.contact,
-    colorTheme: ColorTheme.swamp,
+    colorTheme: ColorTheme.vapor,
     scroll: false,
     Component: ContactPage
   },

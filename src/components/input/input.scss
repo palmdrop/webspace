@@ -1,0 +1,42 @@
+@import '../../styles/layout.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/colors.scss';
+@import '../../styles/ornaments.scss';
+
+@mixin use-input-field() {
+  display: flex;
+  flex-direction: column;
+
+  &__label {
+    @include font( 'accent' );
+
+    font-size: 1.3rem;
+    color: var( --primary-color-500 );
+    
+    padding-bottom: 0.3em;
+  }
+
+  &__input {
+    width: auto;
+    background-color: transparent;
+
+    @include neumorphic-shadow( 6px, 100%, 'inset', color( 'glass' ) );
+    @include font( 'paragraph' );
+
+    font-size: 1.1rem;
+    color: var( --foreground-color );
+
+    padding: 0.3em 0.5em;
+
+    border: none;
+    outline: none;
+    resize: none;
+
+    caret-color: var( --foreground-color );
+    border-radius: 13px;
+
+    &::selection {
+      background-color: var( --secondary-color );
+    }
+  }
+}

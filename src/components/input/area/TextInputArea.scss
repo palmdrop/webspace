@@ -1,0 +1,6 @@
+@import '../input.scss';
+
+.text-input-area {
+  @include use-input-field();
+
+}

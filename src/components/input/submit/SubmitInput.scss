@@ -1,0 +1,32 @@
+@import '../../../styles/layout.scss';
+@import '../../../styles/fonts.scss';
+@import '../../../styles/colors.scss';
+@import '../../../styles/ornaments.scss';
+
+.submit-input {
+  position: relative;
+  display: flex;
+
+  .soft-disk {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    z-index: -1;
+
+    transform: translate( -50%, -50% ) scale( 1.0, 0.5 );
+  }
+
+  input {
+    color: var( --primary-color-300 );
+    @include font( 'paragraph' );
+    font-size: 1.2rem;
+
+    width: 100px;
+
+    &:hover {
+      @include font( 'accent' );
+      font-size: 1.2rem;
+    }
+  }
+}

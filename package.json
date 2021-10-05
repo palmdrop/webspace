@@ -24,6 +24,7 @@
     "three": "^0.131.3",
     "three-kawase-blur": "github:ycw/three-kawase-blur",
     "typescript": "^4.3.5",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -53,6 +54,7 @@
   "devDependencies": {
     "@types/dat.gui": "^0.7.7",
     "@types/react-lazy-load-image-component": "^1.5.2",
-    "@types/react-router-dom": "^5.1.8"
+    "@types/react-router-dom": "^5.1.8",
+    "@types/uuid": "^8.3.1"
   }
 }
