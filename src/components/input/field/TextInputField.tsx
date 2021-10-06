@@ -5,11 +5,12 @@ import './TextInputField.scss';
 
 type Props = {
   label? : string | JSX.Element,
+  name : string,
   defaultValue? : string,
   onChange? : ( value : string ) => void,
 }
 
-const InputField = ( { label, defaultValue, onChange } : Props ) : JSX.Element => {
+const InputField = ( { label, name, defaultValue, onChange } : Props ) : JSX.Element => {
   const uuid = useUUID();
   const [ value, setValue ] = useState( defaultValue ?? "" );
 
@@ -35,6 +36,7 @@ const InputField = ( { label, defaultValue, onChange } : Props ) : JSX.Element =
         type="text"
         id={ uuid }
         value={ value }
+        name={ name }
         onChange={ handleChange }
       />
     </div>

@@ -5,11 +5,12 @@ import './TextInputArea.scss';
 
 type Props = {
   label? : string | JSX.Element,
+  name : string,
   defaultValue? : string,
   onChange? : ( value : string ) => void,
 }
 
-const TextInputArea = ( { label, defaultValue, onChange } : Props ) => {
+const TextInputArea = ( { label, name, defaultValue, onChange } : Props ) => {
   const uuid = useUUID();
   const [ value, setValue ] = useState( defaultValue ?? "" );
 
@@ -34,6 +35,7 @@ const TextInputArea = ( { label, defaultValue, onChange } : Props ) => {
         className="text-input-area__input"
         id={ uuid }
         value={ value }
+        name={ name }
         onChange={ handleChange }
       >
       </textarea>

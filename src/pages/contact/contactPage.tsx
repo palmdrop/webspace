@@ -1,39 +1,51 @@
 import React, { useEffect, useRef, useState } from "react";
+
+import { sendFormEmail, validateEmail } from "../../utils/email";
+
 import { PageRoute } from "../../App";
+import { PageProps } from "../PageWrapper";
+
 import GlassCard from "../../components/cards/glass/GlassCard";
 import Header from "../../components/header/Header";
 import TextInputArea from "../../components/input/area/TextInputArea";
 import TextInputField from "../../components/input/field/TextInputField";
 import SubmitInput from "../../components/input/submit/SubmitInput";
+import HomeBar from "../../components/navigation/home/HomeBar";
 import Paragraph from "../../components/paragraph/Paragraph";
-import { PageProps } from "../PageWrapper";
+
+import { ReactComponent as Obstacle } from '../../assets/svg/obstacle5.svg';
 
 import './contactPage.scss';
 
-// Thanks to https://stackoverflow.com/a/201378 for regex
-const emailValidationRegex = 
-  /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+enum Status {
+  WAITING,
+  SEND_SUCCESSFUL,
+  SEND_FAILED,
+  INPUT_ERROR,
+}
+
+const invalidEmailErrorMessage   = "Invalid Email :( ";
+const invalidMessageErrorMessage = "Include some unironic CONTENT before sending";
+const successMessage = "Email sent successfully";
 
 const validationDelay = 700;
 
 const ContactPage = ( { route } : PageProps ) : JSX.Element => {
-  // Email and email validation
+  const formRef = useRef<HTMLFormElement>( null );
+
+  // Form content and status
   const [ email, setEmail ] = useState( "" );
+  const [ message, setMessage ] = useState( "" );
+  const [ formStatus, setFormStatus ] = useState( Status.WAITING );
+
+  // Input validation
   const [ isEmailValid, setIsEmailValid ] = useState<boolean | undefined>( undefined );
   const validationDelayRef = useRef<NodeJS.Timeout | null>( null );
 
-  // Message 
-  const [ message, setMessage ] = useState( "" );
-
-  // Error message
+  // User feedback 
   const [ errorMessage, setErrorMessage ] = useState( "" );
 
-  const validateEmail = ( email : string ) => {
-    const isValid = emailValidationRegex.test( email );
-    setIsEmailValid( isValid );
-    return isValid;
-  }
-
+  
   const cancelDelayedEmailValidation = () => {
     if( validationDelayRef.current ) clearTimeout( validationDelayRef.current );
   }
@@ -41,25 +53,29 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
   const handleSubmit = ( event : React.FormEvent<HTMLFormElement> ) => {
     event.preventDefault();
 
-    let emailValid = isEmailValid;
-      // validationDelayRef.current 
-      //? validateEmail( email ) 
-      // : isEmailValid;
-
-    // cancelDelayedEmailValidation();
+    cancelDelayedEmailValidation();
+    const emailValid = validateEmail( email );
+    setIsEmailValid( emailValid );
 
     const messageValid = message !== "";
 
     // TODO prevent user from sending too many emails, since I have limited supply! 
 
-    if( !emailValid && !messageValid )  {
-      setErrorMessage( "Invalid email and empty message" );
-    } else if ( !emailValid ) {
-      setErrorMessage( "Invalid email" );
-    } else if ( !messageValid ) {
-      setErrorMessage( "Empty message" );
-    } else {
-      // send email
+    if( !messageValid || !emailValid ) {
+      setFormStatus( Status.INPUT_ERROR );
+    }
+
+    if( !messageValid ) {
+      setErrorMessage( invalidMessageErrorMessage );
+    } else if( messageValid && emailValid ) {
+      // Send email
+      sendFormEmail( 
+        formRef.current as HTMLFormElement 
+      ).then( ( response ) => {
+        setFormStatus( Status.SEND_SUCCESSFUL );
+      }, ( error ) => {
+        setFormStatus( Status.SEND_FAILED );
+      })
     }
   }
 
@@ -70,7 +86,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
 
     setIsEmailValid( undefined ); // undefined means pending state, waiting to be validated
     validationDelayRef.current = setTimeout( () => {
-      validateEmail( value );
+      setIsEmailValid( validateEmail( value ) );
       validationDelayRef.current = null;
     }, validationDelay );
   }
@@ -87,6 +103,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
 
   useEffect( () => {
     setErrorMessage( "" );
+    setFormStatus( Status.WAITING );
   }, [ email, message ] );
 
   return (
@@ -104,7 +121,9 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
           <Header
             mainTitle="Contact me" 
             mainLevel={ 3 }
-          />
+          >
+            <Obstacle className="contact-page__obstacle" />
+          </Header>
           <Paragraph>
             Reach me through the contact form below, or using one of the external resources on the side
           </Paragraph>
@@ -112,22 +131,25 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
           <form
             spellCheck={ false } 
             onSubmit={ handleSubmit }
+            ref={ formRef }
           >
             <div className="contact-page__email-input">
               <TextInputField
                 label="Your email"
+                name="user_email"
                 onChange={ handleEmailInputChange }
               />
 
-              { email !== "" && isEmailValid === false && (
+              { ( email !== "" || formStatus === Status.INPUT_ERROR ) && isEmailValid === false && (
                 <label className="contact-page__invalid-email-message">
-                  Invalid Email :( 
+                  { invalidEmailErrorMessage }
                 </label>
               )}
             </div>
 
             <TextInputArea
               label="What you'd like to say"
+              name="message"
               onChange={ handleMessageInputChange }
             />
 
@@ -141,15 +163,20 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
                   { errorMessage }
                 </div>
               )}
+
+              { !errorMessage && formStatus === Status.SEND_SUCCESSFUL && (
+                <div className="contact-page__success-message">
+                  { successMessage }
+                </div>
+              )}
             </div>
-
-
           </form>
-
-
         </GlassCard>
 
       </main>
+      <aside className="contact-page__aside" >
+        <HomeBar />
+      </aside>
     </div>
   )
 }

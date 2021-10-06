@@ -4,6 +4,8 @@
 /images
 .vscode
 
+src/credentials.ts
+
 # dependencies
 /node_modules
 /.pnp
