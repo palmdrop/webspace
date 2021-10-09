@@ -11,7 +11,11 @@ import { random } from '../../../utils/random';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
 import { clamp } from 'three/src/math/MathUtils';
-import { SolarChromeMaterialPrefab, SolarChromeGeometryPrefab } from '../../prefabs/prefabs';
+import { 
+  SolarChromeMaterialPrefab, 
+  SolarChromeGeometryPrefab,
+  SolarChromeGeometryPrefab2 
+} from '../../prefabs/prefabs';
 
 import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 
@@ -101,7 +105,10 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
   private populateScene() {
     this.scene.background = new THREE.Color( '#976cb8' );
 
-    const geometry = SolarChromeGeometryPrefab( {} );
+    const geometry = Math.random() < 0.5 
+      ? SolarChromeGeometryPrefab( {} )
+      : SolarChromeGeometryPrefab2( {} );
+      
     const material = SolarChromeMaterialPrefab( { geometry } );
 
     const mesh = new THREE.Mesh(

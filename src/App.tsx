@@ -58,7 +58,7 @@ export const pages : Page[] = [
   {
     name: 'Blog',
     route: PageRoute.blog,
-    colorTheme: ColorTheme.swamp,
+    colorTheme: ColorTheme.haze,
     scroll: true,
     Component: BlogPage
   },

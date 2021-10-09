@@ -38,7 +38,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "no-control-regex": 0
+    }
   },
   "browserslist": {
     "production": [

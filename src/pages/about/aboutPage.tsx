@@ -15,12 +15,12 @@ import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
 
 import HomeBar from '../../components/navigation/home/HomeBar';
 import ExternalLink from '../../components/link/ExternalLink';
-import Bar from '../../components/ornamental/bars/Bar';
 
 import { ImageData, introduction, sections, links } from './content';
 
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
+import GlassCard from '../../components/cards/glass/GlassCard';
 
 
 const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
@@ -77,24 +77,21 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
       <section
         className="about-page__link-section"
       >
-        <Bar 
-          direction="horizontal"
-          variant="inset"
-        />
-        <div>
+        <GlassCard>
           <SoftDisk />
           <SoftDisk />
-          { links.map( ( { text, path }, index ) => (
-            <ExternalLink link={ path }>
-              { text }
-            </ExternalLink>
-          ))
-          }
-        </div>
-        <Bar 
-          direction="horizontal"
-          variant="inset"
-        />
+          <>
+            { links.map( ( { text, path }, index ) => (
+              <ExternalLink 
+                key={ `${ path }-${ index }` }
+                link={ path }
+              >
+                { text }
+              </ExternalLink>
+            ))
+            }
+          </>
+        </GlassCard>
       </section>
     )
   }

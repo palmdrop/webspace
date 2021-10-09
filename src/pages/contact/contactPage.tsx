@@ -12,10 +12,12 @@ import TextInputField from "../../components/input/field/TextInputField";
 import SubmitInput from "../../components/input/submit/SubmitInput";
 import HomeBar from "../../components/navigation/home/HomeBar";
 import Paragraph from "../../components/paragraph/Paragraph";
+import ExternalLink from "../../components/link/ExternalLink";
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle5.svg';
 
 import './contactPage.scss';
+import { githubIconData, IconData, instagramIconData, mailIconData } from "../../assets/external-icons";
 
 enum Status {
   WAITING,
@@ -29,6 +31,12 @@ const invalidMessageErrorMessage = "Include some unironic CONTENT before sending
 const successMessage = "Email sent successfully";
 
 const validationDelay = 700;
+
+const icons : IconData[] = [
+  instagramIconData,
+  githubIconData,
+  mailIconData
+]
 
 const ContactPage = ( { route } : PageProps ) : JSX.Element => {
   const formRef = useRef<HTMLFormElement>( null );
@@ -118,14 +126,27 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
 
       <main>
         <GlassCard>
-          <Header
-            mainTitle="Contact me" 
-            mainLevel={ 3 }
-          >
-            <Obstacle className="contact-page__obstacle" />
-          </Header>
+          <div className="contact-page__header-container">
+            <Header
+              mainTitle="Contact me" 
+              mainLevel={ 3 }
+            >
+              <Obstacle className="contact-page__obstacle" />
+            </Header>
+
+            <GlassCard>
+              { icons.map( icon => (
+                <ExternalLink
+                  link={ icon.link }
+                >
+                  <img src={ icon.src } alt={ icon.alt } />
+                </ExternalLink>
+              ))}
+            </GlassCard>
+          </div>
+
           <Paragraph>
-            Reach me through the contact form below, or using one of the external resources on the side
+            I'm Anton. Reach me through the contact form below, or at <ExternalLink link="mailto:contact.palmdrop@gmail.com">contact.palmdrop@gmail.com</ExternalLink>
           </Paragraph>
 
           <form

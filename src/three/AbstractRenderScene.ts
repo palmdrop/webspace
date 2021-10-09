@@ -24,9 +24,9 @@ export abstract class AbstractRenderScene implements RenderScene {
 
   protected composer? : EffectComposer;
 
-  private captureNext : boolean;
-  private dataCallback? : DataURLCallback;
-  private captureFrameResolutionMultiplier : number;
+  protected captureNext : boolean;
+  protected captureFrameResolutionMultiplier : number;
+  protected dataCallback? : DataURLCallback;
 
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     this.canvas = canvas;
@@ -46,10 +46,14 @@ export abstract class AbstractRenderScene implements RenderScene {
 
   private createLoop() : AnimationLoop {
     return new SimpleAnimationLoop( ( now : number, delta : number ) : void => {
-      this.preRender();
+      this.beforeRender();
       this.update( now, delta );
       this.render( now, delta );
-      this.postRender();
+      this.afterRender();
+
+      if( this.captureNext ) {
+        this.captureNext = false;
+      }
     });
   }
 
@@ -103,7 +107,7 @@ export abstract class AbstractRenderScene implements RenderScene {
 
   abstract update( delta : number, now : number ): void;
 
-  private preRender() : void {
+  protected beforeRender() : void {
     if( this.captureNext && this.dataCallback ) {
       this.canvas.width *= this.captureFrameResolutionMultiplier;
       this.canvas.height *= this.captureFrameResolutionMultiplier;
@@ -111,9 +115,8 @@ export abstract class AbstractRenderScene implements RenderScene {
     }
   }
 
-  private postRender() : void {
+  protected afterRender() : void {
     if( this.captureNext && this.dataCallback ) {
-      this.captureNext = false;
       this.dataCallback( this.canvas.toDataURL( 'image/url' ) );
 
       this.canvas.width /= this.captureFrameResolutionMultiplier;

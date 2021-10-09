@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { random } from '../../utils/random';
-import { noiseWarp, twistWarp } from '../geometry/warp/warp';
+import { domainWarp, noiseWarp, twistWarp } from '../geometry/warp/warp';
 import { generateWarpGeometryPrefab } from './WarpGeometryPrefab';
 
 import { ASSETHANDLER } from '../systems/AssetHandler';
@@ -29,15 +29,15 @@ export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
     // Frequency
     () => {
       return new THREE.Vector3( 
-        random( 0.15, solarChromeMaxFrequency.x ),
-        random( 0.15, solarChromeMaxFrequency.y ),
-        random( 0.15, solarChromeMaxFrequency.z )
+        random( 0.2, solarChromeMaxFrequency.x ),
+        random( 0.2, solarChromeMaxFrequency.y ),
+        random( 0.2, solarChromeMaxFrequency.z )
       );
     },
 
     // Warp amount
     ( frequency : THREE.Vector3 ) => {
-      return ( solarChromeMaxFrequency.length() - frequency.length() ) * random( 6.0, 8.0 ) + 0.1 
+      return ( solarChromeMaxFrequency.length() - frequency.length() ) * random( 7.0, 9.0 ) + 0.5 
     },
 
     // Octaves 
@@ -47,7 +47,7 @@ export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
 
     // Lacunarity
     () => {
-      return random( 1.5, 2.5 );
+      return random( 1.9, 2.5 );
     },
 
     // Persistance
@@ -69,6 +69,71 @@ export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
             0.8 * Math.random() 
           ),
           falloff : random( 0.5, 1.0 ),
+        }
+      }
+    ]
+  )
+})();
+
+export const SolarChromeGeometryPrefab2 : GeometryPrefab = ( () => {
+  const solarChromeMaxFrequency = new THREE.Vector3( 0.4 );
+  return generateWarpGeometryPrefab(
+    // Geometry
+    () => {
+      const geometry = new THREE.TorusBufferGeometry( 1.0, 0.2, 128 * 4, 128 * 4 )
+
+      geometry.applyMatrix4( new THREE.Matrix4().scale( new THREE.Vector3( 
+        random( 1.0, 3.0 ),
+        random( 1.0, 3.0 ),
+        random( 1.0, 3.0 ),
+      )));
+
+      return geometry;
+    },
+
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( 0.3, solarChromeMaxFrequency.x ),
+        random( 0.3, solarChromeMaxFrequency.y ),
+        random( 0.3, solarChromeMaxFrequency.z )
+      );
+    },
+
+    // Warp amount
+    ( frequency : THREE.Vector3 ) => {
+      return random( 0.02, 0.05 )
+    },
+
+    // Octaves 
+    () => {
+      return 3
+    },
+
+    // Lacunarity
+    () => {
+      return random( 2.9, 4.5 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.8, 0.9 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction : domainWarp,
+      }, 
+      {
+        warpFunction : twistWarp,
+        args : {
+          twistAmount : new THREE.Vector3( 
+            0.8 * Math.random(), 
+            0.8 * Math.random(), 
+            0.8 * Math.random() 
+          ),
+          falloff : random( 0.8, 0.8 ),
         }
       }
     ]
@@ -418,6 +483,36 @@ export const SolarLandscapeMaterial3Prefab : Prefab<THREE.MeshStandardMaterial, 
 
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.1, 0.5 ) );
+    material.needsUpdate = true;
+  });
+
+  return material;
+}
+
+export const SolarLandscapeMaterial4Prefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
+  color
+} ) => {
+  const material = new THREE.MeshStandardMaterial( {
+    color: color,
+    roughness: random( 0.3, 0.5 ),
+    metalness: 0.7,
+
+    side: THREE.DoubleSide,
+  });
+  
+  material.envMapIntensity = 0.5;
+
+  ASSETHANDLER.loadTexture( normalTexturePathX2, false, ( texture ) => {
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.LinearFilter;
+
+    // const textureRepeat = random( 5.0, 7.0 );
+    // texture.repeat.set( textureRepeat, textureRepeat );
+
+    material.normalMap = texture;
+    material.normalScale = new THREE.Vector2( random( 0.2, 0.6 ) );
     material.needsUpdate = true;
   });
 

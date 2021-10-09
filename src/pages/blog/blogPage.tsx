@@ -2,11 +2,10 @@ import ExternalLink from "../../components/link/ExternalLink";
 import HomeBar from "../../components/navigation/home/HomeBar";
 import Paragraph from "../../components/paragraph/Paragraph";
 import Title from "../../components/title/Title";
-import { PageProps } from "../PageWrapper";
 
 import './blogPage.scss';
 
-const BlogPage = ( { } : PageProps ) : JSX.Element => {
+const BlogPage = ( /* { } : PageProps */ ) : JSX.Element => {
   return (
     <div className='blog-page'>
       <div>

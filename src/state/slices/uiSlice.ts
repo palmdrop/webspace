@@ -6,7 +6,8 @@ export enum ColorTheme {
   horizon = 'horizon',
   swamp = 'swamp', 
   dirty = 'dirty',
-  vapor = 'vapor'
+  vapor = 'vapor',
+  haze = 'haze', 
 };
 
 export interface UIState {

@@ -55,6 +55,17 @@ $themed-colors: (
 
     'secondary': #CA7281,
     'accent': #438397
+  ),
+
+  'haze': (
+    'primary': (
+      300: #4000C9,
+      400: #5010EE,
+      500: #6020FF,
+    ),
+
+    'secondary': #72CA9F,
+    'accent': #974343
   )
 );
 
@@ -92,6 +103,13 @@ $gradients: (
     180deg,
     color( 'secondary', 'vapor' ) 0%,
     color( 'accent', 'vapor' ) 100%,
+  ),
+
+  // Haze
+  'haze': linear-gradient(
+    180deg,
+    color( 'secondary', 'haze' ) 0%,
+    color( 'accent', 'haze' ) 100%,
   )
 );
 

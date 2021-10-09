@@ -1,34 +1,14 @@
 import SharpDisk from '../../../components/ornamental/disk/sharp/SharpDisk';
 
-import instagramIcon from '../../../assets/svg/instagram.svg';
-import githubIcon from '../../../assets/svg/github.svg';
-import mailIcon from '../../../assets/svg/email.svg';
+import ExternalLink from '../../../components/link/ExternalLink';
+import { githubIconData, IconData, instagramIconData, mailIconData } from '../../../assets/external-icons';
 
 import './MainFooter.scss';
-import ExternalLink from '../../../components/link/ExternalLink';
 
-type IconEntry = {
-  src: string,
-  alt: string,
-  link: string,
-};
-
-const icons: IconEntry[] = [
-  {
-    src: instagramIcon,
-    alt: 'instagram',
-    link: 'https://instagram.com/palmdrop/',
-  },
-  {
-    src: githubIcon,
-    alt: 'github',
-    link: 'https://github.com/palmdrop/',
-  },
-  {
-    src: mailIcon,
-    alt: 'mail',
-    link: 'mailto:anton@exlex.se'
-  }
+const icons: IconData[] = [
+  instagramIconData,
+  githubIconData,
+  mailIconData
 ];
 
 const MainFooter = (): JSX.Element => {
