@@ -1,17 +1,17 @@
 /* Poppins */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
 /* Quicksand */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&display=swap');
 
 /* Snippet */
-@import url('https://fonts.googleapis.com/css2?family=Snippet&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Snippet&display=swap');
 
 /* Epilogue */
-@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&display=swap');
 
 /* BioRhyme Expanded */
-@import url('https://fonts.googleapis.com/css2?family=BioRhyme+Expanded:wght@400;700;800&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=BioRhyme+Expanded:wght@400;700;800&display=swap');
 
 /* Syne */
 /* Credit: https://gitlab.com/bonjour-monde/fonderie/syne-typeface */
@@ -50,13 +50,11 @@
 $fonts: (
   'heading': (
     'name': 'Quicksand',
-    //'name': 'Quicksand',
     'fallback': sans-serif,
     'weight': 300,
     'style': italic,
   ),
   'subheading': (
-    //'name': 'Snippet',
     'name': 'Quicksand',
     'fallback': sans-serif,
     'weight': 400,
@@ -71,7 +69,6 @@ $fonts: (
   ),
 
   'button': (
-    //'name': 'Quicksand',
     'name': 'SyneMono',
     'fallback': sans-serif,
     'weight': 600,
