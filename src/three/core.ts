@@ -1,3 +1,5 @@
+import { MouseMoveCallback, MouseScrollCallback } from "../components/canvas/AnimationCanvas";
+
 /* Constants */
 export const MILLI_SECONDS_PER_SECOND = 1000;
 
@@ -30,6 +32,9 @@ export interface RenderScene extends AnimationLoop {
   setCaptureFrameResolutionMultiplier( resolutionMultiplier : number ) : void;
 
   dispose? : () => void;
+
+  onMouseMove? : ( x : number, y : number, deltaX : number, deltaY : number ) => void,
+  onScroll? : ( deltaY : number ) => void
 }
 
 export type RenderSceneConstructor<T extends RenderScene> = 

@@ -4,8 +4,8 @@ import { useRef, useEffect } from 'react';
 import useRenderSceneShortcuts from '../../hooks/useRenderSceneShortcuts';
 import { createRenderScene, RenderScene, RenderSceneConstructor, VoidCallback } from '../../three/core';
 
-type MouseMoveCallback<T extends RenderScene> = ( x : number, y : number, deltaX : number, deltaY : number, renderScene : T ) => void;
-type MouseScrollCallback<T extends RenderScene> = ( deltaScroll : number, renderScene : T ) => void;
+export type MouseMoveCallback<T extends RenderScene> = ( x : number, y : number, deltaX : number, deltaY : number, renderScene : T ) => void;
+export type MouseScrollCallback<T extends RenderScene> = ( deltaScroll : number, renderScene : T ) => void;
 
 type Props<T extends RenderScene> = {
   renderSceneConstructor : RenderSceneConstructor<T>,

@@ -108,7 +108,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     const geometry = Math.random() < 0.5 
       ? SolarChromeGeometryPrefab( {} )
       : SolarChromeGeometryPrefab2( {} );
-      
+
     const material = SolarChromeMaterialPrefab( { geometry } );
 
     const mesh = new THREE.Mesh(
@@ -166,17 +166,6 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     return mesh;
   }
 
-  rotate( deltaX : number, deltaY : number ) {
-    this.rotationAcceleration.y += this.rotationSpeed * deltaX;
-    this.rotationAcceleration.x += this.rotationSpeed * deltaY;
-  }
-
-  zoom( deltaZoom : number ) {
-
-    this.zoomVelocity += deltaZoom * this.zoomSpeed;
-
-  }
-
   update(delta : number, now : number): void {
     this.controls?.update();
 
@@ -221,5 +210,14 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     this.backgroundRenderer.render();
     this.renderer.setRenderTarget( null );
+  }
+
+  onMouseMove( x : number, y : number, deltaX : number, deltaY : number ) {
+    this.rotationAcceleration.y += this.rotationSpeed * deltaX;
+    this.rotationAcceleration.x += this.rotationSpeed * deltaY;
+  }
+
+  onScroll( deltaZoom : number ) {
+    this.zoomVelocity += deltaZoom * this.zoomSpeed;
   }
 }

@@ -288,7 +288,7 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
     this.baseRenderer.setSize( width ?? this.canvas.width, height ?? this.canvas.height );
   }
 
-  rotate( deltaX : number, deltaY : number ) {
+  onMouseMove( x : number, y : number, deltaX : number, deltaY : number ) {
     this.rotationAcceleration.y += this.rotationSpeed * deltaX;
     this.rotationAcceleration.x += this.rotationSpeed * deltaY;
   }
