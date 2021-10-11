@@ -1,13 +1,13 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useReducer } from 'react'
 import { selectIsAdmin } from '../state/slices/adminSlice';
 import { useAppSelector } from '../state/store/hooks';
 import { RenderScene } from '../three/core';
 import { promptDownload } from '../utils/file';
 
 
-
 const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
   const isAdmin = useAppSelector( selectIsAdmin );
+  const [ reloadValue, reload ] = useReducer( ( current : number ) => current + 1, 0 );
 
   const handleCaptureFrame = useCallback( () => {
     if( !isAdmin || !renderScene ) return;
@@ -20,8 +20,11 @@ const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
   const handleKeyDown = useCallback( ( event : KeyboardEvent ) => {
     if( event.type !== 'keydown' ) return;
 
+    console.log( event.key );
+
     switch( event.key ) {
-      case 'c': handleCaptureFrame(); break;
+      case 'c' : handleCaptureFrame(); break;
+      case ' ' : reload(); break;
     }
   }, [ handleCaptureFrame ] );
 
@@ -34,6 +37,10 @@ const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
       window.removeEventListener( 'keydown', handleKeyDown );
     }
   }, [ renderScene, handleKeyDown ] );
+
+  return {
+    reloadValue
+  }
 }
 
 export default useRenderSceneShortcuts;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import { useLayoutEffect } from 'react';
 import { useRef, useEffect } from 'react';
 import useRenderSceneShortcuts from '../../hooks/useRenderSceneShortcuts';
@@ -18,7 +18,7 @@ const AnimationCanvas = <T extends RenderScene>( {
   renderSceneConstructor, 
   onLoad, 
   onMouseMove,
-  onScroll
+  onScroll,
 } : Props<T> ) : JSX.Element => {
   const [ renderScene, setRenderScene ] = useState<T | null>( null );
   const mousePosition = useRef<{ x : number, y : number } | null>( null );
@@ -69,6 +69,10 @@ const AnimationCanvas = <T extends RenderScene>( {
     onMouseMove && window.removeEventListener( 'mousemove', handleMouseMove );
   }
 
+  const {
+    reloadValue 
+  } = useRenderSceneShortcuts( renderScene );
+
   useEffect( () => {
     if( canvasRef.current !== null ) {
       const renderScene = createRenderScene( renderSceneConstructor, canvasRef.current, onLoad );
@@ -81,7 +85,7 @@ const AnimationCanvas = <T extends RenderScene>( {
         renderScene.dispose && renderScene.dispose();
       }
     }
-  }, [ renderSceneConstructor, onLoad ]);
+  }, [ renderSceneConstructor, onLoad, reloadValue ]);
 
   useLayoutEffect( () => {
     addListeners()
@@ -91,7 +95,6 @@ const AnimationCanvas = <T extends RenderScene>( {
     }
   });
 
-  useRenderSceneShortcuts( renderScene );
 
   return (
     <canvas

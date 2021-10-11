@@ -183,12 +183,12 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       });
 
       const texture = textureFromSmoothGeometry( geometry, ( x, y, z, u, v ) => {
-        const ox = warp * getNoise3D( { x : x + 103, y, z }, null, frequency, -1.0, 1.0 );
-        const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, -1.0, 1.0 );
-        const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, -1.0, 1.0 );
+        const ox = warp * getNoise3D( { x : x + 103, y, z }, null, new THREE.Vector3().copy( frequency ).multiplyScalar( 2.0 ), 0.0, 1.0 );
+        const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, 0.0, 1.0 );
+        const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, 0.0, 1.0 );
 
         return new THREE.Color( 
-          0.5 + 1.0 * ox, // Ambient occlusion
+          1.0 - 1.0 * ox, // Ambient occlusion
           0.1 + oy,       // Roughness map
           0.5 + 0.5 * n   // Metalness map
         );
@@ -196,10 +196,9 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
       material.roughnessMap = texture;
       material.metalnessMap = texture;
-      // material.aoMap = texture;
+      material.aoMap = texture;
 
       material.normalScale.multiplyScalar( 0.5 );
-
 
       this.geometries.push( geometry );
       this.materials.push( material );
@@ -214,7 +213,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
 
-      const minScale = 0.2;
+      const minScale = 0.5;
       const maxScale = 1.3;
 
       const range = 7;
@@ -280,8 +279,8 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
     directionalLight.position.set( 0, 4, 0.2 );
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 1028 * 2;
-    directionalLight.shadow.mapSize.height = 1028 * 2;
+    directionalLight.shadow.mapSize.width = 1028 * 4;
+    directionalLight.shadow.mapSize.height = 1028 * 4;
     directionalLight.shadow.bias = -0.0003;
 
     directionalLight.shadow.camera.left   = -15;

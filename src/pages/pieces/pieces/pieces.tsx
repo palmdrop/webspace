@@ -8,7 +8,10 @@ import { SolarChromeRenderScene } from "../../../three/renderScenes/solarChrome/
 import { SolarLandscapeRenderScene } from "../../../three/renderScenes/solarLandscape/SolarLandscapeRenderScene";
 import { createPiece } from "./Piece";
 
-export type PieceProps = { onLoad : (() => void ) | undefined };
+export type PieceProps = { 
+  onLoad : ( () => void ) | undefined,
+};
+
 export type Piece = React.FunctionComponent<PieceProps>;
 export type PieceData = {
   name : string,
@@ -16,8 +19,7 @@ export type PieceData = {
   tags : string[],
   image? : string,
 
-  // Component: React.LazyExoticComponent<Piece>,
-  Component: Piece,
+  Component: React.LazyExoticComponent<Piece>,
 
   colorTheme? : ColorTheme
 }
@@ -49,8 +51,7 @@ export const pieces : PieceData[] = [
     ],
     image: retroCoreImage,
 
-    // Component: React.lazy( () => import( './retroCore/RetroCorePiece' ) ),
-    Component: createPiece( RetroCoreRenderScene ),
+    Component: React.lazy( () => import( './retroCore/RetroCorePiece' ) ),
     colorTheme: ColorTheme.horizon
   },
   {
@@ -78,8 +79,7 @@ export const pieces : PieceData[] = [
 
     image: solarChromeImage,
 
-    // Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
-    Component: createPiece( SolarChromeRenderScene ),
+    Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
   },
   {
     name: "Solar Landscape",
@@ -106,8 +106,7 @@ export const pieces : PieceData[] = [
 
     image: solarChromeImage,
 
-    // Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
-    Component: createPiece( SolarLandscapeRenderScene ),
+    Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
   }
 ]
 
