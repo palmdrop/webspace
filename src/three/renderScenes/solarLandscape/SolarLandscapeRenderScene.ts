@@ -1,7 +1,4 @@
 import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from '../../effects/unrealBloom/UnrealBloomPass';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
 import * as dat from 'dat.gui';
@@ -11,40 +8,25 @@ import { VoidCallback } from "../../core";
 
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
-import { random, randomElement } from '../../../utils/random';
-
-import { setVertexColors } from '../../geometry/color/color';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
-import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
 import { clamp } from 'three/src/math/MathUtils';
 import { varyColorHSL } from '../../utils/color';
-import { SolarChromeGeometryPrefab, SolarChromeMaterialPrefab, SolarLandscapeGeometry1Prefab, SolarLandscapeGeometry2Prefab, SolarLandscapeGeometry3Prefab, SolarLandscapeMaterial1Prefab, SolarLandscapeMaterial2Prefab, SolarLandscapeMaterial3Prefab } from '../../prefabs/prefabs';
 
 import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 
-import { getNoise3D } from '../../utils/noise';
-import { textureFromSmoothGeometry } from '../../material/textureFromVertices';
+import { createMeshes } from './meshes';
+import { createBackground } from './background';
+import { createPostProcessing } from './postProcessing';
+import { ShadowRenderer } from './shadows';
 
-const materialPrefabs = [
-  SolarChromeMaterialPrefab,
-  SolarLandscapeMaterial1Prefab,
-  SolarLandscapeMaterial2Prefab,
-  // SolarLandscapeMaterial3Prefab
-];
-
-const geometryPrefabs = [
-  SolarChromeGeometryPrefab,
-  SolarLandscapeGeometry1Prefab,
-  SolarLandscapeGeometry2Prefab,
-  SolarLandscapeGeometry3Prefab,
-];
+import normalTexturePath from '../../../assets/normal/normal-texture1_x2.jpg';
 
 export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
 
-  private content : THREE.Object3D;
-  private materials : THREE.MeshStandardMaterial[];
-  private geometries : THREE.BufferGeometry[];
+  private meshes? : THREE.Group;
+  private materials? : THREE.MeshStandardMaterial[];
+  private geometries? : THREE.BufferGeometry[];
 
   private rotationSpeed : number;
   private rotationVelocity : THREE.Vector2;
@@ -65,13 +47,14 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private zoomFriction : number;
   private zoomLimitThreshold : number;
 
+  private shadowRenderer : ShadowRenderer;
+  private shadowPlane? : THREE.Mesh;
+  private backgroundPlane? : THREE.Mesh;
+
   private gui : dat.GUI;
 
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     super( canvas, onLoad );
-
-    this.materials = [];
-    this.geometries = [];
 
     this.gui = new dat.GUI();
     this.controls = new TrackballControls( this.camera, this.canvas );
@@ -81,41 +64,41 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.zoomFriction = 0.07;
     this.zoomLimitThreshold = 0.3;
 
-    this.camera.far = 100;
+    this.camera.far = 50;
 
     this.rotationSpeed = 0.00002;
     this.rotationVelocity = new THREE.Vector2();
     this.rotationAcceleration = new THREE.Vector2();
     this.rotationFriction = 0.1;
 
-    const backgroundMaterial = new THREE.ShaderMaterial( createWarpGradientShader( 3 ) );
-    this.backgroundRenderer = new FullscreenQuadRenderer(
-      this.renderer,
-      backgroundMaterial,
-      new THREE.WebGLRenderTarget( canvas.width, canvas.height, {
+    const { 
+      background,
+      backgroundColors,
+      backgroundRenderer
+    } = createBackground( this.renderer );
 
-      })
-    );
-
-    this.backgroundColors = [
-      new THREE.Color().setHSL( Math.random(), 0.4, random( 0.15, 0.6 ) ),
-      new THREE.Color().setHSL( Math.random(), 0.5, random( 0.15, 0.6 ) ),
-      new THREE.Color().setHSL( Math.random(), 0.4, random( 0.15, 0.6 ) ),
-    ];
-
-    backgroundMaterial.uniforms[ 'colors' ].value = this.backgroundColors;
-    backgroundMaterial.uniforms[ 'frequency' ].value = 0.9;
-    backgroundMaterial.uniforms[ 'contrast' ].value = 1.0;
-    backgroundMaterial.uniforms[ 'brightness' ].value = 0.3;
+    this.background = background;
+    this.backgroundColors = backgroundColors;
+    this.backgroundRenderer = backgroundRenderer;
 
     this.resizeables.push( this.backgroundRenderer );
-
-    this.background = this.backgroundRenderer.renderTarget.texture;
 
     this.minZ = 0;
     this.maxZ = 0;
 
-    this.content = new THREE.Object3D();
+    const {
+      composer
+    } = createPostProcessing( this.renderer, this.scene, this.camera );
+    this.composer = composer;
+
+    this.shadowRenderer = new ShadowRenderer(
+      this.renderer, 
+      this.scene, 
+      new THREE.Vector3( 0, 0, 10 ),
+      new THREE.Vector3( 0, 0, -1 ),
+      new THREE.Vector2( 30, 30 ),
+    );
+
     this.populateScene();
   }
 
@@ -123,10 +106,11 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     const renderer = new THREE.WebGLRenderer({
         canvas: this.canvas,
         powerPreference: 'high-performance',
-        antialias: true,
-        depth: true,
-        stencil: false,
-        alpha: true
+        // antialias: true,
+        // depth: true,
+        // stencil: false,
+        alpha: true,
+        // premultipliedAlpha: false
     });
 
     renderer.physicallyCorrectLights = true;
@@ -134,140 +118,13 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     renderer.outputEncoding = THREE.GammaEncoding;
 
     renderer.shadowMap.enabled = true;
-    //renderer.shadowMap.type = THREE.VSMShadowMap;
+
+    renderer.setClearAlpha( 0.0 );
+    renderer.autoClear = false;
 
     return renderer;
   }
 
-  private createMeshes() {
-    for( let i = 0; i < 5; i++ ) {
-      const geometry = randomElement( geometryPrefabs )( {} );
-      const material = randomElement( materialPrefabs )( { 
-        geometry : geometry,
-        color : new THREE.Color( 'gray' )
-      });
-
-      material.dithering = true;
-      material.vertexColors = true;
-
-      /*material.onBeforeCompile = ( shader ) => {
-        console.log( shader.fragmentShader );
-        console.log( shader.uniforms );
-      }*/
-
-
-      /*ASSETHANDLER.loadTexture( randomElement( textures ), false, ( texture ) => {
-        material.map = texture;
-      });*/
-
-      const frequency = 
-        new THREE.Vector3(
-          0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
-          0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
-          0.2 + 0.7 * Math.pow( Math.random(), 2.0 ),
-        );
-
-      const warp = 0.7;
-      const rf = random( 0.2, 0.9 );
-      const gf = random( 0.2, 0.9 );
-      const bf = random( 0.2, 0.9 );
-      setVertexColors( geometry, ( i, x, y, z ) => {
-        const ox = warp * getNoise3D( { x : x + 103, y, z }, null, frequency, -1.0, 1.0 );
-        const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, -1.0, 1.0 );
-        const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, -1.0, 1.0 );
-        return { 
-          r : 1.0 - rf * n,
-          g : 1.0 - gf * ox,
-          b : 1.0 - bf * oy 
-        }
-      });
-
-      const texture = textureFromSmoothGeometry( geometry, ( x, y, z, u, v ) => {
-        const ox = warp * getNoise3D( { x : x + 103, y, z }, null, new THREE.Vector3().copy( frequency ).multiplyScalar( 2.0 ), 0.0, 1.0 );
-        const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, 0.0, 1.0 );
-        const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, 0.0, 1.0 );
-
-        return new THREE.Color( 
-          1.0 - 1.0 * ox, // Ambient occlusion
-          0.1 + oy,       // Roughness map
-          0.5 + 0.5 * n   // Metalness map
-        );
-      }, new THREE.Color());
-
-      material.roughnessMap = texture;
-      material.metalnessMap = texture;
-      material.aoMap = texture;
-
-      material.normalScale.multiplyScalar( 0.5 );
-
-      this.geometries.push( geometry );
-      this.materials.push( material );
-
-      const numberOfInstances = Math.floor( random( 20, 50 ) );
-      const mesh = new THREE.InstancedMesh(
-        geometry,
-        material,
-        numberOfInstances
-      );
-
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-
-      const minScale = 0.5;
-      const maxScale = 1.3;
-
-      const range = 7;
-      for( let i = 0; i < numberOfInstances; i++ ) {
-        const scale = new THREE.Vector3(
-          random( minScale, maxScale ),
-          random( minScale, maxScale ),
-          random( minScale, maxScale ),
-        );
-
-        const position = new THREE.Vector3(
-          random( -range, range ),
-          random( -range, range ),
-          random( -range, range ),
-        );
-
-        /*const rotation = new THREE.Euler(
-          random( 0, Math.PI * 2 ),
-          random( 0, Math.PI * 2 ),
-          random( 0, Math.PI * 2 ),
-        );*/
-
-        const f = 0.03;
-        const minRotation = -Math.PI;
-        const maxRotation = Math.PI;
-        // const minRotation = 0;
-        // const maxRotation = 0;
-        const rotation = new THREE.Euler(
-          getNoise3D( position, { x : 100, y : 0, z : 0 }, f, minRotation, maxRotation ),
-          getNoise3D( position, { x : 0, y : 100, z : 0 }, f, -Math.PI, Math.PI ),
-          getNoise3D( position, { x : 0, y : 0, z : 100 }, f, minRotation, maxRotation ),
-        );
-
-        const matrix = new THREE.Matrix4().compose( 
-          position,
-          new THREE.Quaternion().setFromEuler( rotation ),
-          scale
-        );
-
-        const color = varyColorHSL( 
-          randomElement( this.backgroundColors ),
-          random( -0.1, 0.1 ),
-          random( -0.1, 0.1 ),
-          random( -0.2, 0.2 )
-        );
-
-        mesh.setMatrixAt( i, matrix );
-        mesh.setColorAt( i, color );
-
-      }
-
-      this.content.add( mesh );
-    }
-  }
 
   private createLights() {
     const directionalLight = new THREE.DirectionalLight(
@@ -277,7 +134,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
     this.directionalLight = directionalLight;
 
-    directionalLight.position.set( 0, 4, 0.2 );
+    directionalLight.position.set( 0, 4, 8.2 );
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 1028 * 4;
     directionalLight.shadow.mapSize.height = 1028 * 4;
@@ -288,10 +145,15 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     directionalLight.shadow.camera.top    = 15;
     directionalLight.shadow.camera.bottom = -15;
 
+    this.shadowRenderer.setLightPosition( directionalLight.position );
+    const updateShadowRendererPosition = () => {
+      this.shadowRenderer.setLightPosition( directionalLight.position );
+    }
+
     const dirLightFolder = this.gui.addFolder( 'directionalLight' );
-    dirLightFolder.add( directionalLight.position, 'x' ).min( -10 ).max( 10 );
-    dirLightFolder.add( directionalLight.position, 'y' ).min( -10 ).max( 10 );
-    dirLightFolder.add( directionalLight.position, 'z' ).min( -10 ).max( 10 );
+    dirLightFolder.add( directionalLight.position, 'x' ).min( -10 ).max( 10 ).onChange( updateShadowRendererPosition );
+    dirLightFolder.add( directionalLight.position, 'y' ).min( -10 ).max( 10 ).onChange( updateShadowRendererPosition );
+    dirLightFolder.add( directionalLight.position, 'z' ).min( -10 ).max( 10 ).onChange( updateShadowRendererPosition );
     dirLightFolder.add( directionalLight, 'intensity' ).min( 0.0 ).max( 10 );
     dirLightFolder.addColor( { 
       color : { 
@@ -304,12 +166,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     });
     dirLightFolder.add( directionalLight.shadow, 'bias' ).min( -0.0003 ).max( 0.0003 );
 
-    /*const ambientLight = new THREE.AmbientLight( 'white', 0.1 );
-
-    const ambientLightFolder = this.gui.addFolder( 'ambientLight' );
-    ambientLightFolder.add( ambientLight, 'intensity' ).min( 0.0 ).max( 1.0 );
-    */
-
     const hemisphereLight = new THREE.HemisphereLight( 
       this.backgroundColors[ 0 ],
       this.backgroundColors[ 1 ],
@@ -318,63 +174,21 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     const hemisphereLightFolder = this.gui.addFolder( 'hemisphereLight' );
     hemisphereLightFolder.add( hemisphereLight, 'intensity' ).min( 0.0 ).max( 2.0 );
 
-    /*const pointLight = new THREE.PointLight( 'white', 5.0 );
-    pointLight.position.set( -5, 1, 10 );
-    pointLight.castShadow = true;
-    pointLight.shadow.mapSize.width = 1028;
-    pointLight.shadow.mapSize.height = 1028;
-    pointLight.shadow.bias = -0.0003;
 
-    const pointLightFolder = this.gui.addFolder( 'pointLight' );
-    pointLightFolder.add( pointLight.position, 'x' ).min( -10 ).max( 10 );
-    pointLightFolder.add( pointLight.position, 'y' ).min( -10 ).max( 10 );
-    pointLightFolder.add( pointLight.position, 'z' ).min( -10 ).max( 10 );
-    pointLightFolder.add( pointLight, 'intensity' ).min( 0.0 ).max( 10 );
-    pointLightFolder.addColor( { 
-      color : { 
-        r : pointLight.color.r * 255,
-        g : pointLight.color.g * 255,
-        b : pointLight.color.b * 255
-      } 
-    }, 'color' ).onChange( ( { r, g, b } ) => {
-      pointLight.color.setRGB( r / 255.0, g / 255.0, b / 255.0 );
-    });
-    */
-
-
-    this.scene.add( directionalLight, hemisphereLight, /* ambientLight */ );
-    //this.scene.add( pointLight, hemisphereLight, /* ambientLight */ );
-    //this.scene.add( pointLight );
-  }
-
-  private createPostProcessing() {
-    this.composer = new EffectComposer( this.renderer );
-    
-    const renderPass = new RenderPass( this.scene, this.camera );
-    this.composer.addPass( renderPass );
-
-    /*const bloomPass = new UnrealBloomPass( 
-      new THREE.Vector2( this.canvas.width, this.canvas.height ),
-      1.2,
-      0.05,
-      0.5
-    );
-
-    const bloomFolder = this.gui.addFolder( 'bloom' );
-    bloomFolder.add( bloomPass, 'strength' ).min( 0.0 ).max( 2.0 );
-    bloomFolder.add( bloomPass, 'radius' ).min( 0.0 ).max( 2.0 );
-    bloomFolder.add( bloomPass, 'threshold' ).min( 0.0 ).max( 1.0 );
-
-    this.composer.addPass( bloomPass );*/
+    this.scene.add( directionalLight, hemisphereLight );
   }
 
   private populateScene() {
-    this.createMeshes();
+    // this.createMeshes();
+    const { meshes, geometries, materials } = createMeshes( this.backgroundColors );
+    this.meshes = meshes;
+    this.geometries = geometries;
+    this.materials = materials;
     this.createLights();
-    this.createPostProcessing();
+
 
     // Set camera to appropriate distance from object
-    const boundingBox = new THREE.Box3().setFromObject( this.content );
+    const boundingBox = new THREE.Box3().setFromObject( this.meshes );
     const maxSize = Math.max(
       boundingBox.max.x - boundingBox.min.x,
       boundingBox.max.y - boundingBox.min.y,
@@ -386,14 +200,16 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.minZ = maxSize / 2.0;
     this.maxZ = maxSize / 2.0 + 20;
 
-    this.scene.add( this.content );
-    this.scene.background = this.background;
+    this.scene.add( this.meshes );
+    // this.scene.background = this.background;
 
+    const fogColor = varyColorHSL( this.backgroundColors[0], 0.0, 0.0, -0.45 );
     this.scene.fog = new THREE.Fog( 
-      varyColorHSL( this.backgroundColors[0], 0.0, 0.0, -0.25 ),
+      fogColor,
       this.camera.near, 
       this.camera.far 
     );
+    this.scene.background = fogColor;
     
     const fogFolder = this.gui.addFolder( 'fog' );
     fogFolder.add( this.scene.fog, 'near' ).min( 0.0 ).max( 100 ).onChange( ( near ) => {
@@ -409,7 +225,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     });
 
     const envMapIntensity = 0.35;
-    const setMaterialEnvMapIntensity = ( intensity : number ) => this.materials.forEach( material => material.envMapIntensity = intensity );
+    const setMaterialEnvMapIntensity = ( intensity : number ) => this.materials?.forEach( material => material.envMapIntensity = intensity );
     setMaterialEnvMapIntensity( envMapIntensity );
     this.gui.add( { envMapIntensity : envMapIntensity }, 'envMapIntensity' ).min( 0.0 ).max( 2.0 )
     .onChange( setMaterialEnvMapIntensity );
@@ -420,9 +236,61 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       this.onLoad?.();
     });
 
+    // Background shadow
+    const createTexturedPlane = ( texture : THREE.Texture, transparent = false ) => {
+      return new THREE.Mesh(
+        new THREE.PlaneBufferGeometry( 1.0, 1.0 ),
+        new THREE.MeshBasicMaterial( {
+          map: texture,
+          transparent: transparent, 
+          blending: THREE.NormalBlending
+        })
+      );
+    }
+
+    const shadowPlane = createTexturedPlane( this.shadowRenderer.texture, true );
+
+    shadowPlane.scale.set( 45, 45, 1.0 );
+    shadowPlane.position.set( 0, 0, -8 );
+    
+    this.shadowPlane = shadowPlane;
+    this.scene.add( shadowPlane );
+    
+    ASSETHANDLER.loadTexture( normalTexturePath, false, ( texture ) => {
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      // texture.repeat.x = 20;
+      // texture.repeat.y = 20;
+
+      const backgroundPlane = new THREE.Mesh(
+        // TODO try stretched background plane! stylized! that change does soo much
+          new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
+          new THREE.MeshStandardMaterial( {
+            map: this.backgroundRenderer.renderTarget.texture,
+            roughnessMap: this.backgroundRenderer.renderTarget.texture,
+            metalnessMap: this.backgroundRenderer.renderTarget.texture,
+            // displacementMap: this.backgroundRenderer.renderTarget.texture,
+            // displacementScale: 100,
+            normalMap: texture,
+            normalScale: new THREE.Vector2( 0.1 ),
+            // normalScale: new THREE.Vector2( 0.02, 0.05 ),
+            metalness: 0.7,
+            envMapIntensity: 0.5,
+            roughness: 0.1,
+          })
+        );
+
+      backgroundPlane.scale.set( 100, 100, 1.0 );
+      backgroundPlane.position.set( 0, 0, -8.5 );
+
+      this.backgroundPlane = backgroundPlane;
+      this.scene.add( backgroundPlane );
+      });
+      // normalTexture.repeat.set( 10, 10 );
+
   }
 
-  rotate( deltaX : number, deltaY : number ) {
+  onMouseMove( x : number, y : number, deltaX : number, deltaY : number ) {
     this.rotationAcceleration.y += this.rotationSpeed * deltaX;
     this.rotationAcceleration.x += this.rotationSpeed * deltaY;
   }
@@ -441,6 +309,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       this.directionalLight.shadow.mapSize.height *= 2.0;
       this.directionalLight.shadow.needsUpdate = true;
     }*/
+
   }
 
   protected afterRender() {
@@ -453,13 +322,28 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     }*/
   }
 
-  update(delta : number, now : number): void {
+  render( delta : number, now : number ) {
+    super.render( delta, now );
+
+    if( this.shadowPlane ) this.shadowPlane.visible = false;
+    if( this.backgroundPlane ) this.backgroundPlane.visible = false;
+    const background = this.scene.background;
+    this.scene.background = null;
+    this.shadowRenderer.render( delta );
+    if( this.shadowPlane ) this.shadowPlane.visible = true;
+    if( this.backgroundPlane ) this.backgroundPlane.visible = true;
+    this.scene.background = background;
+  }
+
+  update(delta : number, now : number) {
     this.controls?.update();
 
-    //this.content.rotation.y += delta * 0.14;
 
-    //this.content.rotation.x += this.rotationVelocity.x;
-    //this.content.rotation.y += this.rotationVelocity.y;
+    if( this.meshes ) {
+      // this.meshes.rotation.y += delta * 0.14;
+      this.meshes.rotation.x += this.rotationVelocity.x;
+      this.meshes.rotation.y += this.rotationVelocity.y;
+    }
 
     this.rotationVelocity.add( this.rotationAcceleration );
     this.rotationAcceleration.multiplyScalar( 1.0 - this.rotationFriction );
@@ -495,6 +379,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   resize( width? : number, height? : number ) {
     super.resize( width, height );
 
+    this.shadowRenderer.setSize( width, height );
     this.backgroundRenderer.render();
     this.renderer.setRenderTarget( null );
   }

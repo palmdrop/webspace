@@ -33,11 +33,11 @@ export class ShadowTransformRenderer {
     this.shadowTransformPass.uniforms[ 'offset' ].value.set(
       -60, 90
     );
-    this.shadowTransformPass.uniforms[ 'darkness' ].value = -1.0;
-    this.shadowTransformPass.uniforms[ 'opacity' ].value = 0.5;
-    this.shadowTransformPass.uniforms[ 'staticAmount' ].value = 0.04;
+    this.shadowTransformPass.uniforms[ 'darkness' ].value = -1.5;
+    this.shadowTransformPass.uniforms[ 'opacity' ].value = 0.8;
+    this.shadowTransformPass.uniforms[ 'staticAmount' ].value = 0.09;
 
-    this.shadowTransformPass.uniforms[ 'zoom' ].value = 0.9;
+    this.shadowTransformPass.uniforms[ 'zoom' ].value = 1.0;
 
     this.shadowTransformPass.uniforms[ 'tint' ].value.setRGB(
       2.3, 0.3, 1.1
