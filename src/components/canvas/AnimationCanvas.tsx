@@ -1,8 +1,9 @@
-import React, { useReducer, useState } from 'react';
-import { useLayoutEffect } from 'react';
-import { useRef, useEffect } from 'react';
-import useRenderSceneShortcuts from '../../hooks/useRenderSceneShortcuts';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
+
 import { createRenderScene, RenderScene, RenderSceneConstructor, VoidCallback } from '../../three/core';
+
+import useRenderSceneShortcuts from '../../hooks/useRenderSceneShortcuts';
+import { useMemoizedThrottle } from '../../hooks/useMemoizedThrottle';
 
 export type MouseMoveCallback<T extends RenderScene> = ( x : number, y : number, deltaX : number, deltaY : number, renderScene : T ) => void;
 export type MouseScrollCallback<T extends RenderScene> = ( deltaScroll : number, renderScene : T ) => void;
@@ -12,6 +13,10 @@ type Props<T extends RenderScene> = {
   onLoad? : VoidCallback,
   onMouseMove? : MouseMoveCallback<T>,
   onScroll? : MouseScrollCallback<T>,
+
+  resizeThrottle? : number,
+  mouseMoveThrottle? : number,
+  scrollThrottle? : number,
 };
 
 const AnimationCanvas = <T extends RenderScene>( { 
@@ -19,16 +24,20 @@ const AnimationCanvas = <T extends RenderScene>( {
   onLoad, 
   onMouseMove,
   onScroll,
+
+  resizeThrottle = 300,
+  mouseMoveThrottle = 100,
+  scrollThrottle = 100,
 } : Props<T> ) : JSX.Element => {
   const [ renderScene, setRenderScene ] = useState<T | null>( null );
   const mousePosition = useRef<{ x : number, y : number } | null>( null );
   const canvasRef = useRef<HTMLCanvasElement>( null );
 
-  const handleResize = () : void => {
-    renderScene?.resize();
-  }
+  const handleResize = useMemoizedThrottle( () => {
+    renderScene?.resize()
+  }, resizeThrottle, [ renderScene ] );
 
-  const handleMouseMove = ( event : MouseEvent ) => {
+  const handleMouseMove = useMemoizedThrottle( ( event : MouseEvent ) => {
     let previousX, previousY;
 
     if( mousePosition.current === null ) {
@@ -47,13 +56,13 @@ const AnimationCanvas = <T extends RenderScene>( {
 
     mousePosition.current.x = event.clientX;
     mousePosition.current.y = event.clientY;
-  };
+  }, mouseMoveThrottle, [ renderScene, onMouseMove ] );
 
-  const handleMouseScroll = ( event : React.WheelEvent ) => {
+  const handleMouseScroll = useMemoizedThrottle( ( event : React.WheelEvent ) => {
     let deltaScroll = Math.sign( -event.deltaY );
 
     renderScene && onScroll?.( deltaScroll, renderScene );
-  }
+  }, scrollThrottle, [ renderScene, onScroll ] );
 
   const addListeners = () : void => {
     window.addEventListener( 'resize', handleResize );
@@ -69,9 +78,7 @@ const AnimationCanvas = <T extends RenderScene>( {
     onMouseMove && window.removeEventListener( 'mousemove', handleMouseMove );
   }
 
-  const {
-    reloadValue 
-  } = useRenderSceneShortcuts( renderScene );
+  const { reloadValue } = useRenderSceneShortcuts( renderScene );
 
   useEffect( () => {
     if( canvasRef.current !== null ) {
@@ -94,7 +101,6 @@ const AnimationCanvas = <T extends RenderScene>( {
       removeListeners();
     }
   });
-
 
   return (
     <canvas

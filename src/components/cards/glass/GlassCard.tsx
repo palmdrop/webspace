@@ -4,7 +4,7 @@ import Card from "../Card"
 import './GlassCard.scss';
 
 type Props = {
-  children : React.ReactChild | React.ReactChild[]
+  children : React.ReactChild | React.ReactChild[] | Element[]
 };
 
 // TODO: backdrop-blur is not supported by default in firefox... find alternative

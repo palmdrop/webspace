@@ -106,11 +106,10 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     const renderer = new THREE.WebGLRenderer({
         canvas: this.canvas,
         powerPreference: 'high-performance',
-        // antialias: true,
-        // depth: true,
-        // stencil: false,
+        antialias: true,
+        depth: true,
+        stencil: false,
         alpha: true,
-        // premultipliedAlpha: false
     });
 
     renderer.physicallyCorrectLights = true;

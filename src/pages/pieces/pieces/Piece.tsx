@@ -1,6 +1,5 @@
-import { useReducer } from 'react';
 import AnimationCanvas, { MouseMoveCallback, MouseScrollCallback } from '../../../components/canvas/AnimationCanvas';
-import { RenderScene, RenderSceneConstructor, VoidCallback } from '../../../three/core'
+import { RenderScene, RenderSceneConstructor } from '../../../three/core'
 import { Piece } from './pieces'
 
 import './pieces.scss';

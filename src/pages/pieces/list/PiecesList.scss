@@ -16,16 +16,16 @@
     justify-content: flex-start;
 
     .button {
-      font-size: 0.7em;
+      font-size: 1.0em;
 
       @include medium {
-        font-size: 1.0em;
+        font-size: 1.3em;
       }
 
       color: var(--primary-color-300);
       opacity: 0.4;
 
-      margin-left: 1.0em;
+      margin-left: 0.8em;
       margin-right: 0.0em;
       margin-bottom: 0.5em;
     }
@@ -34,13 +34,13 @@
   & > .button {
     letter-spacing: 0.0em;
 
-    font-size: 1.3em;
+    font-size: 1.6em;
     width: 8em;
     margin: 0em 0.5em;
     text-align: start;
 
     @include medium {
-      font-size: 2em;
+      font-size: 2.2em;
       width: 9em; 
     }
 

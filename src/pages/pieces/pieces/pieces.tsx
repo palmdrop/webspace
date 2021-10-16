@@ -3,10 +3,6 @@ import { ColorTheme } from "../../../state/slices/uiSlice";
 
 import retroCoreImage from '../../../assets/content/pieces/retro-core/img1.png';
 import solarChromeImage from '../../../assets/content/pieces/solar-chrome/img1.png';
-import { RetroCoreRenderScene } from "../../../three/renderScenes/retroCore/RetroCoreRenderScene";
-import { SolarChromeRenderScene } from "../../../three/renderScenes/solarChrome/SolarChromeRenderScene";
-import { SolarLandscapeRenderScene } from "../../../three/renderScenes/solarLandscape/SolarLandscapeRenderScene";
-import { createPiece } from "./Piece";
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,

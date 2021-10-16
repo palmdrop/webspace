@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { sendFormEmail, validateEmail } from "../../utils/email";
+import { sendFormEmail, isValidEmail } from "../../utils/email";
 
 import { PageRoute } from "../../App";
 import { PageProps } from "../PageWrapper";
@@ -18,6 +18,7 @@ import { ReactComponent as Obstacle } from '../../assets/svg/obstacle5.svg';
 
 import './contactPage.scss';
 import { githubIconData, IconData, instagramIconData, mailIconData } from "../../assets/external-icons";
+import { useMemoizedDebounce } from "../../hooks/useMemoizedDebounce";
 
 enum Status {
   WAITING,
@@ -48,27 +49,19 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
 
   // Input validation
   const [ isEmailValid, setIsEmailValid ] = useState<boolean | undefined>( undefined );
-  const validationDelayRef = useRef<NodeJS.Timeout | null>( null );
 
   // User feedback 
   const [ errorMessage, setErrorMessage ] = useState( "" );
 
-  
-  const cancelDelayedEmailValidation = () => {
-    if( validationDelayRef.current ) clearTimeout( validationDelayRef.current );
-  }
-
   const handleSubmit = ( event : React.FormEvent<HTMLFormElement> ) => {
     event.preventDefault();
 
-    cancelDelayedEmailValidation();
+    validateEmailDebounced.cancel()
     const emailValid = validateEmail( email );
-    setIsEmailValid( emailValid );
 
     const messageValid = message !== "";
 
     // TODO prevent user from sending too many emails, since I have limited supply! 
-
     if( !messageValid || !emailValid ) {
       setFormStatus( Status.INPUT_ERROR );
     }
@@ -83,20 +76,23 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
         setFormStatus( Status.SEND_SUCCESSFUL );
       }, ( error ) => {
         setFormStatus( Status.SEND_FAILED );
+        console.error( error );
       })
     }
   }
 
+  const validateEmail = useCallback( ( value : string ) => {
+    const valid = isValidEmail( value );
+    setIsEmailValid( valid );
+    return valid;
+  }, [ setIsEmailValid ] );
+
+  const validateEmailDebounced = useMemoizedDebounce( validateEmail, validationDelay, [ validateEmail ] )
+
   const handleEmailInputChange = ( value : string ) => {
     setEmail( value );
-
-    cancelDelayedEmailValidation();
-
-    setIsEmailValid( undefined ); // undefined means pending state, waiting to be validated
-    validationDelayRef.current = setTimeout( () => {
-      setIsEmailValid( validateEmail( value ) );
-      validationDelayRef.current = null;
-    }, validationDelay );
+    setIsEmailValid( undefined ); 
+    validateEmailDebounced( value );
   }
 
   const handleMessageInputChange = ( value : string ) => {
@@ -104,10 +100,8 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
   }
 
   useEffect( () => {
-    return () => {
-      cancelDelayedEmailValidation();
-    }
-  }, [] );
+    return () => validateEmailDebounced.cancel();
+  }, [ validateEmailDebounced ] );
 
   useEffect( () => {
     setErrorMessage( "" );
@@ -135,9 +129,10 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
             </Header>
 
             <GlassCard>
-              { icons.map( icon => (
+              { icons.map( ( icon, index ) => (
                 <ExternalLink
                   link={ icon.link }
+                  key={ `${ icon.link }-${ index }` }
                 >
                   <img src={ icon.src } alt={ icon.alt } />
                 </ExternalLink>
@@ -193,8 +188,8 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
             </div>
           </form>
         </GlassCard>
-
       </main>
+
       <aside className="contact-page__aside" >
         <HomeBar />
       </aside>

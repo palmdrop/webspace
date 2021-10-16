@@ -83,8 +83,8 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
 
     if( activePieceIndex !== null ) {
       const activePiece = pieces[ activePieceIndex ];
-      title = activePiece.name;
-      paragraphs = activePiece.description;
+      title = `${ activePieceIndex + 1 }. ${ activePiece.name }`;
+      paragraphs = activePiece.description.slice( 0, 2 ) ;
     } else {
       title = introduction.title;
       paragraphs = introduction.description;

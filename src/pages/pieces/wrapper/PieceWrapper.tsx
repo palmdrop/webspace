@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useHistory } from "react-router";
 
@@ -12,8 +12,9 @@ import GradientBackground from "../../../components/ornamental/gradient/Gradient
 import Paragraph from "../../../components/paragraph/Paragraph";
 import Title from "../../../components/title/Title";
 
-import './PieceWrapper.scss';
 import SoftDisk from "../../../components/ornamental/disk/soft/SoftDisk";
+
+import './PieceWrapper.scss';
 
 type Props = {
   pieceIndex : number,
@@ -35,7 +36,7 @@ const PieceWrapper = React.memo( ( {
   const fadeOutRef = useRef<NodeJS.Timeout | null>( null );
 
   const [ isLoaded, setIsLoaded ] = useState( false );
-  const [ pieceData ] = useState( pieces[ pieceIndex ] );
+  const pieceData = useMemo( () => pieces[ pieceIndex ], [ pieceIndex ] );
 
   const [ overlayVisible, setOverlayVisible ] = useState( true );
 

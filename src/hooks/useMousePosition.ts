@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-export const useMousePosition = () : { x : number, y : number }=> {
+export const useMousePosition = () : { x : number, y : number } => {
   const mousePosition = useRef( { x : 0, y : 0 } );
 
   const handleMouseMove = ( event : MouseEvent ) : void => {

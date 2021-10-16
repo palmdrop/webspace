@@ -1,5 +1,3 @@
-import { MouseMoveCallback, MouseScrollCallback } from "../components/canvas/AnimationCanvas";
-
 /* Constants */
 export const MILLI_SECONDS_PER_SECOND = 1000;
 

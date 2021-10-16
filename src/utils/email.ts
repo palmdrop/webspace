@@ -8,7 +8,7 @@ const emailValidationRegex =
 // EmailJS
 emailjs.init( userID );
 
-export const validateEmail = ( email : string ) => {
+export const isValidEmail = ( email : string ) => {
   return emailValidationRegex.test( email );
 }
 

@@ -2,7 +2,7 @@ import './Card.scss';
 
 type Props = {
   additionalClasses? : string,
-  children : React.ReactChild | React.ReactChild[]
+  children : React.ReactChild | React.ReactChild[] | Element[]
 };
 
 const Card = ( { additionalClasses = '', children } : Props ) => {
