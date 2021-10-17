@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 import { selectActivePiece } from '../../state/slices/uiSlice';
 
-import { PageRoute } from '../../App';
+import { PageRoute, RedirectNotFound } from '../../App';
 import { PageProps } from '../PageWrapper';
 
 import Header from '../../components/header/Header';
@@ -25,10 +25,10 @@ import { introduction } from './content';
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
 import LazyImage from '../../components/media/image/LazyImage';
-
-import './piecesPage.scss';
 import Title from '../../components/title/Title';
 import PieceWrapper from './wrapper/PieceWrapper';
+
+import './piecesPage.scss';
 
 type InformationDisplayProps = { 
   title : string, 
@@ -107,31 +107,31 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
       <Suspense fallback={ null }>
         <Switch>
           { /* Piece routes */ }
-          { pieces.map( ( piece, index ) => {
-            return (
-              <Route
-                key={ index }
-                path={ `${ route }/${ index + 1 }` as string }
-              >
-                <PieceWrapper
-                  pieceIndex={ index }
-                  backgroundColorTheme={ piece.colorTheme }
-                  showLoadingPage={ true }
-                  showOverlay={ true }
-                  handlePieceNavigation={ handlePieceNavigation }
-                />
-              </Route>
-            )
-          })}
+          { pieces.map( ( piece, index ) => (
+            <Route
+              key={ index }
+              path={ `${ route }/${ index + 1 }` as string }
+              exact
+            >
+              <PieceWrapper
+                pieceIndex={ index }
+                backgroundColorTheme={ piece.colorTheme }
+                showLoadingPage={ true }
+                showOverlay={ true }
+                handlePieceNavigation={ handlePieceNavigation }
+              />
+            </Route>
+          ))}
 
           { /* Default route */ }
           <Route
             key={ route }
             path={ route } 
+            exact
           >
             <Header 
               mainTitle="OBSCURED"
-              firstSubtitle="Digital art"
+              firstSubtitle="Digital aesthetics"
               mainLevel={ 3 }
               subLevel={ 5 }
               linkTo={ PageRoute.root }
@@ -149,8 +149,9 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
             <aside className="pieces-page__aside">
               <HomeBar />
             </aside>
-
           </Route>
+
+          <RedirectNotFound />
         </Switch>
       </Suspense>
     </div>

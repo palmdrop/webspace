@@ -14,7 +14,7 @@ type Props = {
 const Button = ( { isPressed = false, onClick, onHover, onLeave, additionalClasses = '', children } : Props ) : JSX.Element => {
 
   const handleClick = ( event : React.MouseEvent ) : void => {
-    onClick && onClick( event );
+    onClick?.( event );
   };
 
   return (

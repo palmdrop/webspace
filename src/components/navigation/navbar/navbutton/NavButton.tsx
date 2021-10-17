@@ -57,4 +57,4 @@ const NavButton = ( { navEntry, active, index } : Props ) : JSX.Element => {
   )
 }
 
-export default React.memo( NavButton );
+export default NavButton;

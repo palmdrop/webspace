@@ -21,7 +21,7 @@ $page-padding: 1em;
 
   @include medium {
     grid-template-columns: 
-      0.6fr 1.0fr 0.10fr
+      0.8fr 1.0fr 0.05fr
     ;
   }
 
@@ -116,19 +116,18 @@ $page-padding: 1em;
       &--loaded {
         animation: about-page-slide 1s;
       }
-    }
 
-    label {
-      position: absolute;
-      color: var(--primary-color-300);
-      bottom: 13%;
-      left: 50%;
+      label {
+        position: absolute;
+        color: var(--primary-color-300);
+        left: 50%;
 
-      font-size: 1.3em;
+        font-size: 1.3em;
 
-      transform: translateX(-50%);
+        transform: translateX(-50%);
 
-      @include font( 'accent' );
+        @include font( 'accent' );
+      }
     }
   }
 
@@ -155,14 +154,14 @@ $page-padding: 1em;
     position: relative;
     padding: 2em 0em;
 
-    width: 100vw;
+
+    z-index: 1;
 
     @include medium {
       position: fixed;
       bottom: 0%;
       left: -0.5em;
-      z-index: 1;
-      padding: 1em;
+      padding: 1.0em;
 
       width: unset;
     }
@@ -170,6 +169,7 @@ $page-padding: 1em;
     @include large {
       right: 78%;
       left: unset;
+      padding: 1.0em;
     }
 
     .glass-card {
@@ -177,7 +177,8 @@ $page-padding: 1em;
       flex-direction: row;
       justify-content: space-around;
 
-      padding: 0.5em 0.2em;
+      padding: 0.8em 0.0em;
+      max-width: calc( 100vw - 3em );
 
       @include medium {
         flex-direction: column;
@@ -188,12 +189,16 @@ $page-padding: 1em;
         position: relative;
 
         @include medium {
+          padding: 0.7em 0.8em;
+        }
+
+        @include large {
           padding: 1em;
         }
 
-        @include font( 'accent' );
+        @include font( 'paragraph' );
 
-        font-size: 1.1rem;
+        font-size: 1.0rem;
 
         color: var(--primary-color);
       }

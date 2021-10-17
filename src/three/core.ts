@@ -13,7 +13,7 @@ export interface AnimationLoop {
 }
 
 export interface Resizer {
-  resize( callback? : ResizeCallback, width? : number, height? : number ) : void;
+  resize( callback? : ResizeCallback, width? : number, height? : number, force? : boolean ) : void;
 }
 
 export interface RenderScene extends AnimationLoop {

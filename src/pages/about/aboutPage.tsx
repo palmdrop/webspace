@@ -10,6 +10,7 @@ import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
 import Paragraph, { ParagraphType } from '../../components/paragraph/Paragraph';
 import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
+import GlassCard from '../../components/cards/glass/GlassCard';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
 
@@ -20,8 +21,6 @@ import { ImageData, introduction, sections, links } from './content';
 
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
-import GlassCard from '../../components/cards/glass/GlassCard';
-
 
 const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
   const createLazyImage = ( { src, alt, width, height, link } : ImageData ) : JSX.Element => {
@@ -39,10 +38,12 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
           placeholder={
             <span>Loading...</span>
           }
-        />
-        <label>
-          { alt }
-        </label>
+        >
+          <label>
+            { alt }
+          </label>
+        </LazyImage>
+
       </div>
     );
   }

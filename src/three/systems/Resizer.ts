@@ -14,7 +14,7 @@ export class SimpleResizer implements Resizer {
     this.useDevicePixelRatio = useDevicePixelRatio;
   }
 
-  resize( callback? : ResizeCallback, width? : number, height? : number ) {
+  resize( callback? : ResizeCallback, width? : number, height? : number, force : boolean = false ) {
     if( !width ) width = this.container.clientWidth;
     if( !height ) height = this.container.clientHeight;
 
@@ -24,7 +24,7 @@ export class SimpleResizer implements Resizer {
     if( this.useDevicePixelRatio ) newSize.multiplyScalar( window.devicePixelRatio );
 
     // If size is unchanged, do nothing
-    if( currentSize.equals( newSize ) ) return;
+    // if( !force && currentSize.equals( newSize ) ) return;
 
     this.renderer.setSize( newSize.x, newSize.y, false );
 

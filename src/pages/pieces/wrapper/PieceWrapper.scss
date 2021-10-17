@@ -1,4 +1,5 @@
 @import '../../../styles/fonts.scss';
+@import '../../../styles/layout.scss';
 @import '../../../styles/ornaments.scss';
 
 .piece-wrapper {
@@ -21,8 +22,6 @@
   &__loading {
     position: absolute;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
 
     display: flex;
     justify-content: center;
@@ -30,6 +29,9 @@
 
     .title {
       font-weight: 400;
+      text-align: center;
+
+      max-width: 80vw;
     }
   }
 

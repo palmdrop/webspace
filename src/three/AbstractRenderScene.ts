@@ -125,11 +125,11 @@ export abstract class AbstractRenderScene implements RenderScene {
     }
   }
 
-  resize( width? : number, height? : number ) : void {
+  resize( width? : number, height? : number, force? : boolean ) : void {
     this.resizer.resize( ( width : number, height : number ) => {
       this.composer?.setSize( width, height );
       this.resizeables.forEach( resizeable => resizeable.setSize( width, height ) );
-    }, width, height );
+    }, width, height, force );
   }
 
   start(): void {

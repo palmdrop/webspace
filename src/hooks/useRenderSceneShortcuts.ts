@@ -20,8 +20,6 @@ const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
   const handleKeyDown = useCallback( ( event : KeyboardEvent ) => {
     if( event.type !== 'keydown' ) return;
 
-    console.log( event.key );
-
     switch( event.key ) {
       case 'c' : handleCaptureFrame(); break;
       case ' ' : reload(); break;

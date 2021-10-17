@@ -69,7 +69,7 @@ const AnimationCanvas = <T extends RenderScene>( {
 
     onMouseMove && window.addEventListener( 'mousemove', handleMouseMove );
 
-    handleResize();
+    renderScene?.resize();
   }
 
   const removeListeners = () : void => {

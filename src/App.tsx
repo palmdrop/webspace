@@ -5,6 +5,7 @@ import {
   Route,
   useHistory,
   BrowserRouter as Router,
+  Redirect
 } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "./state/store/hooks";
@@ -16,6 +17,7 @@ import GradientBackground from "./components/ornamental/gradient/GradientBackgro
 import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
 import './App.scss';
+import NotFoundPage from "./pages/notFound/notFoundPage";
 
 // Use lazy loading to load each page
 const MainPage    = React.lazy( () => import( "./pages/main/mainPage" ) );
@@ -30,20 +32,23 @@ export enum PageRoute {
   pieces = '/pieces',
   blog = '/blog',
   contact = '/contact',
+  notFound = '/404',
 }
 
 export type Page = {
   name : string,
   route : PageRoute,
+  exactRoute : boolean,
   colorTheme : ColorTheme,
   scroll : boolean,
-  Component : React.FunctionComponent<PageProps>
+  Component : React.FunctionComponent<PageProps>,
 }
 
 export const pages : Page[] = [
   {
     name: 'About',
     route: PageRoute.self,
+    exactRoute: true,
     colorTheme: ColorTheme.swamp,
     scroll: true,
     Component: AboutPage,
@@ -51,6 +56,7 @@ export const pages : Page[] = [
   {
     name: 'Pieces',
     route: PageRoute.pieces,
+    exactRoute: false,
     colorTheme: ColorTheme.dirty,
     scroll: true,
     Component: PiecesPage
@@ -58,6 +64,7 @@ export const pages : Page[] = [
   {
     name: 'Blog',
     route: PageRoute.blog,
+    exactRoute: false,
     colorTheme: ColorTheme.haze,
     scroll: true,
     Component: BlogPage
@@ -65,6 +72,7 @@ export const pages : Page[] = [
   {
     name: 'Contact',
     route: PageRoute.contact,
+    exactRoute: true,
     colorTheme: ColorTheme.vapor,
     scroll: false,
     Component: ContactPage
@@ -72,6 +80,7 @@ export const pages : Page[] = [
   {
     name: 'Root',
     route: PageRoute.root,
+    exactRoute: true,
     colorTheme: ColorTheme.horizon,
     scroll: false,
     Component: MainPage
@@ -105,6 +114,8 @@ export const useNavigation = () => {
   return navigateTo;
 };
 
+export const RedirectNotFound = () => <Redirect to={ PageRoute.notFound } />;
+
 const App = () => {
   const colorTheme = useAppSelector( selectColorTheme );
   const nextPageRoute = useAppSelector( selectNextPageRoute );
@@ -122,6 +133,7 @@ const App = () => {
             <Route 
               key={ page.route }
               path={ page.route }
+              exact={ page.exactRoute }
             >
               <PageWrapper 
                 route={ page.route }
@@ -133,6 +145,12 @@ const App = () => {
               </PageWrapper>
             </Route>
           ))}
+
+            { /* 404 */ }
+            <Route path={ PageRoute.notFound }>
+              <NotFoundPage />
+            </Route>
+            <RedirectNotFound />
           </Switch>
         </Router>
       </Suspense>

@@ -266,16 +266,16 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
           new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
           new THREE.MeshStandardMaterial( {
             map: this.backgroundRenderer.renderTarget.texture,
-            roughnessMap: this.backgroundRenderer.renderTarget.texture,
-            metalnessMap: this.backgroundRenderer.renderTarget.texture,
+            // roughnessMap: this.backgroundRenderer.renderTarget.texture,
+            // metalnessMap: this.backgroundRenderer.renderTarget.texture,
             // displacementMap: this.backgroundRenderer.renderTarget.texture,
             // displacementScale: 100,
-            normalMap: texture,
-            normalScale: new THREE.Vector2( 0.1 ),
+            // normalMap: texture,
+            // normalScale: new THREE.Vector2( 0.1 ),
             // normalScale: new THREE.Vector2( 0.02, 0.05 ),
             metalness: 0.7,
             envMapIntensity: 0.5,
-            roughness: 0.1,
+            // roughness: 0.1,
           })
         );
 

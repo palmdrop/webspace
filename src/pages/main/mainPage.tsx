@@ -7,6 +7,8 @@ import Paragraph from '../../components/paragraph/Paragraph';
 import PieceWrapper from '../pieces/wrapper/PieceWrapper';
 import { FeaturedPieceIndex } from '../pieces/pieces/pieces';
 
+import { description } from './content';
+
 import './mainPage.scss';
 
 const MainPage = ( { route } : PageProps ) : JSX.Element => {
@@ -21,15 +23,11 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
       { navBar }
 
       <div className="main-page__info">
-        <Paragraph>
-          A webspace as developing ideas, thoughts and knowledge.
+      { description.map( ( paragraph, index ) => (
+        <Paragraph key={ `description-${ index }` }>
+          { paragraph }
         </Paragraph>
-        <Paragraph>
-          Thorugh the centralization of the internet, we lose private spaces.
-        </Paragraph>
-        <Paragraph>
-          Optimization of user interfaces, A/B-testing, digital survailance...
-        </Paragraph>
+      ))}
       </div>
 
       <PieceWrapper 
