@@ -112,7 +112,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
     <div className="contact-page">
       <Header 
         mainTitle="OBSCURED"
-        firstSubtitle="Ways of reaching me"
+        firstSubtitle="Contact me"
         mainLevel={ 3 }
         subLevel={ 5 }
         linkTo={ PageRoute.root }
@@ -164,7 +164,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
             </div>
 
             <TextInputArea
-              label="What you'd like to say"
+              label="Your message"
               name="message"
               onChange={ handleMessageInputChange }
             />

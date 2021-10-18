@@ -19,18 +19,6 @@ $page-padding: 1em;
     0.5fr 1.0fr 0.5fr
   ;
 
-  @include medium {
-    grid-template-columns: 
-      0.8fr 1.0fr 0.05fr
-    ;
-  }
-
-  @include large {
-    grid-template-columns: 
-      0.5fr 1.0fr 0.5fr
-    ;
-  }
-
   grid-template-areas: 
     "header header header"
     ". main ."
@@ -44,12 +32,8 @@ $page-padding: 1em;
     }
   }
 
-  &__main {
+  &__content {
     grid-area: main;
-
-    @include medium {
-
-    }
 
     .faded-header {
       grid-area: page-header;
@@ -73,11 +57,22 @@ $page-padding: 1em;
         opacity: 0.9;
       }
     }
+
+    section {
+      .title {
+        padding-top: 1em;
+        font-style: italic;
+      }
+    }
+
+    footer {
+
+    }
   }
 
   &__lazy-image-container {
     position: relative;
-    padding: 2em 0em;
+    padding: 2em 1em;
 
     width: calc( 100% - 2.0 * #{ $page-padding } );
 
@@ -90,15 +85,16 @@ $page-padding: 1em;
 
     @include medium {
       height: 350px * 1.3;
+      padding: 2em 0.5em;
     }
 
     @include large {
       height: 350px * 1.7;
+      padding: 2em 0.5em;
     }
 
     .lazy-image {
       position: absolute;
-      transform: translate(0%);
       transition: 1s opacity;
 
       z-index: -1;
@@ -121,6 +117,7 @@ $page-padding: 1em;
         position: absolute;
         color: var(--primary-color-300);
         left: 50%;
+        top: 5%;
 
         font-size: 1.3em;
 
@@ -150,89 +147,118 @@ $page-padding: 1em;
     }
   }
 
-  &__link-section {
+  &__credits {
+    padding-top: 1em;
     position: relative;
-    padding: 2em 0em;
 
+    .faded-header {
+      font-size: 0.3rem;
+      text-align: center;
 
-    z-index: 1;
+      padding-bottom: 2em;
 
-    @include medium {
-      position: fixed;
-      bottom: 0%;
-      left: -0.5em;
-      padding: 1.0em;
-
-      width: unset;
-    }
-
-    @include large {
-      right: 78%;
-      left: unset;
-      padding: 1.0em;
-    }
-
-    .glass-card {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-
-      padding: 0.8em 0.0em;
-      max-width: calc( 100vw - 3em );
-
-      @include medium {
-        flex-direction: column;
-      }
-
-      a {
-        padding: 0.5em;
-        position: relative;
-
-        @include medium {
-          padding: 0.7em 0.8em;
-        }
-
-        @include large {
-          padding: 1em;
-        }
-
-        @include font( 'paragraph' );
-
-        font-size: 1.0rem;
-
-        color: var(--primary-color);
-      }
+      z-index: 10;
     }
 
     .soft-disk {
       position: absolute;
-      @include use-glass();
+
+      bottom: -5%;
+      right: -10%;
+
+      z-index: -1;
     }
 
-    .soft-disk:nth-child(1) {
-      left: -5%;
-      bottom: 4;
-      z-index: -1;
+    .glass-card {
+      padding: 1.5em 1.5em;
+      margin-bottom: 1em;
 
-      @include medium {
-        left: -40%;
-        bottom: -33%;
+      .bar {
+        margin-bottom: 1.0em;
       }
     }
 
-    .soft-disk:nth-child(2) {
-      right: -5%;
-      top: -90%;
-      z-index: -1;
+    .about-page__credits-section {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
 
-      opacity: 1;
+      padding: 0.5em 0.5em;
 
-      @include medium {
-        opacity: 0;
+      .title {
+        @include font( 'paragraph' );
+        color: var( --foreground-color );
+      }
+
+      div {
+        display: flex;
+        flex-direction: row;
+
+        width: 55%;
+
+        a {
+          padding: 0em 0.5em;
+          width: 25%;
+
+          @include font( 'accent' );
+
+          color: var( --primary-color );
+        }
       }
     }
   }
 
+  &__link-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    padding: 2em 0em;
+    z-index: 1;
+
+    .soft-disk {
+      position: absolute;
+      @include use-glass();
+
+      left: -10%;
+      bottom: 15%;
+      z-index: -1;
+    }
+
+    .faded-header {
+      font-size: 0.3rem;
+      text-align: center;
+
+      padding-bottom: 2em;
+
+      z-index: 10;
+    }
+
+    .glass-card {
+      padding: 0.8em 0.0em;
+      max-width: calc( 100vw - 3em );
+      position: relative;
+
+      display: flex;
+      flex-direction: column;
+
+      div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+
+        a {
+          padding: 0.5em;
+
+          @include font( 'paragraph' );
+
+          font-size: 1.0rem;
+
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
 }
 
 @keyframes about-page-slide {

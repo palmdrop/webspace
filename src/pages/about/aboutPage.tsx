@@ -17,10 +17,12 @@ import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
 import HomeBar from '../../components/navigation/home/HomeBar';
 import ExternalLink from '../../components/link/ExternalLink';
 
-import { ImageData, introduction, sections, links } from './content';
+import { ImageData, introduction, sections, links, creditsSections, CreditsSection } from './content';
 
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import './aboutPage.scss';
+import Title from '../../components/title/Title';
+import Bar from '../../components/ornamental/bars/Bar';
 
 const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
   const createLazyImage = ( { src, alt, width, height, link } : ImageData ) : JSX.Element => {
@@ -73,15 +75,17 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
     ))
   }
 
-  const createLinkSection = () : JSX.Element => {
+  const createLinks = () : JSX.Element => {
     return (
-      <section
+      <div
         className="about-page__link-section"
       >
+        <FadedHeader 
+          title="More of me"
+        />
+        <SoftDisk />
         <GlassCard>
-          <SoftDisk />
-          <SoftDisk />
-          <>
+          <div>
             { links.map( ( { text, path }, index ) => (
               <ExternalLink 
                 key={ `${ path }-${ index }` }
@@ -91,49 +95,104 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
               </ExternalLink>
             ))
             }
-          </>
+          </div>
         </GlassCard>
-      </section>
+      </div>
+    )
+  }
+
+  const createCredits = () : JSX.Element => {
+    const createCreditsSection = ( creditsSection : CreditsSection, sectionIndex : number ) => {
+      return (
+        <div 
+          className="about-page__credits-section"
+          key={ `credits-section-${ sectionIndex }`}
+        >
+          <Title
+            text={ creditsSection.title }
+            level={ 5 }
+          />
+          <div>
+            { creditsSection.entries.map( ( entry, entryIndex ) => (
+              <ExternalLink
+                link={ entry.path }
+                key={ `entry-${ sectionIndex }.${ entryIndex }` }
+              >
+                { entry.text }
+              </ExternalLink>    
+            ))}
+          </div>
+        </div>
+      )
+    } 
+
+    return (
+      <div className="about-page__credits">
+        <FadedHeader 
+          title="Credits"
+        />
+        <SoftDisk />
+        <GlassCard>
+          { creditsSections.map( ( creditsSection, index ) => (
+            <>
+              { createCreditsSection( creditsSection, index ) }
+              { index !== ( creditsSections.length - 1 ) && ( 
+                <Bar
+                  direction="horizontal"
+                  variant="inset"
+                />
+              )}
+            </>
+          ))}
+        </GlassCard>
+      </div>
     )
   }
 
   const [ mainContent ] = useState( () => createMainContent() );
-  const [ linkSection ] = useState( () => createLinkSection() );
+  const [ linkSection ] = useState( () => createLinks() );
+  const [ creditsSection ] = useState( () => createCredits() );
 
   return (
     <div className="about-page">
       { /* Headers */ }
       <Header 
         mainTitle="OBSCURED"
-        firstSubtitle="About the site"
+        firstSubtitle="About this place"
         mainLevel={ 3 }
         subLevel={ 5 }
         linkTo={ PageRoute.root }
       />
 
-      <main className="about-page__main">
-        <FadedHeader 
-          title="ABOUT"
-        >
-          <Obstacle className="faded-header__obstacle" />
-        </FadedHeader>
+      <div className="about-page__content">
+        <main>
+          <FadedHeader 
+            title="ABOUT"
+          >
+            <Obstacle className="faded-header__obstacle" />
+          </FadedHeader>
 
-        { /* Page introduction */ }
-        <section className="about-page__intro">
+          { /* Page introduction */ }
+          <section className="about-page__intro">
 
-          <Paragraph type={ ParagraphType.bold }>
-            { introduction }
-          </Paragraph>
+            <Paragraph type={ ParagraphType.bold }>
+              { introduction }
+            </Paragraph>
 
-        </section>
+          </section>
 
-        { /* Main page content */ }
-        { mainContent }
+          { /* Main page content */ }
+          { mainContent }
 
-        { /* Links */ }
-        { linkSection }
-      </main>
-      
+        </main>
+
+        <footer>
+          { /* Links */ }
+          { linkSection }
+
+          { creditsSection }
+        </footer>
+      </div>
 
       <aside className="about-page__aside" >
         <HomeBar />

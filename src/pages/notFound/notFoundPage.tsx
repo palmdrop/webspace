@@ -42,12 +42,12 @@ const NotFoundPage = () : JSX.Element => {
             <Button 
               onClick={ onReturnHome }
             >
-              Return Home
+              Home Page
             </Button>
             <Button
               onClick={ onGoBack }
             >
-              Go back
+              Last Page
             </Button>
           </GlassCard>
         </nav>

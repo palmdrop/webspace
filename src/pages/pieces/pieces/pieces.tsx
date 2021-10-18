@@ -29,7 +29,7 @@ export const pieces : PieceData[] = [
   {
     name: "Retro Core",
     description: [
-      "An exploration of a particular aesthetic idea",
+      `An exploration of a particular aesthetic idea, involving plays with perspective and depth.`,
       `3D shapes are turned flat using transparency and disabled depth testing,
        Both the inside and the outside of the shapes are rendered, and the side that is
        visible shifts as the shapes rotate.

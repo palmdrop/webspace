@@ -13,7 +13,7 @@
     position: absolute;
 
     left: 25%;
-    top: 20%;
+    top: 35%;
 
     width: 400px;
 
@@ -34,7 +34,7 @@
     header {
       position: relative;
       font-size: 3em;
-      padding-bottom: 0.2em;
+      padding-bottom: 0.4em;
 
       @include font( 'heading' );
       color: var( --primary-color );
@@ -53,7 +53,7 @@
     }
 
     nav {
-      padding-top: 0.5em;
+      padding-top: 0.6em;
 
       max-width: 25em;
       width: 100%;
