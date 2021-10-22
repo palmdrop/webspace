@@ -6,3 +6,5 @@ declare module "*.hdr";
 
 // https://ycw.github.io/three-kawase-blur/
 declare module 'three-kawase-blur';
+
+declare module 'react-https-redirect';
