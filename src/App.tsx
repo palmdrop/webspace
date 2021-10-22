@@ -4,7 +4,7 @@ import {
   Switch,
   Route,
   useHistory,
-  BrowserRouter as Router,
+  HashRouter as Router,
   Redirect
 } from "react-router-dom";
 
