@@ -16,15 +16,15 @@ export const createBackground = ( renderer : THREE.WebGLRenderer ) => {
   const background = backgroundRenderer.renderTarget.texture;
 
   const backgroundColors = [
-    new THREE.Color().setHSL( Math.random(), 0.4, random( 0.15, 0.6 ) ),
-    new THREE.Color().setHSL( Math.random(), 0.5, random( 0.15, 0.6 ) ),
-    new THREE.Color().setHSL( Math.random(), 0.4, random( 0.15, 0.6 ) ),
+    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.0, 0.8 ) ),
+    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.0, 0.8 ) ),
+    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.0, 0.8 ) ),
   ];
 
   backgroundMaterial.uniforms[ 'colors' ].value = backgroundColors;
-  backgroundMaterial.uniforms[ 'frequency' ].value = 2.0;
-  backgroundMaterial.uniforms[ 'contrast' ].value = 1.0;
-  backgroundMaterial.uniforms[ 'brightness' ].value = 1.2;
+  backgroundMaterial.uniforms[ 'frequency' ].value = 1.3;
+  backgroundMaterial.uniforms[ 'contrast' ].value = 4.0;
+  backgroundMaterial.uniforms[ 'brightness' ].value = 12.2;
 
   backgroundRenderer.render()
   

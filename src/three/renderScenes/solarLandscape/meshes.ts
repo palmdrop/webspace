@@ -2,22 +2,23 @@ import * as THREE from 'three';
 import { random, randomElement } from "../../../utils/random";
 import { setVertexColors } from '../../geometry/color/color';
 import { textureFromSmoothGeometry } from '../../material/textureFromVertices';
-import { SolarChromeGeometryPrefab, SolarChromeMaterialPrefab, SolarLandscapeGeometry1Prefab, SolarLandscapeGeometry2Prefab, SolarLandscapeGeometry3Prefab, SolarLandscapeMaterial1Prefab, SolarLandscapeMaterial2Prefab, SolarLandscapeMaterial3Prefab } from '../../prefabs/prefabs';
+import { SolarChromeGeometryPrefab, SolarChromeMaterialPrefab, FoldedStoneGeometryPrefab, TwistedTorusGeometryPrefab, CurledTubeGeometryPrefab, SoftMaterialPrefab, RoughMetalMaterialPrefab, GlowingMaterialPrefab, DirtyMetalMaterialPrefab, MarbleGeometryPrefab } from '../../prefabs/prefabs';
 import { varyColorHSL } from '../../utils/color';
 import { getNoise3D } from '../../utils/noise';
 
 const materialPrefabs = [
   SolarChromeMaterialPrefab,
-  SolarLandscapeMaterial1Prefab,
-  SolarLandscapeMaterial2Prefab,
-  // SolarLandscapeMaterial3Prefab
+  SoftMaterialPrefab,
+  RoughMetalMaterialPrefab,
+  DirtyMetalMaterialPrefab
 ];
 
 const geometryPrefabs = [
-  SolarChromeGeometryPrefab,
-  SolarLandscapeGeometry1Prefab,
-  SolarLandscapeGeometry2Prefab,
-  SolarLandscapeGeometry3Prefab,
+  // SolarChromeGeometryPrefab,
+  MarbleGeometryPrefab,
+  FoldedStoneGeometryPrefab,
+  TwistedTorusGeometryPrefab,
+  CurledTubeGeometryPrefab,
 ];
 
 
@@ -26,11 +27,11 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
   const materials : THREE.MeshStandardMaterial[] = [];
   const meshes : THREE.Group = new THREE.Group();
 
-  for( let i = 0; i < 5; i++ ) {
+  for( let i = 0; i < 6; i++ ) {
     const geometry = randomElement( geometryPrefabs )( {} );
     const material = randomElement( materialPrefabs )( { 
       geometry : geometry,
-      color : new THREE.Color( 'gray' )
+      color : new THREE.Color( 'white' )
     });
 
     material.dithering = true;
@@ -38,12 +39,12 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
     const frequency = 
       new THREE.Vector3(
-        0.2 + 0.7 * Math.pow( Math.random(), 2.5 ),
-        0.2 + 0.7 * Math.pow( Math.random(), 2.5 ),
-        0.2 + 0.7 * Math.pow( Math.random(), 2.5 ),
+        0.2 + 1.0 * Math.pow( Math.random(), 3.5 ),
+        0.2 + 1.0 * Math.pow( Math.random(), 3.5 ),
+        0.2 + 1.0 * Math.pow( Math.random(), 3.5 ),
       );
 
-    const warp = 0.7;
+    const warp = 0.8;
     const rf = random( 0.2, 0.8 );
     const gf = random( 0.2, 0.8 );
     const bf = random( 0.2, 0.8 );
@@ -74,12 +75,12 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     material.metalnessMap = texture;
     material.aoMap = texture;
 
-    material.normalScale.multiplyScalar( 0.5 );
+    material.normalScale.multiplyScalar( 0.3 );
 
     geometries.push( geometry );
     materials.push( material );
 
-    const numberOfInstances = Math.floor( random( 10, 20 ) );
+    const numberOfInstances = Math.floor( random( 20, 33 ) );
     const mesh = new THREE.InstancedMesh(
       geometry,
       material,
@@ -89,7 +90,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    const minScale = 0.5;
+    const minScale = 0.3;
     const maxScale = 1.3;
 
     const range = {
@@ -111,7 +112,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
         random( -range.z, range.z ),
       );
 
-      const f = 0.1;
+      const f = 0.02;
       const minRotation = -Math.PI;
       const maxRotation = Math.PI;
       const rotation = new THREE.Euler(
@@ -126,14 +127,14 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
         scale
       );
 
-      const hueVariation = getNoise3D( position, undefined, 0.05, -0.4, 0.4 );
+      const hueVariation = getNoise3D( position, undefined, f, -0.2, 0.2 );
 
       const color = varyColorHSL( 
         randomElement( colors ),
         // random( -0.1, 0.1 ),
         hueVariation,
-        random( -0.1, 0.1 ),
-        random( -0.2, 0.2 )
+        Math.pow( random( -0.1, 0.5 ), 2.0 ),
+        random( -0.5, 0.7 )
       );
 
       mesh.setMatrixAt( i, matrix );

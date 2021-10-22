@@ -31,8 +31,8 @@ export const pieces : PieceData[] = [
     description: [
       `An exploration of a particular aesthetic idea, involving plays with perspective and depth.`,
       `3D shapes are turned flat using transparency and disabled depth testing,
-       Both the inside and the outside of the shapes are rendered, and the side that is
-       visible shifts as the shapes rotate.
+       Both the inside and the outside of the shapes are rendered. The 
+       visible sides blend as the shapes rotate.
       `,
       `Creatures with good vision are often also exceptional at determining the orientation,
       size, shape and distance of objects using visual cues such as perspective distortion, shadows
@@ -53,20 +53,15 @@ export const pieces : PieceData[] = [
   {
     name: "Solar Chrome",
     description: [
-      "Generative geometry is exciting. Chrome is hip and cool. Modern and punk.",
+      "Generative geometry is exciting. Chrome is hip and cool -- modern and punk.",
       `
-        I've been for a long time developing personal techniques based on perlin/simplex noise, domain warping,
-        recursion, and so on. Combining these with 3d creates interesting results. Simple geometrical shapes, like
-        spheres, are distorted using some underlying noise field. The result is alien.
+        For a long time I've been developing techniques based on perlin/simplex noise and domain warping. Combining 
+        these techniques with 3D geometry produces interesting shapes. This piece consists of spheres or toruses that are distorted
+        using underlying noise fields. The results are alien.
       `,
       `
-        I especiall like the moments when the smooth, polished surface breaks down under too much distortion, and 
-        reveals the underlying digital geometry -- the mesh of triangles, a sense of something being unveiled. 
-      `,
-      `
-        In addition to this, I'd like to explore something futuristic, something not necessarily hopeful, but other.
-        Modern popular aesthetics seem to resort to the retro, and although this surely can be extremely striking and imaginative,
-        it's in certain ways always retrograde. I don't want to be feel stuck in a loop.
+        I especially like the moments when the smooth, polished surface breaks down under too much distortion. 
+        This reveals the underlying, very digital geometry. 
       `
     ],
     tags : [
@@ -80,21 +75,10 @@ export const pieces : PieceData[] = [
   {
     name: "Solar Landscape",
     description: [
-      "Generative geometry is exciting. Chrome is hip and cool. Modern and punk.",
+      "An extension of the Solar Chrome Piece. An exercise in generative composition.",
       `
-        I've been for a long time developing personal techniques based on perlin/simplex noise, domain warping,
-        recursion, and so on. Combining these with 3d creates interesting results. Simple geometrical shapes, like
-        spheres, are distorted using some underlying noise field. The result is alien.
+        This piece is a work in process.
       `,
-      `
-        I especiall like the moments when the smooth, polished surface breaks down under too much distortion, and 
-        reveals the underlying digital geometry -- the mesh of triangles, a sense of something being unveiled. 
-      `,
-      `
-        In addition to this, I'd like to explore something futuristic, something not necessarily hopeful, but other.
-        Modern popular aesthetics seem to resort to the retro, and although this surely can be extremely striking and imaginative,
-        it's in certain ways always retrograde. I don't want to be feel stuck in a loop.
-      `
     ],
     tags : [
       "3d", "Warp"

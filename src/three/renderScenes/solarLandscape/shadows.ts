@@ -88,4 +88,14 @@ export class ShadowRenderer {
   get texture() {
     return this.renderTarget.texture
   }
+
+  getUniform( uniformName : string ) {
+    return this.shadowPass.uniforms[ uniformName ]?.value;
+  }
+
+  setUniform( uniformName : string, value : any ) {
+    const uniform = this.shadowPass.uniforms[ uniformName ];
+    if( !uniform ) return false;
+    uniform.value = value;
+  }
 }

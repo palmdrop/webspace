@@ -20,6 +20,7 @@ import { createPostProcessing } from './postProcessing';
 import { ShadowRenderer } from './shadows';
 
 import normalTexturePath from '../../../assets/normal/normal-texture1_x2.jpg';
+import { NumberKeyframeTrack } from 'three';
 
 export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
@@ -178,6 +179,11 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   }
 
   private populateScene() {
+    // TODO position, rotate, scale and colorize meshes depending on position and relation to previous mesh!
+    // TODO use underlying noise. Place one mesh, then offset from this mesh, rotate, transform, then place one or multiple next meshes
+    // TODO recursive process, go down in scale size possibly?
+    // TOOD favor certain colors, orientations or scales depending on position / position in hierarchy
+
     // this.createMeshes();
     const { meshes, geometries, materials } = createMeshes( this.backgroundColors );
     this.meshes = meshes;
@@ -218,6 +224,21 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       this.camera.far = far;
     });
 
+    // Shadow settings
+    const shadowFolder = this.gui.addFolder( 'drop-shadow' );
+    const addShadowSetting = ( uniformName : string, min : number, max : number ) => {
+      shadowFolder.add( { [uniformName]: this.shadowRenderer.getUniform( uniformName ) }, uniformName )
+        .min( min )
+        .max( max )
+        .onChange( ( value ) => {
+          this.shadowRenderer.setUniform( uniformName, value );
+        })
+    }
+
+    addShadowSetting( 'darkness', -2, 2 );
+    addShadowSetting( 'opacity',  -2, 2 );
+    // addShadowSetting( 'offset', -2, 2 );
+    addShadowSetting( 'staticAmount', 0, 2 );
 
     ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
       this.scene.environment = dataTextureToEnvironmentMap( this.renderer, hdri );
@@ -263,14 +284,14 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
       const backgroundPlane = new THREE.Mesh(
         // TODO try stretched background plane! stylized! that change does soo much
-          new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
+          new THREE.PlaneBufferGeometry( 40.0, 1.0, 1, 1 ),
           new THREE.MeshStandardMaterial( {
             map: this.backgroundRenderer.renderTarget.texture,
-            // roughnessMap: this.backgroundRenderer.renderTarget.texture,
-            // metalnessMap: this.backgroundRenderer.renderTarget.texture,
+            roughnessMap: this.backgroundRenderer.renderTarget.texture,
+            metalnessMap: this.backgroundRenderer.renderTarget.texture,
             // displacementMap: this.backgroundRenderer.renderTarget.texture,
             // displacementScale: 100,
-            // normalMap: texture,
+            normalMap: texture,
             // normalScale: new THREE.Vector2( 0.1 ),
             // normalScale: new THREE.Vector2( 0.02, 0.05 ),
             metalness: 0.7,
@@ -280,7 +301,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
         );
 
       backgroundPlane.scale.set( 100, 100, 1.0 );
-      backgroundPlane.position.set( 0, 0, -8.5 );
+      backgroundPlane.position.set( 0, 0, -9.0 );
 
       this.backgroundPlane = backgroundPlane;
       this.scene.add( backgroundPlane );
@@ -322,7 +343,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   }
 
   render( delta : number, now : number ) {
-    super.render( delta, now );
 
     if( this.shadowPlane ) this.shadowPlane.visible = false;
     if( this.backgroundPlane ) this.backgroundPlane.visible = false;
@@ -332,6 +352,8 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     if( this.shadowPlane ) this.shadowPlane.visible = true;
     if( this.backgroundPlane ) this.backgroundPlane.visible = true;
     this.scene.background = background;
+
+    super.render( delta, now );
   }
 
   update(delta : number, now : number) {
@@ -380,7 +402,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
     this.shadowRenderer.setSize( width, height );
     this.backgroundRenderer.render();
-    this.renderer.setRenderTarget( null );
   }
 
   dispose() {

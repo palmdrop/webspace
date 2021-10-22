@@ -15,9 +15,10 @@ export type Prefab<T, A> = ( args : A ) => T;
 export type MaterialPrefab = Prefab<THREE.Material, {}>;
 export type GeometryPrefab = Prefab<THREE.BufferGeometry, {}>;
 
-//////////////////
-// SOLAR CHROME //
-//////////////////
+////////////////
+// GEOMETRIES //
+////////////////
+
 export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
   const solarChromeMaxFrequency = new THREE.Vector3( 0.5 );
   return generateWarpGeometryPrefab(
@@ -140,32 +141,265 @@ export const SolarChromeGeometryPrefab2 : GeometryPrefab = ( () => {
   )
 })();
 
-/*export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, {}> = () => {
-  const material = new THREE.MeshStandardMaterial( {
-    color: 'white',
-    roughness: random( 0.15, 0.4 ),
-    metalness: 0.7,
+const solarLandscapePrefabDetail = 228;
+export const FoldedStoneGeometryPrefab : GeometryPrefab = ( () => {
+  const solarChromeMaxFrequency = new THREE.Vector3( 0.23 );
+  return generateWarpGeometryPrefab(
+    // Geometry
+    () => {
+      const geometry = new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
 
-    side: THREE.DoubleSide,
-  });
+      const stretch = random( 1.1, 1.8 );
 
-  material.envMapIntensity = 0.7;
+      geometry.applyMatrix4( new THREE.Matrix4().scale(
+        new THREE.Vector3( 1.0 / stretch, stretch, 1.0 / stretch )
+      ) );
 
-  ASSETHANDLER.loadTexture( solarChromeNormalTexturePath, false, ( texture ) => {
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.minFilter = THREE.NearestFilter;
-    texture.magFilter = THREE.LinearFilter;
+      return geometry;
+    },
 
-    texture.repeat.set( 10.0, 10.0 );
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( 0.075, solarChromeMaxFrequency.x ), 
+        random( 0.075, solarChromeMaxFrequency.y ),
+        random( 0.075, solarChromeMaxFrequency.z )
+      );
+    },
 
-    material.normalMap = texture;
-    material.normalScale = new THREE.Vector2( 0.1 );
-    material.needsUpdate = true;
-  });
+    // Warp amount
+    ( frequency : THREE.Vector3 ) => {
+      return random( 0.3, 0.5 );
+    },
 
-  return material;
-}*/
+    // Octaves 
+    () => {
+      return 3
+    },
+
+    // Lacunarity
+    () => {
+      return random( 3.5, 5.5 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.4, 0.5 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction : noiseWarp,
+      }, 
+      {
+        warpFunction : twistWarp,
+        args : {
+          twistAmount : new THREE.Vector3( 
+            0.6 * Math.random(), 
+            0.6 * Math.random(), 
+            0.6 * Math.random() 
+          ),
+          falloff : random( 0.5, 1.0 ),
+        }
+      }
+    ]
+  )
+})();
+
+export const TwistedTorusGeometryPrefab : GeometryPrefab = ( () => {
+  const solarChromeMaxFrequency = new THREE.Vector3( 0.30 );
+  return generateWarpGeometryPrefab(
+    // Geometry
+    () => {
+      return new THREE.TorusGeometry( 1.0, random( 0.10, 0.3 ), 128, 128 );
+    },
+
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( 0.01, solarChromeMaxFrequency.x ),
+        random( 0.01, solarChromeMaxFrequency.y ),
+        random( 0.01, solarChromeMaxFrequency.z )
+      );
+    },
+
+    // Warp amount
+    ( frequency : THREE.Vector3 ) => {
+      return random( 0.3, 1.5 );
+    },
+
+    // Octaves 
+    () => {
+      return 3
+    },
+
+    // Lacunarity
+    () => {
+      return random( 1.5, 2.5 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.4, 0.5 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction : noiseWarp,
+      }, 
+      {
+        warpFunction : twistWarp,
+        args : {
+          twistAmount : new THREE.Vector3( 
+            0.8 * Math.random(), 
+            0.8 * Math.random(), 
+            0.8 * Math.random() 
+          ),
+          falloff : random( 0.5, 1.2 ),
+        }
+      }
+    ]
+  )
+})();
+
+export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
+  const solarChromeMaxFrequency = new THREE.Vector3( 0.35 );
+  return generateWarpGeometryPrefab(
+    // Geometry
+    () => {
+      const geometry = new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
+
+      geometry.applyMatrix4( new THREE.Matrix4().scale( new THREE.Vector3(
+        random( 0.5, 1.3, ),
+        random( 0.5, 1.3, ),
+        random( 0.5, 1.3, ),
+      )));
+
+      return geometry;
+    },
+
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( 0.01, solarChromeMaxFrequency.x ),
+        random( 0.01, solarChromeMaxFrequency.y ),
+        random( 0.01, solarChromeMaxFrequency.z )
+      );
+    },
+
+    // Warp amount
+    ( frequency : THREE.Vector3 ) => {
+      return random( 0.6, 0.8 );
+    },
+
+    // Octaves 
+    () => {
+      return 3
+    },
+
+    // Lacunarity
+    () => {
+      return random( 1.5, 1.5 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.3, 0.5 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction : noiseWarp,
+      }, 
+      {
+        warpFunction : twistWarp,
+        args : {
+          twistAmount : new THREE.Vector3( 
+            0.8 * Math.random(), 
+            0.8 * Math.random(), 
+            0.8 * Math.random() 
+          ),
+          falloff : random( 1.8, 0.4 ),
+        }
+      }
+    ]
+  )
+})();
+
+export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
+  const solarChromeMaxFrequency = new THREE.Vector3( 0.35 );
+  return generateWarpGeometryPrefab(
+    // Geometry
+    () => {
+      // const geometry = new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
+      const startWidth = random( 0.1, 0.2 );
+      const endWidth = random( 0.1, 0.2 );
+      const geometry = new THREE.CylinderBufferGeometry( startWidth, endWidth, random( 5, 10 ), 128, 128, false );
+
+      /*geometry.applyMatrix4( new THREE.Matrix4().scale( new THREE.Vector3(
+        random( 0.5, 1.3, ),
+        random( 0.5, 1.3, ),
+        random( 0.5, 1.3, ),
+      )));*/
+
+      return geometry;
+    },
+
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( 0.11, solarChromeMaxFrequency.x ),
+        random( 0.11, solarChromeMaxFrequency.y ),
+        random( 0.11, solarChromeMaxFrequency.z )
+      );
+    },
+
+    // Warp amount
+    ( frequency : THREE.Vector3 ) => {
+      return random( 1.0, 1.5 );
+    },
+
+    // Octaves 
+    () => {
+      return 3
+    },
+
+    // Lacunarity
+    () => {
+      return random( 1.5, 1.5 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.3, 0.5 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction : noiseWarp,
+      }, 
+      {
+        warpFunction : twistWarp,
+        args : {
+          twistAmount : new THREE.Vector3( 
+            random( -1.8, 1.8 ),
+            random( -0.8, 0.8 ),
+            random( -1.8, 1.8 ),
+          ),
+          falloff : random( 0.3, 0.4 ),
+        }
+      }
+    ]
+  )
+})();
+
+///////////////
+// MATERIALS //
+///////////////
 
 export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { geometry : THREE.BufferGeometry }> = ( { geometry } ) => {
   const material = new THREE.MeshStandardMaterial( {
@@ -213,197 +447,12 @@ export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { ge
   return material;
 }
 
-//////////////////////
-// SOLAR LANDSCAPES //
-//////////////////////
-const solarLandscapePrefabDetail = 228;
-
-export const SolarLandscapeGeometry1Prefab : GeometryPrefab = ( () => {
-  const solarChromeMaxFrequency = new THREE.Vector3( 0.2 );
-  return generateWarpGeometryPrefab(
-    // Geometry
-    () => {
-      const geometry = new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
-
-      geometry.applyMatrix4( new THREE.Matrix4().scale(
-        new THREE.Vector3( 1.0, 5.0, 1.0 )
-      ) );
-
-      return geometry;
-    },
-
-    // Frequency
-    () => {
-      return new THREE.Vector3( 
-        random( 0.05, solarChromeMaxFrequency.x ), 
-        random( 0.05, solarChromeMaxFrequency.y ),
-        random( 0.05, solarChromeMaxFrequency.z )
-      );
-    },
-
-    // Warp amount
-    ( frequency : THREE.Vector3 ) => {
-      return random( 0.2, 0.6 );
-    },
-
-    // Octaves 
-    () => {
-      return 3
-    },
-
-    // Lacunarity
-    () => {
-      return random( 3.5, 5.5 );
-    },
-
-    // Persistance
-    () => {
-      return random( 0.4, 0.5 );
-    },
-
-    // Warp entries
-    [
-      { 
-        warpFunction : noiseWarp,
-      }, 
-      {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
-            0.8 * Math.random(), 
-            0.8 * Math.random(), 
-            0.8 * Math.random() 
-          ),
-          falloff : random( 0.5, 1.0 ),
-        }
-      }
-    ]
-  )
-})();
-
-export const SolarLandscapeGeometry2Prefab : GeometryPrefab = ( () => {
-  const solarChromeMaxFrequency = new THREE.Vector3( 0.25 );
-  return generateWarpGeometryPrefab(
-    // Geometry
-    () => {
-      return new THREE.TorusGeometry( 1.0, random( 0.1, 0.5 ), 128, 128 );
-    },
-
-    // Frequency
-    () => {
-      return new THREE.Vector3( 
-        random( 0.01, solarChromeMaxFrequency.x ),
-        random( 0.01, solarChromeMaxFrequency.y ),
-        random( 0.01, solarChromeMaxFrequency.z )
-      );
-    },
-
-    // Warp amount
-    ( frequency : THREE.Vector3 ) => {
-      return random( 0.4, 2.0 );
-    },
-
-    // Octaves 
-    () => {
-      return 3
-    },
-
-    // Lacunarity
-    () => {
-      return random( 1.5, 2.5 );
-    },
-
-    // Persistance
-    () => {
-      return random( 0.4, 0.5 );
-    },
-
-    // Warp entries
-    [
-      { 
-        warpFunction : noiseWarp,
-      }, 
-      {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
-            0.8 * Math.random(), 
-            0.8 * Math.random(), 
-            0.8 * Math.random() 
-          ),
-          falloff : random( 0.5, 1.0 ),
-        }
-      }
-    ]
-  )
-})();
-
-export const SolarLandscapeGeometry3Prefab : GeometryPrefab = ( () => {
-  const solarChromeMaxFrequency = new THREE.Vector3( 0.15 );
-  return generateWarpGeometryPrefab(
-    // Geometry
-    () => {
-      const geometry = 
-      new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
-
-      return geometry;
-    },
-
-    // Frequency
-    () => {
-      return new THREE.Vector3( 
-        random( 0.01, solarChromeMaxFrequency.x ),
-        random( 0.01, solarChromeMaxFrequency.y ),
-        random( 0.01, solarChromeMaxFrequency.z )
-      );
-    },
-
-    // Warp amount
-    ( frequency : THREE.Vector3 ) => {
-      return random( 0.6, 0.8 );
-    },
-
-    // Octaves 
-    () => {
-      return 3
-    },
-
-    // Lacunarity
-    () => {
-      return random( 1.5, 1.5 );
-    },
-
-    // Persistance
-    () => {
-      return random( 0.3, 0.5 );
-    },
-
-    // Warp entries
-    [
-      { 
-        warpFunction : noiseWarp,
-      }, 
-      {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
-            0.8 * Math.random(), 
-            0.8 * Math.random(), 
-            0.8 * Math.random() 
-          ),
-          falloff : random( 0.3, 0.4 ),
-        }
-      }
-    ]
-  )
-})();
-
-export const SolarLandscapeMaterial1Prefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
+export const SoftMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
 } ) => {
   const material = new THREE.MeshStandardMaterial( {
     color: color,
-    roughness: random( 0.1, 0.4 ),
+    roughness: random( 0.3, 0.5 ),
     metalness: 0.1,
 
     side: THREE.DoubleSide,
@@ -417,17 +466,15 @@ export const SolarLandscapeMaterial1Prefab : Prefab<THREE.MeshStandardMaterial, 
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.LinearFilter;
 
-    // texture.repeat.set( 7.0, 7.0 );
-
     material.normalMap = texture;
-    material.normalScale = new THREE.Vector2( random( 0.0, 0.08 ) );
+    material.normalScale = new THREE.Vector2( random( 0.02, 0.11 ) );
     material.needsUpdate = true;
   });
 
   return material;
 }
 
-export const SolarLandscapeMaterial2Prefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
+export const RoughMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
 } ) => {
   const material = new THREE.MeshStandardMaterial( {
@@ -450,14 +497,14 @@ export const SolarLandscapeMaterial2Prefab : Prefab<THREE.MeshStandardMaterial, 
     // texture.repeat.set( textureRepeat, textureRepeat );
 
     material.normalMap = texture;
-    material.normalScale = new THREE.Vector2( random( 0.2, 0.6 ) );
+    material.normalScale = new THREE.Vector2( random( 0.2, 0.5 ) );
     material.needsUpdate = true;
   });
 
   return material;
 }
 
-export const SolarLandscapeMaterial3Prefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
+export const GlowingMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
 } ) => {
   const material = new THREE.MeshStandardMaterial( {
@@ -489,12 +536,12 @@ export const SolarLandscapeMaterial3Prefab : Prefab<THREE.MeshStandardMaterial, 
   return material;
 }
 
-export const SolarLandscapeMaterial4Prefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
+export const DirtyMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
 } ) => {
   const material = new THREE.MeshStandardMaterial( {
     color: color,
-    roughness: random( 0.3, 0.5 ),
+    roughness: random( 0.7, 0.9 ),
     metalness: 0.7,
 
     side: THREE.DoubleSide,
