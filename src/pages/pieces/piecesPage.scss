@@ -34,12 +34,12 @@
 
   main {
     grid-area: main;
-    width: calc( min( 37ch, 90vw ) );
+    width: calc( min( 35ch, 90vw ) );
 
     .information-display {
 
       & > .title {
-        color: var(--foreground-color);
+        color: var(--primary-color-500);
 
         @include font( 'accent' );
         font-size: 1.5rem;

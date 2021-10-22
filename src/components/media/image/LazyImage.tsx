@@ -10,7 +10,7 @@ type Props = {
   height? : number,
   scrollPosition? : ScrollPosition,
   placeholder? : JSX.Element,
-  children? : React.ReactChild | React.ReactChild[]
+  children? : React.ReactNode
 };
 
 const loadedImages = new Set<string>();

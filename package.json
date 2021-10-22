@@ -24,6 +24,7 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "serve": "^12.0.1",
     "three": "^0.131.3",
     "three-kawase-blur": "github:ycw/three-kawase-blur",
     "typescript": "^4.3.5",

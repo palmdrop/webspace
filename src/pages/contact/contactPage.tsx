@@ -19,9 +19,11 @@ import { ReactComponent as Obstacle } from '../../assets/svg/obstacle5.svg';
 import './contactPage.scss';
 import { githubIconData, IconData, instagramIconData, mailIconData } from "../../assets/external-icons";
 import { useMemoizedDebounce } from "../../hooks/useMemoizedDebounce";
+import StarLoader from "../../components/loader/starLoader/StarLoader";
 
 enum Status {
-  WAITING,
+  IDLE,
+  SEND_PENDING,
   SEND_SUCCESSFUL,
   SEND_FAILED,
   INPUT_ERROR,
@@ -29,6 +31,7 @@ enum Status {
 
 const invalidEmailErrorMessage   = "Invalid Email :( ";
 const invalidMessageErrorMessage = "Include some unironic CONTENT before sending";
+const sendFailedMessage = "Email NOT sent. Please try again.";
 const successMessage = "Email sent successfully";
 
 const validationDelay = 700;
@@ -45,7 +48,8 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
   // Form content and status
   const [ email, setEmail ] = useState( "" );
   const [ message, setMessage ] = useState( "" );
-  const [ formStatus, setFormStatus ] = useState( Status.WAITING );
+  const [ formStatus, setFormStatus ] = useState( Status.IDLE );
+  const [ errorResponseActive, setErrorResponseActive ] = useState( false );
 
   // Input validation
   const [ isEmailValid, setIsEmailValid ] = useState<boolean | undefined>( undefined );
@@ -64,11 +68,16 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
     // TODO prevent user from sending too many emails, since I have limited supply! 
     if( !messageValid || !emailValid ) {
       setFormStatus( Status.INPUT_ERROR );
+      setErrorResponseActive( true );
+      setTimeout( () => {
+        setErrorResponseActive( false ); 
+      }, 1000 );
     }
 
     if( !messageValid ) {
       setErrorMessage( invalidMessageErrorMessage );
     } else if( messageValid && emailValid ) {
+      setFormStatus( Status.SEND_PENDING );
       // Send email
       sendFormEmail( 
         formRef.current as HTMLFormElement 
@@ -105,7 +114,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
 
   useEffect( () => {
     setErrorMessage( "" );
-    setFormStatus( Status.WAITING );
+    setFormStatus( Status.IDLE );
   }, [ email, message ] );
 
   return (
@@ -118,7 +127,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
         linkTo={ PageRoute.root }
       />
 
-      <main>
+      <main className={ `contact-page__main ${ errorResponseActive ? 'contact-page__main--error' : '' }`}>
         <GlassCard>
           <div className="contact-page__header-container">
             <Header
@@ -174,6 +183,10 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
                 text="Send"
               />
 
+              { formStatus === Status.SEND_PENDING && (
+                <StarLoader />
+              ) }
+
               { errorMessage && (
                 <div className="contact-page__error-message">
                   { errorMessage }
@@ -183,6 +196,12 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
               { !errorMessage && formStatus === Status.SEND_SUCCESSFUL && (
                 <div className="contact-page__success-message">
                   { successMessage }
+                </div>
+              )}
+
+              { formStatus === Status.SEND_FAILED && (
+                <div className="contact-page__send-failed-message">
+                  { sendFailedMessage }
                 </div>
               )}
             </div>

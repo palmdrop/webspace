@@ -8,6 +8,7 @@ export type ImageData = {
   link? : string,
   width? : number,
   height? : number,
+  label? : boolean,
 }
 
 type SectionContent = string | ImageData
@@ -28,9 +29,7 @@ export type CreditsSection = {
 }
 
 export const introduction : string = `
-  This is a personal, exploratory digital place. Here, I experiment with web design, 
-  generative art and writing. I'd love to see the philosophy of the old internet 
-  merged with the technologies of the new. Scroll down to read more.
+This is a personal space where I experiment with web design, writing, and generative art. I'd love to see the philosophy of the old Internet combined with the technologies of the new. Scroll down to read more.
 `;
 
 export const sections : Section[] = [
@@ -40,20 +39,13 @@ export const sections : Section[] = [
         src : retroDiamondPath,
         alt : 'Retro Diamond',
         height : 350,
+        label : false,
       },
       `
-        I love ugly. Ugly is its own aesthetic. Ugly mixed with design is strange and special. In the design of this webspace, I try to
-        strike a balance between the ugly and raw, and the beautiful and polished. It should be fun. Hopefully interesting. Constantly growing.
+      My name is Anton. I go by "palmdrop" on the Internet. The alias means nothing, it's just a symbol. At the moment, I'm learning design, 3D graphics, and new techniques for creating generative art. I'm trying to write more, and hopefully, this site will be where I dump some of my thoughts and ideas.  It will also be a space of my own. I think our presence of the Internet is way too limited to the spaces of established, standardized and corporate platforms. We do not define the bounds of those platforms, we just fill them with filtered content. 
       `,
       `
-        My name is Anton Hildingsson. On the internet, I usually go by "Palmdrop". The name means nothing, it's just a symbol. On the Internet,
-        my presence is not that strong. The pieces of me I show usually involve generative art, and ocassionally writing. I have limited skills in
-        traditional artistic fields, but I do know how to code. Generative art, AI art, NFT:s, whatever, it's all quite mainstream all of a sudden. 
-        My work is not different from anything else out there. I guess it's just mine. Hopefully interesting, beautiful or strikingly ugly to some.
-      `,
-      `
-        I do not write that much. I have trouble finding words. This is my attempt at changing that. There's a discrepancy between what I want to 
-        do/be and what I actually do/is.
+      My goal for this site is to make it a place for interactive generative art, writing, and experimentation.
       `
     ]
   },
@@ -61,22 +53,16 @@ export const sections : Section[] = [
     title : "Generative Art",
     content : [
       `
-        I've been working with generative art for many years now. At first, it was a way of learning programming and algorithms. Then, it developed
-        to a more serious artistic expression. I still haven't quite found my "style" or "niesche". This site is one step in changing that.
+      I've been working with generative art for many years now. At first, it was a way of learning programming and algorithms. Then, it grew into a more serious artistic expression. I still haven't really found my style or niche. I hope to change that.
       `,
       `
-        Typically, I've been working with 2D art, which is most generative art. Systems, algorithms, pixel operations, simple lines and shapes combined
-        and overlayed at mass to create complex pieces. However, lately, I've started exploring 3D art, which functions quite differently from 2D art.
-      `,
-      `
-        I find generative art a extremely interesting medium, in it's inerhently semi-automatic and chance-based nature. Art that is interactive, adaptable,
-        random or changing beyond or only partly influenced by human control is alluring and fascinating to me. Generations can be cherry picked and presented 
-        as perfect stand-alone entities, or continuously generated, in which the algorithm itself becomes the art work.
+      I find generative art an extremely fascinating medium. It's inherently chance-based and living. Generative art can be interactive, adaptable, and organic. The artist can either cherry-pick certain outputs and present them as standalone pieces, or continuously generate new outputs, making the algorithm itself the artwork. 
       `,
       {
         src : threeDMaterialPath,
         alt : 'Materials',
         height : 350,
+        label : false,
       },
     ]
   },
@@ -84,34 +70,28 @@ export const sections : Section[] = [
     title : "Politics and Philosophy",
     content : [
       `
-        Although I'm not particularly well-read, politics and philosophy are quite important to me. No space is devoid of them. This place, and
-        the Internet as a whole, is no exception. We need to be conscious of the underlying ideology when using tools and inhabiting spaces. 
-        I too use Facebook, Google and Instagram, but I also think making these platforms our defaults -- or our only experience of the internet --
-        is dangerous and harmful. 
+      Although I'm not particularly well-read, politics and philosophy are quite important to me. I think we need to be conscious of the underlying ideology when using tools and inhabiting spaces. I too have a Google, Facebook, and Instagram account, but making these platforms our default -- or only -- experience of the internet is dangerous. These spaces are not our own. They are engineered to best fit a capitalist mode of production. They not only gather our data to best serve us personalized ads, but they also conduct social engineering and subtle behavioral conditioning. This is no secret or accident. 
       `,
       `
-        These spaces are not our own. They are engineered to best fit a late capitalist mode of production. They are conduct social engineering, subtle
-        behavior conditioning. This is no accident or secret. Using these tools, however (unfortunately) necessary and natural, does something to us. 
-        Transitioning away is a slow process, especially for artists. NFT:s are a new possibility for creatives, where an Instagram precense and growing a personal
-        brand becomes less vital, but the concept of NFT:s and the surrounding culture has its problems, environmental, community related and conceptual. 
+      Transitioning away from this is a slow process, especially for artists. NFT:s seem hot right now, but NFT platforms have other problems -- environmental, conceptual, and community-related. 
       `,
       `
-        A website of ones own invites more pure digital expression and control.
+      A website of one's own invites more pure digital expression and control
       `,
       {
         src : layeredMaterialPath,
         alt : 'Meditation box',
         height : 350,
+        label : false,
       },
       `
-        Yet, you can find me on major platforms. Github, Instagram, Linkedin, wherever. One has to be pragmatic. Just be conscious. Remember
-        what they are and what they do.
+      Yet, you can find me on major platforms. Github, Instagram, Linkedin, wherever. One has to be pragmatic, I guess. But remain conscious of what these spaces are.
       `,
       `
-        This site stores none of your information. There are no cookies, agreements or user data, not even logging of traffic. 
+      This site stores none of your information. There are no cookies, analytics, or user data.
       `,
       `
-        The images you've seen are some excerpts from my generative explorations.
+      The images you've seen are some excerpts from my generative explorations.
       `
     ]
   }

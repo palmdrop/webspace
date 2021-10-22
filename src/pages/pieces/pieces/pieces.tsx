@@ -3,6 +3,7 @@ import { ColorTheme } from "../../../state/slices/uiSlice";
 
 import retroCoreImage from '../../../assets/content/pieces/retro-core/img1.png';
 import solarChromeImage from '../../../assets/content/pieces/solar-chrome/img1.png';
+import solarLandscapeImage from '../../../assets/content/pieces/solar-landscape/img2.png';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -84,7 +85,7 @@ export const pieces : PieceData[] = [
       "3d", "Warp"
     ],
 
-    image: solarChromeImage,
+    image: solarLandscapeImage,
 
     Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
   }

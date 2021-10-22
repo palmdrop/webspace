@@ -17,7 +17,6 @@ import GradientBackground from "./components/ornamental/gradient/GradientBackgro
 import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
 import './App.scss';
-import NotFoundPage from "./pages/notFound/notFoundPage";
 
 // Use lazy loading to load each page
 const MainPage    = React.lazy( () => import( "./pages/main/mainPage" ) );
@@ -25,6 +24,7 @@ const AboutPage   = React.lazy( () => import( "./pages/about/aboutPage" ) );
 const PiecesPage  = React.lazy( () => import( "./pages/pieces/piecesPage" ) );
 const BlogPage    = React.lazy( () => import( "./pages/blog/blogPage" ) );
 const ContactPage = React.lazy( () => import( "./pages/contact/contactPage" ) );
+const NotFoundPage = React.lazy( () => import("./pages/notFound/notFoundPage") );
 
 export enum PageRoute {
   root = '/',

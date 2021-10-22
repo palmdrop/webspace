@@ -31,10 +31,14 @@
     }
   }
 
-  main {
+  &__main {
     grid-area: main;
 
     width: clamp( 300px, 90vw, 800px );
+
+    &--error {
+      animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) both;
+    }
 
     .glass-card {
       padding: 3em 2.5em 4em 2.5em;
@@ -138,6 +142,16 @@
             width: 30ch;
             height: 0px;
           }
+
+          .contact-page__send-failed-message {
+            color: var( --primary-color-500 );
+            @include font( 'paragraph' );
+
+            text-align: right;
+
+            width: 30ch;
+            height: 0px;
+          }
         }
 
       }
@@ -184,5 +198,23 @@
     opacity: 0.96;
 
     pointer-events: none;
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translateX(-1px);
+  }
+  
+  20%, 80% {
+    transform: translateX(2px);
+  }
+
+  30%, 50%, 70% {
+    transform: translateX(-4px);
+  }
+
+  40%, 60% {
+    transform: translateX(4px);
   }
 }

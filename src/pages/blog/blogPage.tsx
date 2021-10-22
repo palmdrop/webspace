@@ -14,8 +14,8 @@ const BlogPage = ( /* { } : PageProps */ ) : JSX.Element => {
           level={ 3 }
         />
         <Paragraph>
-          For this webspace project, I do not intend to display just a finished product -- I want to get away from the idea of making
-          things products in the first place. This place will grow organically as my skills and interests grow and shift. 
+          For this project, I do not intend to display a finished product -- I don't want to create a product at all. 
+          This place will grow organically as my skills and interests grow and shift. 
         </Paragraph>
         <Paragraph>
           I have yet to build the blog section of this site. Please refer to my old (and unfortunately very inactive) blog: 

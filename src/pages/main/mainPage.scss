@@ -61,7 +61,8 @@
     padding: 0em 1.0em;
 
     .paragraph {
-      max-width: 70ch;
+      max-width: 59ch;
+      padding: 0.5em 0em;
     }
 
     @include medium {

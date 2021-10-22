@@ -1,0 +1,24 @@
+.star-loader {
+  position: relative;
+
+  padding: 0.0em 1.5em;
+
+  &__star {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 5.0em;
+    height: auto;
+
+    animation: spin 3s linear infinite;
+  }
+}
+
+@keyframes spin { 
+  0% { transform: translate(-50%, -50%) rotate(0deg) }
+  100% { transform: translate(-50%, -50%) rotate(360deg) }
+}
