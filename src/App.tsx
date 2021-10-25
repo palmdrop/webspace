@@ -4,7 +4,7 @@ import {
   Switch,
   Route,
   useHistory,
-  HashRouter as Router,
+  BrowserRouter as Router,
   Redirect
 } from "react-router-dom";
 
@@ -18,13 +18,14 @@ import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
 import './App.scss';
 
+import NotFoundPage from "./pages/notFound/notFoundPage";
+
 // Use lazy loading to load each page
 const MainPage    = React.lazy( () => import( "./pages/main/mainPage" ) );
 const AboutPage   = React.lazy( () => import( "./pages/about/aboutPage" ) );
 const PiecesPage  = React.lazy( () => import( "./pages/pieces/piecesPage" ) );
 const BlogPage    = React.lazy( () => import( "./pages/blog/blogPage" ) );
 const ContactPage = React.lazy( () => import( "./pages/contact/contactPage" ) );
-const NotFoundPage = React.lazy( () => import("./pages/notFound/notFoundPage") );
 
 export enum PageRoute {
   root = '/',
@@ -58,7 +59,7 @@ export const pages : Page[] = [
     route: PageRoute.pieces,
     exactRoute: false,
     colorTheme: ColorTheme.dirty,
-    scroll: true,
+    scroll: false,
     Component: PiecesPage
   },
   {
@@ -66,7 +67,7 @@ export const pages : Page[] = [
     route: PageRoute.blog,
     exactRoute: false,
     colorTheme: ColorTheme.haze,
-    scroll: true,
+    scroll: false,
     Component: BlogPage
   },
   {
@@ -74,7 +75,7 @@ export const pages : Page[] = [
     route: PageRoute.contact,
     exactRoute: true,
     colorTheme: ColorTheme.vapor,
-    scroll: false,
+    scroll: true,
     Component: ContactPage
   },
   {

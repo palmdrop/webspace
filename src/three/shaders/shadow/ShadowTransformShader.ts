@@ -14,6 +14,7 @@ const fragmentShader = `
 
   uniform float opacity;
   uniform float darkness;
+  uniform float brightness;
   uniform vec2 offset;
 
   uniform float staticAmount;
@@ -64,6 +65,7 @@ const fragmentShader = `
     }
 
     color = applyStatic( color, vUv );
+    color *= vec3( brightness );
     color -= vec3( darkness );
 
     color *= tint;
@@ -78,6 +80,7 @@ const ShadowTransformShader : THREE.Shader = {
     'viewport': { value: new THREE.Vector2() },
 
     'darkness': { value: -0.2 },
+    'brightness': { value: 1.0 },
     'opacity': { value: 2.9 },
     'offset': { value: new THREE.Vector2( -0, 0 ) },
 

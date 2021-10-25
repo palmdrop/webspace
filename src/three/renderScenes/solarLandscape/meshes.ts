@@ -1,10 +1,26 @@
 import * as THREE from 'three';
+import { clamp } from 'lodash';
 import { random, randomElement } from "../../../utils/random";
 import { setVertexColors } from '../../geometry/color/color';
 import { textureFromSmoothGeometry } from '../../material/textureFromVertices';
-import { SolarChromeGeometryPrefab, SolarChromeMaterialPrefab, FoldedStoneGeometryPrefab, TwistedTorusGeometryPrefab, CurledTubeGeometryPrefab, SoftMaterialPrefab, RoughMetalMaterialPrefab, GlowingMaterialPrefab, DirtyMetalMaterialPrefab, MarbleGeometryPrefab } from '../../prefabs/prefabs';
+import { 
+  SolarChromeGeometryPrefab, 
+  FoldedStoneGeometryPrefab, 
+  TwistedTorusGeometryPrefab, 
+  CurledTubeGeometryPrefab, 
+  MarbleGeometryPrefab 
+} from '../../prefabs/geometries';
+
+import {
+  SolarChromeMaterialPrefab, 
+  SoftMaterialPrefab, 
+  RoughMetalMaterialPrefab, 
+  GlowingMaterialPrefab, 
+  DirtyMetalMaterialPrefab, 
+} from '../../prefabs/materials';
 import { varyColorHSL } from '../../utils/color';
-import { getNoise3D } from '../../utils/noise';
+import { getNoise3D, Noise } from '../../utils/noise';
+import { DomainMap } from '../../generation/domain/domain';
 
 const materialPrefabs = [
   SolarChromeMaterialPrefab,
@@ -14,7 +30,7 @@ const materialPrefabs = [
 ];
 
 const geometryPrefabs = [
-  // SolarChromeGeometryPrefab,
+  SolarChromeGeometryPrefab,
   MarbleGeometryPrefab,
   FoldedStoneGeometryPrefab,
   TwistedTorusGeometryPrefab,
@@ -22,12 +38,32 @@ const geometryPrefabs = [
 ];
 
 
+type CompositionSettings = {
+
+}
+
+const wrapNoise = ( 
+  noiseFunction : Noise,
+  frequency : THREE.Vector3,
+  min : number,
+  max : number,
+  offset? : THREE.Vector3,
+) : DomainMap => {
+  return ( x : number, y : number, z : number ) => {
+    return noiseFunction( new THREE.Vector3( x, y, z ), offset, frequency, min, max );
+  }
+}
+
+const getPoint = ( domainMap : DomainMap, domain : THREE.Box3 ) => {
+
+}
+
 export const createMeshes = ( colors : THREE.Color[] ) => {
   const geometries : THREE.BufferGeometry[] = [];
   const materials : THREE.MeshStandardMaterial[] = [];
   const meshes : THREE.Group = new THREE.Group();
 
-  for( let i = 0; i < 6; i++ ) {
+  const createMesh = ( numberOfInstances : number ) => {
     const geometry = randomElement( geometryPrefabs )( {} );
     const material = randomElement( materialPrefabs )( { 
       geometry : geometry,
@@ -39,9 +75,9 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
     const frequency = 
       new THREE.Vector3(
-        0.2 + 1.0 * Math.pow( Math.random(), 3.5 ),
-        0.2 + 1.0 * Math.pow( Math.random(), 3.5 ),
-        0.2 + 1.0 * Math.pow( Math.random(), 3.5 ),
+        // 0.1 + 1.0 * Math.pow( Math.random(), 3.5 ),
+        // 0.1 + 1.0 * Math.pow( Math.random(), 3.5 ),
+        0.1 + 1.0 * Math.pow( Math.random(), 3.5 ),
       );
 
     const warp = 0.8;
@@ -51,9 +87,10 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     setVertexColors( geometry, ( i, x, y, z ) => {
       const ox = warp * getNoise3D( { x : x + 103, y, z }, null, frequency, -1.0, 1.0 );
       const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, -1.0, 1.0 );
-      const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, -1.0, 1.0 );
+      const oz = warp * getNoise3D( { x: x + 131, y : y, z }, null, frequency, -1.0, 1.0 );
+      // const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, -1.0, 1.0 );
       return { 
-        r : 1.0 - rf * n,
+        r : 1.0 - rf * oz,
         g : 1.0 - gf * ox,
         b : 1.0 - bf * oy 
       }
@@ -80,7 +117,6 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     geometries.push( geometry );
     materials.push( material );
 
-    const numberOfInstances = Math.floor( random( 20, 33 ) );
     const mesh = new THREE.InstancedMesh(
       geometry,
       material,
@@ -90,16 +126,42 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    const minScale = 0.3;
-    const maxScale = 1.3;
+    return mesh;
+  }
 
-    const range = {
-      x : 7,
-      y : 7,
-      z : 1
-    };
+
+  const meshList = [];
+  let totalInstanceCount = 0;
+  const meshIndexArray = [];
+  const arrayIndex = 0;
+  for( let i = 0 ; i < 6; i++ ) {
+    const numberOfInstances = Math.floor( random( 20, 33 ) );
+
+    const mesh = createMesh( numberOfInstances );
+    meshList.push( mesh );
+
+    for( let j = 0; j < numberOfInstances; j++ ) {
+      meshIndexArray.push( i );
+    }
+
+    totalInstanceCount += numberOfInstances;
+  }
+
+
+  for( let i = 0; i < 6; i++ ) {
+    const numberOfInstances = Math.floor( random( 20, 33 ) );
+    const mesh = createMesh( numberOfInstances );
 
     for( let i = 0; i < numberOfInstances; i++ ) {
+      const minScale = 0.3;
+      const maxScale = 1.1;
+
+      const range = {
+        x : 7,
+        y : 7,
+        z : 1
+      };
+
       const scale = new THREE.Vector3(
         random( minScale, maxScale ),
         random( minScale, maxScale ),

@@ -12,12 +12,15 @@ import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
 import { clamp } from 'three/src/math/MathUtils';
 import { 
-  SolarChromeMaterialPrefab, 
   SolarChromeGeometryPrefab,
   SolarChromeGeometryPrefab2 
-} from '../../prefabs/prefabs';
+} from '../../prefabs/geometries';
 
-import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
+import {
+  SolarChromeMaterialPrefab, 
+} from '../../prefabs/materials';
+
+import hdriPath from '../../../assets/hdri/decor_shop_1k.hdr';
 
 export class SolarChromeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;

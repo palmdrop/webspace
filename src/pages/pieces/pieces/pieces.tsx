@@ -1,9 +1,9 @@
 import React from "react";
 import { ColorTheme } from "../../../state/slices/uiSlice";
 
-import retroCoreImage from '../../../assets/content/pieces/retro-core/img1.png';
-import solarChromeImage from '../../../assets/content/pieces/solar-chrome/img1.png';
-import solarLandscapeImage from '../../../assets/content/pieces/solar-landscape/img2.png';
+import retroCoreImage from '../../../assets/content/pieces/retro-core.jpg';
+import solarChromeImage from '../../../assets/content/pieces/solar-chrome.jpg';
+import solarLandscapeImage from '../../../assets/content/pieces/solar-landscape-1.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,

@@ -3,6 +3,7 @@
 *.notes
 /images
 .vscode
+deploy.sh
 
 src/credentials.ts
 

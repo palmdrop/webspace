@@ -43,7 +43,7 @@
 
   .nav-bar {
     grid-area: navbar;
-
+    padding-bottom: 2em;
 
     @include medium {
       justify-self: flex-end;

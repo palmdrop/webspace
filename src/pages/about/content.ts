@@ -1,6 +1,6 @@
-import retroDiamondPath from '../../assets/content/about/retro-diamond.png';
-import threeDMaterialPath from '../../assets/content/about/3d-material.png';
-import layeredMaterialPath from '../../assets/content/about/layered-material.png';
+import retroDiamondPath from '../../assets/content/about/retro-diamond.jpg';
+import threeDMaterialPath from '../../assets/content/about/3d-material.jpg';
+import layeredMaterialPath from '../../assets/content/about/layered-material.jpg';
 
 export type ImageData = {
   src : string,

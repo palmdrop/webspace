@@ -15,6 +15,7 @@ import Title from "../../../components/title/Title";
 import SoftDisk from "../../../components/ornamental/disk/soft/SoftDisk";
 
 import './PieceWrapper.scss';
+import StarLoader from "../../../components/loader/starLoader/StarLoader";
 
 type Props = {
   pieceIndex : number,
@@ -87,10 +88,12 @@ const PieceWrapper = React.memo( ( {
     <div className={ `piece-wrapper ${ isLoaded ? 'piece-wrapper--loaded' : '' }` }>
       { !isLoaded && showLoadingPage && (
         <div className="piece-wrapper__loading">
+          <StarLoader />
           <Title 
             level={ 3 }
             text={ `Loading ${ pieceData.name }...` }
           />
+          <StarLoader />
         </div>
       )}
 

@@ -12,7 +12,7 @@ import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { clamp } from 'three/src/math/MathUtils';
 import { varyColorHSL } from '../../utils/color';
 
-import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
+import hdriPath from '../../../assets/hdri/decor_shop_1k.hdr';
 
 import { createMeshes } from './meshes';
 import { createBackground } from './background';
@@ -20,7 +20,6 @@ import { createPostProcessing } from './postProcessing';
 import { ShadowRenderer } from './shadows';
 
 import normalTexturePath from '../../../assets/normal/normal-texture1_x2.jpg';
-import { NumberKeyframeTrack } from 'three';
 
 export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
@@ -206,7 +205,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.maxZ = maxSize / 2.0 + 20;
 
     this.scene.add( this.meshes );
-    // this.scene.background = this.background;
 
     const fogColor = varyColorHSL( this.backgroundColors[0], 0.0, 0.0, -0.45 );
     this.scene.fog = new THREE.Fog( 
@@ -236,8 +234,8 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     }
 
     addShadowSetting( 'darkness', -2, 2 );
+    addShadowSetting( 'brightness', 0, 2 );
     addShadowSetting( 'opacity',  -2, 2 );
-    // addShadowSetting( 'offset', -2, 2 );
     addShadowSetting( 'staticAmount', 0, 2 );
 
     ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
@@ -279,24 +277,17 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     ASSETHANDLER.loadTexture( normalTexturePath, false, ( texture ) => {
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
-      // texture.repeat.x = 20;
-      // texture.repeat.y = 20;
 
       const backgroundPlane = new THREE.Mesh(
         // TODO try stretched background plane! stylized! that change does soo much
-          new THREE.PlaneBufferGeometry( 40.0, 1.0, 1, 1 ),
+          new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
           new THREE.MeshStandardMaterial( {
             map: this.backgroundRenderer.renderTarget.texture,
             roughnessMap: this.backgroundRenderer.renderTarget.texture,
             metalnessMap: this.backgroundRenderer.renderTarget.texture,
-            // displacementMap: this.backgroundRenderer.renderTarget.texture,
-            // displacementScale: 100,
             normalMap: texture,
-            // normalScale: new THREE.Vector2( 0.1 ),
-            // normalScale: new THREE.Vector2( 0.02, 0.05 ),
             metalness: 0.7,
             envMapIntensity: 0.5,
-            // roughness: 0.1,
           })
         );
 
@@ -306,7 +297,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       this.backgroundPlane = backgroundPlane;
       this.scene.add( backgroundPlane );
       });
-      // normalTexture.repeat.set( 10, 10 );
 
   }
 
@@ -316,39 +306,20 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   }
 
   zoom( deltaZoom : number ) {
-
     this.zoomVelocity += deltaZoom * this.zoomSpeed;
-
   }
 
-  protected beforeRender() {
-    super.beforeRender();
-
-    /*if( this.captureNext && this.directionalLight ) {
-      this.directionalLight.shadow.mapSize.width *= 2.0;
-      this.directionalLight.shadow.mapSize.height *= 2.0;
-      this.directionalLight.shadow.needsUpdate = true;
-    }*/
-
-  }
-
-  protected afterRender() {
-    super.afterRender();
-
-    /*if( this.captureNext && this.directionalLight ) {
-      this.directionalLight.shadow.mapSize.width /= 2.0;
-      this.directionalLight.shadow.mapSize.height /= 2.0;
-      this.directionalLight.shadow.needsUpdate = true;
-    }*/
-  }
 
   render( delta : number, now : number ) {
-
+    // Hide shadow plane and background when rendering shadow
     if( this.shadowPlane ) this.shadowPlane.visible = false;
     if( this.backgroundPlane ) this.backgroundPlane.visible = false;
     const background = this.scene.background;
     this.scene.background = null;
+
     this.shadowRenderer.render( delta );
+
+    // Show shadow plane and background again
     if( this.shadowPlane ) this.shadowPlane.visible = true;
     if( this.backgroundPlane ) this.backgroundPlane.visible = true;
     this.scene.background = background;
@@ -358,7 +329,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
   update(delta : number, now : number) {
     this.controls?.update();
-
 
     if( this.meshes ) {
       // this.meshes.rotation.y += delta * 0.14;

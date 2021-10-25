@@ -73,6 +73,9 @@ type ListProps = {
 
   mousePlateau? : number,
   mouseScrollSpeed? : number,
+
+  touchScrollSpeed? : number,
+  touchScrollThreshold? : number,
 }
 
 export const PiecesList = ( { 
@@ -87,9 +90,14 @@ export const PiecesList = ( {
   scrollEdgeDamping = 30,
 
   mousePlateau = 0.4,
-  mouseScrollSpeed = 0.04
+  mouseScrollSpeed = 0.04,
+
+  touchScrollSpeed = 4,
+  touchScrollThreshold = 0,
 } : ListProps ) : JSX.Element => {
   const mainContainerRef = useRef<HTMLDivElement>( null );
+  const touchPositionRef = useRef<{ x : number, y : number }>( { x : 0, y : 0 } );
+
   const scrollVelocity = useRef( 0 );
   const scrollAcceleration = useRef( 0 );
   const [ scrollAmount, setScrollAmount ] = useState( window.innerWidth / 3.0 );
@@ -109,6 +117,27 @@ export const PiecesList = ( {
 
   const handleScroll = ( event : React.WheelEvent<HTMLDivElement> ) => {
     scrollAcceleration.current = scrollSpeed * Math.sign( -event.deltaY );
+  }
+
+  const handleTouchStart = ( event : React.TouchEvent<HTMLDivElement> ) => {
+    touchPositionRef.current.x = event.touches[ 0 ].clientX;
+    touchPositionRef.current.y = event.touches[ 0 ].clientY;
+  }
+
+  const handleTouchMove = ( event : React.TouchEvent<HTMLDivElement> ) => {
+    const x = event.touches[ 0 ].clientX;
+    const y = event.touches[ 0 ].clientY;
+
+    const dx = x - touchPositionRef.current.x;
+    const dy = y - touchPositionRef.current.y;
+
+    const deltaScroll = dx + dy;
+    if ( Math.abs( deltaScroll ) > touchScrollThreshold ) {
+      scrollAcceleration.current = touchScrollSpeed * deltaScroll;
+    }
+
+    touchPositionRef.current.x = x;
+    touchPositionRef.current.y = y;
   }
 
   const animationCallback = useCallback( ( delta : number, now : number ) => {
@@ -196,6 +225,8 @@ export const PiecesList = ( {
     <div 
       className="pieces-list"
       onWheel={ handleScroll }
+      onTouchStart={ handleTouchStart }
+      onTouchMove={ handleTouchMove }
     >
       <div 
         ref={ mainContainerRef }

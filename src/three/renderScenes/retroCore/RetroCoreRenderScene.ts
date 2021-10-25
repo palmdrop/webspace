@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+// import { SSAARenderPass } from 'three/examples/jsm/postprocessing/SSAARenderPass';
 import { UnrealBloomPass } from '../../effects/unrealBloom/UnrealBloomPass';
 
 import { VoidCallback } from "../../core";
@@ -8,12 +9,13 @@ import { AbstractRenderScene } from '../../AbstractRenderScene';
 
 import { ASSETHANDLER } from '../../systems/AssetHandler';
 
-import t1 from '../../../assets/texture/t2.png';
-import t2 from '../../../assets/texture/t3.png';
-import t3 from '../../../assets/texture/t1.png';
 import { random, randomElement } from '../../../utils/random';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { ShadowTransformShader } from '../../shaders/shadow/ShadowTransformShader';
+
+import t1 from '../../../assets/texture/t2.jpg';
+import t2 from '../../../assets/texture/t3.jpg';
+import t3 from '../../../assets/texture/t1.jpg';
 
 type ObjectData = {
   object : THREE.Object3D,
@@ -44,7 +46,7 @@ class BaseRenderer {
     this.composer = new EffectComposer( renderer, this.renderTarget );
 
     const renderPass = new RenderPass( scene, camera );
-    //const renderPass = new SSAARenderPass( scene, camera, 'black', 0 );
+    // const renderPass = new SSAARenderPass( scene, camera, 'black', 0 );
 
     this.transformPass = new ShaderPass( ShadowTransformShader );
     this.transformPass.uniforms[ 'darkness' ].value = -0.2;
@@ -157,7 +159,7 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
           roughness: random( 0.3, 1.0 ),
 
           bumpMap: texture,
-          bumpScale: random( 0.1, 0.25 ),
+          bumpScale: random( 0.02, 0.1 ),
 
           alphaMap: texture,
 

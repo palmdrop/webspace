@@ -3,14 +3,22 @@ import { clamp } from 'three/src/math/MathUtils';
 
 export type Vector3 = { x : number, y : number, z : number };
 
-export const noise3D = makeNoise3D();
-
-export const getNoise3D = ( 
+export type Noise = ( 
   position : Vector3, 
   offset : Vector3 | null | undefined, 
   frequency : number | Vector3,
-  min : number = -1.0, 
-  max : number = 1.0 
+  min? : number, 
+  max? : number
+) => number
+
+export const noise3D = makeNoise3D();
+
+export const getNoise3D : Noise = ( 
+  position, 
+  offset, 
+  frequency,
+  min = -1.0, 
+  max = 1.0 
 ) => {
   let x = position.x;
   let y = position.y;
