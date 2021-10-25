@@ -16,11 +16,13 @@ import PageWrapper, { PageProps } from "./pages/PageWrapper";
 import GradientBackground from "./components/ornamental/gradient/GradientBackground";
 import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
+import { PageDidNotLoadErrorBoundry } from "./components/error/boundaries/PageDidNotLoadErrorBoundry";
+import NotFoundPage from "./pages/notFound/notFoundPage";
+import PageDidNotLoadPage from "./pages/pageDidNotLoad/pageDidNotLoadPage";
+
 import './App.scss';
 
-import NotFoundPage from "./pages/notFound/notFoundPage";
-
-// Use lazy loading to load each page
+// Use lazy loading to load most pages
 const MainPage    = React.lazy( () => import( "./pages/main/mainPage" ) );
 const AboutPage   = React.lazy( () => import( "./pages/about/aboutPage" ) );
 const PiecesPage  = React.lazy( () => import( "./pages/pieces/piecesPage" ) );
@@ -126,35 +128,41 @@ const App = () => {
       <GradientBackground colorTheme={ colorTheme } />
       <NoiseBackground opacity={ 0.4 } />
 
-      { /* No fallback, just display background while loading */ }
-      <Suspense fallback={ null }>
-        <Router>
-          <Switch>
-          { pages.map( page => (
-            <Route 
-              key={ page.route }
-              path={ page.route }
-              exact={ page.exactRoute }
-            >
-              <PageWrapper 
-                route={ page.route }
-                colorTheme={ page.colorTheme }
-                fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
-                scroll={ page.scroll }
-              >
-                <page.Component route={ page.route } />
-              </PageWrapper>
-            </Route>
-          ))}
+      <PageDidNotLoadErrorBoundry
+        fallback={ PageDidNotLoadPage } 
+      >
 
-            { /* 404 */ }
-            <Route path={ PageRoute.notFound }>
-              <NotFoundPage />
-            </Route>
-            <RedirectNotFound />
-          </Switch>
-        </Router>
-      </Suspense>
+        { /* No fallback, just display background while loading */ }
+        <Suspense fallback={ null }>
+          <Router>
+            <Switch>
+            { pages.map( page => (
+              <Route 
+                key={ page.route }
+                path={ page.route }
+                exact={ page.exactRoute }
+              >
+                <PageWrapper 
+                  route={ page.route }
+                  colorTheme={ page.colorTheme }
+                  fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
+                  scroll={ page.scroll }
+                >
+                  <page.Component route={ page.route } />
+                </PageWrapper>
+              </Route>
+            ))}
+
+              { /* 404 */ }
+              <Route path={ PageRoute.notFound }>
+                <NotFoundPage />
+              </Route>
+              <RedirectNotFound />
+            </Switch>
+          </Router>
+        </Suspense>
+
+      </PageDidNotLoadErrorBoundry>
     </div>
   );
 }

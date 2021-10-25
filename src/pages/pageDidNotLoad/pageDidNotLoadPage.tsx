@@ -6,10 +6,9 @@ import Paragraph from '../../components/paragraph/Paragraph';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle1.svg';
 
-import './notFoundPage.scss';
+import './pageDidNotLoadPage.scss';
 
-
-const NotFoundPage = () : JSX.Element => {
+const PageDidNotLoadPage = () : JSX.Element => {
   const history = useHistory();
 
   const onGoBack = () => {
@@ -21,15 +20,14 @@ const NotFoundPage = () : JSX.Element => {
   }
 
   return (
-    <div className="not-found-page">
+    <div className="page-did-not-load-page">
       <main>
         <header>
-          404 Page Not Found
-          <Obstacle className="not-found-page__obstacle" />
+          Something went wrong!
+          <Obstacle className="page-did-not-load-page__obstacle" />
         </header>
         <Paragraph>
-          This page does not exist (yet).
-          Perhaps it should.
+          This page failed to load. 
         </Paragraph>
         <nav>
           <GlassCard>
@@ -50,4 +48,4 @@ const NotFoundPage = () : JSX.Element => {
   );
 }
 
-export default NotFoundPage;
+export default PageDidNotLoadPage;
