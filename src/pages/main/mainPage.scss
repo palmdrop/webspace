@@ -8,7 +8,7 @@
   display: grid;
 
   gap: 1em;
-  grid-template-rows: 0.1fr 1.1fr 0.1fr;
+  grid-template-rows: 1.1fr 0.1fr 0.1fr;
   grid-template-areas: 
     "header header"
     "info info"
@@ -16,12 +16,13 @@
   ;
 
   @include medium {
+    display: grid;
     grid-template-columns: 0.99fr auto;
     grid-template-rows: 0.25fr 0.95fr 0.1fr;
 
     grid-template-areas: 
       "header header"
-      "navbar navbar"
+      ". navbar"
       "info info"
     ;
   }
@@ -37,28 +38,30 @@
     ;
   }
 
-  .main-header {
+  .header {
     grid-area: header;
   }
 
   .nav-bar {
     grid-area: navbar;
-    padding-bottom: 2em;
+
+    padding-bottom: 8vh;
 
     @include medium {
       justify-self: flex-end;
       padding: 0.4em;
-
     }
   }
 
   &__info {
     grid-area: info;
-    align-self: flex-end;
+
+    @include medium {
+      justify-self: unset;
+    }
 
     z-index: 1;
-
-    padding: 0em 1.0em;
+    padding: 1em;
 
     .paragraph {
       max-width: 59ch;
@@ -78,7 +81,7 @@
     z-index: -1;
 
     $size: calc(min(80vh, 80vw));
-    $min-size: 500px;
+    $min-size: 300px;
 
     position: absolute;
 
@@ -88,7 +91,7 @@
     height: $size;
     min-height: $min-size;
 
-    top: 50%;
+    top: 43%;
     left: 50%;
 
     @include medium {

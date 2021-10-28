@@ -345,7 +345,7 @@ export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
 
     // Warp amount
     ( frequency : THREE.Vector3 ) => {
-      return random( 1.0, 1.5 );
+      return random( 1.3, 1.5 );
     },
 
     // Octaves 

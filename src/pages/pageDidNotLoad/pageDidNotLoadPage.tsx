@@ -1,4 +1,7 @@
 import { useHistory } from 'react-router';
+
+import { FallbackProps } from 'react-error-boundary';
+
 import { PageRoute } from '../../App';
 import GlassCard from '../../components/cards/glass/GlassCard';
 import Button from '../../components/input/button/Button';
@@ -8,7 +11,7 @@ import { ReactComponent as Obstacle } from '../../assets/svg/obstacle1.svg';
 
 import './pageDidNotLoadPage.scss';
 
-const PageDidNotLoadPage = () : JSX.Element => {
+const PageDidNotLoadPage = ( { error, resetErrorBoundary } : FallbackProps ) : JSX.Element => {
   const history = useHistory();
 
   const onGoBack = () => {

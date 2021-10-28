@@ -8,15 +8,16 @@
 }
 
 .page-wrapper {
-  display: flex;
   overflow: hidden;
 
   &--scroll {
-    overflow-y: auto;
+    overflow-y: scroll;
     scroll-behavior: smooth;
   }
 
   animation: fadeIn 0.7s;
+
+  margin: unset;
 
   transition: 0.5s opacity;
   opacity: 1;

@@ -1,5 +1,7 @@
 import React, { Suspense } from "react";
 
+import { ErrorBoundary } from 'react-error-boundary';
+
 import {
   Switch,
   Route,
@@ -122,17 +124,15 @@ export const RedirectNotFound = () => <Redirect to={ PageRoute.notFound } />;
 const App = () => {
   const colorTheme = useAppSelector( selectColorTheme );
   const nextPageRoute = useAppSelector( selectNextPageRoute );
-
+  
   return (
     <div className={ `app app--${ colorTheme }` }>
       <GradientBackground colorTheme={ colorTheme } />
       <NoiseBackground opacity={ 0.4 } />
 
-      <PageDidNotLoadErrorBoundry
-        fallback={ PageDidNotLoadPage } 
+      <ErrorBoundary
+        FallbackComponent={ PageDidNotLoadPage }
       >
-
-        { /* No fallback, just display background while loading */ }
         <Suspense fallback={ null }>
           <Router>
             <Switch>
@@ -153,7 +153,6 @@ const App = () => {
               </Route>
             ))}
 
-              { /* 404 */ }
               <Route path={ PageRoute.notFound }>
                 <NotFoundPage />
               </Route>
@@ -162,7 +161,7 @@ const App = () => {
           </Router>
         </Suspense>
 
-      </PageDidNotLoadErrorBoundry>
+      </ErrorBoundary>
     </div>
   );
 }

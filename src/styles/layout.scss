@@ -91,6 +91,8 @@ $page-max-width: $huge-device-width;
 /* Styled mixins */
 
 @mixin page() {
+  height: auto;
+
   @include padded-dimensions( 0.4 * $page-padding-horizontal, 0.8 * $page-padding-vertical );
 
   @include medium {

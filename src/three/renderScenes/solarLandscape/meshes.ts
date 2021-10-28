@@ -8,7 +8,8 @@ import {
   FoldedStoneGeometryPrefab, 
   TwistedTorusGeometryPrefab, 
   CurledTubeGeometryPrefab, 
-  MarbleGeometryPrefab 
+  MarbleGeometryPrefab, 
+  SolarChromeGeometryPrefab2
 } from '../../prefabs/geometries';
 
 import {
@@ -20,7 +21,9 @@ import {
 } from '../../prefabs/materials';
 import { varyColorHSL } from '../../utils/color';
 import { getNoise3D, Noise } from '../../utils/noise';
-import { DomainMap } from '../../generation/domain/domain';
+import { Domain, ProbabilityMap, getWeightedRandomPointInDomain, combineProbabilityMaps } from '../../generation/domain/domain';
+import { Box3 } from 'three';
+import { mapLinear } from 'three/src/math/MathUtils';
 
 const materialPrefabs = [
   SolarChromeMaterialPrefab,
@@ -30,33 +33,14 @@ const materialPrefabs = [
 ];
 
 const geometryPrefabs = [
-  SolarChromeGeometryPrefab,
+  // SolarChromeGeometryPrefab,
+  // SolarChromeGeometryPrefab2,
   MarbleGeometryPrefab,
   FoldedStoneGeometryPrefab,
   TwistedTorusGeometryPrefab,
   CurledTubeGeometryPrefab,
 ];
 
-
-type CompositionSettings = {
-
-}
-
-const wrapNoise = ( 
-  noiseFunction : Noise,
-  frequency : THREE.Vector3,
-  min : number,
-  max : number,
-  offset? : THREE.Vector3,
-) : DomainMap => {
-  return ( x : number, y : number, z : number ) => {
-    return noiseFunction( new THREE.Vector3( x, y, z ), offset, frequency, min, max );
-  }
-}
-
-const getPoint = ( domainMap : DomainMap, domain : THREE.Box3 ) => {
-
-}
 
 export const createMeshes = ( colors : THREE.Color[] ) => {
   const geometries : THREE.BufferGeometry[] = [];
@@ -81,9 +65,9 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
       );
 
     const warp = 0.8;
-    const rf = random( 0.2, 0.8 );
-    const gf = random( 0.2, 0.8 );
-    const bf = random( 0.2, 0.8 );
+    const rf = random( 0.1, 0.5 );
+    const gf = random( 0.1, 0.5 );
+    const bf = random( 0.1, 0.5 );
     setVertexColors( geometry, ( i, x, y, z ) => {
       const ox = warp * getNoise3D( { x : x + 103, y, z }, null, frequency, -1.0, 1.0 );
       const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, -1.0, 1.0 );
@@ -130,7 +114,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
   }
 
 
-  const meshList = [];
+  /*const meshList = [];
   let totalInstanceCount = 0;
   const meshIndexArray = [];
   const arrayIndex = 0;
@@ -145,36 +129,74 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     }
 
     totalInstanceCount += numberOfInstances;
+  }*/
+
+  const size = 30;
+  const minScale = 0.6;
+  const maxScale = 1.7;
+
+  const domain : Domain = new THREE.Box3( 
+    new THREE.Vector3( -size / 2.0, -size / 2, -size / 8.0 ),
+    new THREE.Vector3(  size / 2.0,  size / 2,  size / 9.0 ),
+  );
+
+  const tempVector = new THREE.Vector3();
+  const rotationAmount = 0.0;
+
+  const falloff : ProbabilityMap = ( x, y, z ) => {
+    const length = tempVector.set( x, y, z ).length();
+    return Math.pow( ( size / 2.0 - length ) / ( size / 2.0 ), 1.0 );
   }
 
 
   for( let i = 0; i < 6; i++ ) {
-    const numberOfInstances = Math.floor( random( 20, 33 ) );
+    const numberOfInstances = Math.floor( random( 20, 40 ) );
     const mesh = createMesh( numberOfInstances );
 
-    for( let i = 0; i < numberOfInstances; i++ ) {
-      const minScale = 0.3;
-      const maxScale = 1.1;
+    const probabilityMap : ProbabilityMap = combineProbabilityMaps( ( x, y, z ) => {
+      tempVector.set( x + i * 1.31, y, z );
+      const length = tempVector.length();
 
-      const range = {
-        x : 7,
-        y : 7,
-        z : 1
-      };
+      const rotation = length * rotationAmount;
+      const euler = new THREE.Euler( 0, rotation, 0 );
 
-      const scale = new THREE.Vector3(
-        random( minScale, maxScale ),
-        random( minScale, maxScale ),
-        random( minScale, maxScale ),
+      tempVector.applyEuler( euler );
+
+      return Math.pow( getNoise3D( tempVector, null, random( 0.12, 0.34 ), 0.0, 1.0 ), 2.0 );
+    }, falloff, ( v1, v2 ) => v1 * v2 );
+
+    const positionGenerator = () => {
+      return getWeightedRandomPointInDomain( 
+        domain,
+        probabilityMap,
+        30
       );
+    }
 
-      const position = new THREE.Vector3(
-        random( -range.x, range.x ),
-        random( -range.y, range.y ),
-        random( -range.z, range.z ),
+    const scaleGenerator = ( x : number , y : number, z : number ) => {
+      const sx = getNoise3D( tempVector.set( x + 3.1313 * i, y, z ), null, 0.06, 0, 1 );
+      const sy = getNoise3D( tempVector.set( y + 2.31 * i, x, z + 1.03 ), null, 0.06, 0, 1 );
+      const sz = getNoise3D( tempVector.set( z + -0.31 * i, x + 0.31, y ), null, 0.06, 0, 1 );
+
+      return tempVector.set( 
+        mapLinear( Math.pow( sx, 3.0 ), 0, 1.0, minScale, maxScale ),
+        mapLinear( Math.pow( sy, 3.0 ), 0, 1.0, minScale, maxScale ),
+        mapLinear( Math.pow( sz, 3.0 ), 0, 1.0, minScale, maxScale ),
       );
+    }
 
-      const f = 0.02;
+
+    for( let j = 0; j < numberOfInstances; j++ ) {
+      const position = positionGenerator();
+      if(!position) {
+        j--;
+        continue;
+      }
+
+      const scale = new THREE.Vector3().copy( scaleGenerator( position.x, position.y, position.z ));
+
+
+      const f = mapLinear( j, 0, numberOfInstances, 0.05, 0.08 );
       const minRotation = -Math.PI;
       const maxRotation = Math.PI;
       const rotation = new THREE.Euler(
@@ -199,8 +221,8 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
         random( -0.5, 0.7 )
       );
 
-      mesh.setMatrixAt( i, matrix );
-      mesh.setColorAt( i, color );
+      mesh.setMatrixAt( j, matrix );
+      mesh.setColorAt( j, color );
 
     }
 

@@ -16,9 +16,9 @@ export const createBackground = ( renderer : THREE.WebGLRenderer ) => {
   const background = backgroundRenderer.renderTarget.texture;
 
   const backgroundColors = [
-    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.0, 0.8 ) ),
-    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.0, 0.8 ) ),
-    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.0, 0.8 ) ),
+    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.5, 1.0 ) ),
+    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.5, 1.0 ) ),
+    new THREE.Color().setHSL( Math.random(), Math.random(), random( 0.5, 1.0 ) ),
   ];
 
   backgroundMaterial.uniforms[ 'colors' ].value = backgroundColors;

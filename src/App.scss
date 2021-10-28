@@ -2,11 +2,15 @@
 @import './styles/ornaments.scss';
 
 .app {
-	height: 100vh;
-
   @each $theme, $_ in $themed-colors {
     &--#{$theme} {
       @include colorScheme( $theme );
     }
   }
+}
+
+.overflow {
+  background-color: green;
+  width: 100vw;
+  height: 100%;
 }

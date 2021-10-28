@@ -14,6 +14,12 @@ export class PageDidNotLoadErrorBoundry extends React.Component<Props, State> {
     this.state = { hasError : false };
   }
 
+  static getDerivedStateFromError( error : Error ) {
+    return {
+      hasError: true
+    }
+  }
+
   componentDidCatch( error : Error, errorInfo : ErrorInfo ) {
     this.setState( {
       hasError : true 

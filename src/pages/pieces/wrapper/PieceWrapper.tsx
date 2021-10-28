@@ -13,9 +13,9 @@ import Paragraph from "../../../components/paragraph/Paragraph";
 import Title from "../../../components/title/Title";
 
 import SoftDisk from "../../../components/ornamental/disk/soft/SoftDisk";
+import StarLoader from "../../../components/loader/starLoader/StarLoader";
 
 import './PieceWrapper.scss';
-import StarLoader from "../../../components/loader/starLoader/StarLoader";
 
 type Props = {
   pieceIndex : number,

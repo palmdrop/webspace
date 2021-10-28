@@ -1,6 +1,5 @@
 import Header from '../Header';
 
-
 import './FadedHeader.scss';
 
 type Props = {

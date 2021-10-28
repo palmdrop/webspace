@@ -110,10 +110,6 @@ export const links : LinkData[] = [
     text : "Linktree",
     path : "https://linktr.ee/palmdrop",
   },
-  {
-    text : "Surfaces",
-    path : "https://palmdrop.github.io/surfaces/"
-  }
 ];
 
 export const creditsSections : CreditsSection[] = [
@@ -148,7 +144,7 @@ export const creditsSections : CreditsSection[] = [
     ]
   },
   {
-    title : "Inspiration",
+    title : "Inspo",
     entries : [
       {
         text : "Fuse blog",

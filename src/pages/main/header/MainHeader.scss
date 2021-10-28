@@ -2,14 +2,21 @@
 @import '../../../styles/layout.scss';
 
 .header {
+  width: 100%;
   &__obstacle {
     position: absolute;
 
-    width: 15em;
+    width: 50vw;
+    max-width: 15em;
     height: auto;
 
     top:  0em;
-    left: 3em;
+
+    left: 1.5em;
+
+    @include medium {
+      left: 3em;
+    }
 
     transition: 3s top, 3s left, 3s transform;
 

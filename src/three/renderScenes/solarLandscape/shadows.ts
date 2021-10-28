@@ -17,6 +17,8 @@ export class ShadowRenderer {
   private composer : EffectComposer;
   private shadowPass : ShaderPass;
 
+  private _size : THREE.Vector2;
+
   constructor( renderer : THREE.WebGLRenderer, scene : THREE.Scene, origin : THREE.Vector3, lookAt : THREE.Vector3, size : THREE.Vector2 ) {
     this.renderer = renderer;
     this.scene = scene;
@@ -24,6 +26,7 @@ export class ShadowRenderer {
       -size.x / 2.0,  size.x / 2.0,
        size.y / 2.0, -size.y / 2.0
     );
+    this._size = size;
 
     this.setLightPosition( origin );
     this.setLightLookAt( lookAt );
@@ -46,7 +49,7 @@ export class ShadowRenderer {
     shadowPass.uniforms[ 'darkness' ].value = 0.5;
     shadowPass.uniforms[ 'opacity' ].value = 0.7;
     shadowPass.uniforms[ 'offset' ].value.set( 0, 0 );
-    shadowPass.uniforms[ 'staticAmount' ].value = 0.4;
+    shadowPass.uniforms[ 'staticAmount' ].value = 0.1;
 
     this.composer.addPass( renderPass );
     this.composer.addPass( kawaseBlurPass );
@@ -87,6 +90,10 @@ export class ShadowRenderer {
 
   get texture() {
     return this.renderTarget.texture
+  }
+
+  get size() {
+    return this._size.clone()
   }
 
   getUniform( uniformName : string ) {

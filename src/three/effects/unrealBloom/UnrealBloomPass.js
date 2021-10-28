@@ -125,7 +125,7 @@ class UnrealBloomPass extends Pass {
 
 		const bloomFactors = [ 1.0, 0.8, 0.6, 0.4, 0.2 ];
 		this.compositeMaterial.uniforms[ 'bloomFactors' ].value = bloomFactors;
-		this.bloomTintColors = [ new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ) ];
+		this.bloomTintColors = [ new Vector2( 1, 1, 1 ), new Vector2( 1, 1, 1 ), new Vector2( 1, 1, 1 ), new Vector2( 1, 1, 1 ), new Vector2( 1, 1, 1 ) ];
 		this.compositeMaterial.uniforms[ 'bloomTintColors' ].value = this.bloomTintColors;
 
 		// copy material

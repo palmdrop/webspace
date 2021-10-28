@@ -12,7 +12,7 @@ import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { clamp } from 'three/src/math/MathUtils';
 import { varyColorHSL } from '../../utils/color';
 
-import hdriPath from '../../../assets/hdri/decor_shop_1k.hdr';
+import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
 
 import { createMeshes } from './meshes';
 import { createBackground } from './background';
@@ -29,8 +29,8 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private geometries? : THREE.BufferGeometry[];
 
   private rotationSpeed : number;
-  private rotationVelocity : THREE.Vector2;
-  private rotationAcceleration : THREE.Vector2;
+  private rotationVelocity : THREE.Vector3;
+  private rotationAcceleration : THREE.Vector3;
   private rotationFriction : number;
 
   private directionalLight? : THREE.DirectionalLight;
@@ -67,8 +67,8 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.camera.far = 50;
 
     this.rotationSpeed = 0.00002;
-    this.rotationVelocity = new THREE.Vector2();
-    this.rotationAcceleration = new THREE.Vector2();
+    this.rotationVelocity = new THREE.Vector3();
+    this.rotationAcceleration = new THREE.Vector3();
     this.rotationFriction = 0.1;
 
     const { 
@@ -96,7 +96,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       this.scene, 
       new THREE.Vector3( 0, 0, 10 ),
       new THREE.Vector3( 0, 0, -1 ),
-      new THREE.Vector2( 30, 30 ),
+      new THREE.Vector2( 55, 55 ),
     );
 
     this.populateScene();
@@ -267,9 +267,11 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     }
 
     const shadowPlane = createTexturedPlane( this.shadowRenderer.texture, true );
+    const planeZ = -5;
 
-    shadowPlane.scale.set( 45, 45, 1.0 );
-    shadowPlane.position.set( 0, 0, -8 );
+    const size = this.shadowRenderer.size;
+    shadowPlane.scale.set( size.x, size.y, 1.0 );
+    shadowPlane.position.set( 0, 0, planeZ + 0.01 );
     
     this.shadowPlane = shadowPlane;
     this.scene.add( shadowPlane );
@@ -283,16 +285,16 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
           new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
           new THREE.MeshStandardMaterial( {
             map: this.backgroundRenderer.renderTarget.texture,
-            roughnessMap: this.backgroundRenderer.renderTarget.texture,
             metalnessMap: this.backgroundRenderer.renderTarget.texture,
             normalMap: texture,
-            metalness: 0.7,
+            normalScale: new THREE.Vector2( 0.02 ),
+            metalness: 0.2,
             envMapIntensity: 0.5,
           })
         );
 
       backgroundPlane.scale.set( 100, 100, 1.0 );
-      backgroundPlane.position.set( 0, 0, -9.0 );
+      backgroundPlane.position.set( 0, 0, planeZ );
 
       this.backgroundPlane = backgroundPlane;
       this.scene.add( backgroundPlane );
@@ -301,8 +303,9 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   }
 
   onMouseMove( x : number, y : number, deltaX : number, deltaY : number ) {
-    this.rotationAcceleration.y += this.rotationSpeed * deltaX;
-    this.rotationAcceleration.x += this.rotationSpeed * deltaY;
+    // this.rotationAcceleration.y += this.rotationSpeed * deltaX;
+    // this.rotationAcceleration.x += this.rotationSpeed * deltaY;
+    this.rotationAcceleration.z += this.rotationSpeed * deltaY;
   }
 
   zoom( deltaZoom : number ) {
@@ -334,6 +337,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       // this.meshes.rotation.y += delta * 0.14;
       this.meshes.rotation.x += this.rotationVelocity.x;
       this.meshes.rotation.y += this.rotationVelocity.y;
+      this.meshes.rotation.z += this.rotationVelocity.z;
     }
 
     this.rotationVelocity.add( this.rotationAcceleration );

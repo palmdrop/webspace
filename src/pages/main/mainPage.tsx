@@ -15,12 +15,10 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
   const navBar = useNavBar( route );
 
   return (
-    <div 
+    <div  
       className="main-page"
     >
       <MainHeader />
-
-      { navBar }
 
       <div className="main-page__info">
       { description.map( ( paragraph, index ) => (
@@ -29,6 +27,8 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
         </Paragraph>
       ))}
       </div>
+
+      { navBar }
 
       <PieceWrapper 
         pieceIndex={ FeaturedPieceIndex }

@@ -25,6 +25,7 @@ import Title from '../../components/title/Title';
 import Bar from '../../components/ornamental/bars/Bar';
 
 const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
+
   const createLazyImage = ( { src, alt, width, height, link, label } : ImageData ) : JSX.Element => {
     return (
       <div 
