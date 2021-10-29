@@ -117,7 +117,7 @@ export const creditsSections : CreditsSection[] = [
     title : "Fonts",
     entries : [
       {
-        text : "Syne Family",
+        text : "Syne",
         path : "https://gitlab.com/bonjour-monde/fonderie/syne-typeface"
       },
       {
@@ -147,7 +147,7 @@ export const creditsSections : CreditsSection[] = [
     title : "Inspo",
     entries : [
       {
-        text : "Fuse blog",
+        text : "Fuse",
         path : "https://fuse.blog/"
       },
       {
