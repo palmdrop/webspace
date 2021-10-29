@@ -33,6 +33,8 @@ export interface RenderScene extends AnimationLoop {
 
   onMouseMove? : ( x : number, y : number, deltaX : number, deltaY : number ) => void,
   onScroll? : ( deltaY : number ) => void
+
+  onUserAdmin? : () => void
 }
 
 export type RenderSceneConstructor<T extends RenderScene> = 

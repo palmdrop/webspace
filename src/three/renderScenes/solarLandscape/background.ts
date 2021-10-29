@@ -22,7 +22,7 @@ export const createBackground = ( renderer : THREE.WebGLRenderer ) => {
   ];
 
   backgroundMaterial.uniforms[ 'colors' ].value = backgroundColors;
-  backgroundMaterial.uniforms[ 'frequency' ].value = 1.3;
+  backgroundMaterial.uniforms[ 'frequency' ].value = 2.6;
   backgroundMaterial.uniforms[ 'contrast' ].value = 4.0;
   backgroundMaterial.uniforms[ 'brightness' ].value = 12.2;
 

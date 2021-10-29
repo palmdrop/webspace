@@ -4,6 +4,8 @@ import { createRenderScene, RenderScene, RenderSceneConstructor, VoidCallback } 
 
 import useRenderSceneShortcuts from '../../hooks/useRenderSceneShortcuts';
 import { useMemoizedThrottle } from '../../hooks/useMemoizedThrottle';
+import { useAppSelector } from '../../state/store/hooks';
+import { selectIsAdmin } from '../../state/slices/adminSlice';
 
 export type MouseMoveCallback<T extends RenderScene> = ( x : number, y : number, deltaX : number, deltaY : number, renderScene : T ) => void;
 export type MouseScrollCallback<T extends RenderScene> = ( deltaScroll : number, renderScene : T ) => void;
@@ -32,6 +34,7 @@ const AnimationCanvas = <T extends RenderScene>( {
   const [ renderScene, setRenderScene ] = useState<T | null>( null );
   const mousePosition = useRef<{ x : number, y : number } | null>( null );
   const canvasRef = useRef<HTMLCanvasElement>( null );
+  const isAdmin = useAppSelector( selectIsAdmin );
 
   const handleResize = useMemoizedThrottle( () => {
     renderScene?.resize()
@@ -85,6 +88,7 @@ const AnimationCanvas = <T extends RenderScene>( {
       const renderScene = createRenderScene( renderSceneConstructor, canvasRef.current, onLoad );
       setRenderScene( renderScene );
 
+      if( isAdmin && renderScene.onUserAdmin ) renderScene.onUserAdmin();
       renderScene.start();
 
       return () => {

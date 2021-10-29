@@ -42,7 +42,7 @@ export const sections : Section[] = [
         label : false,
       },
       `
-      My name is Anton. I go by "palmdrop" on the Internet. The alias means nothing, it's just a symbol. At the moment, I'm learning design, 3D graphics, and new techniques for creating generative art. I'm trying to write more, and hopefully, this site will be where I dump some of my thoughts and ideas.  It will also be a space of my own. I think our presence of the Internet is way too limited to the spaces of established, standardized and corporate platforms. We do not define the bounds of those platforms, we just fill them with filtered content. 
+      My name is Anton. I go by "palmdrop" on the Internet. At the moment, I'm learning design, 3D graphics, and new techniques for creating generative art. I'm trying to write more, and hopefully, this site will be where I dump some of my thoughts and ideas.  It will also be a space of my own. I think our presence of the Internet is way too limited to the spaces of established, standardized and corporate platforms. We do not define the bounds of those platforms, we just fill them with filtered content. 
       `,
       `
       My goal for this site is to make it a place for interactive generative art, writing, and experimentation.
