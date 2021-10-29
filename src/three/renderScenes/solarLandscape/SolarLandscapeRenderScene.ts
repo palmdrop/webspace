@@ -20,24 +20,21 @@ import { createPostProcessing } from './postProcessing';
 import { ShadowRenderer } from './shadows';
 
 import normalTexturePath from '../../../assets/normal/normal-texture1_x2.jpg';
+import { random } from '../../../utils/random';
 
 export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
 
   private meshes? : THREE.Group;
   private materials? : THREE.MeshStandardMaterial[];
-  private geometries? : THREE.BufferGeometry[];
 
   private rotationSpeed : number;
   private rotationVelocity : THREE.Vector3;
   private rotationAcceleration : THREE.Vector3;
   private rotationFriction : number;
 
-  private directionalLight? : THREE.DirectionalLight;
-
   private backgroundRenderer : FullscreenQuadRenderer;
   private backgroundColors : THREE.Color[];
-  private background : THREE.Texture;
 
   private minZ : number;
   private maxZ : number;
@@ -57,7 +54,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     super( canvas, onLoad );
 
     this.gui = new dat.GUI();
-    this.controls = new TrackballControls( this.camera, this.canvas );
+    // this.controls = new TrackballControls( this.camera, this.canvas );
 
     this.zoomSpeed = 0.12;
     this.zoomVelocity = 0.0;
@@ -66,18 +63,16 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
     this.camera.far = 50;
 
-    this.rotationSpeed = 0.00002;
+    this.rotationSpeed = 0.000002;
     this.rotationVelocity = new THREE.Vector3();
     this.rotationAcceleration = new THREE.Vector3();
     this.rotationFriction = 0.1;
 
     const { 
-      background,
       backgroundColors,
       backgroundRenderer
     } = createBackground( this.renderer );
 
-    this.background = background;
     this.backgroundColors = backgroundColors;
     this.backgroundRenderer = backgroundRenderer;
 
@@ -114,6 +109,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
     renderer.physicallyCorrectLights = true;
     renderer.toneMapping = THREE.LinearToneMapping;
+    renderer.toneMappingExposure = 0.8;
     renderer.outputEncoding = THREE.GammaEncoding;
 
     renderer.shadowMap.enabled = true;
@@ -131,9 +127,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       3.5
     );
 
-    this.directionalLight = directionalLight;
-
-    directionalLight.position.set( 0, 4, 8.2 );
+    directionalLight.position.set( random( -8, 8 ), random( -8, 8 ), 8.2 );
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 1028 * 4;
     directionalLight.shadow.mapSize.height = 1028 * 4;
@@ -173,23 +167,14 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     const hemisphereLightFolder = this.gui.addFolder( 'hemisphereLight' );
     hemisphereLightFolder.add( hemisphereLight, 'intensity' ).min( 0.0 ).max( 2.0 );
 
-
     this.scene.add( directionalLight, hemisphereLight );
   }
 
   private populateScene() {
-    // TODO position, rotate, scale and colorize meshes depending on position and relation to previous mesh!
-    // TODO use underlying noise. Place one mesh, then offset from this mesh, rotate, transform, then place one or multiple next meshes
-    // TODO recursive process, go down in scale size possibly?
-    // TOOD favor certain colors, orientations or scales depending on position / position in hierarchy
-
-    // this.createMeshes();
-    const { meshes, geometries, materials } = createMeshes( this.backgroundColors );
+    const { meshes, materials } = createMeshes( this.backgroundColors );
     this.meshes = meshes;
-    this.geometries = geometries;
     this.materials = materials;
     this.createLights();
-
 
     // Set camera to appropriate distance from object
     const boundingBox = new THREE.Box3().setFromObject( this.meshes );
@@ -199,14 +184,15 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       boundingBox.max.z - boundingBox.min.z,
     );
 
-    this.camera.position.set( 0, 0, maxSize / 2.0 + 5 );
+    this.camera.position.set( 0, -7, maxSize / 2.0 + 13 );
+    this.camera.lookAt( 0, 0, 0 );
 
     this.minZ = maxSize / 2.0;
     this.maxZ = maxSize / 2.0 + 20;
 
     this.scene.add( this.meshes );
 
-    const fogColor = varyColorHSL( this.backgroundColors[0], 0.0, 0.0, -0.45 );
+    const fogColor = varyColorHSL( this.backgroundColors[0], 0.0, 0.0, random( 0.1, 0.55 ) );
     this.scene.fog = new THREE.Fog( 
       fogColor,
       this.camera.near, 
@@ -242,10 +228,10 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       this.scene.environment = dataTextureToEnvironmentMap( this.renderer, hdri );
     });
 
-    const envMapIntensity = 0.35;
+    const envMapIntensity = random( 1.0, 2.0 );
     const setMaterialEnvMapIntensity = ( intensity : number ) => this.materials?.forEach( material => material.envMapIntensity = intensity );
     setMaterialEnvMapIntensity( envMapIntensity );
-    this.gui.add( { envMapIntensity : envMapIntensity }, 'envMapIntensity' ).min( 0.0 ).max( 2.0 )
+    this.gui.add( { envMapIntensity : envMapIntensity }, 'envMapIntensity' ).min( 0.0 ).max( 4.0 )
     .onChange( setMaterialEnvMapIntensity );
 
     this.gui.add( this.renderer, 'toneMappingExposure' ).min( 0.0 ).max( 10.0 );
@@ -281,37 +267,37 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       texture.wrapT = THREE.RepeatWrapping;
 
       const backgroundPlane = new THREE.Mesh(
-        // TODO try stretched background plane! stylized! that change does soo much
-          new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
-          new THREE.MeshStandardMaterial( {
-            map: this.backgroundRenderer.renderTarget.texture,
-            metalnessMap: this.backgroundRenderer.renderTarget.texture,
-            normalMap: texture,
-            normalScale: new THREE.Vector2( 0.02 ),
-            metalness: 0.2,
-            envMapIntensity: 0.5,
-          })
-        );
+        new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
+        new THREE.MeshStandardMaterial( {
+          map: this.backgroundRenderer.renderTarget.texture,
+          metalnessMap: this.backgroundRenderer.renderTarget.texture,
+          roughnessMap: this.backgroundRenderer.renderTarget.texture,
+          normalMap: texture,
+          normalScale: new THREE.Vector2( 0.5 ),
+          metalness: 0.5,
+          roughness: 0.8,
+          envMapIntensity: 0.5,
+        })
+      );
 
       backgroundPlane.scale.set( 100, 100, 1.0 );
       backgroundPlane.position.set( 0, 0, planeZ );
 
       this.backgroundPlane = backgroundPlane;
       this.scene.add( backgroundPlane );
-      });
-
+    });
+    
+    this.gui.hide();
   }
 
   onMouseMove( x : number, y : number, deltaX : number, deltaY : number ) {
-    // this.rotationAcceleration.y += this.rotationSpeed * deltaX;
-    // this.rotationAcceleration.x += this.rotationSpeed * deltaY;
-    this.rotationAcceleration.z += this.rotationSpeed * deltaY;
+    this.rotationAcceleration.y += this.rotationSpeed * deltaX;
+    this.rotationAcceleration.x += this.rotationSpeed * deltaY;
   }
 
   zoom( deltaZoom : number ) {
     this.zoomVelocity += deltaZoom * this.zoomSpeed;
   }
-
 
   render( delta : number, now : number ) {
     // Hide shadow plane and background when rendering shadow
@@ -334,10 +320,9 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.controls?.update();
 
     if( this.meshes ) {
-      // this.meshes.rotation.y += delta * 0.14;
       this.meshes.rotation.x += this.rotationVelocity.x;
       this.meshes.rotation.y += this.rotationVelocity.y;
-      this.meshes.rotation.z += this.rotationVelocity.z;
+      this.meshes.rotation.z += this.rotationVelocity.z + 0.001;
     }
 
     this.rotationVelocity.add( this.rotationAcceleration );
@@ -365,8 +350,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
           );
       }
 
-      //this.camera.position.z = clamp( z + zoomAmount * this.zoomVelocity, this.minZ, this.maxZ );
-
       this.zoomVelocity *= ( 1.0 - this.zoomFriction );
     }
   }
@@ -382,5 +365,9 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     if( this.gui ) {
       this.gui.destroy();
     }
+  }
+  
+  onUserAdmin() {
+    this.gui.show();
   }
 }

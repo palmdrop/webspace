@@ -7,19 +7,15 @@ import GlassCard from '../../components/cards/glass/GlassCard';
 import Button from '../../components/input/button/Button';
 import Paragraph from '../../components/paragraph/Paragraph';
 
-import { ReactComponent as Obstacle } from '../../assets/svg/obstacle1.svg';
+import { ReactComponent as Obstacle } from '../../assets/svg/obstacle2.svg';
 
 import './pageDidNotLoadPage.scss';
+import SoftDisk from '../../components/ornamental/disk/soft/SoftDisk';
 
 const PageDidNotLoadPage = ( { error, resetErrorBoundary } : FallbackProps ) : JSX.Element => {
-  const history = useHistory();
-
-  const onGoBack = () => {
-    history.goBack();
-  }
-
-  const onReturnHome = () => {
-    history.replace( PageRoute.root );
+  const onRetry = () => {
+    resetErrorBoundary();
+    window.location.reload();
   }
 
   return (
@@ -27,25 +23,21 @@ const PageDidNotLoadPage = ( { error, resetErrorBoundary } : FallbackProps ) : J
       <main>
         <header>
           Something went wrong!
-          <Obstacle className="page-did-not-load-page__obstacle" />
+          <SoftDisk />
+          <SoftDisk />
         </header>
-        <Paragraph>
-          This page failed to load. 
-        </Paragraph>
-        <nav>
+        <div>
+          <Paragraph>
+            The internet is unpredictable. Something went wrong along the way. Try again.
+          </Paragraph>
           <GlassCard>
-            <Button 
-              onClick={ onReturnHome }
-            >
-              Home Page
-            </Button>
             <Button
-              onClick={ onGoBack }
+              onClick={ onRetry }
             >
-              Last Page
+              Reload Page
             </Button>
           </GlassCard>
-        </nav>
+        </div>
       </main>
     </div>
   );

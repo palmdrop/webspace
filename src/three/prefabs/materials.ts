@@ -63,7 +63,7 @@ export const SoftMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : T
   const material = new THREE.MeshStandardMaterial( {
     color: color,
     roughness: random( 0.3, 0.5 ),
-    metalness: 0.1,
+    metalness: 0.5,
 
     side: THREE.DoubleSide,
   });
@@ -90,7 +90,7 @@ export const RoughMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
   const material = new THREE.MeshStandardMaterial( {
     color: color,
     roughness: random( 0.3, 0.5 ),
-    metalness: 0.7,
+    metalness: 0.8,
 
     side: THREE.DoubleSide,
   });
@@ -152,7 +152,7 @@ export const DirtyMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
   const material = new THREE.MeshStandardMaterial( {
     color: color,
     roughness: random( 0.7, 0.9 ),
-    metalness: 0.7,
+    metalness: 0.9,
 
     side: THREE.DoubleSide,
   });

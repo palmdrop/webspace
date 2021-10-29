@@ -5,8 +5,10 @@ export interface AdminState {
   isAdmin : boolean
 }
 
+const isDevelopment : boolean = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+
 const initialState : AdminState = {
-  isAdmin : true, // TODO should be false by default
+  isAdmin : isDevelopment
 }
 
 export const adminSlice = createSlice( {

@@ -4,7 +4,6 @@ import { useAppSelector } from '../state/store/hooks';
 import { RenderScene } from '../three/core';
 import { promptDownload } from '../utils/file';
 
-
 const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
   const isAdmin = useAppSelector( selectIsAdmin );
   const [ reloadValue, reload ] = useReducer( ( current : number ) => current + 1, 0 );
@@ -37,7 +36,7 @@ const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
   }, [ renderScene, handleKeyDown ] );
 
   return {
-    reloadValue
+    reloadValue,
   }
 }
 

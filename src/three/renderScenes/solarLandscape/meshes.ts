@@ -94,7 +94,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
     material.roughnessMap = texture;
     material.metalnessMap = texture;
-    material.aoMap = texture;
+    // material.aoMap = texture;
 
     material.normalScale.multiplyScalar( 0.3 );
 
@@ -131,13 +131,13 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     totalInstanceCount += numberOfInstances;
   }*/
 
-  const size = 30;
+  const size = 34;
   const minScale = 0.6;
-  const maxScale = 1.7;
+  const maxScale = 1.6;
 
   const domain : Domain = new THREE.Box3( 
     new THREE.Vector3( -size / 2.0, -size / 2, -size / 8.0 ),
-    new THREE.Vector3(  size / 2.0,  size / 2,  size / 9.0 ),
+    new THREE.Vector3(  size / 2.0,  size / 2,  size / 8.0 ),
   );
 
   const tempVector = new THREE.Vector3();
@@ -145,16 +145,17 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
   const falloff : ProbabilityMap = ( x, y, z ) => {
     const length = tempVector.set( x, y, z ).length();
-    return Math.pow( ( size / 2.0 - length ) / ( size / 2.0 ), 1.0 );
+    return Math.pow( ( size / 2.0 - length ) / ( size / 2.0 ), 0.3 );
   }
 
 
   for( let i = 0; i < 6; i++ ) {
-    const numberOfInstances = Math.floor( random( 20, 40 ) );
+    const numberOfInstances = Math.floor( random( 30, 40 ) );
     const mesh = createMesh( numberOfInstances );
 
+    const frequency = random( 0.02, 0.2 );
     const probabilityMap : ProbabilityMap = combineProbabilityMaps( ( x, y, z ) => {
-      tempVector.set( x + i * 1.31, y, z );
+      tempVector.set( x + i * 0.1, y, z );
       const length = tempVector.length();
 
       const rotation = length * rotationAmount;
@@ -162,7 +163,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
       tempVector.applyEuler( euler );
 
-      return Math.pow( getNoise3D( tempVector, null, random( 0.12, 0.34 ), 0.0, 1.0 ), 2.0 );
+      return Math.pow( getNoise3D( tempVector, null, frequency, 0.0, 1.0 ), 3.5 );
     }, falloff, ( v1, v2 ) => v1 * v2 );
 
     const positionGenerator = () => {
@@ -196,7 +197,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
       const scale = new THREE.Vector3().copy( scaleGenerator( position.x, position.y, position.z ));
 
 
-      const f = mapLinear( j, 0, numberOfInstances, 0.05, 0.08 );
+      const f = 0.05;
       const minRotation = -Math.PI;
       const maxRotation = Math.PI;
       const rotation = new THREE.Euler(
@@ -215,7 +216,6 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
       const color = varyColorHSL( 
         randomElement( colors ),
-        // random( -0.1, 0.1 ),
         hueVariation,
         Math.pow( random( -0.1, 0.5 ), 2.0 ),
         random( -0.5, 0.7 )

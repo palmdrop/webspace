@@ -251,16 +251,16 @@ export const TwistedTorusGeometryPrefab : GeometryPrefab = ( () => {
 })();
 
 export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
-  const solarChromeMaxFrequency = new THREE.Vector3( 0.35 );
+  const solarChromeMaxFrequency = new THREE.Vector3( 0.45 );
   return generateWarpGeometryPrefab(
     // Geometry
     () => {
       const geometry = new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
 
       geometry.applyMatrix4( new THREE.Matrix4().scale( new THREE.Vector3(
-        random( 0.5, 1.3, ),
-        random( 0.5, 1.3, ),
-        random( 0.5, 1.3, ),
+        random( 0.2, 1.4, ),
+        random( 0.2, 1.4, ),
+        random( 0.2, 1.4, ),
       )));
 
       return geometry;
@@ -304,11 +304,11 @@ export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
         warpFunction : twistWarp,
         args : {
           twistAmount : new THREE.Vector3( 
-            0.8 * Math.random(), 
-            0.8 * Math.random(), 
-            0.8 * Math.random() 
+            random( -0.8, 0.8 ),
+            random( -0.8, 0.8 ),
+            random( -0.8, 0.8 ),
           ),
-          falloff : random( 1.8, 0.4 ),
+          falloff : random( 1.3, 0.3 ),
         }
       }
     ]
@@ -316,20 +316,14 @@ export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
 })();
 
 export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
-  const solarChromeMaxFrequency = new THREE.Vector3( 0.35 );
+  const solarChromeMaxFrequency = new THREE.Vector3( 0.25 );
   return generateWarpGeometryPrefab(
     // Geometry
     () => {
       // const geometry = new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
-      const startWidth = random( 0.1, 0.2 );
-      const endWidth = random( 0.1, 0.2 );
-      const geometry = new THREE.CylinderBufferGeometry( startWidth, endWidth, random( 5, 10 ), 128, 128, false );
-
-      /*geometry.applyMatrix4( new THREE.Matrix4().scale( new THREE.Vector3(
-        random( 0.5, 1.3, ),
-        random( 0.5, 1.3, ),
-        random( 0.5, 1.3, ),
-      )));*/
+      const startWidth = random( 0.1, 0.1 );
+      const endWidth = random( 0.1, 0.1 );
+      const geometry = new THREE.CylinderBufferGeometry( startWidth, endWidth, random( 8, 12 ), 128, 128, false );
 
       return geometry;
     },
@@ -345,7 +339,7 @@ export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
 
     // Warp amount
     ( frequency : THREE.Vector3 ) => {
-      return random( 1.3, 1.5 );
+      return random( 2.3, 3.5 );
     },
 
     // Octaves 
@@ -373,10 +367,10 @@ export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
         args : {
           twistAmount : new THREE.Vector3( 
             random( -1.8, 1.8 ),
-            random( -0.8, 0.8 ),
+            random( -1.8, 1.8 ),
             random( -1.8, 1.8 ),
           ),
-          falloff : random( 0.3, 0.4 ),
+          falloff : random( 0.3, 0.45 ),
         }
       }
     ]
