@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { random } from '../../../utils/random';
+import { random } from '../../../../utils/random';
 
-import { random2d, simplex2d } from '../chunks/noise';
+import { random2dChunk, simplex2dChunk } from '../../chunk/noise';
 
 const vertexShader = `
 
@@ -13,7 +13,7 @@ const vertexShader = `
 
 `;
 
-const colorAccumulatorChunk = ( numberOfColors : number ) => {
+const colorAccumulator = ( numberOfColors : number ) => {
   let chunk = '';
 
   for( let i = 0; i < numberOfColors; i++ ) {
@@ -47,8 +47,8 @@ const fragmentShader = ( numberOfColors : number ) => `
 
   uniform vec2 offset;
 
-  ${ simplex2d }
-  ${ random2d }
+  ${ simplex2dChunk.content }
+  ${ random2dChunk.content }
 
   vec2 layerOffset = vec2( 13.78, 19.31 );
 
@@ -56,7 +56,7 @@ const fragmentShader = ( numberOfColors : number ) => `
     vec3 color;
     float noise;
 
-    ${ colorAccumulatorChunk( numberOfColors ) }
+    ${ colorAccumulator( numberOfColors ) }
 
     return brightness * color / float( ${ numberOfColors } );
   }

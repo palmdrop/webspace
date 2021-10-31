@@ -5,7 +5,7 @@ import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass';
 import { KawaseBlurPass } from '../kawaseBlur/KawaseBlurPass';
 
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
-import { ShadowTransformShader } from '../../shaders/shadow/ShadowTransformShader';
+import { ShadowTransformShader } from '../../shader/shaders/shadow/ShadowTransformShader';
 
 export class ShadowTransformRenderer {
   private composer : EffectComposer;

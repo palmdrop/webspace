@@ -9,7 +9,7 @@ import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHa
 import { random } from '../../../utils/random';
 
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
-import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
+import { createWarpGradientShader } from '../../shader/shaders/gradient/WarpGradientShader';
 import { clamp } from 'three/src/math/MathUtils';
 import { 
   SolarChromeGeometryPrefab,

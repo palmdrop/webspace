@@ -76,19 +76,39 @@ export const pieces : PieceData[] = [
   {
     name: "Solar Landscape",
     description: [
-      "An extension of the Solar Chrome Piece. An exercise in generative composition.",
+      "An extension of the Solar Chrome Piece. An exploration in generative environments.",
       `
-        This piece is a work in process.
+        This piece is visually interesting, I think, although it didn't end up as structured and 
+        well composed as I hoped it would. Mostly, this was an experiment with geometry instancing
+        and the capabilities of modern browsers. 
       `,
+      `
+        I would think twice before opening this on a mobile device.
+      `
     ],
     tags : [
-      "3d", "Warp"
+      "3d", "Instancing"
     ],
 
     image: solarLandscapeImage,
 
     Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
-  }
+  },
+  {
+    name: "Iterated Static",
+    description: [
+      `
+        Shader builder experiments
+      `
+    ],
+    tags : [
+      "GLSL", "Patterns"
+    ],
+
+    image: solarLandscapeImage,
+
+    Component: React.lazy( () => import( './iteratedStatic/IteratedStaticPiece' ) ),
+  },
 ]
 
 export const FeaturedPieceIndex = 0;

@@ -5,7 +5,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
 import { KawaseBlurPass } from '../../effects/kawaseBlur/KawaseBlurPass';
-import { ShadowTransformShader } from '../../shaders/shadow/ShadowTransformShader';
+import { ShadowTransformShader } from '../../shader/shaders/shadow/ShadowTransformShader';
 
 export class ShadowRenderer {
   private renderer : THREE.WebGLRenderer;
