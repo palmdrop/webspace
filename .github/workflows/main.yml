@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  SFPT-Deploy-Action:
+    name: SFTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    
+    - name: Use Node,js 16.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16.x'
+    
+    - name: Build Project
+      run: |
+        npm install
+        npm run build
+    
+    - name: List output files
+      run: ls
+      
+    - name: SFTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@2.0.0
+      env:
+        FPT_SERVER: ${{ secrets.FTP_SERVER }}
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        LOCAL_DIR: build
+        METHOD: sftp
+        PORT: 22
+        ARGS: --delete
