@@ -18,7 +18,6 @@ import PageWrapper, { PageProps } from "./pages/PageWrapper";
 import GradientBackground from "./components/ornamental/gradient/GradientBackground";
 import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
 
-import { PageDidNotLoadErrorBoundry } from "./components/error/boundaries/PageDidNotLoadErrorBoundry";
 import NotFoundPage from "./pages/notFound/notFoundPage";
 import PageDidNotLoadPage from "./pages/pageDidNotLoad/pageDidNotLoadPage";
 
@@ -29,6 +28,7 @@ const MainPage    = React.lazy( () => import( "./pages/main/mainPage" ) );
 const AboutPage   = React.lazy( () => import( "./pages/about/aboutPage" ) );
 const PiecesPage  = React.lazy( () => import( "./pages/pieces/piecesPage" ) );
 const BlogPage    = React.lazy( () => import( "./pages/blog/blogPage" ) );
+const LinksPage   = React.lazy( () => import( "./pages/links/linksPage" ) );
 const ContactPage = React.lazy( () => import( "./pages/contact/contactPage" ) );
 
 export enum PageRoute {
@@ -36,6 +36,7 @@ export enum PageRoute {
   self = '/self',
   pieces = '/pieces',
   blog = '/blog',
+  links = '/links',
   contact = '/contact',
   notFound = '/404',
 }
@@ -73,6 +74,14 @@ export const pages : Page[] = [
     colorTheme: ColorTheme.haze,
     scroll: false,
     Component: BlogPage
+  },
+  {
+    name: 'Links',
+    route: PageRoute.links,
+    exactRoute: false,
+    colorTheme: ColorTheme.digital,
+    scroll: true,
+    Component: LinksPage
   },
   {
     name: 'Contact',

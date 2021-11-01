@@ -112,11 +112,13 @@
   .main-footer {
     position: absolute;
 
+    /*
     left: -1.9em;
     top: 50%;
     transform: translateY(-70%);
+    */
 
-    @include medium {
+    //@include medium {
       left: 50%;
       top: unset;
       bottom: -1.6em;
@@ -125,7 +127,7 @@
       flex-direction: row;
 
       align-items: flex-end;
-    }
+    //}
 
     @include large {
       left: unset;

@@ -66,6 +66,17 @@ $themed-colors: (
 
     'secondary': #72CA9F,
     'accent': #974343
+  ),
+
+  'digital': (
+    'primary': (
+      300: #24FF00,
+      400: #44FF20,
+      500: #64FF50,
+    ),
+
+    'secondary': #FF1414,
+    'accent': #2830F0
   )
 );
 
@@ -110,6 +121,13 @@ $gradients: (
     180deg,
     color( 'secondary', 'haze' ) 0%,
     color( 'accent', 'haze' ) 100%,
+  ),
+
+  // Haze
+  'digital': linear-gradient(
+    180deg,
+    color( 'secondary', 'digital' ) 0%,
+    color( 'accent', 'digital' ) 100%,
   )
 );
 

@@ -1,7 +1,7 @@
 @import '../../../styles/layout.scss';
 
 // TODO clean up variable usage
-$nav-entries: 4;
+$nav-entries: 5;
 $disk-offset: 10%;
 $disk-offset-vertical: 40%;
 $disk-movement-amount: ( 100% - $disk-offset * 2 ) / $nav-entries;
@@ -79,6 +79,14 @@ $disk-movement-amount: ( 100% - $disk-offset * 2 ) / $nav-entries;
           width: 100%;  
           padding: 0.7em 0em;
           text-align: center;
+
+          * {
+            font-size: 0.8rem;
+
+            @include medium {
+              font-size: 1.0rem;
+            }
+          }
         }
       }
     }
