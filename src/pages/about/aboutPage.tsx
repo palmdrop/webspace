@@ -197,7 +197,7 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
         </footer>
       </div>
 
-      <aside className="about-page__aside" >
+      <aside>
         <HomeBar />
       </aside>
     </div>

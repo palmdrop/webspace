@@ -56,7 +56,7 @@ export const pages : Page[] = [
     route: PageRoute.self,
     exactRoute: true,
     colorTheme: ColorTheme.swamp,
-    scroll: true,
+    scroll: false,
     Component: AboutPage,
   },
   {
@@ -80,7 +80,7 @@ export const pages : Page[] = [
     route: PageRoute.links,
     exactRoute: false,
     colorTheme: ColorTheme.digital,
-    scroll: true,
+    scroll: false,
     Component: LinksPage
   },
   {
@@ -88,7 +88,7 @@ export const pages : Page[] = [
     route: PageRoute.contact,
     exactRoute: true,
     colorTheme: ColorTheme.vapor,
-    scroll: true,
+    scroll: false,
     Component: ContactPage
   },
   {
@@ -137,7 +137,7 @@ const App = () => {
   return (
     <div className={ `app app--${ colorTheme }` }>
       <GradientBackground colorTheme={ colorTheme } />
-      <NoiseBackground opacity={ 0.4 } />
+      { /* <NoiseBackground opacity={ 0.4 } /> */ }
 
       <ErrorBoundary
         FallbackComponent={ PageDidNotLoadPage }
