@@ -10,7 +10,7 @@
   display: grid;
 
   grid-template-rows: 
-    10.0em 1px 
+    10.0em auto
   ;
 
   grid-template-columns: 
@@ -127,7 +127,7 @@
     }
   }
 
-  &__aside {
+  aside {
     position: fixed;
     top: 0;
     right: 0;

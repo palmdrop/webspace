@@ -14,7 +14,7 @@
   ;
 
   grid-template-rows: 
-    15vh 1px 1fr
+    15vh auto
   ;
 
   grid-template-columns: 
@@ -138,9 +138,6 @@
           align-content: center;
 
           padding: 0.2em;
-
-          .submit-input {
-          }
 
           .contact-page__error-message {
             color: var( --warning-color );
