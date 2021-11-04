@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { random } from "../../../../utils/random";
 import { simplex2dChunk, simplex3dChunk } from "../../chunk/noise";
-import { Attributes, GLSL, Shader, Uniforms, Vec2, Vec3, Vec4, Float, Int, Functions, Constants } from "../../core";
+import { Attributes, GLSL, Shader, Uniforms, Vec2, Vec3, Vec4, Float, Int, Functions, Constants, ShaderChunk } from "../../core";
 import { defaultVertexMain } from "../../vertex/defaultVertexSource";
 import { buildShader } from "../shaderBuilder";
 
@@ -10,7 +10,7 @@ export const patternShaderBuilder = (
   seed : number = random( 0, Number.MAX_SAFE_INTEGER ) / 2.0 
 ) : Shader => {
 
-  const imports : ShaderChunk<any>[] = [
+  const imports : ShaderChunk[] = [
     simplex3dChunk
   ];
 
@@ -41,12 +41,12 @@ export const patternShaderBuilder = (
 
   const fragmentShaderFunctions : Functions = {
     'domainWarp': {
-      arguments : [ 
+      parameters : [ 
         [ 'vec2',  'point' ], 
         [ 'float', 'amount'], 
         [ 'float', 'frequency'], 
       ],
-      returnValue : 'vec2',
+      returnType : 'vec2',
       body: `
         float xOffset = simplex3d( vec3( point * frequency, 0.0 ) ) * amount;
         float yOffset = simplex3d( vec3( point * frequency, 18.4 ) ) * amount;

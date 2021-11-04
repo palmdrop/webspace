@@ -1,7 +1,8 @@
+import { ShaderChunk } from '../core';
+
 // https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
 
-
-export const random2dChunk : ShaderChunk<THREE.Vector2> = {
+export const random2dChunk : ShaderChunk = {
 
   content : `
 
@@ -10,13 +11,16 @@ export const random2dChunk : ShaderChunk<THREE.Vector2> = {
     }
 
     `,
-
-  use : ( n ) => {
-    return `random2d( vec2(${ n.x }, ${ n.y }) )`
+  
+  functionSignatures : {
+    'random2d' : {
+      parameters : [ [ 'vec2', 'n' ] ],
+      returnType : 'float',
+    }
   }
 }
 
-export const simplex2dChunk : ShaderChunk<THREE.Vector3> = {
+export const simplex2dChunk : ShaderChunk = {
 
   content : `
 
@@ -53,12 +57,15 @@ export const simplex2dChunk : ShaderChunk<THREE.Vector3> = {
 
   `,
 
-  use : ( n ) => {
-    return `simplex2d( vec2(${ n.x }, ${ n.y }) )`
+  functionSignatures : {
+    'simplex2d' : {
+      parameters : [ [ 'vec2', 'v' ] ],
+      returnType : 'float',
+    }
   }
 }
 
-export const simplex3dChunk : ShaderChunk<THREE.Vector3> = {
+export const simplex3dChunk : ShaderChunk = {
 
   content : `
     //	Simplex 3D Noise 
@@ -138,7 +145,10 @@ export const simplex3dChunk : ShaderChunk<THREE.Vector3> = {
 
     `,
 
-  use : ( n ) => {
-    return `simplex3d( vec3(${ n.x }, ${ n.y }, ${ n.z }) )`
+  functionSignatures : {
+    'simplex3d' : {
+      parameters : [ [ 'vec3', 'v' ] ],
+      returnType : 'float',
+    }
   }
 }
