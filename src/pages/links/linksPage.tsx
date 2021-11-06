@@ -4,7 +4,7 @@ import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
 import { PageProps } from '../PageWrapper';
 
-import { ReactComponent as Obstacle } from '../../assets/svg/obstacle3.svg';
+import { ReactComponent as Obstacle } from '../../assets/svg/obstacle6.svg';
 
 import './linksPage.scss';
 import Paragraph, { ParagraphType } from '../../components/paragraph/Paragraph';
@@ -13,12 +13,6 @@ import GlassCard from '../../components/cards/glass/GlassCard';
 import Button from '../../components/input/button/Button';
 import ExternalLink from '../../components/link/ExternalLink';
 import { some } from 'lodash';
-
-/*const usedCategories = Array.from( links.reduce<Set<Category>>( ( accumulator, { category, additionalCategories } ) => {
-  accumulator.add( category );
-  additionalCategories?.forEach( category => accumulator.add( category ) );
-  return accumulator;
-}, new Set()) );*/
 
 const LinksPage = ( { route } : PageProps ) => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
@@ -128,7 +122,7 @@ const LinksPage = ( { route } : PageProps ) => {
             <FadedHeader 
               title="Links"
             >
-              { /* <Obstacle className="faded-header__obstacle" /> */ }
+              <Obstacle className="faded-header__obstacle" />
             </FadedHeader>
 
             { /* Page introduction */ }
