@@ -1,7 +1,23 @@
 @import '../../../styles/ornaments.scss';
+@import '../../../styles/layout.scss';
 
 .home-bar {
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  z-index: 1;
+
+  padding: 1em;
+
+  @include medium {
+    right: unset;
+    left: 68%;
+  }
+
+  @include large {
+    left: 75%;
+  }
 
   nav {
     position: relative;

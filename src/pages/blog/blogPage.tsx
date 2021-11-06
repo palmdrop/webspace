@@ -25,9 +25,7 @@ const BlogPage = ( /* { } : PageProps */ ) : JSX.Element => {
         </Paragraph>
       </div>
 
-      <aside className="blog-page__aside" >
-        <HomeBar />
-      </aside>
+      <HomeBar />
     </div>
   )
 }

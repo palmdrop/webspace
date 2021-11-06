@@ -146,9 +146,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
               onPieceClick={ handlePieceNavigation }
             />
 
-            <aside className="pieces-page__aside">
-              <HomeBar />
-            </aside>
+            <HomeBar />
           </Route>
 
           <RedirectNotFound />

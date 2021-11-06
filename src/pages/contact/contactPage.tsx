@@ -210,10 +210,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
         </GlassCard>
       </main>
 
-      <aside className="contact-page__aside" >
-        <HomeBar />
-      </aside>
-
+      <HomeBar />
     </div>
   )
 }

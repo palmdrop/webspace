@@ -175,25 +175,6 @@
     }    
   }
 
-  aside {
-    position: fixed;
-    top: 0;
-    right: 0;
-
-    z-index: 10;
-
-    padding: 1em;
-
-    @include medium {
-      right: unset;
-      left: 68%;
-    }
-
-    @include large {
-      left: 75%;
-    }
-  }
-
   &__obstacle {
     position: absolute;
 

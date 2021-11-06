@@ -13,6 +13,7 @@ import GlassCard from '../../components/cards/glass/GlassCard';
 import Button from '../../components/input/button/Button';
 import ExternalLink from '../../components/link/ExternalLink';
 import { some } from 'lodash';
+import HomeBar from '../../components/navigation/home/HomeBar';
 
 const LinksPage = ( { route } : PageProps ) => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
@@ -158,6 +159,8 @@ const LinksPage = ( { route } : PageProps ) => {
           )}
         </section>
       </div>
+
+      <HomeBar />
     </div>
   )
 }

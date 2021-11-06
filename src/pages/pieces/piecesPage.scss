@@ -95,26 +95,6 @@
     }
   }
 
-  &__aside {
-    position: fixed;
-    top: 0;
-    right: 0;
-
-    z-index: 1;
-
-    padding: 1em;
-
-    @include medium {
-      right: unset;
-      left: 68%;
-    }
-
-    @include large {
-      right: unset;
-      left: 75%;
-    }
-  }
-
   .pieces-list {
     position: fixed;
     bottom: 5vh;
