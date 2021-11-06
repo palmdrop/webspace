@@ -22,6 +22,13 @@ import { some } from 'lodash';
 
 const LinksPage = ( { route } : PageProps ) => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
+  const [ activeLinks, setActiveLinks ] = useState<Set<Link>>( new Set() );
+
+  const defaultLink = { 
+    url: '',
+    text: 'Default'
+  }
+  const getFirstActiveLink = () => activeLinks.size > 0 ? Array.from( activeLinks )[ 0 ] : defaultLink;
 
   const categorizedLinksToSections = ( categorizedLinks : { [ title : string ] : Link[] } ) => {
     const cleanURL = ( url: string ) => {
@@ -29,6 +36,18 @@ const LinksPage = ( { route } : PageProps ) => {
         .replace(/^(?:https?:\/\/)?(?:www\.)?/i, '') // Remove https and www from link
         .replace(/\/$/, '') // Remove trailing slash
       // Can be done as one regex sure but I do not know regex
+    }
+
+    const handleHover = ( link : Link ) => {
+      const newActiveLinks = new Set( activeLinks );
+      newActiveLinks.add( link );
+      setActiveLinks( newActiveLinks );
+    }
+
+    const handleLeave = ( link : Link ) => {
+      const newActiveLinks = new Set( activeLinks );
+      newActiveLinks.delete( link );
+      setActiveLinks( newActiveLinks );
     }
 
     return Object.entries( categorizedLinks ).map( ( [ title, links ], index ) => (
@@ -43,6 +62,8 @@ const LinksPage = ( { route } : PageProps ) => {
         { links.map( link => (
             <ExternalLink
               link={ link.url }
+              onHover={ () => handleHover( link ) }
+              onLeave={ () => handleLeave( link ) }
             >
               { link.text }
               <div>
@@ -68,7 +89,6 @@ const LinksPage = ( { route } : PageProps ) => {
     } else {
       // Filter applied
       const filteredTitle = Array.from( activeCategories ).join( ', ' );
-      console.log( activeCategories );
 
       const filteredLinks = links.filter( link => 
         activeCategories.has( link.category ) || 
@@ -115,7 +135,7 @@ const LinksPage = ( { route } : PageProps ) => {
             <Paragraph type={ ParagraphType.normal }>
               This is my personal set of curated links.
               The Internet was built on the idea of the hyperlink: a portal that transfer you to some relevant or related location. 
-              This process would be recursive: each webspace you visit would in turn provide you with another set of hyperlinks. However,
+              This process would be recursive: each webspace you visit in turn provides you with another set of hyperlinks. However,
               the range of most of these links has decreased: we're now only sent to different areas of the same corporate platforms. 
               But there's more. <ExternalLink link="https://memex.marginalia.nu/"> The author of the Marginalia blog put it well.</ExternalLink>
             </Paragraph>
@@ -135,6 +155,13 @@ const LinksPage = ( { route } : PageProps ) => {
 
         <section className="links-page__links">
           { linkSections }
+          { activeLinks.size > 0 && (
+            <iframe
+              src={ getFirstActiveLink().url }
+              loading="lazy"
+              name={ getFirstActiveLink().text }
+            />
+          )}
         </section>
       </div>
     </div>

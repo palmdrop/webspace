@@ -44,8 +44,8 @@ export const links : Link[] = [
     'Art',
   ),
   toLink(
-    'Crosslucid',
-    'https://linktr.ee/crosslucid',
+    'Stimulation Zone',
+    'https://stimulation.zone/',
     'Art',
   ),
   toLink(
