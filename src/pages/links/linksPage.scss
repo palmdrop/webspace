@@ -179,33 +179,6 @@
         }
 
       }
-
-      iframe {
-        position: absolute;
-        right: 50%;
-        top: 50%;
-
-        width: 100%;
-        max-width: 500px;
-        height: 80%;
-
-        transform: translate( 80%, -50% );
-
-        border-radius: 10%;
-        border: 3px solid var( --primary-color );
-        background-color: white;
-
-        display: none;
-
-        z-index: -1;
-
-        @include medium {
-          display: block;
-        }
-
-        box-shadow: 0px 0px 50px #0002;
-      }
-
     }
   }
 

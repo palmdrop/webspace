@@ -19,11 +19,7 @@ const LinksPage = ( { route } : PageProps ) => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
   const [ activeLinks, setActiveLinks ] = useState<Set<Link>>( new Set() );
 
-  const defaultLink = { 
-    url: '',
-    text: 'Default'
-  }
-  const getFirstActiveLink = () => activeLinks.size > 0 ? Array.from( activeLinks )[ 0 ] : defaultLink;
+  // const getFirstActiveLink = () => activeLinks.size > 0 ? Array.from( activeLinks )[ 0 ] : { url : '', text : 'Default' };
 
   const categorizedLinksToSections = ( categorizedLinks : { [ title : string ] : Link[] } ) => {
     const cleanURL = ( url: string ) => {
@@ -150,13 +146,6 @@ const LinksPage = ( { route } : PageProps ) => {
 
         <section className="links-page__links">
           { linkSections }
-          { activeLinks.size > 0 && (
-            <iframe
-              src={ getFirstActiveLink().url }
-              loading="lazy"
-              name={ getFirstActiveLink().text }
-            />
-          )}
         </section>
       </div>
 
