@@ -5,7 +5,9 @@
 .env
 deploy.sh
 
-/images
+/images/*
+!/images/example
+!/images/example/*
 
 
 # dependencies
