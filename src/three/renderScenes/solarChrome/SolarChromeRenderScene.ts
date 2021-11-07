@@ -59,7 +59,6 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     this.rotationAcceleration = new THREE.Vector2();
     this.rotationFriction = 0.1;
 
-
     const backgroundMaterial = new THREE.ShaderMaterial( createWarpGradientShader( 3 ) );
     this.backgroundRenderer = new FullscreenQuadRenderer(
       this.renderer,
