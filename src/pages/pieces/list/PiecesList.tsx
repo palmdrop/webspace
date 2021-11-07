@@ -84,7 +84,7 @@ export const PiecesList = ( {
 
   scrollSpeed = 400.0,
   scrollMaxSpeed = 1500.0,
-  scrollFriction = 0.016,
+  scrollFriction = 0.026,
   scrollThresholdSpeed = 1.0,
 
   scrollEdgeDamping = 30,

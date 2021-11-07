@@ -1,5 +1,5 @@
 # OBSCURED - PERSONAL WEBSPACE
-**Live at** [palmdrop.zone](https://palmdrop.zone).
+**Live at** [palmdrop.zone](https://palmdrop.zone)
 
 ![Obscured - main page](/images/example/main-page.png)
 
@@ -18,6 +18,8 @@ I would also like to create something that pushes the internet and digital space
 The complete source code is published here for all to see. Feel free to glean what you like. If you like, give me credit where credit is due. Or not. 
 
 The contents of [my old (and short-lived) blog](https://palmdrop.github.io) will eventually be moved here.
+
+**Generative art** can mostly be found under ["Pieces"](https://palmdrop.zone/pieces). Recently, I've mostly been experimenting with 3D.
 
 ## README/Blog backlog
 Things I'd like to document.
