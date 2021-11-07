@@ -4,6 +4,11 @@ import * as THREE from 'three';
 export type GLSL = string;
 export type GlslType = 'float' | 'int' | 'vec2' | 'vec3' | 'vec4';
 
+export type Trigonometry = 'sin' | 'cos' | 'tan';
+export type BinaryOperation = 'mult' | 'div' | 'add' | 'sub';
+
+export const AXES = [ 'x', 'y', 'z' ] as const;
+
 export type FunctionSignature = {
   parameters : [ GlslType, String ][] // array of parameters
   returnType : GlslType,

@@ -1,46 +1,12 @@
 import * as THREE from 'three';
 
-import { random } from "../../../../utils/random";
 import { simplex3dChunk } from "../../chunk/noise";
-import { Attributes, GLSL, Shader, Uniforms, Functions, Function, Constants, ShaderChunk } from "../../core";
+import { Attributes, GLSL, Shader, Uniforms, Functions, Function, Constants, ShaderChunk, AXES } from "../../core";
 import { buildShader } from "../shaderBuilder";
+import { binOpToGLSL, numToGLSL } from '../utils';
+import { DomainWarp, NoiseSource, PatternShaderSettings, Source, TrigSource } from './types';
 
-const axes = [ 'x', 'y', 'z' ] as const;
-
-const vertexShaderMain : GLSL = `
-  vUv = uv;
-  // TODO: get model matrix!
-  vVertexPosition = vec3( modelMatrix * vec4( position, 1.0 ) );
-  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-`;
-
-const imports : ShaderChunk[] = [
-  simplex3dChunk
-];
-
-const uniforms : Uniforms = {
-  'opacity' : { 
-    value : 0.3, 
-    type : 'float' 
-  },
-  'viewport' : {
-    value : new THREE.Vector2( 1, 1 ),
-    type : 'vec2'
-  },
-  'time' : {
-    value : 0.0,
-    type : 'float'
-  },
-}
-
-const attributes : Attributes = {
-  'vUv' : {
-    type : 'vec2'
-  },
-  'vVertexPosition' : {
-    type : 'vec3'
-  }
-}
+const mainSourceName = 'mainSource';
 
 const getFunctionName = (() => {
   let counter = 0;
@@ -50,91 +16,6 @@ const getFunctionName = (() => {
     return functionName;
   }
 })();
-
-export enum PointVariable {
-  samplePoint = 'samplePoint',
-  origin = 'origin',
-}
-
-export type Domain = 'uv' | 'vertex';
-type Trigonometry = 'sin' | 'cos' | 'tan';
-type BinaryOperation = 'mult' | 'div' | 'add' | 'sub';
-
-type NoiseSource = {
-  kind : string,
-  frequency : THREE.Vector3,
-  amplitude? : number,
-  pow? : number,
-  octaves? : number,
-  persistance? : number,
-  lacunarity? : number,
-  ridge? : number,
-}
-
-type TrigSource = {
-  kind : string,
-  types : { 
-    x : Trigonometry,
-    y : Trigonometry,
-    z : Trigonometry
-  },
-  frequency? : THREE.Vector3,
-  amplitude? : THREE.Vector3,
-  combinationOperation? : Exclude<BinaryOperation, 'div'>,
-  pow? : number,
-}
-
-type CustomSource = {
-  glsl : GLSL,
-}
-
-type Source = NoiseSource | TrigSource;
-
-type DomainWarp = {
-  sources : {
-    x : Source,
-    y : Source,
-    z : Source,
-  },
-  amount? : THREE.Vector3,
-  iterations? : number,
-
-  inputVariable : PointVariable,
-}
-
-type PatternShaderSettings = {
-  domain : Domain,
-  scale? : number,
-  timeOffset? : THREE.Vector3,
-
-  mainSource : Source,
-  domainWarp? : DomainWarp,
-}
-
-const numberToGLSL = ( n : number ) => {
-  return Number.isInteger( n ) ? n + '.0' : n;
-}
-
-const binaryOperationToGLSL = ( operation : BinaryOperation, a : string, b : string, ...c : string[] ) => {
-  const op = (() => {
-    switch( operation ) {
-      case 'add': return '+';
-      case 'sub': return '-';
-      case 'mult': return '*';
-      case 'div': return '/';
-    }
-  })();
-
-  const operands = [ a, b, ...c ];
-  return operands.join( ` ${ op } ` );
-}
-
-const createSource = ( source : Source ) : Function => {
-  switch( source.kind ) {
-    case 'noise' : return createNoise( source as NoiseSource );
-    default : return createTrig( source as TrigSource );
-  }
-}
 
 const createNoise = ( noise : NoiseSource ) : Function => {
   const frequency = noise.frequency;
@@ -152,14 +33,14 @@ const createNoise = ( noise : NoiseSource ) : Function => {
     body : `
       float n = 0.0;
       vec3 f = vec3( ${ frequency.x }, ${ frequency.y }, ${ frequency.z } );
-      float a = ${ numberToGLSL( amplitude ) };
+      float a = ${ numToGLSL( amplitude ) };
       float divider = 0.0;
       for( int i = 0; i < ${ octaves }; i++ ) {
         vec3 p = point * f;
-        float on = pow( simplex3d( p ), ${ numberToGLSL( pow ) });
+        float on = pow( simplex3d( p ), ${ numToGLSL( pow ) });
 
         ${ ridge < 1.0 ? `
-          float rt = ${ numberToGLSL( ridge ) };
+          float rt = ${ numToGLSL( ridge ) };
           if( on > rt ) on = rt - ( on - rt );
           on /= rt;
         ` : '' }
@@ -168,11 +49,11 @@ const createNoise = ( noise : NoiseSource ) : Function => {
 
         divider += a;
 
-        a *= ${ numberToGLSL( persistance ) };
-        f *= ${ numberToGLSL( lacunarity ) };
+        a *= ${ numToGLSL( persistance ) };
+        f *= ${ numToGLSL( lacunarity ) };
       }
 
-      return ${ numberToGLSL( amplitude ) } * n / divider;
+      return ${ numToGLSL( amplitude ) } * n / divider;
     `
   };
 }
@@ -188,69 +69,107 @@ const createTrig = ( trig : TrigSource ) : Function => {
     parameters : [ [ 'vec3', 'point' ] ],
     returnType : 'float',
     body : `
-      float x = ${ numberToGLSL( amplitude.x ) } * ${ types.x }( point.x * ${ numberToGLSL( frequency.x ) } );
-      float y = ${ numberToGLSL( amplitude.y ) } * ${ types.y }( point.y * ${ numberToGLSL( frequency.y ) } );
-      float z = ${ numberToGLSL( amplitude.z ) } * ${ types.z }( point.z * ${ numberToGLSL( frequency.z ) } );
-      return pow( ${ binaryOperationToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numberToGLSL( pow ) } );
+      float x = ${ numToGLSL( amplitude.x ) } * ${ types.x }( point.x * ${ numToGLSL( frequency.x ) } );
+      float y = ${ numToGLSL( amplitude.y ) } * ${ types.y }( point.y * ${ numToGLSL( frequency.y ) } );
+      float z = ${ numToGLSL( amplitude.z ) } * ${ types.z }( point.z * ${ numToGLSL( frequency.z ) } );
+      return pow( ${ binOpToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numToGLSL( pow ) } );
     `
   }
 }
-
-// TODO wrap everything in a function or class! too much data stored in module... 
-// TODO will not work for building multiple shaders
 
 // TODO add support for composite source! source made up of multiple sources, warped, combined, multed etc
-const sources = new Map<Source, Function>();
-
-const createWarp = ( warp : DomainWarp ) => {
-  const functions : Functions = {};
-  const helperNames : string[] = [];
-
-  const amount = warp.amount ?? new THREE.Vector3( 1.0, 1.0, 1.0 );
-  const iterations = Math.floor( warp.iterations ?? 1 );
-
-  axes.forEach( axis => {
-    const name = getFunctionName( `${ axis }Offset` );
-    helperNames.push( name );
-    if( !sources.has( warp.sources[ axis ] ) ) {
-      functions[ name ] = createSource( warp.sources[ axis ] );
-    }
-  });
-
-  const warpFunction : Function = {
-    parameters : [ [ 'vec3', 'point' ] ],
-    returnType : 'vec3',
-    body : `
-      vec3 previous = vec3( point );
-      for( int i = 0; i < ${ iterations }; i++ ) {
-        point.x = point.x + ${ helperNames[ 0 ] }( previous ) * ${ numberToGLSL( amount.x ) };
-        point.y = point.y + ${ helperNames[ 1 ] }( previous ) * ${ numberToGLSL( amount.y ) };
-        point.z = point.z + ${ helperNames[ 2 ] }( previous ) * ${ numberToGLSL( amount.z ) };
-        previous = vec3( point );
-      }
-      return point;
-    `
-  };
-
-  const warpName = getFunctionName( 'domainWarp' );
-  functions[ warpName ] = warpFunction;
-
-  return {
-    warpName,
-    functions,
-    inputVariable : warp.inputVariable
-  }
-}
 
 export const buildPatternShader = ( 
-  seed : number = random( 0, Number.MAX_SAFE_INTEGER ) / 2.0,
   settings : PatternShaderSettings,
 ) : Shader => {
+  // Cache
+  const cache = new Map<Source, Function>();
 
+  // Helper functions
+  const createSource = ( source : Source ) : Function => {
+    switch( source.kind ) {
+      case 'noise' : return createNoise( source as NoiseSource );
+      default : return createTrig( source as TrigSource );
+    }
+  }
+
+  const createWarp = ( warp : DomainWarp ) => {
+    const functions : Functions = {};
+    const helperNames : string[] = [];
+
+    const amount = warp.amount ?? new THREE.Vector3( 1.0, 1.0, 1.0 );
+    const iterations = Math.floor( warp.iterations ?? 1 );
+
+    AXES.forEach( axis => {
+      const name = getFunctionName( `${ axis }Offset` );
+      helperNames.push( name );
+      if( !cache.has( warp.sources[ axis ] ) ) {
+        functions[ name ] = createSource( warp.sources[ axis ] );
+      }
+    });
+
+    const warpFunction : Function = {
+      parameters : [ [ 'vec3', 'point' ] ],
+      returnType : 'vec3',
+      body : `
+        vec3 previous = vec3( point );
+        for( int i = 0; i < ${ iterations }; i++ ) {
+          point.x = point.x + ${ helperNames[ 0 ] }( previous ) * ${ numToGLSL( amount.x ) };
+          point.y = point.y + ${ helperNames[ 1 ] }( previous ) * ${ numToGLSL( amount.y ) };
+          point.z = point.z + ${ helperNames[ 2 ] }( previous ) * ${ numToGLSL( amount.z ) };
+          previous = vec3( point );
+        }
+        return point;
+      `
+    };
+
+    const warpName = getFunctionName( 'domainWarp' );
+    functions[ warpName ] = warpFunction;
+
+    return {
+      warpName,
+      functions,
+      inputVariable : warp.inputVariable
+    }
+  }
+
+  // Settings
   const timeOffset = settings.timeOffset ?? new THREE.Vector3( 0.0 );
 
-  const sourceName = 'source';
+  /* GLSL Construction */
 
+  // Imports
+  const imports : ShaderChunk[] = [
+    simplex3dChunk
+  ];
+
+  // Uniforms
+  const uniforms : Uniforms = {
+    'opacity' : { 
+      value : 0.3, 
+      type : 'float' 
+    },
+    'viewport' : {
+      value : new THREE.Vector2( 1, 1 ),
+      type : 'vec2'
+    },
+    'time' : {
+      value : 0.0,
+      type : 'float'
+    },
+  }
+
+  // Attributes
+  const attributes : Attributes = {
+    'vUv' : {
+      type : 'vec2'
+    }
+  }
+
+  if( settings.domain === 'vertex' ) attributes[ 'vVertexPosition' ] = { type : 'vec3' };
+  else if( settings.domain === 'view' ) attributes[ 'vViewPosition' ] = { type : 'vec3' };
+
+  // Constants
   const fragmentConstants : Constants = {
     'frequency' : {
       type : 'float',
@@ -262,26 +181,21 @@ export const buildPatternShader = (
     }
   };
 
+  // Functions
   const fragmentShaderFunctions : Functions = {
-    'domainWarp': {
-      parameters : [ 
-        [ 'vec2',  'point' ], 
-        [ 'float', 'amount'], 
-        [ 'float', 'frequency'], 
-      ],
-      returnType : 'vec2',
-      body: `
-        float xOffset = simplex3d( vec3( point * frequency, 0.0 ) ) * amount;
-        float yOffset = simplex3d( vec3( point * frequency, 18.4 ) ) * amount;
-        return point + vec2( xOffset, yOffset );
-      `
-    },
   };
 
-  if( !sources.has( settings.mainSource ) ) {
-    fragmentShaderFunctions[ sourceName ] = createSource( settings.mainSource );
-  }
+  fragmentShaderFunctions[ mainSourceName ] = createSource( settings.mainSource );
 
+  // Vertex shader
+  const vertexShaderMain : GLSL = `
+    vUv = uv;
+    ${ settings.domain === 'vertex' ? `vVertexPosition = vec3( modelMatrix * vec4( position, 1.0 ) );` : '' }
+    ${ settings.domain === 'view'   ? `vViewPosition = vec3( modelViewMatrix * vec4( position, 1.0 ) );` : '' }
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+  `;
+
+  // Fragment shader
   let warpGLSL = '';
   if( settings.domainWarp ) {
     const warpData = createWarp( settings.domainWarp );
@@ -295,10 +209,12 @@ export const buildPatternShader = (
 	const fragmentShaderMain : GLSL = `
     ${ settings.domain === 'uv' ? 
       `vec3 origin = vec3( vUv * viewport, 0.0 );` : 
+       settings.domain === 'view' ?
+      `vec3 origin = vec3( vViewPosition );` :
       `vec3 origin = vec3( vVertexPosition );`
     }
 
-    origin *= ${ numberToGLSL( settings.scale ?? 1.0 ) };
+    origin *= ${ numToGLSL( settings.scale ?? 1.0 ) };
 
     origin += timeOffset * time;
 
@@ -306,11 +222,12 @@ export const buildPatternShader = (
 
     ${ warpGLSL }
 
-    float n = ${ sourceName }( samplePoint * frequency );
+    float n = ${ mainSourceName }( samplePoint * frequency );
     // gl_FragColor = vec4( n, opacity, 0.3, 1.0 );
     gl_FragColor = vec4( n, n, n, 1.0 );
   `;
 
+  // Build
   return buildShader(
     attributes,
     uniforms,

@@ -1,5 +1,5 @@
-import { GLSL1 } from "three";
 import { Attributes, Functions, Function, GLSL, Imports, Shader, Uniforms, SupportedVariable, Variables, Constants, GlslType, ShaderChunk, FunctionSignatures, variableValueToGLSL, } from "../core";
+import { arrayToString } from "./utils";
 
 export type ShaderSourceData = {
   imports : Imports,
@@ -7,23 +7,6 @@ export type ShaderSourceData = {
   functions : Functions,
   main : GLSL,
 }
-
-const arrayToString = <T>( 
-  array : T[], 
-  itemToString : ( item : T, index? : number ) => string,
-  separator : string = '\n'
-) => {
-  return array.map( itemToString ).join( separator );
-}
-
-/*const variableValueToString = ( { type, value } : SupportedVariable ) => {
-  if( type === 'float' ) {
-    if( Number.isInteger( value ) ) return value + '.0';
-    else return value + '';
-  }
-
-  return value + '';
-}*/
 
 const importsToGLSL = ( imports : Imports ) => {
   if( !imports ) return '';
@@ -70,17 +53,7 @@ const functionsToGLSL = ( functions : Functions ) => {
   );
 }
 
-/*
-  Allow for building functions and main functions
-  
-  * method chaining
-  * variables, functions, attributes and uniforms stored in list
-  * user calls function, can access these variables and perform operations
-  * define simple operations, like mult, div, etc... should only be defined for certain combinations of types
-
-*/
-
-export type ShaderBuilder = {
+/*export type ShaderBuilder = {
   imports : Imports,
   attributes : Attributes,
   uniforms : Uniforms,
@@ -207,6 +180,7 @@ export const createShaderBuilder = (
     return variableDeclarations + '\n' + this.glsl.join( '\n' );
   }
 }}
+*/
 
 export const buildShader = ( 
   attributes : Attributes,

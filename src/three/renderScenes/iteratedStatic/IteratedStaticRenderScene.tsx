@@ -4,7 +4,8 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { AbstractRenderScene } from "../../AbstractRenderScene";
 import { VoidCallback } from "../../core";
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
-import { buildPatternShader, PointVariable } from '../../shader/builder/pattern/patternShaderBuilder';
+import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
+import { PointVariable } from '../../shader/builder/pattern/types';
 import { setUniform } from '../../shader/core';
 
 
@@ -81,9 +82,8 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
 
     // TODO combine shader material with physical material!? allow lighting
     this.shaderMaterial = new THREE.ShaderMaterial(
-      buildPatternShader(Math.random() * Number.MAX_SAFE_INTEGER, {
+      buildPatternShader( {
         domain : 'vertex',
-        // TODO use this texture on a moving cube! apply material, animate! 
         scale : 3.0,
         mainSource : source1,
 
@@ -114,7 +114,7 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
       }) 
     );
 
-    this.shaderMaterial[ 'side' ] = THREE.DoubleSide;
+    this.shaderMaterial.side = THREE.DoubleSide;
 
     this.fullscreenRenderer = new FullscreenQuadRenderer( this.renderer, this.shaderMaterial, renderTarget );
 
