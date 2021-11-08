@@ -4,9 +4,6 @@ on:
     - main
     paths:
     - 'src/**'
-  pull_request:
-    branches: 
-    - main
 
   workflow_dispatch:
 
@@ -42,3 +39,5 @@ jobs:
         METHOD: sftp
         PORT: 22
         ARGS: --delete
+        LOG_LEVEL: minimal
+        SECURITY: strict

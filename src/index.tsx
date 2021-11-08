@@ -16,3 +16,9 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+console.log("##################")
+console.log("#### OBSCURED ####")
+console.log("##################")
+console.log("#### palmdrop ####")
+console.log("##################")
