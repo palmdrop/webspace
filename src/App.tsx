@@ -15,11 +15,10 @@ import { ColorTheme, selectColorTheme, selectNextPageRoute, setColorTheme, setNe
 
 import PageWrapper, { PageProps } from "./pages/PageWrapper";
 
-import GradientBackground from "./components/ornamental/gradient/GradientBackground";
-import NoiseBackground from "./components/ornamental/noise/NoiseBackground";
-
 import NotFoundPage from "./pages/notFound/notFoundPage";
 import PageDidNotLoadPage from "./pages/pageDidNotLoad/pageDidNotLoadPage";
+
+import GradientBackground from "./components/ornamental/gradient/GradientBackground";
 
 import './App.scss';
 
@@ -137,7 +136,6 @@ const App = () => {
   return (
     <div className={ `app app--${ colorTheme }` }>
       <GradientBackground colorTheme={ colorTheme } />
-      { /* <NoiseBackground opacity={ 0.4 } /> */ }
 
       <ErrorBoundary
         FallbackComponent={ PageDidNotLoadPage }

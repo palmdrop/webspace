@@ -20,7 +20,6 @@ import './contactPage.scss';
 import { githubIconData, IconData, instagramIconData, mailIconData } from "../../assets/external-icons";
 import { useMemoizedDebounce } from "../../hooks/useMemoizedDebounce";
 import StarLoader from "../../components/loader/starLoader/StarLoader";
-import Overflow from "../../components/ornamental/overflow/Overflow";
 
 enum Status {
   IDLE,

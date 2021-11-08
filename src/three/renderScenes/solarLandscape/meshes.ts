@@ -1,28 +1,24 @@
 import * as THREE from 'three';
-import { clamp } from 'lodash';
 import { random, randomElement } from "../../../utils/random";
 import { setVertexColors } from '../../geometry/color/color';
 import { textureFromSmoothGeometry } from '../../material/textureFromVertices';
 import { 
-  SolarChromeGeometryPrefab, 
   FoldedStoneGeometryPrefab, 
   TwistedTorusGeometryPrefab, 
   CurledTubeGeometryPrefab, 
   MarbleGeometryPrefab, 
-  SolarChromeGeometryPrefab2
 } from '../../prefabs/geometries';
 
 import {
   SolarChromeMaterialPrefab, 
   SoftMaterialPrefab, 
   RoughMetalMaterialPrefab, 
-  GlowingMaterialPrefab, 
   DirtyMetalMaterialPrefab, 
 } from '../../prefabs/materials';
+
 import { varyColorHSL } from '../../utils/color';
-import { getNoise3D, Noise } from '../../utils/noise';
+import { getNoise3D } from '../../utils/noise';
 import { Domain, ProbabilityMap, getWeightedRandomPointInDomain, combineProbabilityMaps } from '../../generation/domain/domain';
-import { Box3 } from 'three';
 import { mapLinear } from 'three/src/math/MathUtils';
 
 const materialPrefabs = [
@@ -33,8 +29,6 @@ const materialPrefabs = [
 ];
 
 const geometryPrefabs = [
-  // SolarChromeGeometryPrefab,
-  // SolarChromeGeometryPrefab2,
   MarbleGeometryPrefab,
   FoldedStoneGeometryPrefab,
   TwistedTorusGeometryPrefab,
@@ -59,8 +53,6 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
     const frequency = 
       new THREE.Vector3(
-        // 0.1 + 1.0 * Math.pow( Math.random(), 3.5 ),
-        // 0.1 + 1.0 * Math.pow( Math.random(), 3.5 ),
         0.1 + 1.0 * Math.pow( Math.random(), 3.5 ),
       );
 
@@ -72,7 +64,6 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
       const ox = warp * getNoise3D( { x : x + 103, y, z }, null, frequency, -1.0, 1.0 );
       const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, -1.0, 1.0 );
       const oz = warp * getNoise3D( { x: x + 131, y : y, z }, null, frequency, -1.0, 1.0 );
-      // const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, -1.0, 1.0 );
       return { 
         r : 1.0 - rf * oz,
         g : 1.0 - gf * ox,
@@ -112,24 +103,6 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
     return mesh;
   }
-
-
-  /*const meshList = [];
-  let totalInstanceCount = 0;
-  const meshIndexArray = [];
-  const arrayIndex = 0;
-  for( let i = 0 ; i < 6; i++ ) {
-    const numberOfInstances = Math.floor( random( 20, 33 ) );
-
-    const mesh = createMesh( numberOfInstances );
-    meshList.push( mesh );
-
-    for( let j = 0; j < numberOfInstances; j++ ) {
-      meshIndexArray.push( i );
-    }
-
-    totalInstanceCount += numberOfInstances;
-  }*/
 
   const size = 34;
   const minScale = 0.6;

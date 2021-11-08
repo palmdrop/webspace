@@ -9,7 +9,6 @@ import { VoidCallback } from "../../core";
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
-import { clamp } from 'three/src/math/MathUtils';
 import { varyColorHSL } from '../../utils/color';
 
 import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
@@ -36,14 +35,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private backgroundRenderer : FullscreenQuadRenderer;
   private backgroundColors : THREE.Color[];
 
-  private minZ : number;
-  private maxZ : number;
-  private zoomSpeed : number;
-  private zoomVelocity : number;
-
-  private zoomFriction : number;
-  private zoomLimitThreshold : number;
-
   private shadowRenderer : ShadowRenderer;
   private shadowPlane? : THREE.Mesh;
   private backgroundPlane? : THREE.Mesh;
@@ -54,12 +45,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     super( canvas, onLoad );
 
     this.gui = new dat.GUI();
-    // this.controls = new TrackballControls( this.camera, this.canvas );
-
-    this.zoomSpeed = 0.12;
-    this.zoomVelocity = 0.0;
-    this.zoomFriction = 0.07;
-    this.zoomLimitThreshold = 0.3;
 
     this.camera.far = 50;
 
@@ -77,9 +62,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.backgroundRenderer = backgroundRenderer;
 
     this.resizeables.push( this.backgroundRenderer );
-
-    this.minZ = 0;
-    this.maxZ = 0;
 
     const {
       composer
@@ -187,9 +169,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.camera.position.set( 0, -7, maxSize / 2.0 + 13 );
     this.camera.lookAt( 0, 0, 0 );
 
-    this.minZ = maxSize / 2.0;
-    this.maxZ = maxSize / 2.0 + 20;
-
     this.scene.add( this.meshes );
 
     const fogColor = varyColorHSL( this.backgroundColors[0], 0.0, 0.0, random( 0.1, 0.55 ) );
@@ -280,7 +259,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
         })
       );
 
-      backgroundPlane.scale.set( 100, 100, 1.0 );
+      backgroundPlane.scale.set( 120, 120, 1.0 );
       backgroundPlane.position.set( 0, 0, planeZ );
 
       this.backgroundPlane = backgroundPlane;
@@ -293,10 +272,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   onMouseMove( x : number, y : number, deltaX : number, deltaY : number ) {
     this.rotationAcceleration.y += this.rotationSpeed * deltaX;
     this.rotationAcceleration.x += this.rotationSpeed * deltaY;
-  }
-
-  zoom( deltaZoom : number ) {
-    this.zoomVelocity += deltaZoom * this.zoomSpeed;
   }
 
   render( delta : number, now : number ) {
@@ -316,7 +291,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     super.render( delta, now );
   }
 
-  update(delta : number, now : number) {
+  update() {
     this.controls?.update();
 
     if( this.meshes ) {
@@ -328,30 +303,6 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.rotationVelocity.add( this.rotationAcceleration );
     this.rotationAcceleration.multiplyScalar( 1.0 - this.rotationFriction );
     this.rotationVelocity.multiplyScalar( 1.0 - this.rotationFriction );
-
-
-    if( Math.abs( this.zoomVelocity ) > 0.01 ) {
-      const thresholdDistance = ( this.maxZ - this.minZ ) * this.zoomLimitThreshold;
-      const z = this.camera.position.z;
-
-      let zoomAmount = 1;
-
-      if ( ( z - this.minZ ) < thresholdDistance && this.zoomVelocity < 0 ) {
-        zoomAmount = 
-          Math.pow( 
-            clamp( ( z - this.minZ ) / thresholdDistance, 0.0, 1.0 ),
-            1.1
-          );
-      } else if( ( this.maxZ - z ) < thresholdDistance && this.zoomVelocity > 0 ) {
-        zoomAmount = 
-          Math.pow( 
-            clamp( ( this.maxZ - z ) / thresholdDistance, 0.0, 1.0 ),
-            1.1
-          );
-      }
-
-      this.zoomVelocity *= ( 1.0 - this.zoomFriction );
-    }
   }
 
   resize( width? : number, height? : number ) {

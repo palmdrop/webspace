@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { PageRoute } from '../../App';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
@@ -21,7 +21,7 @@ const LinksPage = ( { route } : PageProps ) => {
 
   // const getFirstActiveLink = () => activeLinks.size > 0 ? Array.from( activeLinks )[ 0 ] : { url : '', text : 'Default' };
 
-  const categorizedLinksToSections = ( categorizedLinks : { [ title : string ] : Link[] } ) => {
+  const categorizedLinksToSections = useCallback( ( categorizedLinks : { [ title : string ] : Link[] } ) => {
     const cleanURL = ( url: string ) => {
       return url
         .replace(/^(?:https?:\/\/)?(?:www\.)?/i, '') // Remove https and www from link
@@ -64,7 +64,7 @@ const LinksPage = ( { route } : PageProps ) => {
         ))}
       </section>
     ));
-  }
+  }, [ activeLinks ] );
 
   const linkSections = useMemo( () => {
     const categorizedLinks : { [ title : string ] : Link[] } = {};
@@ -90,7 +90,7 @@ const LinksPage = ( { route } : PageProps ) => {
     }
 
     return categorizedLinksToSections( categorizedLinks );
-  }, [ activeCategories ] );
+  }, [ activeCategories, categorizedLinksToSections ] );
 
 
   const handleToggleCategory = ( category : Category ) => {

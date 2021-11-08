@@ -18,7 +18,7 @@ export class SimpleResizer implements Resizer {
     if( !width ) width = this.container.clientWidth;
     if( !height ) height = this.container.clientHeight;
 
-    const currentSize = this.renderer.getSize( new THREE.Vector2() );
+    // const currentSize = this.renderer.getSize( new THREE.Vector2() );
     const newSize = new THREE.Vector2(width, height);
 
     if( this.useDevicePixelRatio ) newSize.multiplyScalar( window.devicePixelRatio );

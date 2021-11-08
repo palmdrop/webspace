@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from '../../effects/unrealBloom/UnrealBloomPass';
 
 export const createPostProcessing = ( renderer : THREE.WebGLRenderer, scene : THREE.Scene, camera : THREE.Camera ) => {
   const composer = new EffectComposer( renderer );
