@@ -44,7 +44,7 @@ export const pieces : PieceData[] = [
       `
     ],
     tags : [
-      "3d", "Geometry"
+      "Generative"
     ],
     image: retroCoreImage,
 
@@ -66,7 +66,7 @@ export const pieces : PieceData[] = [
       `
     ],
     tags : [
-      "3d", "Warp"
+      "Generative"
     ],
 
     image: solarChromeImage,
@@ -82,7 +82,7 @@ export const pieces : PieceData[] = [
       `,
     ],
     tags : [
-      "3d", "Warp"
+      "Generative"
     ],
 
     image: solarLandscapeImage,

@@ -4,7 +4,7 @@
 @import '../../../styles/fonts.scss';
 
 .piece-entry {
-  padding: 0.0em;
+  padding: 0.0em 1.5em;
 
   display: flex;
   flex-direction: column;
@@ -35,13 +35,14 @@
     letter-spacing: 0.0em;
 
     font-size: 1.6em;
-    width: 8em;
     margin: 0em 0.5em;
     text-align: start;
 
+    width: 5em;
+
     @include medium {
       font-size: 2.2em;
-      width: 9em; 
+      width: 6em;
     }
 
     &:hover {
@@ -62,7 +63,6 @@
     justify-content: space-around;
 
     padding: 1em 1em;
-
 
     &:before {
       content: '';

@@ -35,6 +35,7 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
       onMouseEnter={ handleHover }
       onMouseLeave={ handleLeave }
     >
+      { 
       <div className="piece-entry__tags">
         { piece.tags.map( ( tag, index ) => {
           let tagText = tag;
@@ -51,6 +52,7 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
           )
         })}
       </div>
+      }
       <Button
         onClick={ handleClick }
       >
