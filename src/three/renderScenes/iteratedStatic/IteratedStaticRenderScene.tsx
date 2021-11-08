@@ -3,9 +3,10 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 
 import { AbstractRenderScene } from "../../AbstractRenderScene";
 import { VoidCallback } from "../../core";
+import { FoldedStoneGeometryPrefab, SolarChromeGeometryPrefab } from '../../prefabs/geometries';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
-import { PointVariable } from '../../shader/builder/pattern/types';
+import { DomainWarp, PointVariable, Source } from '../../shader/builder/pattern/types';
 import { setUniform } from '../../shader/core';
 
 
@@ -38,15 +39,15 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
 
     this.controls = new TrackballControls( this.camera, canvas );
 
-    const cubeSize = 500;
+    const objectSize = 100;
 
-    this.camera.far = cubeSize * 10;
-    this.camera.position.z = cubeSize * 1.4;
+    this.camera.far = objectSize * 100;
+    this.camera.position.z = objectSize * 1.4;
 
     const renderTarget = new THREE.WebGLRenderTarget( canvas.width, canvas.height, {
     });
 
-    const source1 = {
+    /*const source1 : Source = {
       kind : 'noise',
       frequency : new THREE.Vector3( 0.1, 0.1, 0.1 ),
       amplitude : 1.5,
@@ -55,11 +56,12 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
       persistance : 0.3,
       pow : 4.0,
       ridge : 0.5,
-    };
+    };*/
 
-    const source2 = {
+
+    const source2 : Source = {
       kind : 'noise',
-      frequency : new THREE.Vector3( 0.01, 0.01, 0.001 ),
+      frequency : new THREE.Vector3( 0.004, 0.004, 0.003 ),
       amplitude : 1.0,
       octaves : 2,
       lacunarity : 3.2,
@@ -68,28 +70,74 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
       ridge : 0.6,
     };
 
-    const source3 = {
+
+    const source3 : Source = {
+      kind : 'noise',
+      frequency : new THREE.Vector3( 0.1, 0.01, 0.01 ),
+      amplitude : 1.0,
+      octaves : 3,
+      lacunarity : 3.2,
+      persistance : 0.7,
+      pow : 3.0,
+      ridge : 0.6,
+    };
+
+    const source4 : Source = {
       kind : 'trig',
       types : {
         x : 'sin',
         y : 'cos',
         z : 'sin',
       },
-      frequency : new THREE.Vector3( 0.05, 0.05, 0.05 ),
+      frequency : new THREE.Vector3( 0.01, 0.01, 0.01 ),
       combinationOperation : 'add',
-      pow : 2.0,
+      pow : 1.0,
     };
+
+    const source1 : Source = {
+      kind : 'combined',
+      sources : [ source2, source3 ],
+      operation : 'add',
+      multipliers : [ 0.5, 0.5 ],
+      postModifications : [
+        {
+          kind : 'pow',
+          argument : 4.0
+        },
+        {
+          kind : 'mult',
+          argument : 2.0,
+        }
+      ]
+    }
+
+    const domainWarp : DomainWarp = {
+      sources : { 
+        x : source4,
+        y : source2,
+        z : source3,
+      },
+      amount : new THREE.Vector3( 10.0, 10.0, 20.0 ),
+      iterations : 3,
+      inputVariable : PointVariable.samplePoint,
+    }
+
+    const warpedSource : Source = {
+      kind : 'warped',
+      source : source1,
+      warp : domainWarp
+    }
 
     // TODO combine shader material with physical material!? allow lighting
     this.shaderMaterial = new THREE.ShaderMaterial(
       buildPatternShader( {
-        domain : 'vertex',
+        domain : 'view',
         scale : 3.0,
-        mainSource : source1,
+        mainSource : warpedSource,
 
         domainWarp : {
           sources : { 
-            x : source2,
+            x : source4,
             y : source2,
             z : source3,
           },
@@ -97,19 +145,6 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
           iterations : 3,
           inputVariable : PointVariable.samplePoint,
         },
-
-        /*mainSource : {
-          kind : 'trig',
-          types : {
-            x : 'sin',
-            y : 'cos',
-            z : 'sin',
-          },
-          frequency : new THREE.Vector3( 10.5, 20.3, 5.1 ),
-          combinationOperation : 'add',
-          pow : 2.0,
-        },
-        */
         timeOffset : new THREE.Vector3( 20.0, -20.0, 20, ),
       }) 
     );
@@ -118,12 +153,16 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
 
     this.fullscreenRenderer = new FullscreenQuadRenderer( this.renderer, this.shaderMaterial, renderTarget );
 
-    const cube = new THREE.Mesh(
-      new THREE.BoxBufferGeometry( cubeSize, cubeSize, cubeSize ),
+    const object = new THREE.Mesh(
+      new THREE.BoxBufferGeometry( 5.0, 5.0, 5.0 ),
+      // new THREE.SphereBufferGeometry( 1.0, 100, 100, 100 ),
+      // FoldedStoneGeometryPrefab({}),
       this.shaderMaterial
     );
 
-    this.scene.add( cube );
+    object.scale.set( objectSize, objectSize, objectSize );
+
+    this.scene.add( object );
 
     this.scene.background = renderTarget.texture;
 

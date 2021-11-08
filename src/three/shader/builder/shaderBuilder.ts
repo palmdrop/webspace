@@ -3,8 +3,8 @@ import { arrayToString } from "./utils";
 
 export type ShaderSourceData = {
   imports : Imports,
-  constants : Constants,
-  functions : Functions,
+  constants? : Constants,
+  functions? : Functions,
   main : GLSL,
 }
 

@@ -1,14 +1,28 @@
-import { BinaryOperation, GLSL, Trigonometry } from '../../core';
+import { BinaryOperation, Function, GLSL, Trigonometry } from '../../core';
 
 export enum PointVariable {
   samplePoint = 'samplePoint',
   origin = 'origin',
 }
 
+export type FunctionWithName = {
+  name : string,
+  func : Function
+}
+
 export type Domain = 'uv' | 'vertex' | 'view';
 
-export type NoiseSource = {
-  kind : string,
+export type Modification = {
+  kind : 'add' | 'mult' | 'pow' | 'mod',
+  argument : number,
+}
+
+export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped';
+export type RootSource = {
+  kind : SourceKind
+}
+
+export type NoiseSource = RootSource & {
   frequency : THREE.Vector3,
   amplitude? : number,
   pow? : number,
@@ -18,8 +32,7 @@ export type NoiseSource = {
   ridge? : number,
 }
 
-export type TrigSource = {
-  kind : string,
+export type TrigSource = RootSource & {
   types : { 
     x : Trigonometry,
     y : Trigonometry,
@@ -31,11 +44,21 @@ export type TrigSource = {
   pow? : number,
 }
 
-export type CustomSource = {
-  glsl : GLSL,
+export type CombinedSource = RootSource & {
+  sources : Source[],
+  operation : BinaryOperation,
+  multipliers? : number[],
+  postModifications? : Modification | Modification[]
 }
 
-export type Source = NoiseSource | TrigSource;
+export type WarpedSource = RootSource & {
+  kind : string,
+  source : Source,
+  warp : DomainWarp,
+}
+
+// TODO add support for composite source! source made up of multiple sources, warped, combined, multed etc
+export type Source = NoiseSource | TrigSource | CombinedSource | WarpedSource;
 
 export type DomainWarp = {
   sources : {
@@ -49,6 +72,19 @@ export type DomainWarp = {
   inputVariable : PointVariable,
 }
 
+export type ColorMode = 'rgb' | 'hsb';
+
+export type ColorSettings = {
+  mode : ColorMode,
+  componentModifications? : {
+    x? : Modification | Modification[],
+    y? : Modification | Modification[],
+    z? : Modification | Modification[],
+    a? : Modification | Modification[],
+  }
+}
+
+// Settings
 export type PatternShaderSettings = {
   domain : Domain,
   scale? : number,
@@ -56,4 +92,6 @@ export type PatternShaderSettings = {
 
   mainSource : Source,
   domainWarp? : DomainWarp,
+
+  colorSettings? : ColorSettings
 }

@@ -12,7 +12,7 @@ export const numToGLSL = ( n : number ) => {
   return Number.isInteger( n ) ? n + '.0' : n;
 }
 
-export const binOpToGLSL = ( operation : BinaryOperation, a : string, b : string, ...c : string[] ) => {
+export const binOpToGLSL = ( operation : BinaryOperation, ...args : string[] ) => {
   const op = (() => {
     switch( operation ) {
       case 'add': return '+';
@@ -22,6 +22,5 @@ export const binOpToGLSL = ( operation : BinaryOperation, a : string, b : string
     }
   })();
 
-  const operands = [ a, b, ...c ];
-  return operands.join( ` ${ op } ` );
+  return args.join( ` ${ op } ` );
 }

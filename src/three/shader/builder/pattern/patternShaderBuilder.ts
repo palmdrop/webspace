@@ -4,9 +4,7 @@ import { simplex3dChunk } from "../../chunk/noise";
 import { Attributes, GLSL, Shader, Uniforms, Functions, Function, Constants, ShaderChunk, AXES } from "../../core";
 import { buildShader } from "../shaderBuilder";
 import { binOpToGLSL, numToGLSL } from '../utils';
-import { DomainWarp, NoiseSource, PatternShaderSettings, Source, TrigSource } from './types';
-
-const mainSourceName = 'mainSource';
+import { CombinedSource, DomainWarp, FunctionWithName, Modification, NoiseSource, PatternShaderSettings, Source, TrigSource, WarpedSource } from './types';
 
 const getFunctionName = (() => {
   let counter = 0;
@@ -17,7 +15,29 @@ const getFunctionName = (() => {
   }
 })();
 
-const createNoise = ( noise : NoiseSource ) : Function => {
+const buildModification = ( input : GLSL, modifications : Modification | Modification[] ) => {
+  if( !Array.isArray( modifications ) ) {
+    modifications = [ modifications ];
+  }
+
+  const applySingleModification = ( input : GLSL, kind : string, argument : number ) => {
+    switch( kind ) {
+      case 'add'  : return `${ numToGLSL( argument ) } + ${ input }`
+      case 'mult' : return `${ numToGLSL( argument ) } * ${ input }`
+      case 'pow'  : return `pow( ${ input }, ${ numToGLSL( argument ) } )`
+      case 'mod'  : return `mod( ${ input }, ${ numToGLSL( argument ) } )`
+    }
+  }
+
+  let result = '' + input;
+  modifications.forEach( ( { kind, argument } ) => {
+    result = `( ${ applySingleModification( result, kind, argument ) } )`
+  });
+
+  return result;
+}
+
+const buildNoiseSource = ( noise : NoiseSource ) : Function => {
   const frequency = noise.frequency;
   const amplitude = noise.amplitude ?? 1.0;
   const pow = noise.pow ?? 1.0;
@@ -58,7 +78,7 @@ const createNoise = ( noise : NoiseSource ) : Function => {
   };
 }
 
-const createTrig = ( trig : TrigSource ) : Function => {
+const buildTrigSource = ( trig : TrigSource ) : Function => {
   const types = trig.types;
   const frequency = trig.frequency ?? new THREE.Vector3( 0.0 );
   const amplitude = trig.amplitude ?? new THREE.Vector3( 1.0, 1.0, 1.0 );
@@ -77,38 +97,89 @@ const createTrig = ( trig : TrigSource ) : Function => {
   }
 }
 
-// TODO add support for composite source! source made up of multiple sources, warped, combined, multed etc
+export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader => {
 
-export const buildPatternShader = ( 
-  settings : PatternShaderSettings,
-) : Shader => {
   // Cache
-  const cache = new Map<Source, Function>();
+  const cache = new Map<any, FunctionWithName>();
 
   // Helper functions
-  const createSource = ( source : Source ) : Function => {
-    switch( source.kind ) {
-      case 'noise' : return createNoise( source as NoiseSource );
-      default : return createTrig( source as TrigSource );
+  const buildSource = ( source : Source ) : FunctionWithName => {
+    if( cache.has( source ) ) return cache.get( source ) as FunctionWithName;
+
+    const name = getFunctionName( 'source' );
+
+    let func : Function;
+    const kind = source.kind;
+    switch( kind ) {
+      case 'noise' : func = buildNoiseSource( source as NoiseSource ); break;
+      case 'trig' : func = buildTrigSource( source as TrigSource ); break;
+      case 'combined' : func = buildCombinedSource( source as CombinedSource ); break;
+      case 'warped' : func = buildWarpedSource( source as WarpedSource ); break;
+      default : throw new Error( `Source kind ${ kind } is not supported` );
+    }
+
+    const data = { name, func };
+    cache.set( source, data );
+
+    return data;
+  }
+
+  const buildCombinedSource = ( source : CombinedSource ) : Function => {
+    const getPart = ( name : string, index : number ) => {
+      let multiplier;
+      if( source.multipliers && source.multipliers.length > index ) {
+        multiplier = source.multipliers[ index ];
+      } else {
+        multiplier = 1.0;
+      }
+
+      return `${ numToGLSL( multiplier ) } * ${ name }( point )`;
+    }
+
+    const subSources : FunctionWithName[] = source.sources.map(subSource => buildSource( subSource ) );
+
+    let combinedGLSL = binOpToGLSL( source.operation, ...subSources.map( ( { name }, index ) => getPart( name, index ) ) );
+    if( source.postModifications ) {
+      combinedGLSL = buildModification( `( ${ combinedGLSL } )`, source.postModifications );
+    }
+
+    return {
+      parameters : [ [ 'vec3', 'point' ] ],
+      returnType : 'float',
+      body : `
+        return ${ combinedGLSL };
+      `
     }
   }
 
-  const createWarp = ( warp : DomainWarp ) => {
-    const functions : Functions = {};
+  const buildWarpedSource = ( source : WarpedSource ) : Function => {
+    const { name : sourceFunctionName } = buildSource( source.source );
+    const { name : warpFunctioName } = buildWarpFunction( source.warp );
+
+    return {
+      parameters : [ [ 'vec3', 'point' ] ],
+      returnType : 'float',
+      body : `
+        return ${ sourceFunctionName }( ${ warpFunctioName }( point ) );
+      `
+    }
+  }
+
+
+  const buildWarpFunction = ( warp : DomainWarp ) : FunctionWithName => {
+    if( cache.has( warp ) ) return cache.get( warp ) as FunctionWithName;
+
     const helperNames : string[] = [];
 
     const amount = warp.amount ?? new THREE.Vector3( 1.0, 1.0, 1.0 );
     const iterations = Math.floor( warp.iterations ?? 1 );
 
     AXES.forEach( axis => {
-      const name = getFunctionName( `${ axis }Offset` );
+      const { name } = buildSource( warp.sources[ axis ] );
       helperNames.push( name );
-      if( !cache.has( warp.sources[ axis ] ) ) {
-        functions[ name ] = createSource( warp.sources[ axis ] );
-      }
     });
 
-    const warpFunction : Function = {
+    const func : Function = {
       parameters : [ [ 'vec3', 'point' ] ],
       returnType : 'vec3',
       body : `
@@ -123,14 +194,11 @@ export const buildPatternShader = (
       `
     };
 
-    const warpName = getFunctionName( 'domainWarp' );
-    functions[ warpName ] = warpFunction;
+    const name = getFunctionName( 'domainWarp' );
+    const data = { name, func };
+    cache.set( warp, data );
 
-    return {
-      warpName,
-      functions,
-      inputVariable : warp.inputVariable
-    }
+    return data;
   }
 
   // Settings
@@ -181,12 +249,6 @@ export const buildPatternShader = (
     }
   };
 
-  // Functions
-  const fragmentShaderFunctions : Functions = {
-  };
-
-  fragmentShaderFunctions[ mainSourceName ] = createSource( settings.mainSource );
-
   // Vertex shader
   const vertexShaderMain : GLSL = `
     vUv = uv;
@@ -196,14 +258,12 @@ export const buildPatternShader = (
   `;
 
   // Fragment shader
+  const { name : mainSourceName } = buildSource( settings.mainSource );
+
   let warpGLSL = '';
   if( settings.domainWarp ) {
-    const warpData = createWarp( settings.domainWarp );
-    Object.assign( fragmentShaderFunctions, warpData.functions );
-
-    warpGLSL = `
-      samplePoint = ${ warpData.warpName }( ${ warpData.inputVariable } );
-    `;
+    const { name } = buildWarpFunction( settings.domainWarp );
+    warpGLSL = `samplePoint = ${ name }( ${ settings.domainWarp.inputVariable } );`;
   }
 
 	const fragmentShaderMain : GLSL = `
@@ -223,9 +283,12 @@ export const buildPatternShader = (
     ${ warpGLSL }
 
     float n = ${ mainSourceName }( samplePoint * frequency );
-    // gl_FragColor = vec4( n, opacity, 0.3, 1.0 );
     gl_FragColor = vec4( n, n, n, 1.0 );
   `;
+
+  // Functions
+  const fragmentShaderFunctions : Functions = {};
+  cache.forEach( ( { name, func } ) => fragmentShaderFunctions[ name ] = func );
 
   // Build
   return buildShader(
@@ -233,8 +296,6 @@ export const buildPatternShader = (
     uniforms,
     {
       imports,
-      constants : undefined,
-      functions : undefined,
       main : vertexShaderMain,
     },
     {
