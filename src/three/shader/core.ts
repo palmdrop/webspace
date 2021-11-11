@@ -2,12 +2,11 @@ import * as THREE from 'three';
 
 /* Basic types */
 export type GLSL = string;
-export type GlslType = 'float' | 'int' | 'vec2' | 'vec3' | 'vec4';
+export type GlslType = 'float' | 'int' | 'vec2' | 'vec3' | 'vec4' | 'sampler2D';
 
 export type Trigonometry = 'sin' | 'cos' | 'tan';
 export type BinaryOperation = 'mult' | 'div' | 'add' | 'sub';
 
-export const AXES = [ 'x', 'y', 'z' ] as const;
 
 export type FunctionSignature = {
   parameters : [ GlslType, String ][] // array of parameters
@@ -21,46 +20,47 @@ export type ShaderChunk = {
 
 
 /* Variables */
-type Variable<T extends GlslType, V> = {
+type IVariable<T extends GlslType, V> = {
   type : T,
   value? : V
 }
 
-export type Float = Variable<'float', number>;
-export type Int = Variable<'int', number>;
-export type Vec2 = Variable<'vec2', THREE.Vector2>;
-export type Vec3 = Variable<'vec3', THREE.Vector3>;
-export type Vec4 = Variable<'vec4', THREE.Vector4>;
-export type SupportedVariable = Float | Int | Vec2 | Vec3 | Vec4;
+export type Float = IVariable<'float', number>;
+export type Int = IVariable<'int', number>;
+export type Vec2 = IVariable<'vec2', THREE.Vector2>;
+export type Vec3 = IVariable<'vec3', THREE.Vector3>;
+export type Vec4 = IVariable<'vec4', THREE.Vector4>;
+export type Variable = Float | Int | Vec2 | Vec3 | Vec4;
 
-export type Variables = { [ name : string ] : SupportedVariable } | undefined;
+export type Variables = { [ name : string ] : Variable };
 
 /* Constants */
-export type Constant = SupportedVariable;
+export type Constant = Variable;
 export type Constants = Variables;
 
 /* Uniforms */
 export type Uniform = THREE.IUniform & { 
   type : GlslType 
 }
-export type Uniforms = { [ uniform : string ] : Uniform } | undefined;
+
+export type Uniforms = { [ uniform : string ] : Uniform };
 
 /* Attributes */
 export type Attribute = {
   type : GlslType 
 }
-export type Attributes = { [ varying : string ] : Attribute } | undefined;
+export type Attributes = { [ varying : string ] : Attribute };
 
 /* Imports */
 export type Imports = ShaderChunk[] | undefined;
 
 /* Functions */
-export type FunctionSignatures = { [ name : string ] : FunctionSignature } | undefined;
+export type FunctionSignatures = { [ name : string ] : FunctionSignature };
 export type Function = FunctionSignature & {
   body : GLSL,
 }
 
-export type Functions = { [ name : string ] : Function } | undefined;
+export type Functions = { [ name : string ] : Function };
 
 /* Shaders */
 export type Shader = {
@@ -91,16 +91,4 @@ export const setUniform = <T>(
   destinationObject.uniforms[ name ].value = value;
 
   return true;
-}
-
-export const variableValueToGLSL = ( variable : SupportedVariable ) => {
-  const converters : { [ type in GlslType ] : ( value? : any ) => string }= {
-    'float' : ( value? : number ) => !value ? '0.0' : '' + value,
-    'int' : ( value? : number ) => !value ? '0' : '' + value,
-    'vec2' : ( value? : THREE.Vector2 ) => !value ? 'vec2()' : `vec2( ${ value.x }, ${ value.y } )`,
-    'vec3' : ( value? : THREE.Vector3 ) => !value ? 'vec3()' : `vec3( ${ value.x }, ${ value.y }, ${ value.z } )`,
-    'vec4' : ( value? : THREE.Vector4 ) => !value ? 'vec4()' : `vec4( ${ value.x }, ${ value.y }, ${ value.z }, ${ value.w } )`,
-  }
-
-  return converters[ variable.type ]( variable.value );
 }

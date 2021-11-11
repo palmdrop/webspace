@@ -1,14 +1,11 @@
-import { BinaryOperation, Function, GLSL, Trigonometry } from '../../core';
-
-export enum PointVariable {
-  samplePoint = 'samplePoint',
-  origin = 'origin',
-}
+import { BinaryOperation, Function, Trigonometry } from '../../core';
 
 export type FunctionWithName = {
   name : string,
   func : Function
 }
+
+export type FunctionCache = Map<any, FunctionWithName>;
 
 export type Domain = 'uv' | 'vertex' | 'view';
 
@@ -17,9 +14,11 @@ export type Modification = {
   argument : number,
 }
 
-export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped';
+export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture';
+
 export type RootSource = {
-  kind : SourceKind
+  kind : SourceKind,
+  domain? : Domain
 }
 
 export type NoiseSource = RootSource & {
@@ -52,13 +51,17 @@ export type CombinedSource = RootSource & {
 }
 
 export type WarpedSource = RootSource & {
-  kind : string,
   source : Source,
   warp : DomainWarp,
 }
 
-// TODO add support for composite source! source made up of multiple sources, warped, combined, multed etc
-export type Source = NoiseSource | TrigSource | CombinedSource | WarpedSource;
+export type TextureSource = RootSource & {
+  name : string,
+  texture : THREE.Texture,
+  toFloat? : Function,
+}
+
+export type Source = NoiseSource | TrigSource | CombinedSource | WarpedSource | TextureSource;
 
 export type DomainWarp = {
   sources : {
@@ -68,11 +71,9 @@ export type DomainWarp = {
   },
   amount? : THREE.Vector3,
   iterations? : number,
-
-  inputVariable : PointVariable,
 }
 
-export type ColorMode = 'rgb' | 'hsb';
+export type ColorMode = 'rgb' | 'hsv';
 
 export type ColorSettings = {
   mode : ColorMode,
@@ -93,5 +94,7 @@ export type PatternShaderSettings = {
   mainSource : Source,
   domainWarp? : DomainWarp,
 
-  colorSettings? : ColorSettings
+  colorSettings? : ColorSettings,
+
+  seed? : number,
 }
