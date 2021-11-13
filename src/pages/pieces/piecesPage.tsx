@@ -1,14 +1,10 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useCallback, useMemo } from 'react'
 
 import {
   Switch,
   Route,
   useHistory
 } from "react-router-dom";
-
-import { useSelector } from 'react-redux';
-
-import { selectActivePiece } from '../../state/slices/uiSlice';
 
 import { PageRoute, RedirectNotFound } from '../../App';
 import { PageProps } from '../PageWrapper';
@@ -19,88 +15,32 @@ import FadedHeader from '../../components/header/faded/FadedHeader';
 import Paragraph from '../../components/paragraph/Paragraph';
 
 import { PieceNavigationFunction, pieces } from './pieces/pieces';
-import { PiecesList } from './list/PiecesList';
+import PieceWrapper from './wrapper/PieceWrapper';
+import { PieceEntry } from './entry/PieceEntry';
+
 import { introduction } from './content';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
-import LazyImage from '../../components/media/image/LazyImage';
-import Title from '../../components/title/Title';
-import PieceWrapper from './wrapper/PieceWrapper';
-
 import './piecesPage.scss';
 
-type InformationDisplayProps = { 
-  title : string, 
-  paragraphs : string[], 
-  imagePath? : string, 
-  topHeader? : boolean 
-};
-
-const InformationDisplay = ( { title, paragraphs, imagePath, topHeader = false } : InformationDisplayProps ) => {
-  return (
-    <main className="information-display">
-      { topHeader ? (
-        <Title
-          level={ 4 }
-          text={ title }
-        />
-      ) : (
-        <FadedHeader
-          title={ title } 
-        >
-          <Obstacle className="faded-header__obstacle" />
-        </FadedHeader>
-      )}
-      { paragraphs.map( paragraph => (
-        <Paragraph>
-          { paragraph }
-        </Paragraph>
-      ))}
-      { imagePath && (
-        <LazyImage 
-          src={ imagePath }
-          alt={ "" }
-          height={ 250 }
-          placeholder={ <div></div> }
-        />
-      )}
-    </main>
-  )
-}
-
 const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
-  const activePieceIndex = useSelector( selectActivePiece );
   const history = useHistory();
 
-  const handlePieceNavigation : PieceNavigationFunction = ( index : number, event : React.MouseEvent ) : void => {
+  const handlePieceNavigation : PieceNavigationFunction = useCallback( ( index : number, event : React.MouseEvent ) : void => {
     history.push( `${ route }/${ index + 1 }` );
-  }
+  }, [ history, route ] );
 
-  const getMainContent = () : JSX.Element => {
-    let title : string;
-    let paragraphs : string[];
-
-    if( activePieceIndex !== null ) {
-      const activePiece = pieces[ activePieceIndex ];
-      title = `${ activePieceIndex + 1 }. ${ activePiece.name }`;
-      paragraphs = activePiece.description.slice( 0, 2 ) ;
-    } else {
-      title = introduction.title;
-      paragraphs = introduction.description;
-    }
-
-    return (
-      <InformationDisplay
-        title={ title } 
-        paragraphs={ paragraphs }
-        imagePath={ 
-          activePieceIndex !== null ? pieces[ activePieceIndex ].image : undefined 
-        }
-        topHeader={ activePieceIndex !== null }
+  const pieceEntries = useMemo( () => (
+    pieces.map( ( piece, index ) => (
+      <PieceEntry 
+        key={ `${ piece.name }-${ index + 1 }` }
+        piece={ piece } 
+        index={ index }
+        onClick={ handlePieceNavigation }
       />
-    )
-  }
+    ))
+  ), [ handlePieceNavigation ] );
 
   return (
     <div className="pieces-page" >
@@ -131,20 +71,27 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
           >
             <Header 
               mainTitle="OBSCURED"
-              firstSubtitle="Digital aesthetics"
+              firstSubtitle="Digital art"
               mainLevel={ 3 }
               subLevel={ 5 }
               linkTo={ PageRoute.root }
             />
 
             <main>
-              { getMainContent() }
-            </main>
+              <FadedHeader
+                title={ introduction.title }
+              >
+                <Obstacle className="faded-header__obstacle" />
+              </FadedHeader>
 
-            <PiecesList 
-              pieces={ pieces }
-              onPieceClick={ handlePieceNavigation }
-            />
+              { introduction.description.map( paragraph => (
+                <Paragraph>
+                  { paragraph }
+                </Paragraph>
+              ))}
+
+              { pieceEntries }
+            </main>
 
             <HomeBar />
           </Route>

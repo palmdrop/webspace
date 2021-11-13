@@ -1,0 +1,80 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/ornaments.scss';
+@import '../../../styles/layout.scss';
+@import '../../../styles/fonts.scss';
+
+.piece-entry {
+  padding: 1.0em 0.0em;
+  position: relative;
+
+  width: 130%;
+
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &__tags {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    .button {
+      font-size: 0.9em;
+      padding-bottom: 0.1em;
+
+      @include medium {
+        font-size: 1.1em;
+      }
+
+      color: var( --primary-color-300 );
+      opacity: 0.4;
+    }
+  }
+
+  & > .button {
+    position: relative;
+    letter-spacing: 0.0em;
+
+    font-size: 1.5em;
+    text-align: start;
+
+    width: 80vw;
+
+    @include medium {
+      font-size: 2.2em;
+    }
+
+    &:hover {
+      @include font( 'accent' );
+      letter-spacing: 0.13em;
+
+      .lazy-image {
+        visibility: visible;
+      }
+    }
+
+    .lazy-image {
+      position: absolute;
+      z-index: -1;
+
+      visibility: hidden;
+
+      left: 6em;
+      transform: translate( 0%, -50% ) scale( 0.65 );
+
+      @include medium {
+        left: 8em;
+        transform: translate( 0%, -50% ) scale( 1.1 );
+      }
+    }
+  }
+
+  .bar {
+    margin-top: 0.3em;
+    width: 100%;
+    z-index: -2;
+  }
+
+}

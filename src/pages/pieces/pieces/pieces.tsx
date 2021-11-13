@@ -28,28 +28,20 @@ export type PieceNavigationFunction = (
 
 export const pieces : PieceData[] = [
   {
-    name: "Retro Core",
+    name: "Solar Landscape",
     description: [
-      `An exploration of a particular aesthetic idea, involving plays with perspective and depth.`,
-      `3D shapes are turned flat using transparency and disabled depth testing,
-       Both the inside and the outside of the shapes are rendered. The 
-       visible sides blend as the shapes rotate.
-      `,
-      `Creatures with good vision are often also exceptional at determining the orientation,
-      size, shape and distance of objects using visual cues such as perspective distortion, shadows
-      and lighting.
-      `,
-      `This piece tries to confuse our perception by intentionally not presenting 3D objects
-      as we might expect them to be presented.
+      "An extension of the Solar Chrome Piece. An exercise in generative composition.",
       `
+        This piece is a work in process.
+      `,
     ],
     tags : [
       "Generative"
     ],
-    image: retroCoreImage,
 
-    Component: React.lazy( () => import( './retroCore/RetroCorePiece' ) ),
-    colorTheme: ColorTheme.horizon
+    image: solarLandscapeImage,
+
+    Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
   },
   {
     name: "Solar Chrome",
@@ -74,21 +66,29 @@ export const pieces : PieceData[] = [
     Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
   },
   {
-    name: "Solar Landscape",
+    name: "Retro Core",
     description: [
-      "An extension of the Solar Chrome Piece. An exercise in generative composition.",
-      `
-        This piece is a work in process.
+      `An exploration of a particular aesthetic idea, involving plays with perspective and depth.`,
+      `3D shapes are turned flat using transparency and disabled depth testing,
+       Both the inside and the outside of the shapes are rendered. The 
+       visible sides blend as the shapes rotate.
       `,
+      `Creatures with good vision are often also exceptional at determining the orientation,
+      size, shape and distance of objects using visual cues such as perspective distortion, shadows
+      and lighting.
+      `,
+      `This piece tries to confuse our perception by intentionally not presenting 3D objects
+      as we might expect them to be presented.
+      `
     ],
     tags : [
       "Generative"
     ],
+    image: retroCoreImage,
 
-    image: solarLandscapeImage,
-
-    Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
-  }
+    Component: React.lazy( () => import( './retroCore/RetroCorePiece' ) ),
+    colorTheme: ColorTheme.horizon
+  },
 ]
 
-export const FeaturedPieceIndex = 0;
+export const FeaturedPieceIndex = pieces.findIndex( pieceData => pieceData.name === 'Retro Core' );

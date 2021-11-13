@@ -3,55 +3,6 @@
 @import '../../../styles/layout.scss';
 @import '../../../styles/fonts.scss';
 
-.piece-entry {
-  padding: 0.0em 1.5em;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  &__tags {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-
-    .button {
-      font-size: 1.0em;
-
-      @include medium {
-        font-size: 1.3em;
-      }
-
-      color: var(--primary-color-300);
-      opacity: 0.4;
-
-      margin-left: 0.8em;
-      margin-right: 0.0em;
-      margin-bottom: 0.5em;
-    }
-  }
-
-  & > .button {
-    letter-spacing: 0.0em;
-
-    font-size: 1.6em;
-    margin: 0em 0.5em;
-    text-align: start;
-
-    width: 5em;
-
-    @include medium {
-      font-size: 2.2em;
-      width: 6em;
-    }
-
-    &:hover {
-      @include font( 'accent' );
-      letter-spacing: 0.13em;
-    }
-  }
-}
-
 .pieces-list {
   display: flex;
   align-items: flex-end;
