@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Function, GLSL, GlslType, Uniforms } from "../../core";
-import { AXES, binOpToGLSL, numToGLSL } from "../utils";
+import { AXES, opToGLSL, numToGLSL } from "../utils";
 import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource } from "./types";
 
 export const getFunctionName = ( () => {
@@ -129,7 +129,7 @@ export const buildTrigSource = ( trig : TrigSource ) : Function => {
       float x = ${ numToGLSL( amplitude.x ) } * ${ types.x }( point.x * ${ numToGLSL( frequency.x ) } );
       float y = ${ numToGLSL( amplitude.y ) } * ${ types.y }( point.y * ${ numToGLSL( frequency.y ) } );
       float z = ${ numToGLSL( amplitude.z ) } * ${ types.z }( point.z * ${ numToGLSL( frequency.z ) } );
-      return pow( ${ binOpToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numToGLSL( pow ) } );
+      return pow( ${ opToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numToGLSL( pow ) } );
     `
   }
 }
@@ -154,7 +154,7 @@ export const buildCombinedSource = (
 
   const subSources : FunctionWithName[] = source.sources.map(subSource => buildSource( subSource, uniforms, textureNames, functionCache, isMain ) );
 
-  let combinedGLSL = binOpToGLSL( source.operation, ...subSources.map( ( { name }, index ) => getPart( name, index ) ) );
+  let combinedGLSL = opToGLSL( source.operation, ...subSources.map( ( { name }, index ) => getPart( name, index ) ) );
   if( source.postModifications ) {
     combinedGLSL = buildModification( `( ${ combinedGLSL } )`, source.postModifications );
   }
@@ -240,7 +240,6 @@ const buildTextureSource = (
   let sampleGLSL;
   if( convertToFloat ) {
     const { name : converterFuncName } = nameFunction( source.toFloat ?? defaultTextureToFloatFunction, functionCache );
-    // TODO allow uv or vertex or view sampling for EVERY source?
     sampleGLSL = `
       vec4 textureSample = texture2D( ${ source.name }, point.xy );
       float result = ${ converterFuncName }( textureSample );

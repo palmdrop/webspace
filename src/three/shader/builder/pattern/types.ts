@@ -1,4 +1,4 @@
-import { BinaryOperation, Function, Trigonometry } from '../../core';
+import { Operation, Function, Trigonometry } from '../../core';
 
 export type FunctionWithName = {
   name : string,
@@ -18,7 +18,6 @@ export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture';
 
 export type RootSource = {
   kind : SourceKind,
-  domain? : Domain
 }
 
 export type NoiseSource = RootSource & {
@@ -39,13 +38,13 @@ export type TrigSource = RootSource & {
   },
   frequency? : THREE.Vector3,
   amplitude? : THREE.Vector3,
-  combinationOperation? : Exclude<BinaryOperation, 'div'>,
+  combinationOperation? : Exclude<Operation, 'div'>,
   pow? : number,
 }
 
 export type CombinedSource = RootSource & {
   sources : Source[],
-  operation : BinaryOperation,
+  operation : Operation,
   multipliers? : number[],
   postModifications? : Modification | Modification[]
 }

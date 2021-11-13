@@ -16,15 +16,22 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
   private fullscreenRenderer : FullscreenQuadRenderer;
   private shaderMaterial : THREE.ShaderMaterial;
 
+  private cubeCamera : THREE.CubeCamera;
+
+  private object : THREE.Mesh;
+
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     super( canvas, onLoad );
 
     this.controls = new TrackballControls( this.camera, canvas );
 
-    const objectSize = 100;
+    const spaceSize = 100;
 
-    this.camera.far = objectSize * 100;
-    this.camera.position.z = objectSize * 1.4;
+    this.camera.far = spaceSize * 100;
+    this.camera.position.z = spaceSize * 1.4;
+
+    const [ cubeCamera, cubeRenderTarget ] = this._createCubeCamera();
+    this.cubeCamera = cubeCamera;
 
     const renderTarget = new THREE.WebGLRenderTarget( canvas.width, canvas.height, {
     });
@@ -37,33 +44,72 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
 
     this.fullscreenRenderer = new FullscreenQuadRenderer( this.renderer, this.shaderMaterial, renderTarget );
 
-    const object = new THREE.Mesh(
+    const space = new THREE.Mesh(
       new THREE.BoxBufferGeometry( 5.0, 5.0, 5.0 ),
       // new THREE.SphereBufferGeometry( 1.0, 100, 100, 100 ),
-      // FoldedStoneGeometryPrefab({}),
-      // SolarChromeGeometryPrefab2({}),
-      // CurledTubeGeometryPrefab({}),
       this.shaderMaterial
     );
 
-    object.scale.set( objectSize, objectSize, objectSize );
+    space.scale.set( spaceSize, spaceSize, spaceSize );
 
-    this.scene.add( object );
+    const object = new THREE.Mesh(
+      // FoldedStoneGeometryPrefab({}),
+      // CurledTubeGeometryPrefab({}),
+      SolarChromeGeometryPrefab2({}),
+      new THREE.MeshPhysicalMaterial( {
+        color : 'white',
+        roughness : 0.1,
+        metalness : 0.9,
 
-    this.scene.background = renderTarget.texture;
+        clearcoat : 0.5,
+
+        envMap : cubeRenderTarget.texture,
+        envMapIntensity : 1.5,
+      })
+    );
+
+    object.scale.set( spaceSize / 3.0, spaceSize / 3.0, spaceSize / 3.0 );
+
+    this.object = object;
+
+    const light = new THREE.DirectionalLight( 
+      new THREE.Color().setHSL( Math.random(), random( 0.5, 1.0 ), random( 0.6, 0.9 ) ),
+      4.0
+    );
+
+    light.position.set( 0, spaceSize / 2.0 - 2, 0 );
+
+    this.scene.add( space, cubeCamera, object, light );
+    // this.scene.background = renderTarget.texture;
 
     this.resizeables.push( this.fullscreenRenderer );
     onLoad?.();
   }
 
+  _createCubeCamera() : [ THREE.CubeCamera, THREE.WebGLCubeRenderTarget ] {
+    const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 1024, {
+      format :THREE.RGBFormat,
+      generateMipmaps : true,
+      minFilter : THREE.LinearMipMapLinearFilter
+    });
+
+    const cubeCamera = new THREE.CubeCamera( 1, 1000, cubeRenderTarget );
+
+    return [ cubeCamera, cubeRenderTarget ];
+  }
+
   update( delta : number, now : number ) : void {
     this.controls?.update();
     setUniform( 'time', now, this.shaderMaterial );
+
+    this.object.visible = false;
+    this.cubeCamera.update( this.renderer, this.scene );
+    this.object.visible = true;
   }
 
   render( delta : number, now : number ) {
-    setUniform( 'brightness', 0.7, this.shaderMaterial );
-    this.fullscreenRenderer.render();
+    ///setUniform( 'brightness', 0.7, this.shaderMaterial );
+    // this.fullscreenRenderer.render();
     this.renderer.setRenderTarget( null );
     setUniform( 'brightness', 1.0, this.shaderMaterial );
     super.render( delta, now );

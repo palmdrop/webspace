@@ -4,24 +4,25 @@ import { ColorSettings, DomainWarp, PatternShaderSettings, Source } from "../../
 import { ASSETHANDLER } from '../../systems/AssetHandler';
 
 import t1 from '../../../assets/content/about/retro-diamond.jpg';
-// import t1 from '../../../assets/img/bulbs.jpg';
-// import t1 from '../../../assets/img/combi2.png';
+//import t1 from '../../../assets/img/bulbs.jpg';
+//import t1 from '../../../assets/img/combi2.png';
 
 const source1 : Source = {
   kind : 'trig',
   types : {
     x : 'sin',
     y : 'sin',
-    z : 'sin',
+    z : 'cos',
   },
   amplitude : new THREE.Vector3(
     1.0,
     1.0, 
     1.0
   ),
-  frequency : new THREE.Vector3( 2, 1.2, 1.2 ),
+  frequency : new THREE.Vector3( 1, 1.5, 1.5 ),
   combinationOperation : 'mult',
   pow : 1.0,
+  // NOTE: try sub with low pow (0.02)! interesting maps
 }
 
 const source2 : Source = {
@@ -111,8 +112,8 @@ const colorSettings : ColorSettings = {
       // { kind : 'mod', argument : random( 1.0, 1.5 ) },
     ],
     y : [ 
-      { kind : 'mult', argument : -0.7 },
-      { kind : 'add', argument : random( 0.5, 0.8 ) },
+      { kind : 'mult', argument : 0.6 },
+      // { kind : 'add', argument : random( 1.0, 0.8 ) },
     ],
     z : [ 
       { kind : 'mult', argument : 1.1 },
@@ -124,20 +125,20 @@ const colorSettings : ColorSettings = {
 
 // TODO combine shader material with physical material!? allow lighting
 export const shaderSettings1 : PatternShaderSettings = {
-  domain : 'view',
-  scale : 0.018,
+  domain : 'vertex',
+  scale : 0.015,
   mainSource : textureSource,
 
   domainWarp : {
     sources : { 
-      x : source2,
+      x : source4,
       y : source3,
       z : source2,
     },
     amount : new THREE.Vector3( 0.5, 0.5, 0.4 ),
     iterations : 3,
   },
-  timeOffset : new THREE.Vector3( 0.01, -0.01, 0.1, ),
+  timeOffset : new THREE.Vector3( 0.05, -0.05, 0.05, ),
 
   colorSettings
 } 

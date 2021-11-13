@@ -1,4 +1,4 @@
-import { BinaryOperation, Function, GlslType, Variable } from "../core";
+import { Operation, Function, GlslType, Variable } from "../core";
 
 export const AXES = [ 'x', 'y', 'z' ] as const;
 
@@ -11,20 +11,29 @@ export const arrayToString = <T>(
 }
 
 export const numToGLSL = ( n : number ) => {
-  return Number.isInteger( n ) ? n + '.0' : n;
+  return Number.isInteger( n ) ? n + '.0' : n + '';
 }
 
-export const binOpToGLSL = ( operation : BinaryOperation, ...args : string[] ) => {
+export const opToGLSL = ( operation : Operation, ...args : string[] ) => {
+  if( args.length === 0 ) return '';
+
   const op = (() => {
     switch( operation ) {
       case 'add': return '+';
       case 'sub': return '-';
       case 'mult': return '*';
       case 'div': return '/';
+      case 'avg': return '+';
     }
   })();
 
-  return args.join( ` ${ op } ` );
+  let result = args.join( ` ${ op } ` );
+
+  if( operation === 'avg' ) {
+    result = `( ${ result } ) / ${ numToGLSL( args.length ) }`;
+  }
+
+  return result;
 }
 
 const converters : { [ type in GlslType ] : ( value? : any ) => string }= {
