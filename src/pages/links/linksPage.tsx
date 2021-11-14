@@ -6,7 +6,6 @@ import { PageProps } from '../PageWrapper';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle6.svg';
 
-import './linksPage.scss';
 import Paragraph, { ParagraphType } from '../../components/paragraph/Paragraph';
 import { categories, Category, Link, links } from './content';
 import GlassCard from '../../components/cards/glass/GlassCard';
@@ -14,6 +13,8 @@ import Button from '../../components/input/button/Button';
 import ExternalLink from '../../components/link/ExternalLink';
 import { some } from 'lodash';
 import HomeBar from '../../components/navigation/home/HomeBar';
+
+import './linksPage.scss';
 
 const LinksPage = ( { route } : PageProps ) => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
@@ -50,8 +51,9 @@ const LinksPage = ( { route } : PageProps ) => {
           mainTitle={ title }
           mainLevel={ 3 }
         />
-        { links.map( link => (
+        { links.map( ( link, linkIndex ) => (
             <ExternalLink
+              key={ `link-${ index }.${ linkIndex }`}
               link={ link.url }
               onHover={ () => handleHover( link ) }
               onLeave={ () => handleLeave( link ) }
@@ -128,13 +130,14 @@ const LinksPage = ( { route } : PageProps ) => {
               The Internet was built on the idea of the hyperlink: a portal that transfer you to some relevant or related location. 
               This process would be recursive: each webspace you visit in turn provides you with another set of hyperlinks. However,
               the range of most of these links has decreased: we're now only sent to different areas of the same corporate platforms. 
-              But there's more. <ExternalLink link="https://memex.marginalia.nu/"> The author of the Marginalia blog put it well.</ExternalLink>
+              But there's more. <ExternalLink link="https://memex.marginalia.nu/log/19-website-discoverability-crisis.gmi"> The author of the Marginalia blog put it well.</ExternalLink>
             </Paragraph>
           </div>
 
           <GlassCard>
-            { categories.map( category => (
+            { categories.map( ( category, index ) => (
               <Button
+                key={ `button-${ index }` }
                 isPressed={ activeCategories.has( category )}
                 onClick={ () => handleToggleCategory( category ) }
               >

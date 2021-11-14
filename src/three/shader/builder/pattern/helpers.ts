@@ -235,7 +235,7 @@ const buildTextureSource = (
   functionCache : FunctionCache,
 ) : Function & { isTexture : boolean } => {
   if( !uniforms ) throw new Error( 'Uniforms object cannot be undefined' );
-  if( textureNames.has( source.name ) ) throw new Error( `A texture with the name \"${ source.name }\" already exists. }` );
+  if( textureNames.has( source.name ) ) throw new Error( `A texture with the name "${ source.name }" already exists. }` );
 
   let sampleGLSL;
   if( convertToFloat ) {

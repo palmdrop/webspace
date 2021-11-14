@@ -26,7 +26,7 @@
       letter-spacing: 0.08em;
 
       @include medium {
-        font-size: 1.1em;
+        font-size: 1.0em;
       }
 
       color: var( --primary-color-300 );
@@ -38,13 +38,13 @@
     position: relative;
     letter-spacing: 0.0em;
 
-    font-size: 1.5em;
+    font-size: 1.4em;
     text-align: start;
 
     width: 80vw;
 
     @include medium {
-      font-size: 2.2em;
+      font-size: 1.8em;
     }
 
     &:hover {
@@ -61,7 +61,7 @@
       z-index: -1;
 
       visibility: hidden;
-      opacity: 0.8;
+      opacity: 1.0;
 
       left: 6em;
       transform: translate( 0%, -50% ) scale( 0.65 );
@@ -69,6 +69,11 @@
       @include medium {
         left: 8em;
         transform: translate( 0%, -50% ) scale( 1.1 );
+      }
+
+      @include large {
+        left: 10em;
+        transform: translate( 0%, -50% ) scale( 1.3 );
       }
     }
   }

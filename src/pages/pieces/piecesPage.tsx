@@ -84,8 +84,10 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
                 <Obstacle className="faded-header__obstacle" />
               </FadedHeader>
 
-              { introduction.description.map( paragraph => (
-                <Paragraph>
+              { introduction.description.map( ( paragraph, index ) => (
+                <Paragraph
+                  key={`paragraph-${ index }` }
+                >
                   { paragraph }
                 </Paragraph>
               ))}

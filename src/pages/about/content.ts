@@ -42,7 +42,7 @@ export const sections : Section[] = [
         label : false,
       },
       `
-      My name is Anton. I go by "palmdrop" on the Internet. At the moment, I'm learning design, 3D graphics, and new techniques for creating generative art. I'm trying to write more, and hopefully, this site will be where I dump some of my thoughts and ideas.  It will also be a space of my own. I think our presence of the Internet is way too limited to the spaces of established, standardized and corporate platforms. We do not define the bounds of those platforms, we just fill them with filtered content. 
+      My name is Anton. I go by "palmdrop" on the web. At the moment, I'm learning design, 3D graphics, and new techniques for creating generative art. I'm trying to write more, and hopefully, this site will be where I dump some of my thoughts and ideas.  It's a space of my own. I think our presence of the Internet is way too limited to the spaces of established corporate platforms. We do not define the bounds of those platforms, we just fill them with filtered content. 
       `,
       `
       My goal for this site is to make it a place for interactive generative art, writing, and experimentation.
@@ -70,13 +70,13 @@ export const sections : Section[] = [
     title : "Politics and Philosophy",
     content : [
       `
-      Although I'm not particularly well-read, politics and philosophy are quite important to me. I think we need to be conscious of the underlying ideology when using tools and inhabiting spaces. I too have a Google, Facebook, and Instagram account, but making these platforms our default -- or only -- experience of the internet is dangerous. These spaces are not our own. They are engineered to best fit a capitalist mode of production. They not only gather our data to best serve us personalized ads, but they also conduct social engineering and subtle behavioral conditioning. This is no secret or accident. 
+      Although I'm not particularly well-read, politics and philosophy are important to me. I think we need to be conscious of the underlying ideology when using digital tools and inhabiting digital spaces. I too have a Google, Facebook, and Instagram account, but making these platforms our default -- or only -- experience of the Internet is dangerous. These spaces are not our own. They are formed to best fit a capitalist mode of production. They not only gather our data to best serve us personalized ads, but they also conduct social engineering and subtle behavioral conditioning. This is no secret nor accident. 
       `,
       `
-      Transitioning away from this is a slow process, especially for artists. NFT:s seem hot right now, but NFT platforms have other problems -- environmental, conceptual, and community-related. 
+      Transitioning away from this is a slow process, especially for artists. NFT:s seem hot right now, but they have other problems -- environmental, conceptual, and community-related. 
       `,
       `
-      A website of one's own invites more pure digital expression and control
+      A website of one's own invites more pure digital expression and control.
       `,
       {
         src : layeredMaterialPath,
@@ -84,9 +84,6 @@ export const sections : Section[] = [
         height : 350,
         label : false,
       },
-      `
-      Yet, you can find me on major platforms. Github, Instagram, Linkedin, wherever. One has to be pragmatic, I guess. But remain conscious of what these spaces are.
-      `,
       `
       This site stores none of your information. There are no cookies, analytics, or user data.
       `,

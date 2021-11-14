@@ -1,4 +1,4 @@
-import { Attributes, Functions, Function, GLSL, Imports, Shader, Uniforms, Variable, Constants, GlslType, } from "../core";
+import { Attributes, Functions, Function, GLSL, Imports, Shader, Uniforms, Variable, Constants } from "../core";
 import { arrayToString, variableValueToGLSL } from "./utils";
 
 export type ShaderSourceData = {
