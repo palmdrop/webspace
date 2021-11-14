@@ -5,8 +5,8 @@ import { simplex3dChunk } from "../../chunk/noise";
 import { Attributes, GLSL, Shader, Uniforms, Functions, Constants, ShaderChunk } from "../../core";
 import { buildShader } from "../shaderBuilder";
 import { numToGLSL } from '../utils';
-import { buildCombinedSource, buildModification, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, rgbToHsvFunction } from './helpers';
-import { ColorSettings, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, PatternShaderSettings, TextureSource } from './types';
+import { buildModification, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, rgbToHsvFunction } from './helpers';
+import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, PatternShaderSettings } from './types';
 
 // Constants
 const REGULAR_OUTPUT = 'n';

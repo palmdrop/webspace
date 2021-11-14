@@ -57,7 +57,7 @@ const source4 : Source = {
   },
   frequency : new THREE.Vector3( 2, 0.02, 0.02 ),
   combinationOperation : 'add',
-  pow : 10.0,
+  pow : 1.0,
 };
 
 /*const source1 : Source = {
@@ -123,9 +123,8 @@ const colorSettings : ColorSettings = {
   }
 }
 
-// TODO combine shader material with physical material!? allow lighting
 export const shaderSettings1 : PatternShaderSettings = {
-  domain : 'vertex',
+  domain : Math.random() > 0.5 ? 'view' : 'vertex',
   scale : 0.015,
   mainSource : textureSource,
 

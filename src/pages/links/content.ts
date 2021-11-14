@@ -24,9 +24,6 @@ const toLink = ( text : string, url : string, category : Category, ...additional
   }
 }
 
-// TODO read this from json file
-// TOOD create script for me to easily add entries
-// TODO possibly admin interface on site
 export const links : Link[] = [
   toLink(
     'Underground Flower',

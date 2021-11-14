@@ -1,4 +1,4 @@
-import { Operation, Function, GlslType, Variable } from "../core";
+import { Operation, GlslType, Variable } from "../core";
 
 export const AXES = [ 'x', 'y', 'z' ] as const;
 

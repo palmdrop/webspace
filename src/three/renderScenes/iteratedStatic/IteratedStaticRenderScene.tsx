@@ -23,29 +23,28 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
   constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
     super( canvas, onLoad );
 
+    const spaceSize = 500;
+    const objectSize = 30;
+
     this.controls = new TrackballControls( this.camera, canvas );
+    this.controls.noPan = true;
+    this.controls.noRoll = true;
+    this.controls.maxDistance = spaceSize / 2.0;
 
-    const spaceSize = 100;
-
-    this.camera.far = spaceSize * 100;
-    this.camera.position.z = spaceSize * 1.4;
+    this.camera.far = spaceSize * 10;
+    this.camera.position.z = objectSize * 4.0;
 
     const [ cubeCamera, cubeRenderTarget ] = this._createCubeCamera();
     this.cubeCamera = cubeCamera;
 
-    const renderTarget = new THREE.WebGLRenderTarget( canvas.width, canvas.height, {
-    });
-
-    this.shaderMaterial = new THREE.ShaderMaterial( 
-      buildPatternShader( shaderSettings1 )
-    )
-
+    this.shaderMaterial = new THREE.ShaderMaterial( buildPatternShader( shaderSettings1 ) );
     this.shaderMaterial.side = THREE.DoubleSide;
 
+    const renderTarget = new THREE.WebGLRenderTarget( canvas.width, canvas.height, {} );
     this.fullscreenRenderer = new FullscreenQuadRenderer( this.renderer, this.shaderMaterial, renderTarget );
 
     const space = new THREE.Mesh(
-      new THREE.BoxBufferGeometry( 5.0, 5.0, 5.0 ),
+      new THREE.BoxBufferGeometry( 1.0, 1.0, 1.0 ),
       // new THREE.SphereBufferGeometry( 1.0, 100, 100, 100 ),
       this.shaderMaterial
     );
@@ -59,7 +58,7 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
       new THREE.MeshPhysicalMaterial( {
         color : 'white',
         roughness : 0.1,
-        metalness : 0.9,
+        metalness : 1.0,
 
         clearcoat : 0.5,
 
@@ -68,8 +67,7 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
       })
     );
 
-    object.scale.set( spaceSize / 3.0, spaceSize / 3.0, spaceSize / 3.0 );
-
+    object.scale.set( objectSize, objectSize, objectSize );
     this.object = object;
 
     const light = new THREE.DirectionalLight( 
@@ -80,7 +78,7 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
     light.position.set( 0, spaceSize / 2.0 - 2, 0 );
 
     this.scene.add( space, cubeCamera, object, light );
-    // this.scene.background = renderTarget.texture;
+    this.scene.background = renderTarget.texture;
 
     this.resizeables.push( this.fullscreenRenderer );
     onLoad?.();
@@ -109,7 +107,7 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
 
   render( delta : number, now : number ) {
     ///setUniform( 'brightness', 0.7, this.shaderMaterial );
-    // this.fullscreenRenderer.render();
+    this.fullscreenRenderer.render();
     this.renderer.setRenderTarget( null );
     setUniform( 'brightness', 1.0, this.shaderMaterial );
     super.render( delta, now );
@@ -120,5 +118,13 @@ export class IteratedStaticRenderScene extends AbstractRenderScene {
     super.resize( width, height, force );
 
     setUniform( 'viewport', new THREE.Vector2( this.canvas.width, this.canvas.height ), this.shaderMaterial );
+  }
+
+  onUserAdmin() {
+    if( this.controls ) {
+      this.controls.noPan = false;
+      this.controls.noRoll = false;
+      this.controls.maxDistance = Number.POSITIVE_INFINITY;
+    }
   }
 }
