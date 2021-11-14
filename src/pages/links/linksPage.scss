@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
 
-    max-width: 800px;
+    max-width: calc( min( 800px, 100% ) );
 
     .links-page__intro {
       display: flex;
@@ -127,9 +127,13 @@
 
       a {
         display: flex;
+        flex-direction: row;
         color: var( --foreground-color );
+
         padding: 0.5em 0em;
         border-radius: 100px;
+        width: 80vw;
+
         @include font( 'paragraph' );
 
         transition: 0.5s;
@@ -137,7 +141,17 @@
         z-index: 2;
 
         div {
-          padding-left: 1.5em;
+          position: absolute;
+          visibility: hidden;
+
+          justify-self: flex-end;
+
+          @include medium {
+            position: relative;
+            visibility: visible;
+          }
+
+          padding-left: 2.5em;
           opacity: 0;
 
           transition: 0.1s;
@@ -154,7 +168,7 @@
           }
 
           div {
-            opacity: 1;
+            opacity: 0.85;
           }
         }
 
