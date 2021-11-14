@@ -4,6 +4,7 @@ import { ColorTheme } from "../../../state/slices/uiSlice";
 import retroCoreImage from '../../../assets/content/pieces/retro-core.jpg';
 import solarChromeImage from '../../../assets/content/pieces/solar-chrome.jpg';
 import solarLandscapeImage from '../../../assets/content/pieces/solar-landscape-1.jpg';
+import virtualImprintImage from '../../../assets/content/pieces/virtual-imprint.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -28,44 +29,6 @@ export type PieceNavigationFunction = (
 
 export const pieces : PieceData[] = [
   {
-    name: "Solar Landscape",
-    description: [
-      "An extension of the Solar Chrome Piece. An exercise in generative composition.",
-      `
-        This piece is a work in process.
-      `,
-    ],
-    tags : [
-      "Generative"
-    ],
-
-    image: solarLandscapeImage,
-
-    Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
-  },
-  {
-    name: "Solar Chrome",
-    description: [
-      "Generative geometry is exciting. Chrome is hip and cool -- modern and punk.",
-      `
-        For a long time I've been developing techniques based on perlin/simplex noise and domain warping. Combining 
-        these techniques with 3D geometry produces interesting shapes. This piece consists of spheres or toruses that are distorted
-        using underlying noise fields. The results are alien.
-      `,
-      `
-        I especially like the moments when the smooth, polished surface breaks down under too much distortion. 
-        This reveals the underlying, very digital geometry. 
-      `
-    ],
-    tags : [
-      "Generative"
-    ],
-
-    image: solarChromeImage,
-
-    Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
-  },
-  {
     name: "Retro Core",
     description: [
       `An exploration of a particular aesthetic idea, involving plays with perspective and depth.`,
@@ -82,12 +45,65 @@ export const pieces : PieceData[] = [
       `
     ],
     tags : [
-      "Generative"
+      "Depth, Geometry"
     ],
     image: retroCoreImage,
 
     Component: React.lazy( () => import( './retroCore/RetroCorePiece' ) ),
     colorTheme: ColorTheme.horizon
+  },
+  {
+    name: "Solar Chrome",
+    description: [
+      "Generative geometry is exciting. Chrome is hip and cool -- modern and punk.",
+      `
+        For a long time I've been developing techniques based on perlin/simplex noise and domain warping. Combining 
+        these techniques with 3D geometry produces interesting shapes. This piece consists of spheres or toruses that are distorted
+        using underlying noise fields. The results are alien.
+      `,
+      `
+        I especially like the moments when the smooth, polished surface breaks down under too much distortion. 
+        This reveals the underlying, very digital geometry. 
+      `
+    ],
+    tags : [
+      "Warp, Geometry"
+    ],
+
+    image: solarChromeImage,
+
+    Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
+  },
+  {
+    name: "Solar Landscape",
+    description: [
+      "An extension of the Solar Chrome Piece. Experiments with geometry instancing",
+      `
+      I wanted to 1) try to practice generative composition (with varied results) and 2)
+      test what was possible in terms of 3D running in the web. I do not recommend running 
+      this piece on a mobile device. 
+      `,
+    ],
+    tags : [
+      "Instancing, Composition"
+    ],
+
+    image: solarLandscapeImage,
+
+    Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
+  },
+  {
+    name: "Virtual Imprint",
+    description: [
+      `Shader builder experiments. WIP.`
+    ],
+    tags : [
+      "Warp, Space"
+    ],
+
+    image: virtualImprintImage,
+
+    Component: React.lazy( () => import( './virtualImprint/VirtualImprintPiece' ) ),
   },
 ]
 

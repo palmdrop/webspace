@@ -39,7 +39,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
         index={ index }
         onClick={ handlePieceNavigation }
       />
-    ))
+    )).reverse()
   ), [ handlePieceNavigation ] );
 
   return (

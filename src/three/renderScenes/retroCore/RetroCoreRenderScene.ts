@@ -11,7 +11,7 @@ import { ASSETHANDLER } from '../../systems/AssetHandler';
 
 import { random, randomElement } from '../../../utils/random';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { ShadowTransformShader } from '../../shaders/shadow/ShadowTransformShader';
+import { ShadowTransformShader } from '../../shader/shaders/shadow/ShadowTransformShader';
 
 import t1 from '../../../assets/texture/t2.jpg';
 import t2 from '../../../assets/texture/t3.jpg';

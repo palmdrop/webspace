@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
-import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
+import { createWarpGradientShader } from '../../shader/shaders/gradient/WarpGradientShader';
 
 
 export const createBackground = ( renderer : THREE.WebGLRenderer ) => {

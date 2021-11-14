@@ -9,7 +9,7 @@ import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHa
 import { random } from '../../../utils/random';
 
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
-import { createWarpGradientShader } from '../../shaders/gradient/WarpGradientShader';
+import { createWarpGradientShader } from '../../shader/shaders/gradient/WarpGradientShader';
 import { clamp } from 'three/src/math/MathUtils';
 import { 
   SolarChromeGeometryPrefab,
@@ -58,7 +58,6 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     this.rotationVelocity = new THREE.Vector2();
     this.rotationAcceleration = new THREE.Vector2();
     this.rotationFriction = 0.1;
-
 
     const backgroundMaterial = new THREE.ShaderMaterial( createWarpGradientShader( 3 ) );
     this.backgroundRenderer = new FullscreenQuadRenderer(

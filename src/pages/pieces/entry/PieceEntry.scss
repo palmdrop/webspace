@@ -23,6 +23,7 @@
     .button {
       font-size: 0.9em;
       padding-bottom: 0.1em;
+      letter-spacing: 0.08em;
 
       @include medium {
         font-size: 1.1em;
@@ -60,6 +61,7 @@
       z-index: -1;
 
       visibility: hidden;
+      opacity: 0.8;
 
       left: 6em;
       transform: translate( 0%, -50% ) scale( 0.65 );
