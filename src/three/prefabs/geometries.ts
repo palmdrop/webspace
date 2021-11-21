@@ -320,7 +320,6 @@ export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
   return generateWarpGeometryPrefab(
     // Geometry
     () => {
-      // const geometry = new THREE.SphereBufferGeometry( 1.0, solarLandscapePrefabDetail, solarLandscapePrefabDetail );
       const startWidth = random( 0.1, 0.1 );
       const endWidth = random( 0.1, 0.1 );
       const geometry = new THREE.CylinderBufferGeometry( startWidth, endWidth, random( 8, 12 ), 128, 128, false );
@@ -371,6 +370,72 @@ export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
             random( -1.8, 1.8 ),
           ),
           falloff : random( 0.3, 0.45 ),
+        }
+      }
+    ]
+  )
+})();
+
+export const ImprintGeometryPrefab : GeometryPrefab = ( () => {
+  const minFrequency = new THREE.Vector3( 0.175, 0.175, 0.175 );
+  const maxFrequency = new THREE.Vector3( 0.33, 0.33, 0.33 );
+  return generateWarpGeometryPrefab(
+    // Geometry
+    () => {
+      const geometry = new THREE.SphereBufferGeometry( 1.0, 128, 128 );
+
+      const stretch = 5.0 * Math.pow( random( 0.0, 1.0 ), 1.7 ) + 1.0;
+
+      geometry.applyMatrix4( new THREE.Matrix4().scale(
+        new THREE.Vector3( 1.0 / stretch, stretch, 1.0 / stretch )
+      ) );
+
+      return geometry;
+    },
+
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( minFrequency.x, maxFrequency.x ), 
+        random( minFrequency.y, maxFrequency.y ),
+        random( minFrequency.z, maxFrequency.z )
+      );
+    },
+
+    // Warp amount
+    ( frequency : THREE.Vector3 ) => {
+      return random( 0.3, 0.8 );
+    },
+
+    // Octaves 
+    () => {
+      return 3
+    },
+
+    // Lacunarity
+    () => {
+      return random( 2.0, 3.0 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.4, 0.5 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction : noiseWarp,
+      }, 
+      {
+        warpFunction : twistWarp,
+        args : {
+          twistAmount : new THREE.Vector3( 
+            0.6 * Math.random(), 
+            0.6 * Math.random(), 
+            0.6 * Math.random() 
+          ),
+          falloff : random( 0.5, 0.7 ),
         }
       }
     ]

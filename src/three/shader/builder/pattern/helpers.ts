@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Function, GLSL, GlslType, Uniforms } from "../../core";
-import { AXES, opToGLSL, numToGLSL } from "../utils";
-import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource } from "./types";
+import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from "../utils";
+import { CombinedSource, CustomSource, Domain, DomainWarp, Fog, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource } from "./types";
 
 export const getFunctionName = ( () => {
   let counter = 0;
@@ -50,7 +50,7 @@ export const buildSource = (
   uniforms : Uniforms, 
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
-  isMain = false 
+  isMain = false,
 ) : FunctionWithName => {
   if( !uniforms ) throw new Error( 'Uniforms cannot be null' );
   if( functionCache.has( source ) ) return functionCache.get( source ) as FunctionWithName;
@@ -65,7 +65,15 @@ export const buildSource = (
     case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
     case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, isMain ); break;
     case 'texture' : func = buildTextureSource( source as TextureSource, !isMain, uniforms, textureNames, functionCache ); break;
+    case 'custom' : func = buildCustomSource( source as CustomSource ); break;
     default : throw new Error( `Source kind ${ kind } is not supported` );
+  }
+
+  if( source.uvOverride ) {
+    func.body = `
+      point = vec3( vUv, 0 );
+      ${ func.body }
+    `
   }
 
   const data = { name, func };
@@ -92,7 +100,7 @@ export const buildNoiseSource = ( noise : NoiseSource ) : Function => {
       vec3 f = vec3( ${ frequency.x }, ${ frequency.y }, ${ frequency.z } );
       float a = ${ numToGLSL( amplitude ) };
       float divider = 0.0;
-      for( int i = 0; i < ${ octaves }; i++ ) {
+      for( int i = 0; i < ${ Math.floor( octaves ) }; i++ ) {
         vec3 p = point * f;
         float on = pow( simplex3d( p ), ${ numToGLSL( pow ) });
 
@@ -109,6 +117,8 @@ export const buildNoiseSource = ( noise : NoiseSource ) : Function => {
         a *= ${ numToGLSL( persistance ) };
         f *= ${ numToGLSL( lacunarity ) };
       }
+
+      n = sanitize( n );
 
       return ${ numToGLSL( amplitude ) } * n / divider;
     `
@@ -237,15 +247,22 @@ const buildTextureSource = (
   if( !uniforms ) throw new Error( 'Uniforms object cannot be undefined' );
   if( textureNames.has( source.name ) ) throw new Error( `A texture with the name "${ source.name }" already exists. }` );
 
-  let sampleGLSL;
+  let sampleGLSL = `
+    vec2 samplePoint = point.xy;
+    ${ source.repeat ? `samplePoint *= ${ variableValueToGLSL( { type : 'vec2', value : source.repeat } ) };` : '' }
+  `;
   if( convertToFloat ) {
     const { name : converterFuncName } = nameFunction( source.toFloat ?? defaultTextureToFloatFunction, functionCache );
     sampleGLSL = `
-      vec4 textureSample = texture2D( ${ source.name }, point.xy );
+      ${ sampleGLSL }
+      vec4 textureSample = texture2D( ${ source.name }, samplePoint );
       float result = ${ converterFuncName }( textureSample );
     `;
   } else {
-    sampleGLSL = `vec4 result = texture2D( ${ source.name }, point.xy );`;
+    sampleGLSL = `
+      ${ sampleGLSL }
+      vec4 result = texture2D( ${ source.name }, samplePoint );
+    `;
   }
 
   textureNames.add( source.name );
@@ -265,6 +282,14 @@ const buildTextureSource = (
   }
 }
 
+export const buildCustomSource = ( source : CustomSource ) : Function => {
+  return {
+    parameters :  [ [ 'vec3', 'point' ] ],
+    returnType : 'float',
+    body : source.body
+  }
+}
+
 export const defaultTextureToFloatFunction : Function = {
   parameters : [ [ 'vec4', 'color' ] ],
   returnType : 'float',
@@ -272,6 +297,42 @@ export const defaultTextureToFloatFunction : Function = {
     return ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a;
   `
 };
+
+export const colorToGLSL = ( color : THREE.Color ) => {
+  return `vec3( ${ numToGLSL( color.r ) }, ${ numToGLSL( color.g ) }, ${ numToGLSL( color.b ) } )`;
+}
+
+export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionWithName => {
+  const nearColorGLSL = colorToGLSL( fog.nearColor );
+  const farColorGLSL = colorToGLSL( fog.farColor );
+  console.log( fog.opacity )
+  const func : Function = {
+    parameters : [ [ 'vec3', 'fragColor' ], [ 'float', 'depth' ] ],
+    returnType : 'vec3',
+    body : `
+      ${ fog.opacity === undefined ? `
+        if( depth < ${ numToGLSL( fog.near ) } ) return fragColor;
+        if( depth > ${ numToGLSL( fog.far ) } ) return ${ farColorGLSL };
+      ` : '' }
+
+      float factor = smoothstep( ${ numToGLSL( fog.near ) }, ${ numToGLSL( fog.far ) }, depth );
+
+      ${ fog.pow ? `factor = pow( factor, ${ numToGLSL( fog.pow ) });` : '' }
+      vec3 fogColor = mix( ${ nearColorGLSL }, ${ farColorGLSL }, factor );
+
+      ${ fog.opacity ? `factor *= ${ numToGLSL( fog.opacity ) };` : '' }
+      return mix( fragColor, fogColor, factor );
+      // return fragColor;
+    `
+  }
+
+  const name = getFunctionName( 'fog' );
+  const data = { name, func };
+
+  functionCache.set( fog, data );
+
+  return data;
+}
 
 // Adapted from https://gist.github.com/983/e170a24ae8eba2cd174f
 export const rgbToHsvFunction : Function = {
@@ -296,6 +357,36 @@ export const hsvToRgbFunction : Function = {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+  `
+}
+
+// 
+export const isNanFunction : Function = {
+  parameters : [ [ 'float', 'value' ] ],
+  returnType : 'bool',
+  body : `
+    return ( value < 0.0 || 0.0 < value || value == 0.0 ) ? false : true;
+  `
+}
+
+export const isInfFunction : Function = {
+  parameters : [ [ 'float', 'value' ] ],
+  returnType : 'bool',
+  body : `
+    return (value != 0.0 && value * 2.0 == value) ? true : false;
+  `
+}
+
+export const sanitizeFunction : Function = {
+  parameters : [ [ 'float', 'value' ] ],
+  returnType : 'float',
+  body : ` 
+    if( isNan( value ) || value < 0.0 ) {
+      return 0.0;
+    } else if( isInf( value ) || value > 1.0 ) {
+      return 1.0;
+    }
+    return value;
   `
 }
 

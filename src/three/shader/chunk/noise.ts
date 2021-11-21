@@ -142,7 +142,8 @@ export const simplex3dChunk : ShaderChunk = {
       float n = 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
                                     dot(p2,x2), dot(p3,x3) ) );
 
-      return ( n + 1.0 ) / 2.0;
+      n = ( n + 1.0 ) / 2.0;
+      return clamp( n, 0.0, 1.0 );
     }
 
     `,

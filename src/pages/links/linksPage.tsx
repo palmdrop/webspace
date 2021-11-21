@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { PageRoute } from '../../App';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
@@ -18,9 +18,6 @@ import './linksPage.scss';
 
 const LinksPage = ( { route } : PageProps ) => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
-  const [ activeLinks, setActiveLinks ] = useState<Set<Link>>( new Set() );
-
-  // const getFirstActiveLink = () => activeLinks.size > 0 ? Array.from( activeLinks )[ 0 ] : { url : '', text : 'Default' };
 
   const categorizedLinksToSections = useCallback( ( categorizedLinks : { [ title : string ] : Link[] } ) => {
     const cleanURL = ( url: string ) => {
@@ -28,18 +25,6 @@ const LinksPage = ( { route } : PageProps ) => {
         .replace(/^(?:https?:\/\/)?(?:www\.)?/i, '') // Remove https and www from link
         .replace(/\/$/, '') // Remove trailing slash
       // Can be done as one regex sure but I do not know regex
-    }
-
-    const handleHover = ( link : Link ) => {
-      const newActiveLinks = new Set( activeLinks );
-      newActiveLinks.add( link );
-      setActiveLinks( newActiveLinks );
-    }
-
-    const handleLeave = ( link : Link ) => {
-      const newActiveLinks = new Set( activeLinks );
-      newActiveLinks.delete( link );
-      setActiveLinks( newActiveLinks );
     }
 
     return Object.entries( categorizedLinks ).map( ( [ title, links ], index ) => (
@@ -55,8 +40,6 @@ const LinksPage = ( { route } : PageProps ) => {
             <ExternalLink
               key={ `link-${ index }.${ linkIndex }`}
               link={ link.url }
-              onHover={ () => handleHover( link ) }
-              onLeave={ () => handleLeave( link ) }
             >
               { link.text }
               <div>
@@ -66,7 +49,7 @@ const LinksPage = ( { route } : PageProps ) => {
         ))}
       </section>
     ));
-  }, [ activeLinks ] );
+  }, [] );
 
   const linkSections = useMemo( () => {
     const categorizedLinks : { [ title : string ] : Link[] } = {};
@@ -74,9 +57,10 @@ const LinksPage = ( { route } : PageProps ) => {
     if( activeCategories.size === 0 ) {
       // No filter applied
       links.forEach( link => {
-        const categoryLinks = categorizedLinks[ link.category ] || [];
+        if(!categorizedLinks[ link.category ]) categorizedLinks[ link.category ] = [];
+
+        const categoryLinks = categorizedLinks[ link.category ];
         categoryLinks.push( link );
-        categorizedLinks[ link.category ] = categoryLinks;
       });
 
     } else {

@@ -101,7 +101,9 @@ export const geometryWarp = (
 
   warpEntries : WarpEntry[],
 
-  correctOffset : boolean = true
+  correctOffset : boolean = true,
+
+  outputBoundingBox? : THREE.Box3
 ) => {
 
   const noiseOffset = new THREE.Vector3(
@@ -111,6 +113,7 @@ export const geometryWarp = (
   );
 
   const averageOffset = new THREE.Vector3();
+  const tempVector = new THREE.Vector3();
 
   const positionAttribute = geometry.attributes.position;
   for(let k = 0; k < octaves; k++) {
@@ -135,6 +138,10 @@ export const geometryWarp = (
         averageOffset.x += warp.x;
         averageOffset.y += warp.y;
         averageOffset.z += warp.z;
+      }
+
+      if( outputBoundingBox ) {
+        outputBoundingBox.expandByPoint( tempVector.set( warp.x, warp.y, warp.z ) );
       }
     }
 

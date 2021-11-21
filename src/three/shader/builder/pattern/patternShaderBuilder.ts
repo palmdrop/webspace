@@ -5,7 +5,7 @@ import { simplex3dChunk } from "../../chunk/noise";
 import { Attributes, GLSL, Shader, Uniforms, Functions, Constants, ShaderChunk } from "../../core";
 import { buildShader } from "../shaderBuilder";
 import { numToGLSL } from '../utils';
-import { buildModification, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, rgbToHsvFunction } from './helpers';
+import { buildFog, buildModification, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction } from './helpers';
 import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, PatternShaderSettings } from './types';
 
 // Constants
@@ -45,16 +45,16 @@ const getUniforms = () : Uniforms => {
       value : 1.0,
       type : 'float'
     },
+    'frequency' : {
+      type : 'float',
+      value : 0.1,
+    },
   }
 }
 
 // Constants
 const getConstants = ( settings : PatternShaderSettings ) : Constants => {
   return {
-    'frequency' : {
-      type : 'float',
-      value : 1.0,
-    },
     'timeOffset' : {
       type : 'vec3',
       value : settings.timeOffset ?? new THREE.Vector3()
@@ -157,6 +157,10 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   const textureNames = new Set<string>();
   const functions : Functions = {};
 
+  functions[ 'isNan' ] = isNanFunction;
+  functions[ 'isInf' ] = isInfFunction;
+  functions[ 'sanitize' ] = sanitizeFunction;
+
   /* GLSL Construction */
   const imports = getImports();
   const attributes = getAttributes();
@@ -172,16 +176,31 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
 
   // Vertex shader
   const vertexMain : GLSL = `
-    ${ settings.domain === 'uv' ? `vUv = uv;` : '' }
-    ${ settings.domain === 'vertex' ? `vVertexPosition = vec3( modelMatrix * vec4( position, 1.0 ) );` : '' }
-    ${ settings.domain === 'view'   ? `vViewPosition = vec3( modelViewMatrix * vec4( position, 1.0 ) );` : '' }
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+    vUv = uv;
+
+    ${ settings.forInstancedMesh ? `
+      mat4 modifiedModelMatrix = modelMatrix * instanceMatrix;
+      mat4 modifiedModelViewMatrix = modelViewMatrix * instanceMatrix;
+    ` : `
+      mat4 modifiedModelMatrix = modelMatrix;
+      mat4 modifiedModelViewMatrix = modelViewMatrix;
+    ` }
+
+    ${ settings.domain === 'vertex' ? `vVertexPosition = vec3( modifiedModelMatrix * vec4( position, 1.0 ) );` : '' }
+    ${ settings.domain === 'view'   ? `vViewPosition = vec3( modifiedModelViewMatrix * vec4( position, 1.0 ) );` : '' }
+
+    gl_Position = projectionMatrix * modifiedModelViewMatrix * vec4( position, 1.0 );
   `;
 
   // Fragment shader
   const warpGLSL = buildWarpGLSL( settings.domainWarp, uniforms, textureNames, functionCache );
   const toFragColorGLSL = buildFragColorConverterGLSL( settings.colorSettings, mainFromTexture, functions );
+
   const { name : mainSourceName } = buildSource( settings.mainSource, uniforms, textureNames, functionCache, true );
+  const maskSourceData = settings.mask ? buildSource( settings.mask, uniforms, textureNames, functionCache ) : undefined;
+  const alphaMaskSourceData = settings.alphaMask ? buildSource( settings.alphaMask, uniforms, textureNames, functionCache ) : undefined;
+
+  const fogData = settings.fog ? buildFog( settings.fog, functionCache ) : undefined;
 
 	const fragmentMain : GLSL = `
     ${ settings.domain === 'uv' ? `vec3 origin = vec3( vUv, 0.0 );` : '' }
@@ -198,11 +217,32 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
     ${ warpGLSL }
 
     ${ !mainFromTexture ? 
-      `float n = ${ mainSourceName }( samplePoint * frequency );` :
-      `vec4 color = ${ mainSourceName }( samplePoint * frequency );`
+      `float n = ${ mainSourceName }( samplePoint * frequency );
+       n = sanitize( n );` : 
+      `vec4 color = ${ mainSourceName }( samplePoint * frequency );
+      `
     }
 
     ${ toFragColorGLSL } 
+    ${ maskSourceData ? 
+      `gl_FragColor = vec4( gl_FragColor.rgb * ${ maskSourceData.name }( samplePoint * frequency ), gl_FragColor.a );` 
+      : '' 
+    } 
+    ${ alphaMaskSourceData ? `
+      float alphaMask = ${ alphaMaskSourceData.name }( samplePoint * frequency );
+      alphaMask = clamp( alphaMask, 0.0, 1.0 );
+      gl_FragColor = vec4( gl_FragColor.rgb, alphaMask * gl_FragColor.a );`
+      : '' 
+    } 
+
+    gl_FragColor.x = sanitize( gl_FragColor.x );
+    gl_FragColor.y = sanitize( gl_FragColor.y );
+    gl_FragColor.z = sanitize( gl_FragColor.z );
+
+    ${ fogData ? `
+      float depth = gl_FragCoord.z / gl_FragCoord.w;
+      gl_FragColor = vec4( ${ fogData.name }( gl_FragColor.rgb, depth ), gl_FragColor.a );
+    ` : '' }
 
     gl_FragColor *= opacity;
   `;

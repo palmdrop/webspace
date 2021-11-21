@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 /* Basic types */
 export type GLSL = string;
-export type GlslType = 'float' | 'int' | 'vec2' | 'vec3' | 'vec4' | 'sampler2D';
+export type GlslType = 'float' | 'int' | 'bool' | 'vec2' | 'vec3' | 'vec4' | 'sampler2D';
 
 export type Trigonometry = 'sin' | 'cos' | 'tan';
 export type Operation = 'mult' | 'div' | 'add' | 'sub' | 'avg';
@@ -27,6 +27,7 @@ type IVariable<T extends GlslType, V> = {
 
 export type Float = IVariable<'float', number>;
 export type Int = IVariable<'int', number>;
+export type Bool = IVariable<'bool', boolean>;
 export type Vec2 = IVariable<'vec2', THREE.Vector2>;
 export type Vec3 = IVariable<'vec3', THREE.Vector3>;
 export type Vec4 = IVariable<'vec4', THREE.Vector4>;
@@ -70,17 +71,18 @@ export type Shader = {
 }
 
 /* Utility */
+export type UniformObject = {
+  uniforms?: { 
+    [uniform: string]: {
+      value : any
+    }
+  }
+}
+
 export const setUniform = <T>( 
   name : string,
   value : T,
-
-  destinationObject? : { 
-    uniforms?: { 
-      [uniform: string]: {
-        value : any
-      }
-    } | undefined
-  }
+  destinationObject : UniformObject | undefined
 ) => {
   if( 
     !destinationObject || 

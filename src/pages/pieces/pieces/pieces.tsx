@@ -5,6 +5,7 @@ import retroCoreImage from '../../../assets/content/pieces/retro-core.jpg';
 import solarChromeImage from '../../../assets/content/pieces/solar-chrome.jpg';
 import solarLandscapeImage from '../../../assets/content/pieces/solar-landscape-1.jpg';
 import virtualImprintImage from '../../../assets/content/pieces/virtual-imprint.jpg';
+import rehashTransformImage from '../../../assets/content/pieces/rehash-transform.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -95,7 +96,11 @@ export const pieces : PieceData[] = [
   {
     name: "Virtual Imprint",
     description: [
-      `Shader builder experiments. WIP.`
+      `First experiments with a custom shader builds for composing complex domain warping patterns.`,
+      `I've been working with domain warping for a long time, but only recently using shaders. Since shaders code have some limitations 
+      that are not present in "regular" code (like not being able to have loops that iterate a variable number of times), I wanted to
+      create a small shader builder library that allows me to work with shaders in a more convenient way.`,
+      `Although please note that the use case of this "library" is highly specific and probably not useful for anyone but me.`
     ],
     tags : [
       "Warp, Space"
@@ -104,6 +109,27 @@ export const pieces : PieceData[] = [
     image: virtualImprintImage,
 
     Component: React.lazy( () => import( './virtualImprint/VirtualImprintPiece' ) ),
+  },
+  {
+    name: "Rehash Transform",
+    description: [
+      `An experiment with instanced geometry, shader builders and fake depth.`,
+      `Beyond technique, I wanted to explore abstract visualization of the human mind on the Internet. When interacting with the web,
+       we're in a loop of derivation and creation. I'm endlessly fascinated (and horrified) by how we shape the Internet and how it shapes us in a increasingly rapid feedback loop.
+       The Internet is a tool, and our minds are extremely adapt at incorporating tools into itself. A physical tool becomes an extension of
+       the body, a mental tool becomes an extension of, well, the mind. This is a topic I'll likely explore further in future pieces or posts.
+      `,
+      `
+       Images are used as source material for the textures. Some of them you might recognize, one way or another.
+      `
+    ],
+    tags : [
+      "Web, Mind"
+    ],
+
+    image: rehashTransformImage,
+
+    Component: React.lazy( () => import( './rehashTransform/RehashTransformPiece' ) ),
   },
 ]
 

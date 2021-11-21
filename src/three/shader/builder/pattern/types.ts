@@ -1,4 +1,4 @@
-import { Operation, Function, Trigonometry } from '../../core';
+import { Operation, Function, Trigonometry, GLSL } from '../../core';
 
 export type FunctionWithName = {
   name : string,
@@ -14,10 +14,11 @@ export type Modification = {
   argument : number,
 }
 
-export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture';
+export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture' | 'custom';
 
 export type RootSource = {
   kind : SourceKind,
+  uvOverride? : boolean,
 }
 
 export type NoiseSource = RootSource & {
@@ -57,10 +58,16 @@ export type WarpedSource = RootSource & {
 export type TextureSource = RootSource & {
   name : string,
   texture : THREE.Texture,
+  repeat? : THREE.Vector2,
   toFloat? : Function,
 }
 
-export type Source = NoiseSource | TrigSource | CombinedSource | WarpedSource | TextureSource;
+export type CustomSource = RootSource & {
+  kind : string,
+  body : GLSL
+}
+
+export type Source = NoiseSource | TrigSource | CombinedSource | WarpedSource | TextureSource | CustomSource;
 
 export type DomainWarp = {
   sources : {
@@ -84,6 +91,15 @@ export type ColorSettings = {
   }
 }
 
+export type Fog = {
+  nearColor : THREE.Color,
+  farColor : THREE.Color,
+  near : number,
+  far : number,
+  pow? : number,
+  opacity? : number,
+}
+
 // Settings
 export type PatternShaderSettings = {
   domain : Domain,
@@ -95,5 +111,11 @@ export type PatternShaderSettings = {
 
   colorSettings? : ColorSettings,
 
+  mask? : Source,
+  alphaMask? : Source,
+  fog? : Fog,
+
   seed? : number,
+
+  forInstancedMesh? : boolean
 }

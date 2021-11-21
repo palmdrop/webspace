@@ -4,15 +4,13 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 
 import { AbstractRenderScene } from "../../AbstractRenderScene";
 import { VoidCallback } from "../../core";
-import { CurledTubeGeometryPrefab, FoldedStoneGeometryPrefab, SolarChromeGeometryPrefab, SolarChromeGeometryPrefab2 } from '../../prefabs/geometries';
-import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
+import { SolarChromeGeometryPrefab2 } from '../../prefabs/geometries';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
 import { setUniform } from '../../shader/core';
-import { shaderSettings1 } from './shaderConfigurations';
+import shaderSettings from './shader';
 
 export class VirtualImprintRenderScene extends AbstractRenderScene {
   private controls? : TrackballControls;
-  private fullscreenRenderer : FullscreenQuadRenderer;
   private shaderMaterial : THREE.ShaderMaterial;
 
   private cubeCamera : THREE.CubeCamera;
@@ -36,23 +34,17 @@ export class VirtualImprintRenderScene extends AbstractRenderScene {
     const [ cubeCamera, cubeRenderTarget ] = this._createCubeCamera();
     this.cubeCamera = cubeCamera;
 
-    this.shaderMaterial = new THREE.ShaderMaterial( buildPatternShader( shaderSettings1 ) );
+    this.shaderMaterial = new THREE.ShaderMaterial( buildPatternShader( shaderSettings ) );
     this.shaderMaterial.side = THREE.DoubleSide;
-
-    const renderTarget = new THREE.WebGLRenderTarget( canvas.width, canvas.height, {} );
-    this.fullscreenRenderer = new FullscreenQuadRenderer( this.renderer, this.shaderMaterial, renderTarget );
 
     const space = new THREE.Mesh(
       new THREE.BoxBufferGeometry( 1.0, 1.0, 1.0 ),
-      // new THREE.SphereBufferGeometry( 1.0, 100, 100, 100 ),
       this.shaderMaterial
     );
 
     space.scale.set( spaceSize, spaceSize, spaceSize );
 
     const object = new THREE.Mesh(
-      // FoldedStoneGeometryPrefab({}),
-      // CurledTubeGeometryPrefab({}),
       SolarChromeGeometryPrefab2({}),
       new THREE.MeshPhysicalMaterial( {
         color : 'white',
@@ -77,9 +69,8 @@ export class VirtualImprintRenderScene extends AbstractRenderScene {
     light.position.set( 0, spaceSize / 2.0 - 2, 0 );
 
     this.scene.add( space, cubeCamera, object, light );
-    this.scene.background = renderTarget.texture;
+    this.scene.background = new THREE.Color( 'black' );
 
-    this.resizeables.push( this.fullscreenRenderer );
     onLoad?.();
   }
 
@@ -105,12 +96,9 @@ export class VirtualImprintRenderScene extends AbstractRenderScene {
   }
 
   render( delta : number, now : number ) {
-    ///setUniform( 'brightness', 0.7, this.shaderMaterial );
-    this.fullscreenRenderer.render();
     this.renderer.setRenderTarget( null );
     setUniform( 'brightness', 1.0, this.shaderMaterial );
     super.render( delta, now );
-
   }
 
   resize( width? : number, height? : number, force? : boolean ) : void {

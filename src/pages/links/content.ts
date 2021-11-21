@@ -56,6 +56,11 @@ export const links : Link[] = [
     'Art', 'Tech'
   ),
   toLink(
+    'Hastelier',
+    'https://hastelier.tumblr.com/',
+    'Art'
+  ),
+  toLink(
     'Broadcast',
     'https://pioneerworks.org/broadcast/',
     'Blog'
