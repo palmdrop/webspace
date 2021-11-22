@@ -6,51 +6,21 @@
 .pieces-page {
   @include page();
 
-  display: grid;
-  overflow: hidden;
-
-  grid-template-rows: 
-    20vh 10em 0.0fr 1.0fr
-  ;
-
-  grid-template-columns: 
-    0.0fr 1.0fr 0.0fr
-  ;
-
-  @include medium {
-    grid-template-columns: 
-      0.15fr 0.7fr 0.15fr
-    ;
-  }
-
-  @include large {
-    grid-template-columns: 
-      0.3fr 0.5fr 0.3fr
-    ;
-  }
-
-  grid-template-areas: 
-    "header header header"
-    ". main ."
-    ". main ."
-    "pieces pieces pieces"
-  ;
+  display: flex;
+  flex-direction: column;
 
   .header {
-    grid-area: header;
-
     .title {
       width: 100%;
     }
   }
 
   main {
-    grid-area: main;
-    width: calc( min( 35ch, 90vw ) );
+    width: calc( min( 48ch, 90vw ) );
 
-    p {
-      width: 80ch;
-    }
+    padding-top: 5em;
+    justify-self: center;
+    align-self: center;
 
     .faded-header {
       position: relative;
@@ -63,7 +33,7 @@
         position: absolute;
 
         top: -7.0em;
-        right: -11em;
+        right: -4em;
 
         width: 20em;
         height: auto;
@@ -76,10 +46,12 @@
     }
   }
 
+  /*
   .pieces-list {
     position: fixed;
     bottom: 5vh;
     left: 0;
     z-index: 3;
   }
+  */
 }
