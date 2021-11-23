@@ -86,6 +86,11 @@ export const links : Link[] = [
     'Blog', 'Tech'
   ),
   toLink(
+    'Skumrask (swedish)',
+    'https://fredrikedin.se',
+    'Politics', 'Blog'
+  ),
+  toLink(
     'Search Marginalia',
     'https://search.marginalia.nu/',
     'Other' 
@@ -97,3 +102,8 @@ export const links : Link[] = [
   ),
 ];
 
+links.push(toLink(
+  'Softer',
+  'http://softerdigitalfutures.xyz',
+  'Tech', 'Art', 'Blog'
+));

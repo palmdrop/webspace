@@ -18,10 +18,15 @@ if [ -z $link ]; then
   return 0
 fi
 
-ping -w 2 -c 1 ${link} >> /dev/null || {
+curl --output /dev/null --silent --head --fail "${link}" || {
   notify-send -u normal "\"${link}\" cannot be reached. Is the link correct?"
   return 0
 }
+
+if ! [[ "${link}" =~ ^http.*|^https ]]; 
+then
+  link="http://${link}"
+fi
 
 while true;
 do
