@@ -1,6 +1,6 @@
 ---
 title: Test post 2
-keywords: tech, c3
+keywords: other, c5
 date: Nov 21, 2021
 ---
 

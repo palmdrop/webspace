@@ -1,18 +1,18 @@
 
 import Post from '../posts';
-import 'highlight.js/styles/kimbie-dark.css';
+import "highlight.js/styles/kimbie-dark.css";
 
 const metadata = {
   "title": "Test post 2",
   "keywords": [
-    "tech",
-    "c3"
+    "internet",
+    "c4"
   ],
   "date": "Nov 21, 2021",
-  "id": 2
+  "id": 3
 };
 
-const Post2 = () => {
+const Post3 = () => {
   return (
     <Post metadata={ metadata }>
       <div dangerouslySetInnerHTML={ { __html: `<h1 id="test-post-2">TEST POST 2</h1>
@@ -32,8 +32,8 @@ const Post2 = () => {
 </code></pre>
 ` } }/>
     </Post>
-  );
-};
+  )
+}
 
-export default Post2;
+export default Post3;
 

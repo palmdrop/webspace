@@ -1,5 +1,6 @@
 ---
 title: Test post
+keywords: art, c2, c3
 date: Nov 21, 2021
 ---
 

@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import { Route, Switch } from 'react-router';
 import ExternalLink from '../../components/link/ExternalLink';
 import HomeBar from '../../components/navigation/home/HomeBar';
@@ -9,34 +9,51 @@ import { PageProps } from '../PageWrapper';
 import { postsData } from './posts/data';
 
 import './blogPage.scss';
+import Button from "../../components/input/button/Button";
+import { Link } from "react-router-dom";
 
 const BlogPage = ( { route } : PageProps ) : JSX.Element => {
+  const categories = useMemo( () => postsData.map( ( { metadata }, index ) => (
+    <Button
+      additionalClasses={ "blog-page__category-button" }
+      key={ index }
+    >
+      { metadata.keywords[0] }
+    </Button>
+  )), [])
+
+  const postRoutes = useMemo( () => postsData.map( ( { metadata, Component } ) => (
+    <Route
+      key={ metadata.id }
+      path={ `${ route }/post${ metadata.id }` as string } 
+      exact
+    >
+      <Component />
+    </Route>
+  )), [ route ] );
+
+  const links = useMemo( () => postsData.map( ( { metadata }, index ) => (
+    <Link
+      to={ `${ route }/post${ metadata.id }` }
+      className="blog-page__post-link"
+      key={ index }
+    >
+      { metadata.title }
+    </Link>
+  )), [ route ])
+
   return (
     <div className='blog-page'>
       <Suspense fallback={ null }>
         <Switch>
-          { postsData.map( ( { metadata, Component } ) => (
-
-            <Route
-              key={ metadata.id }
-              path={ `${ route }/post${ metadata.id }` as string } 
-              exact
-            >
-              <Component />
-            </Route>
-          ) )}
-
-          <Route
-            path={ `${ route }/testing` }
-          >
-            Blog testing
-          </Route>
+          { postRoutes }
 
           <Route 
             path={ route }
             exact
           >
             <div>
+              { /* 
               <Title
                 text="Work In Progress"
                 level={ 3 }
@@ -51,9 +68,25 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
                   { ' palmdrop.github.io ' }
                 </ExternalLink>
               </Paragraph>
+              */ }
+
+              <Title
+                text="Mind Fog"
+                level={ 1 }
+              />
+              <div className="blog-page__categories">
+                { categories }
+              </div>
+              <section
+                className="blog-page__posts"
+              >
+                { links }
+              </section>
             </div>
 
-            <HomeBar />
+            <HomeBar 
+              text={ "Home" }
+            />
           </Route>
         </Switch>
       </Suspense>

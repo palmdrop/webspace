@@ -3,9 +3,14 @@ import Post from '../posts';
 import 'highlight.js/styles/kimbie-dark.css';
 
 const metadata = {
-  'title': 'Test post',
-  'date': 'Nov 21, 2021',
-  'id': 1
+  "title": "Test post",
+  "keywords": [
+    "art",
+    "c2",
+    "c3"
+  ],
+  "date": "Nov 21, 2021",
+  "id": 1
 };
 
 const Post1 = () => {

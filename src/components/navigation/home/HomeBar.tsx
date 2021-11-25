@@ -6,12 +6,16 @@ import NavButton from '../navbar/navbutton/NavButton';
 
 import './HomeBar.scss';
 
-const HomeBar = () : JSX.Element => {
+type Props = {
+  text? : string,
+}
+
+const HomeBar = ( { text = "Go back" } : Props ) : JSX.Element => {
   const [ rootNavEntry ] = useState( () => {
     const page = routePageMap.get( PageRoute.root );
     // The root page will always exist in the routePageMap
-    return createNavEntry( page as Page, 'Go back' );
-  } );
+    return createNavEntry( page as Page, text );
+  });
 
   return (
     <div className="home-bar">

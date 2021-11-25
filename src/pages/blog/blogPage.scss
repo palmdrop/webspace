@@ -13,7 +13,7 @@
 
   div {
     .title {
-      padding-bottom: 0.2em;
+
     }
 
     .paragraph {
@@ -27,6 +27,27 @@
       }
     }
   }
+
+  &__posts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__post-link {
+    padding: 0.5em;
+  }
+
+  &__categories {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__category-button {
+    padding: 0.5em;
+  }
+
 }
 
 .post {

@@ -7,8 +7,8 @@ const cliProgress = require( "cli-progress" );
 
 const postsDataDirPath = path.join( __dirname, "../src/posts" );
 
-const allowedMetadata = [ 'title', 'date', 'image' ];
-const requiredMetadata = [ 'title', 'date' ];
+const allowedMetadata = [ 'title', 'keywords', 'date', 'image' ];
+const requiredMetadata = [ 'title', 'keywords', 'date' ];
 
 const parseMetadata = ( file, metadataLines ) => {
   const metadata = {}
@@ -18,7 +18,11 @@ const parseMetadata = ( file, metadataLines ) => {
       throw new Error( `Malformed metadata field in file ${ file }` );
     }
 
-    metadata[ name ] = value.trim();
+    if( name === 'keywords' ) {
+      metadata[ name ] = value.split( ',' ).map(category => category.trim());
+    } else {
+      metadata[ name ] = value.trim();
+    }
   });
 
   requiredMetadata.forEach( name => {
