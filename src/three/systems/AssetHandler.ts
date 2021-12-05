@@ -18,90 +18,90 @@ export const dataTextureToEnvironmentMap = ( renderer : THREE.WebGLRenderer, dat
 };
 
 class AssetHandler {
-    loadManager : THREE.LoadingManager;
-    textureLoader : THREE.TextureLoader;
-    gltfLoader : GLTFLoader;
-    rgbeLoader : RGBELoader;
-    cache : Map<string, any>;
-    toLoad : number;
-    loaded : number;
-    onProgress : ProgressCallback | null;
+  loadManager : THREE.LoadingManager;
+  textureLoader : THREE.TextureLoader;
+  gltfLoader : GLTFLoader;
+  rgbeLoader : RGBELoader;
+  cache : Map<string, any>;
+  toLoad : number;
+  loaded : number;
+  onProgress : ProgressCallback | null;
 
-    renderer ?: THREE.WebGLRenderer;
-    pmremGenerator ?: THREE.PMREMGenerator;
+  renderer ?: THREE.WebGLRenderer;
+  pmremGenerator ?: THREE.PMREMGenerator;
 
-    constructor() {
-      this.loadManager = new THREE.LoadingManager();
+  constructor() {
+    this.loadManager = new THREE.LoadingManager();
 
-      this.textureLoader = new THREE.TextureLoader( this.loadManager );
-      this.gltfLoader = new GLTFLoader();
-      this.rgbeLoader = new RGBELoader();
-      this.rgbeLoader.setDataType( THREE.UnsignedByteType );
+    this.textureLoader = new THREE.TextureLoader( this.loadManager );
+    this.gltfLoader = new GLTFLoader();
+    this.rgbeLoader = new RGBELoader();
+    this.rgbeLoader.setDataType( THREE.UnsignedByteType );
 
-      // Asset cache
-      this.cache = new Map<string, any>();
+    // Asset cache
+    this.cache = new Map<string, any>();
 
-      // Number of assets left to load
-      this.toLoad = 0;
+    // Number of assets left to load
+    this.toLoad = 0;
 
-      // Number of assets loaded
-      this.loaded = 0;
+    // Number of assets loaded
+    this.loaded = 0;
 
-      // On progress callback
-      this.onProgress = null;
+    // On progress callback
+    this.onProgress = null;
+  }
+
+
+  onLoad( onProgress ?: ProgressCallback, onLoad ?: LoadedCallback ) {
+    if( onLoad ) this.loadManager.onLoad = onLoad;
+    if( onProgress ) this.onProgress = onProgress;
+
+    if( this.toLoad === this.loaded ) {
+      onLoad && onLoad();
+      onProgress && onProgress( null, 0, 0 );
     }
 
+    return this;
+  }
 
-    onLoad( onProgress ?: ProgressCallback, onLoad ?: LoadedCallback ) {
-      if( onLoad ) this.loadManager.onLoad = onLoad;
-      if( onProgress ) this.onProgress = onProgress;
+  _loaded<T>( path : string, asset : T ) {
+    this.loaded++;
+    this.onProgress && this.onProgress( path, this.loaded, this.toLoad );
 
-      if( this.toLoad === this.loaded ) {
-        onLoad && onLoad();
-        onProgress && onProgress( null, 0, 0 );
-      }
+    // And add the asset to the cache
+    this.cache.set( path, asset );
+  }
 
-      return this;
+  _load<T>( path : string, method : LoadMethod, callback ?: LoadCallback<T> ) {
+    // If asset is already loaded, return cached instance
+    if( this.cache.has( path ) ) {
+      const data = this.cache.get( path );
+      callback?.( data );
+      return data;
     }
 
-    _loaded<T>( path : string, asset : T ) {
-      this.loaded++;
-      this.onProgress && this.onProgress( path, this.loaded, this.toLoad );
+    // Increment number of assets to load
+    this.toLoad++;
 
-      // And add the asset to the cache
-      this.cache.set( path, asset );
-    }
+    // Otherwise, load asset
+    const asset = method( path );
 
-    _load<T>( path : string, method : LoadMethod, callback ?: LoadCallback<T> ) {
-      // If asset is already loaded, return cached instance
-      if( this.cache.has( path ) ) {
-        const data = this.cache.get( path );
-        callback?.( data );
-        return data;
-      }
+    // And return the final asset
+    return asset;
+  }
 
-      // Increment number of assets to load
-      this.toLoad++;
+  loadTexture( path : string, useSRGB : boolean, callback ?: LoadCallback<THREE.Texture> ) : THREE.Texture {
+    return this._load( path, ( p ) => { 
+      const texture = this.textureLoader.load( p, texture => {
+        callback?.( texture );
+        this._loaded( path, texture );
+      } );
+      if( useSRGB ) texture.encoding = THREE.sRGBEncoding;
+      return texture;
+    }, callback );
+  }
 
-      // Otherwise, load asset
-      const asset = method( path );
-
-      // And return the final asset
-      return asset;
-    }
-
-    loadTexture( path : string, useSRGB : boolean, callback ?: LoadCallback<THREE.Texture> ) : THREE.Texture {
-      return this._load( path, ( p ) => { 
-        const texture = this.textureLoader.load( p, texture => {
-          callback?.( texture );
-          this._loaded( path, texture );
-        } );
-        if( useSRGB ) texture.encoding = THREE.sRGBEncoding;
-        return texture;
-      }, callback );
-    }
-
-    /*async loadGLTF(path) {
+  /*async loadGLTF(path) {
         return this._load(path, async (p) => {
             const model = await this.gltfLoader.loadAsync(p);
 
@@ -111,14 +111,14 @@ class AssetHandler {
         });
     }*/
 
-    loadHDR( path : string, callback ?: LoadCallback<THREE.DataTexture> ) {
-      return this._load( path, p => {
-        return this.rgbeLoader.load( p, ( texture ) => {
-          callback?.( texture );
-          this._loaded( path, texture );
-        } );
-      }, callback );
-    }
+  loadHDR( path : string, callback ?: LoadCallback<THREE.DataTexture> ) {
+    return this._load( path, p => {
+      return this.rgbeLoader.load( p, ( texture ) => {
+        callback?.( texture );
+        this._loaded( path, texture );
+      } );
+    }, callback );
+  }
 }
 
 const ASSETHANDLER = new AssetHandler();

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { random } from '../../../../utils/random';
 
 import { simplex3dChunk } from '../../chunk/noise';
-import { Attributes, GLSL, Shader, Uniforms, Functions, Constants, ShaderChunk } from '../../core';
+import { Attributes, GLSL, Shader, Uniforms, GlslFunctions, Constants, ShaderChunk } from '../../core';
 import { buildShader } from '../shaderBuilder';
 import { numToGLSL } from '../utils';
 import { buildFog, buildModification, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction } from './helpers';
@@ -63,7 +63,7 @@ const getConstants = ( settings : PatternShaderSettings ) : Constants => {
 };
 
 // Color
-const buildFragColorConverterGLSL = ( colorSettings : ColorSettings | undefined, mainFromTexture : boolean, functions : Functions ) : GLSL => {
+const buildFragColorConverterGLSL = ( colorSettings : ColorSettings | undefined, mainFromTexture : boolean, functions : GlslFunctions ) : GLSL => {
   // No color adjustments if settings are absent
   if( !colorSettings ) {
     return mainFromTexture 
@@ -155,7 +155,7 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   // Cache and data
   const functionCache : FunctionCache = new Map<any, FunctionWithName>();
   const textureNames = new Set<string>();
-  const functions : Functions = {};
+  const functions : GlslFunctions = {};
 
   functions[ 'isNan' ] = isNanFunction;
   functions[ 'isInf' ] = isInfFunction;
@@ -195,7 +195,6 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   // Fragment shader
   const warpGLSL = buildWarpGLSL( settings.domainWarp, uniforms, textureNames, functionCache );
   const toFragColorGLSL = buildFragColorConverterGLSL( settings.colorSettings, mainFromTexture, functions );
-
   const { name: mainSourceName } = buildSource( settings.mainSource, uniforms, textureNames, functionCache, true );
   const maskSourceData = settings.mask ? buildSource( settings.mask, uniforms, textureNames, functionCache ) : undefined;
   const alphaMaskSourceData = settings.alphaMask ? buildSource( settings.alphaMask, uniforms, textureNames, functionCache ) : undefined;

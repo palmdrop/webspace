@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { ScrollPosition, trackWindowScroll } from 'react-lazy-load-image-component';
 import LazyImage from '../../components/media/image/LazyImage';
+import 'react-lazy-load-image-component/src/effects/opacity.css';
 
 import { PageRoute } from '../../App';
 import { PageProps } from '../PageWrapper';
@@ -19,10 +20,10 @@ import ExternalLink from '../../components/link/ExternalLink';
 
 import { ImageData, introduction, sections, links, creditsSections, CreditsSection } from './content';
 
-import 'react-lazy-load-image-component/src/effects/opacity.css';
-import './aboutPage.scss';
 import Title from '../../components/title/Title';
 import Bar from '../../components/ornamental/bars/Bar';
+
+import './aboutPage.scss';
 
 const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
 

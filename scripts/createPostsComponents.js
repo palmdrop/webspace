@@ -1,46 +1,74 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const fs = require( 'fs' );
+const path = require( 'path' );
+const hljs = require( 'highlight.js' );
+const marked = require( 'marked' );
+
+const ASSETS_PATH = 'src/assets/';
+const IMAGES_PATH = `${ ASSETS_PATH }/img`;
+
+const BLOG_PATH = 'src/pages/blog';
+const POSTS_PATH = `${ BLOG_PATH }/posts`;
+const CONFIG_PATH = path.relative( __dirname, 'src/blog-config.json' );
+
+const POST_COMPONENT_PATH = `${ BLOG_PATH }/components/post/Post`;
+const ABSOLUTE_POSTS_PATH = path.join( __dirname, '..', POSTS_PATH );
+const RELATIVE_POST_COMPONENT_PATH = path.relative( POSTS_PATH, POST_COMPONENT_PATH );
+
 const { getPostsData } = require( './getPostsData' );
-
-const fs = require( "fs" );
-const path = require( "path" );
-
-const marked = require( "marked" );
-const hljs = require( "highlight.js" );
-
-const postsOutputPath = path.join( __dirname, "../src/pages/blog/posts" );
-const config = require( "../src/blog-config.json" );
-
-const postComponentPath = '../components/post/Post';
+const config = require( CONFIG_PATH );
 
 // Configure syntax highlighting for code blocks
-marked.setOptions({
+marked.setOptions( {
   highlight: function( code, lang ) {
-    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    const language = hljs.getLanguage( lang ) ? lang : 'plaintext';
     return hljs.highlight( code, { language } ).value;
   },
   langPrefix: 'hljs language-',
-});
+} );
+
+const processMetadata = ( posts ) => {
+  return posts.map( ( { metadata, content } ) => {
+    const processedMetadata = { ...metadata };
+
+    if( processedMetadata.image ) {
+      processedMetadata.image = path.relative( POSTS_PATH, path.join( IMAGES_PATH, metadata.image ) );
+    }
+
+    return {
+      metadata: processedMetadata,
+      content
+    };
+  } );
+};
 
 // TODO fix indentation
 const htmlToReactComponent = ( metadata, html ) => {
-  return `import Post from '${ postComponentPath }';
-${ config && config[ "code-theme" ] && (
-  `import \"${ config[ "code-theme" ] }\";`
-)}
+  return `import Post from '${ RELATIVE_POST_COMPONENT_PATH }';
+${ config && config[ 'code-theme' ] && (
+`import '${ config[ 'code-theme' ] }';
+${ metadata.image ? `import image from '${ metadata.image }';` : '' }`
+  ) }
 
-const metadata = ${ JSON.stringify( metadata, null, 2 ) };
+const metadata = ${ JSON.stringify( metadata, null, 2 ).replaceAll( '"', '\'' ) };
 
 const Post${ metadata.id } = () => {
   return (
-    <Post metadata={ metadata }>
+    <Post 
+      metadata={ metadata }
+      ${ metadata.image ? 'image={ image }' : ''}
+    >
       <div dangerouslySetInnerHTML={ { __html: \`${ html }\` } }/>
     </Post>
-  )
-}
+  );
+};
 
 export default Post${ metadata.id };
 
 `;
-}
+};
 
 const createPostsHTML = ( posts ) => {
   return posts.map( ( { metadata, content } ) => {
@@ -49,8 +77,8 @@ const createPostsHTML = ( posts ) => {
       html: htmlToReactComponent( metadata, html ),
       id: metadata.id
     };
-  })
-}
+  } );
+};
 
 const writeMetadata = ( posts ) => {
   const module = `
@@ -58,40 +86,41 @@ import React from 'react';
 
 ${ posts.map( ( { metadata } ) => (
     `const Post${ metadata.id } = React.lazy( () => import( './post${ metadata.id }' ) );`
-)).join( "\n" ) }
+  ) ).join( '\n' ) }
 
 export const postsData = [
-  ${ posts.map( ( { metadata } ) => `
-    {
-      metadata: ${ JSON.stringify( metadata ) },
-      Component: Post${ metadata.id }
-    },`).join( "\n" ) }
+${ posts.map( ( { metadata, snippet } ) => `  {
+    metadata: ${ JSON.stringify( metadata ).replaceAll( '"', '\'' ) },
+    snippet: \`${ snippet }\`,
+    Component: Post${ metadata.id }
+  },` ).join( '\n' ) }
 ];
   `;
 
-  fs.writeFileSync( `${ postsOutputPath }/data.tsx`, module );
+  fs.writeFileSync( `${ ABSOLUTE_POSTS_PATH }/data.tsx`, module );
 
   return posts;
-}
+};
 
 const writePostsComponents = ( postsHTML ) => {
   postsHTML.forEach( ( { html, id } ) => {
-    const filePath = `${ postsOutputPath }/post${ id }.tsx`;
-    fs.writeFileSync( filePath, html )
-  });
-}
+    const filePath = `${ ABSOLUTE_POSTS_PATH }/post${ id }.tsx`;
+    fs.writeFileSync( filePath, html );
+  } );
+};
 
-console.log( " Building Posts HTML ");
+console.log( ' Building Posts HTML ' );
 
-if ( fs.existsSync( postsOutputPath ) ) fs.rmSync( postsOutputPath, { recursive: true } );
-fs.mkdirSync( postsOutputPath );
+if ( fs.existsSync( ABSOLUTE_POSTS_PATH ) ) fs.rmSync( ABSOLUTE_POSTS_PATH, { recursive: true } );
+fs.mkdirSync( ABSOLUTE_POSTS_PATH );
 
 getPostsData()
+  .then( processMetadata )
   .then( posts => {
     writeMetadata( posts );
     return createPostsHTML( posts );
-  })
+  } )
   .then( writePostsComponents )
   .catch( error => {
     console.error( error );
-  });
+  } );

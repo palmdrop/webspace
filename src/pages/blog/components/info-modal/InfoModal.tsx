@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+/* eslint-disable react/no-unescaped-entities */
+import { useState } from 'react';
 import Button from '../../../../components/input/button/Button';
-import Modal from '../../../../components/modal/Modal'
+import Modal from '../../../../components/modal/Modal';
 import SoftDisk from '../../../../components/ornamental/disk/soft/SoftDisk';
 import Paragraph from '../../../../components/paragraph/Paragraph';
 import Title from '../../../../components/title/Title';
 
 import { ReactComponent as CloseIcon } from '../../../../assets/svg/close.svg';
 
-import './InfoModal.scss'
+import './InfoModal.scss';
 
-const InfoModal = ( { } ) => {
+const InfoModal = () => {
   const [ active, setActive ] = useState<boolean>( false );
 
   return (
@@ -36,13 +37,18 @@ const InfoModal = ( { } ) => {
           text="[navigating] mind fog"
         />
         <Paragraph>
-          By Palmdrop. I'm a person living on the internet, trying my best to occassionally think about things, and write my thoughts down. 
-          This blog is a slightly polished thought-dump. I write mostly for myself. My thoughts tend to revolve around art, culture, the internet, 
-          and politics. Welcome.
+          A blog by palmdrop. Intended to be my more or less polished thought-dump. Posts may vary in length, quality and content. 
+        </Paragraph>
+        <Paragraph>
+          I believe in learning in public, and I want to rid myself of the fear of criticism. And finally, I want to inspire more deep thinking, 
+          mostly in myself, but hopefully also in others.
+        </Paragraph>
+        <Paragraph>
+          At the moment, this blog is under construction.
         </Paragraph>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default InfoModal
+export default InfoModal;

@@ -2,10 +2,12 @@
 title: Test post
 keywords: art, c2, c3
 date: Nov 21, 2021
+image: rehash-transform/crowd.jpg
 ---
 
-# TEST POST
 With some content
+
+---
 
 * item
 * item

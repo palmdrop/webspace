@@ -23,10 +23,7 @@ import { introduction } from './content';
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
 import './piecesPage.scss';
-
-const pieceNameToPath = ( name : string ) => {
-  return name.replace( ' ', '-' ).toLowerCase();
-}
+import { nameToPath } from '../../utils/general';
 
 const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
   const history = useHistory();
@@ -34,11 +31,11 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
   const handlePieceNavigation : PieceNavigationFunction = useCallback( ( 
     pieceData : PieceData | undefined, 
     index : number, 
-    event : React.MouseEvent 
+    event : React.MouseEvent,
   ) : void => {
     event.preventDefault();
     pieceData = pieceData || pieces[ index ];
-    history.push( `${ route }/${ pieceNameToPath( pieceData.name ) }`)
+    history.push( `${ route }/${ nameToPath( pieceData.name ) }` );
   }, [ history, route ] );
 
   const pieceEntries = useMemo( () => (
@@ -60,7 +57,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
           { pieces.map( ( piece, index ) => (
             <Route
               key={ index }
-              path={ `${ route }/${ pieceNameToPath( piece.name ) }` as string }
+              path={ `${ route }/${ nameToPath( piece.name ) }` as string }
               exact
             >
               <PieceWrapper
@@ -68,6 +65,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
                 backgroundColorTheme={ piece.colorTheme }
                 showLoadingPage={ true }
                 showOverlay={ true }
+                setPageTitle={ true }
                 handlePieceNavigation={ handlePieceNavigation }
               />
             </Route>

@@ -1,10 +1,10 @@
-import { Attributes, Functions, Function, GLSL, Imports, Shader, Uniforms, Variable, Constants } from '../core';
+import { Attributes, GlslFunctions, GlslFunction, GLSL, Imports, Shader, Uniforms, GlslVariable, Constants } from '../core';
 import { arrayToString, variableValueToGLSL } from './utils';
 
 export type ShaderSourceData = {
   imports : Imports,
   constants ?: Constants,
-  functions ?: Functions,
+  functions ?: GlslFunctions,
   main : GLSL,
 }
 
@@ -17,7 +17,7 @@ const constantsToGLSL = ( constants : Constants | undefined ) => {
   if( !constants ) return '';
   return arrayToString( 
     Object.entries( constants ), 
-    ( [ name, { type, value } ] ) => `const ${ type } ${ name } = ${ variableValueToGLSL( { type, value } as Variable ) };` 
+    ( [ name, { type, value } ] ) => `const ${ type } ${ name } = ${ variableValueToGLSL( { type, value } as GlslVariable ) };` 
   );
 };
 
@@ -37,7 +37,7 @@ const attributesToGLSL = ( attributes : Attributes ) => {
   );
 };
 
-const functionToGLSL = ( name : string, glslFunction : Function ) => {
+const functionToGLSL = ( name : string, glslFunction : GlslFunction ) => {
   return `${ glslFunction.returnType } ${ name }( 
     ${ arrayToString( glslFunction.parameters, ( arg ) => `${ arg[ 0 ] } ${ arg[ 1 ] }`, ',' ) }
   ) {\n
@@ -45,7 +45,7 @@ const functionToGLSL = ( name : string, glslFunction : Function ) => {
   }\n`;
 };
 
-const functionsToGLSL = ( functions : Functions | undefined ) => {
+const functionsToGLSL = ( functions : GlslFunctions | undefined ) => {
   if( !functions ) return '';
   return arrayToString( 
     Object.entries( functions ), 

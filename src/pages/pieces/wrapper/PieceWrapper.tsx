@@ -16,6 +16,7 @@ import SoftDisk from '../../../components/ornamental/disk/soft/SoftDisk';
 import StarLoader from '../../../components/loader/starLoader/StarLoader';
 
 import './PieceWrapper.scss';
+import { useTitle } from '../../../hooks/useTitle';
 
 type Props = {
   pieceIndex : number,
@@ -23,6 +24,7 @@ type Props = {
   onLoad ?: () => void,
   showLoadingPage ?: boolean,
   showOverlay ?: boolean,
+  setPageTitle ?: boolean,
   handlePieceNavigation ?: PieceNavigationFunction
 } 
 
@@ -32,6 +34,7 @@ const PieceWrapper = React.memo( ( {
   onLoad, 
   showLoadingPage = false,
   showOverlay = false,
+  setPageTitle = false,
   handlePieceNavigation
 } : Props ) => {
   const fadeOutRef = useRef<NodeJS.Timeout | null>( null );
@@ -42,6 +45,8 @@ const PieceWrapper = React.memo( ( {
   const [ overlayVisible, setOverlayVisible ] = useState( true );
 
   const history = useHistory();
+
+  useTitle( setPageTitle ? pieceData.name : undefined );
 
   const cancelFadeOut = useCallback( () => {
     if( fadeOutRef.current ) {
@@ -56,7 +61,7 @@ const PieceWrapper = React.memo( ( {
     }, 1500 );
   }, [ setOverlayVisible, cancelFadeOut ] );
   
-  useEffect( ( ) => {
+  useEffect( () => {
     if( isLoaded ) {
       handleOverlayBlur();
     }
@@ -74,11 +79,11 @@ const PieceWrapper = React.memo( ( {
 
   const handlePrevious = ( event : React.MouseEvent ) => {
     handlePieceNavigation?.( undefined, pieceIndex - 1, event );
-  }
+  };
 
   const handleNext = ( event : React.MouseEvent ) => {
     handlePieceNavigation?.( undefined, pieceIndex + 1, event );
-  }
+  };
 
   const handleGoBack = () => {
     history.push( PageRoute.pieces );

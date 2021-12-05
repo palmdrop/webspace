@@ -8,36 +8,35 @@ export type Trigonometry = 'sin' | 'cos' | 'tan';
 export type Operation = 'mult' | 'div' | 'add' | 'sub' | 'avg';
 
 
-export type FunctionSignature = {
+export type GlslFunctionSignature = {
   parameters : [ GlslType, string ][] // array of parameters
   returnType : GlslType,
 }
 
 export type ShaderChunk = {
   content : string,
-  functionSignatures ?: { [ key : string ] : FunctionSignature }
+  functionSignatures ?: { [ key : string ] : GlslFunctionSignature }
 }
 
 
 /* Variables */
-type IVariable<T extends GlslType, V> = {
+type IGlslVariable<T extends GlslType, V> = {
   type : T,
   value ?: V
 }
 
-export type Float = IVariable<'float', number>;
-export type Int = IVariable<'int', number>;
-export type Bool = IVariable<'bool', boolean>;
-export type Vec2 = IVariable<'vec2', THREE.Vector2>;
-export type Vec3 = IVariable<'vec3', THREE.Vector3>;
-export type Vec4 = IVariable<'vec4', THREE.Vector4>;
-export type Variable = Float | Int | Vec2 | Vec3 | Vec4;
+export type Float = IGlslVariable<'float', number>;
+export type Int = IGlslVariable<'int', number>;
+export type Vec2 = IGlslVariable<'vec2', THREE.Vector2>;
+export type Vec3 = IGlslVariable<'vec3', THREE.Vector3>;
+export type Vec4 = IGlslVariable<'vec4', THREE.Vector4>;
+export type GlslVariable = Float | Int | Vec2 | Vec3 | Vec4;
 
-export type Variables = { [ name : string ] : Variable };
+export type GlslVariables = { [ name : string ] : GlslVariable };
 
 /* Constants */
-export type Constant = Variable;
-export type Constants = Variables;
+export type Constant = GlslVariable;
+export type Constants = GlslVariables;
 
 /* Uniforms */
 export type Uniform = THREE.IUniform & { 
@@ -56,12 +55,12 @@ export type Attributes = { [ varying : string ] : Attribute };
 export type Imports = ShaderChunk[] | undefined;
 
 /* Functions */
-export type FunctionSignatures = { [ name : string ] : FunctionSignature };
-export type Function = FunctionSignature & {
+export type GlslFunctionSignatures = { [ name : string ] : GlslFunctionSignature };
+export type GlslFunction = GlslFunctionSignature & {
   body : GLSL,
 }
 
-export type Functions = { [ name : string ] : Function };
+export type GlslFunctions = { [ name : string ] : GlslFunction };
 
 /* Shaders */
 export type Shader = {
@@ -82,7 +81,14 @@ export type UniformObject = {
 export const setUniform = <T>( 
   name : string,
   value : T,
-  destinationObject : UniformObject | undefined
+
+  destinationObject ?: { 
+    uniforms ?: { 
+      [uniform : string] : {
+        value : any
+      }
+    } | undefined
+  }
 ) => {
   if( 
     !destinationObject || 

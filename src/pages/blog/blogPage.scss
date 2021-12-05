@@ -23,7 +23,7 @@
       flex-direction: row;
       justify-content: flex-end;
 
-      .paragraph {
+      & > .paragraph {
         text-align: right;
         padding-right: 4.2em;
         padding-bottom: 0em;
@@ -45,7 +45,40 @@
   }
 
   &__post-link {
-    padding: 0.5em;
+    div {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      color: var( --foreground-color );
+      padding: 0.5em 0.3em;
+
+      @include font( 'paragraph' );
+      text-transform: lowercase;
+      font-size: 1.5rem;
+
+      &:visited {
+        color: var( --foreground-color );
+        opacity: 0.5;
+      }
+
+      &:hover {
+        color: var( --foreground-color );
+      }
+
+      span {
+        color: var( --secondary-color );
+      }
+    }
+
+    p {
+      font-size: 1rem;
+      padding-left: 1.5em;
+    }
+
+    .bar {
+      padding: 0.0em;
+    }
   }
 
   &__categories {

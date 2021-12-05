@@ -1,8 +1,8 @@
-import { Operation, Function, Trigonometry, GLSL } from '../../core';
+import { Operation, GlslFunction, Trigonometry, GLSL } from '../../core';
 
 export type FunctionWithName = {
   name : string,
-  func : Function
+  func : GlslFunction
 }
 
 export type FunctionCache = Map<any, FunctionWithName>;
@@ -59,7 +59,7 @@ export type TextureSource = RootSource & {
   name : string,
   texture : THREE.Texture,
   repeat ?: THREE.Vector2,
-  toFloat ?: Function,
+  toFloat ?: GlslFunction,
 }
 
 export type CustomSource = RootSource & {

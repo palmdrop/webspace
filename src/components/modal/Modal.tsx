@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 
 import './Modal.scss';
 
@@ -12,8 +12,8 @@ enum State {
 type Props = {
   open : boolean,
   onChangeCompleted : ( isOpen : boolean ) => void,
-  transitionTime? : number,
-  blockEvents? : boolean,
+  transitionTime ?: number,
+  blockEvents ?: boolean,
   children : React.ReactNode,
 }
 
@@ -36,20 +36,34 @@ const Modal = ( {
     timerRef.current = setTimeout( () => {
       setState( newState === State.Opening ? State.Open : State.Closed );
       onChangeCompleted( newState === State.Opening );
-    }, transitionTime )
-  }
+    }, transitionTime );
+  };
 
   useEffect( () => {
     changeState( open ? State.Opening : State.Closing );
-  }, [ open ])
+
+    if( open ) {
+      const handleKeyPress = ( e : KeyboardEvent ) => {
+        if( e.key === 'Escape' ) {
+          changeState( State.Closing );
+        }
+      };
+
+      window.addEventListener( 'keydown', handleKeyPress );
+
+      return () => {
+        window.removeEventListener( 'keydown', handleKeyPress );
+      };
+    }
+  }, [ open ] );
 
   useEffect( () => {
     const onPress = ( event : MouseEvent | TouchEvent ) => {
       // Clicked outside
-      if( rootRef && !rootRef.current?.contains( event.target as Node )) {
+      if( rootRef && !rootRef.current?.contains( event.target as Node ) ) {
         changeState( State.Closing );
       }
-    }
+    };
 
     if( state === State.Open ) {
       window.addEventListener( 'mousedown', onPress );
@@ -58,11 +72,11 @@ const Modal = ( {
       return () => {
         window.removeEventListener( 'mousedown', onPress );
         window.removeEventListener( 'touchstart', onPress );
-      }
+      };
     }
-  }, [ state ] )
+  }, [ state ] );
 
-  return (<>
+  return ( <>
     { blockEvents && state === State.Open && <div className="blocker" /> }
     <div 
       ref={ rootRef }
@@ -70,7 +84,7 @@ const Modal = ( {
     >
       { children }
     </div>
-  </>)
-}
+  </> );
+};
 
-export default Modal
+export default Modal;

@@ -1,18 +1,22 @@
 import Post from '../components/post/Post';
-import "highlight.js/styles/kimbie-dark.css";
+import 'highlight.js/styles/kimbie-dark.css';
+
 
 const metadata = {
-  "title": "Test post 4",
-  "keywords": "other, c5",
-  "date": "Nov 26, 2021",
-  "id": 4
+  'title': 'Test post 4',
+  'keywords': 'other, c5',
+  'date': 'Nov 26, 2021',
+  'id': 4
 };
 
 const Post4 = () => {
   return (
-    <Post metadata={ metadata }>
-      <div dangerouslySetInnerHTML={ { __html: `<h1 id="test-post-4">TEST POST 4</h1>
-<p>With some content</p>
+    <Post 
+      metadata={ metadata }
+      
+    >
+      <div dangerouslySetInnerHTML={ { __html: `<p>With some content</p>
+<hr>
 <ul>
 <li>item</li>
 <li>item</li>
@@ -28,8 +32,8 @@ const Post4 = () => {
 </code></pre>
 ` } }/>
     </Post>
-  )
-}
+  );
+};
 
 export default Post4;
 

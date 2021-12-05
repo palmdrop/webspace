@@ -34,7 +34,7 @@ const NavButton = ( { navEntry, active, index } : Props ) : JSX.Element => {
     }
   };
 
-  const handleLeave = ( event : React.MouseEvent ) => {
+  const handleLeave = () => {
     if( active === undefined ) {
       setHovering( false );
     }

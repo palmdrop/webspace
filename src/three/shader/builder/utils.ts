@@ -1,4 +1,4 @@
-import { Operation, GlslType, Variable } from '../core';
+import { Operation, GlslType, GlslVariable } from '../core';
 
 export const AXES = [ 'x', 'y', 'z' ] as const;
 
@@ -39,13 +39,13 @@ export const opToGLSL = ( operation : Operation, ...args : string[] ) => {
 const converters : { [ type in GlslType ] : ( value ?: any ) => string } = {
   'float': ( value ?: number ) => !value ? '0.0' : '' + numToGLSL( value ),
   'int': ( value ?: number ) => !value ? '0' : '' + Math.floor( value ),
-  'bool': ( value ?: boolean ) => value ? '1' : '0',
   'vec2': ( value ?: THREE.Vector2 ) => !value ? 'vec2()' : `vec2( ${ numToGLSL( value.x ) }, ${ numToGLSL( value.y ) } )`,
   'vec3': ( value ?: THREE.Vector3 ) => !value ? 'vec3()' : `vec3( ${ numToGLSL( value.x ) }, ${ numToGLSL( value.y ) }, ${ numToGLSL( value.z ) } )`,
   'vec4': ( value ?: THREE.Vector4 ) => !value ? 'vec4()' : `vec4( ${ numToGLSL( value.x ) }, ${ numToGLSL( value.y ) }, ${ numToGLSL( value.z ) }, ${ numToGLSL( value.w ) } )`,
+  'bool': ( value ?: boolean ) => value ? '1' : '0',
   'sampler2D': () => { throw new Error( 'Cannot convert texture to value' ); }
 };
 
-export const variableValueToGLSL = ( variable : Variable ) => {
+export const variableValueToGLSL = ( variable : GlslVariable ) => {
   return converters[ variable.type ]( variable.value );
 };

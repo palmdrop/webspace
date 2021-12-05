@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import * as THREE from 'three';
 
 export type Prefab<T, A> = ( args : A ) => T;

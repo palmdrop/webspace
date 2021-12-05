@@ -9,8 +9,7 @@
   @include text-shadow( 'button' );
 
   @include font( 'button' );
-
-  font-size: 1.0rem;
+  font-size: 1.2rem;
   letter-spacing: 0.2rem;
 
   transition: 0.7s color, 0.2s border-bottom;

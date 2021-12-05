@@ -3,18 +3,18 @@
 
 .paragraph {
   line-height: 1.1rem;
-  letter-spacing: -0.01em;
   padding-bottom: 0.6em;
 
   color: color( 'foreground' );
   @include font( 'paragraph' );
 
   &--normal {
-    font-size: 1.0rem;
+    font-size: 1.1rem;
   }
 
   &--bold {
-    text-transform: uppercase;
+    // text-transform: uppercase;
+    font-size: 1.2rem;
     line-height: 1.2rem;
   }
 

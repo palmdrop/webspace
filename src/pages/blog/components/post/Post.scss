@@ -1,0 +1,36 @@
+.post {
+  &__header {
+    padding: 0em;
+    margin: 0em;
+    padding-bottom: 1em;
+
+    img {
+      width: 100%;
+      height: 50vh;
+
+      object-fit: cover;
+    }
+
+    .title {
+      padding-left: 0em;
+      padding-bottom: 0.5rem;
+      margin-left: -1.0rem;
+      font-size: 5em;
+    }
+
+    div {
+      color: var( --accent-color );
+      margin-bottom: 0.5em;
+    }
+  }
+
+  footer {
+    padding-top: 5em;
+  }
+
+  &__footer-keywords {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

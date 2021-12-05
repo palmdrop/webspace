@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { sendFormEmail, isValidEmail } from '../../utils/email';

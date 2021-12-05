@@ -1,23 +1,24 @@
-import { Suspense, useMemo, useState } from "react";
-import { Route, Switch } from "react-router";
-import HomeBar from "../../components/navigation/home/HomeBar";
-import Title from "../../components/title/Title";
-import { PageProps } from "../PageWrapper";
+import React from 'react';
+import { Suspense, useMemo, useState } from 'react';
+import { Route, Switch } from 'react-router';
+import HomeBar from '../../components/navigation/home/HomeBar';
+import Title from '../../components/title/Title';
+import { PageProps } from '../PageWrapper';
 
 import { postsData } from './posts/data';
 
-import Button from "../../components/input/button/Button";
-import { Link } from "react-router-dom";
+import Button from '../../components/input/button/Button';
+import { Link } from 'react-router-dom';
 
 import './blogPage.scss';
-import { allPostsMetadata, categories, postMetadataByCategory } from "./blog";
-import { PostMetadata } from "./components/post/Post";
-import Paragraph, { ParagraphType } from "../../components/paragraph/Paragraph";
-import Bar from "../../components/ornamental/bars/Bar";
-import SoftDisk from "../../components/ornamental/disk/soft/SoftDisk";
-import Modal from "../../components/modal/Modal";
-import InfoModal from "./components/info-modal/InfoModal";
+import { allPostsData, categories, formatDate, postDataByCategory } from './blog';
+import { PostData, PostMetadata } from './components/post/Post';
+import Paragraph from '../../components/paragraph/Paragraph';
+import Bar from '../../components/ornamental/bars/Bar';
+import InfoModal from './components/info-modal/InfoModal';
+import { nameToPath } from '../../utils/general';
 
+// eslint-disable-next-line react/prop-types
 const BlogPage = ( { route } : PageProps ) : JSX.Element => {
   const [ activeCategory, setActiveCategory ] = useState<string | null>( null );
 
@@ -26,44 +27,58 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
       <Button
         key={ `category-${ index }` }
         additionalClasses={ 
-          "blog-page__category-button" +
-          ( category === activeCategory ? " blog-page__category-button--pressed" : "" )
+          'blog-page__category-button' +
+          ( category === activeCategory ? ' blog-page__category-button--pressed' : '' )
         }
         onClick={ () => setActiveCategory( category === activeCategory ? null : category ) }
       >
         { category }
       </Button>
     )
-  ), [ activeCategory ]);
+    ), [ activeCategory ] );
 
-  const postRoutes = useMemo( () => postsData.map( ( { metadata, Component } ) => (
+  const postRoutes = useMemo( () => postsData.map( ( 
+    { metadata, Component } : { metadata : PostMetadata, Component : React.FunctionComponent }
+  ) => (
     <Route
       key={ metadata.id }
-      path={ `${ route }/post${ metadata.id }` as string } 
+      path={ `${ route }/${ nameToPath( metadata.title ) }` as string }
       exact
     >
       <Component />
     </Route>
-  )), [ route ] );
+  ) ), [ route ] );
 
   // TODO react virtualized/window in the future? 
   // TODO recalculate based on selected category
   const links = useMemo( () => {
-    const createLink = ( metadata : PostMetadata ) => (
-      <Link
-        to={ `${ route }/post${ metadata.id }` }
+    const createLink = ( { metadata, snippet } : PostData ) => {
+      return <Link
+        to={ `${ route }/${ nameToPath( metadata.title ) }` }
         className="blog-page__post-link"
       >
-        { metadata.title }
-      </Link>
-    )
+        <div>
+          { metadata.title }
+          <span>
+            { formatDate( metadata.date ) }
+          </span>
+        </div>
+        <Paragraph>
+          { snippet.trim() }
+        </Paragraph>
+        <Bar
+          direction="horizontal"
+          variant="extrude"
+        />
+      </Link>;
+    };
 
     if( activeCategory ) {
-      return postMetadataByCategory[ activeCategory ] ? postMetadataByCategory[ activeCategory ].map( createLink ) : [];
+      return postDataByCategory[ activeCategory ] ? postDataByCategory[ activeCategory ].map( createLink ) : [];
     }
 
-    return allPostsMetadata.map( createLink );
-  }, [ route, activeCategory ])
+    return allPostsData.map( createLink );
+  }, [ route, activeCategory ] );
 
   return (
     <div className='blog-page'>
@@ -114,7 +129,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
             </nav>
 
             <HomeBar 
-              text={ "Home" }
+              text={ 'Home' }
             />
           </Route>
         </Switch>

@@ -47,6 +47,8 @@ export type Page = {
   Component : React.FunctionComponent<PageProps>,
 }
 
+export const PAGE_TITLE = 'Obscured';
+
 export const pages : Page[] = [
   {
     name: 'About',
@@ -84,7 +86,7 @@ export const pages : Page[] = [
     Component: ContactPage
   },
   {
-    name: 'Root',
+    name: 'Home',
     route: PageRoute.root,
     exactRoute: true,
     colorTheme: ColorTheme.horizon,
@@ -101,7 +103,7 @@ export const RedirectNotFound = () => <Redirect to={ PageRoute.notFound } />;
 
 const App = () => {
   const colorTheme = useAppSelector( selectColorTheme );
-  
+
   return (
     <div className={ `app app--${ colorTheme }` }>
       <GradientBackground colorTheme={ colorTheme } />
@@ -119,7 +121,7 @@ const App = () => {
                   exact={ page.exactRoute }
                 >
                   <PageWrapper 
-                    route={ page.route }
+                    title={ page.name }
                     colorTheme={ page.colorTheme }
                   >
                     <page.Component route={ page.route } />

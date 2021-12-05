@@ -4,7 +4,7 @@ import './Button.scss';
 
 type Props = {
   isPressed ?: boolean,  
-  onClick ?: ( event : React.MouseEvent ) => void,
+  onClick ?: ( event : React.MouseEvent, which ?: number ) => void,
   onHover ?: ( event : React.MouseEvent ) => void,
   onLeave ?: ( event : React.MouseEvent ) => void,
   additionalClasses ?: string,
@@ -13,8 +13,8 @@ type Props = {
 
 const Button = ( { isPressed = false, onClick, onHover, onLeave, additionalClasses = '', children } : Props ) : JSX.Element => {
 
-  const handleClick = ( event : React.MouseEvent ) : void => {
-    onClick?.( event );
+  const handleClick = ( event : React.MouseEvent, which ?: number ) : void => {
+    onClick?.( event, which );
   };
 
   return (
@@ -23,6 +23,7 @@ const Button = ( { isPressed = false, onClick, onHover, onLeave, additionalClass
         `button ${ isPressed ? 'button--pressed' : '' } ${ additionalClasses }` 
       }
       onClick={ handleClick }
+      onAuxClick={ ( e ) => handleClick( e, 2 ) }
       onMouseEnter={ onHover }
       onMouseLeave={ onLeave }
     >

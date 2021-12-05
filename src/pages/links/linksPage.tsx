@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
+/* eslint-disable react/no-unescaped-entities */
+import React, { useCallback, useMemo, useState } from 'react';
 import { PageRoute } from '../../App';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
@@ -49,7 +50,7 @@ const LinksPage = ( { route } : PageProps ) => {
         ) )}
       </section>
     ) );
-  }, [] );
+  }, []);
 
   const linkSections = useMemo( () => {
     const categorizedLinks : { [ title : string ] : Link[] } = {};
@@ -61,6 +62,7 @@ const LinksPage = ( { route } : PageProps ) => {
 
         const categoryLinks = categorizedLinks[ link.category ];
         categoryLinks.push( link );
+        categorizedLinks[ link.category ] = categoryLinks;
       } );
 
     } else {

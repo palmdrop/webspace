@@ -1,18 +1,23 @@
 import Post from '../components/post/Post';
-import "highlight.js/styles/kimbie-dark.css";
+import 'highlight.js/styles/kimbie-dark.css';
+import image from '../../../assets/img/rehash-transform/crowd.jpg';
 
 const metadata = {
-  "title": "Test post",
-  "keywords": "art, c2, c3",
-  "date": "Nov 21, 2021",
-  "id": 1
+  'title': 'Test post',
+  'keywords': 'art, c2, c3',
+  'date': 'Nov 21, 2021',
+  'image': '../../../assets/img/rehash-transform/crowd.jpg',
+  'id': 1
 };
 
 const Post1 = () => {
   return (
-    <Post metadata={ metadata }>
-      <div dangerouslySetInnerHTML={ { __html: `<h1 id="test-post">TEST POST</h1>
-<p>With some content</p>
+    <Post 
+      metadata={ metadata }
+      image={ image }
+    >
+      <div dangerouslySetInnerHTML={ { __html: `<p>With some content</p>
+<hr>
 <ul>
 <li>item</li>
 <li>item</li>

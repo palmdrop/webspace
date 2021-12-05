@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { Function, GLSL, GlslType, Uniforms } from '../../core';
+import { GlslFunction, GLSL, GlslType, Uniforms } from '../../core';
 import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
-import { CombinedSource, CustomSource, Domain, DomainWarp, Fog, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource } from './types';
+import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog } from './types';
 
 export const getFunctionName = ( () => {
   let counter = 0;
@@ -12,7 +12,7 @@ export const getFunctionName = ( () => {
   };
 } )();
 
-export const nameFunction = ( func : Function, functionCache : Map<any, FunctionWithName> ) : FunctionWithName => {
+export const nameFunction = ( func : GlslFunction, functionCache : Map<any, FunctionWithName> ) : FunctionWithName => {
   if ( functionCache.has( func ) ) return functionCache.get( func ) as FunctionWithName;
 
   const name = getFunctionName( 'function' );
@@ -57,7 +57,7 @@ export const buildSource = (
 
   const name = getFunctionName( 'source' );
 
-  let func : Function;
+  let func : GlslFunction;
   const kind = source.kind;
   switch( kind ) {
   case 'noise' : func = buildNoiseSource( source as NoiseSource ); break;
@@ -82,7 +82,7 @@ export const buildSource = (
   return data;
 };
 
-export const buildNoiseSource = ( noise : NoiseSource ) : Function => {
+export const buildNoiseSource = ( noise : NoiseSource ) : GlslFunction => {
   const frequency = noise.frequency;
   const amplitude = noise.amplitude ?? 1.0;
   const pow = noise.pow ?? 1.0;
@@ -125,7 +125,7 @@ export const buildNoiseSource = ( noise : NoiseSource ) : Function => {
   };
 };
 
-export const buildTrigSource = ( trig : TrigSource ) : Function => {
+export const buildTrigSource = ( trig : TrigSource ) : GlslFunction => {
   const types = trig.types;
   const frequency = trig.frequency ?? new THREE.Vector3( 0.0 );
   const amplitude = trig.amplitude ?? new THREE.Vector3( 1.0, 1.0, 1.0 );
@@ -150,7 +150,7 @@ export const buildCombinedSource = (
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
   isMain = false 
-) : Function => {
+) : GlslFunction => {
   const getPart = ( name : string, index : number ) => {
     let multiplier;
     if( source.multipliers && source.multipliers.length > index ) {
@@ -184,7 +184,7 @@ export const buildWarpedSource = (
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
   isMain = false 
-) : Function => {
+) : GlslFunction => {
   const { name: sourceFunctionName } = buildSource( source.source, uniforms, textureNames, functionCache, isMain );
   const { name: warpFunctioName } = buildWarpFunction( source.warp, uniforms, textureNames, functionCache );
 
@@ -215,7 +215,7 @@ export const buildWarpFunction = (
     helperNames.push( name );
   } );
 
-  const func : Function = {
+  const func : GlslFunction = {
     parameters: [ [ 'vec3', 'point' ] ],
     returnType: 'vec3',
     body: `
@@ -243,7 +243,7 @@ const buildTextureSource = (
   uniforms : Uniforms,
   textureNames : Set<string>, 
   functionCache : FunctionCache,
-) : Function & { isTexture : boolean } => {
+) : GlslFunction & { isTexture : boolean } => {
   if( !uniforms ) throw new Error( 'Uniforms object cannot be undefined' );
   if( textureNames.has( source.name ) ) throw new Error( `A texture with the name "${ source.name }" already exists. }` );
 
@@ -282,7 +282,7 @@ const buildTextureSource = (
   };
 };
 
-export const buildCustomSource = ( source : CustomSource ) : Function => {
+export const buildCustomSource = ( source : CustomSource ) : GlslFunction => {
   return {
     parameters: [ [ 'vec3', 'point' ] ],
     returnType: 'float',
@@ -290,7 +290,7 @@ export const buildCustomSource = ( source : CustomSource ) : Function => {
   };
 };
 
-export const defaultTextureToFloatFunction : Function = {
+export const defaultTextureToFloatFunction : GlslFunction = {
   parameters: [ [ 'vec4', 'color' ] ],
   returnType: 'float',
   body: `
@@ -306,7 +306,7 @@ export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionW
   const nearColorGLSL = colorToGLSL( fog.nearColor );
   const farColorGLSL = colorToGLSL( fog.farColor );
   console.log( fog.opacity );
-  const func : Function = {
+  const func : GlslFunction = {
     parameters: [ [ 'vec3', 'fragColor' ], [ 'float', 'depth' ] ],
     returnType: 'vec3',
     body: `
@@ -335,7 +335,7 @@ export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionW
 };
 
 // Adapted from https://gist.github.com/983/e170a24ae8eba2cd174f
-export const rgbToHsvFunction : Function = {
+export const rgbToHsvFunction : GlslFunction = {
   parameters: [ [ 'vec3', 'c' ] ],
   returnType: 'vec3',
   body: `
@@ -350,7 +350,7 @@ export const rgbToHsvFunction : Function = {
 };
 
 // Adapted from https://gist.github.com/983/e170a24ae8eba2cd174f
-export const hsvToRgbFunction : Function = {
+export const hsvToRgbFunction : GlslFunction = {
   parameters: [ [ 'vec3', 'c' ] ],
   returnType: 'vec3',
   body: `
@@ -361,7 +361,7 @@ export const hsvToRgbFunction : Function = {
 };
 
 // 
-export const isNanFunction : Function = {
+export const isNanFunction : GlslFunction = {
   parameters: [ [ 'float', 'value' ] ],
   returnType: 'bool',
   body: `
@@ -369,7 +369,7 @@ export const isNanFunction : Function = {
   `
 };
 
-export const isInfFunction : Function = {
+export const isInfFunction : GlslFunction = {
   parameters: [ [ 'float', 'value' ] ],
   returnType: 'bool',
   body: `
@@ -377,7 +377,7 @@ export const isInfFunction : Function = {
   `
 };
 
-export const sanitizeFunction : Function = {
+export const sanitizeFunction : GlslFunction = {
   parameters: [ [ 'float', 'value' ] ],
   returnType: 'float',
   body: ` 
