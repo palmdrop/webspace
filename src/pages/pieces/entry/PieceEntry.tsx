@@ -25,8 +25,8 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
   };
 
   const handleClick = ( event : React.MouseEvent ) => {
-    onClick( index, event );
-  };
+    onClick( piece, index, event );
+  }
 
   return (
     <div className="piece-entry"

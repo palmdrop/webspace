@@ -1,0 +1,47 @@
+$closed : translate( -50%, -40% );
+$opened : translate( -50%, -50% );
+
+.modal {
+  position: fixed;
+  z-index: 100;
+
+  width: 400px;
+  height: auto;
+
+  top: 50%;
+  left: 50%;
+
+  background-color: white;
+  
+  transition: 0.5s opacity, 1.5s transform;
+
+  &--opening {
+    visibility: visible;
+    opacity: 1;
+    transform: $opened;
+  }
+
+  &--open {
+    transform: $opened;
+    opacity: 1;
+  }
+
+  &--closing {
+    opacity: 0;
+    transform: $closed;
+  }
+
+  &--closed {
+    opacity: 0;
+    visibility: hidden;
+    transform: $closed;
+  }
+}
+
+.blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  background-color: transparent;
+}

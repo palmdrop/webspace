@@ -24,6 +24,7 @@ export type PieceData = {
 }
 
 export type PieceNavigationFunction = ( 
+  pieceData : PieceData | undefined,
   index : number, 
   event : React.MouseEvent 
 ) => void;

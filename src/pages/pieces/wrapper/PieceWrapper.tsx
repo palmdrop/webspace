@@ -73,12 +73,12 @@ const PieceWrapper = React.memo( ( {
   }, [ setIsLoaded, onLoad ] );
 
   const handlePrevious = ( event : React.MouseEvent ) => {
-    handlePieceNavigation?.( pieceIndex - 1, event );
-  };
+    handlePieceNavigation?.( undefined, pieceIndex - 1, event );
+  }
 
   const handleNext = ( event : React.MouseEvent ) => {
-    handlePieceNavigation?.( pieceIndex + 1, event );
-  };
+    handlePieceNavigation?.( undefined, pieceIndex + 1, event );
+  }
 
   const handleGoBack = () => {
     history.push( PageRoute.pieces );

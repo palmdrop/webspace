@@ -14,7 +14,7 @@ import HomeBar from '../../components/navigation/home/HomeBar';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Paragraph from '../../components/paragraph/Paragraph';
 
-import { PieceNavigationFunction, pieces } from './pieces/pieces';
+import { PieceData, PieceNavigationFunction, pieces } from './pieces/pieces';
 import PieceWrapper from './wrapper/PieceWrapper';
 import { PieceEntry } from './entry/PieceEntry';
 
@@ -24,11 +24,21 @@ import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
 import './piecesPage.scss';
 
+const pieceNameToPath = ( name : string ) => {
+  return name.replace( ' ', '-' ).toLowerCase();
+}
+
 const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
   const history = useHistory();
 
-  const handlePieceNavigation : PieceNavigationFunction = useCallback( ( index : number, event : React.MouseEvent ) : void => {
-    history.push( `${ route }/${ index + 1 }` );
+  const handlePieceNavigation : PieceNavigationFunction = useCallback( ( 
+    pieceData : PieceData | undefined, 
+    index : number, 
+    event : React.MouseEvent 
+  ) : void => {
+    event.preventDefault();
+    pieceData = pieceData || pieces[ index ];
+    history.push( `${ route }/${ pieceNameToPath( pieceData.name ) }`)
   }, [ history, route ] );
 
   const pieceEntries = useMemo( () => (
@@ -50,7 +60,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
           { pieces.map( ( piece, index ) => (
             <Route
               key={ index }
-              path={ `${ route }/${ index + 1 }` as string }
+              path={ `${ route }/${ pieceNameToPath( piece.name ) }` as string }
               exact
             >
               <PieceWrapper

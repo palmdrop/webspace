@@ -7,7 +7,9 @@ const marked = require( "marked" );
 const hljs = require( "highlight.js" );
 
 const postsOutputPath = path.join( __dirname, "../src/pages/blog/posts" );
-const config = require( "../blog-config.json" );
+const config = require( "../src/blog-config.json" );
+
+const postComponentPath = '../components/post/Post';
 
 // Configure syntax highlighting for code blocks
 marked.setOptions({
@@ -18,9 +20,9 @@ marked.setOptions({
   langPrefix: 'hljs language-',
 });
 
+// TODO fix indentation
 const htmlToReactComponent = ( metadata, html ) => {
-  return `
-import Post from '../posts';
+  return `import Post from '${ postComponentPath }';
 ${ config && config[ "code-theme" ] && (
   `import \"${ config[ "code-theme" ] }\";`
 )}

@@ -1,21 +1,17 @@
-
-import Post from '../posts';
+import Post from '../components/post/Post';
 import "highlight.js/styles/kimbie-dark.css";
 
 const metadata = {
-  "title": "Test post 2",
-  "keywords": [
-    "other",
-    "c5"
-  ],
-  "date": "Nov 21, 2021",
+  "title": "Test post 4",
+  "keywords": "other, c5",
+  "date": "Nov 26, 2021",
   "id": 4
 };
 
 const Post4 = () => {
   return (
     <Post metadata={ metadata }>
-      <div dangerouslySetInnerHTML={ { __html: `<h1 id="test-post-2">TEST POST 2</h1>
+      <div dangerouslySetInnerHTML={ { __html: `<h1 id="test-post-4">TEST POST 4</h1>
 <p>With some content</p>
 <ul>
 <li>item</li>

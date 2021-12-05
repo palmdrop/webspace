@@ -4,6 +4,9 @@
 /* Quicksand */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&display=swap');
 
+/* Space Grotesk */ 
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap');
+
 /* Snippet */
 // @import url('https://fonts.googleapis.com/css2?family=Snippet&display=swap');
 
@@ -49,13 +52,15 @@
 /* Font data */ 
 $fonts: (
   'heading': (
+    // 'name': 'Space Grotesk',
     'name': 'Quicksand',
     'fallback': sans-serif,
-    'weight': 300,
+    'weight': 200,
     'style': italic,
   ),
   'subheading': (
-    'name': 'Quicksand',
+    // 'name': 'Quicksand',
+    'name': 'Space Grotesk',
     'fallback': sans-serif,
     'weight': 400,
     'style': normal,
@@ -63,6 +68,8 @@ $fonts: (
 
   'paragraph': (
     'name': 'SyneMono',
+    // 'name': 'Space Grotesk',
+    // 'name': 'SyneRegular',
     'fallback': sans-serif,
     'weight': 300,
     'style': normal
@@ -70,8 +77,9 @@ $fonts: (
 
   'button': (
     'name': 'SyneMono',
+    // 'name': 'Space Grotesk',
     'fallback': sans-serif,
-    'weight': 600,
+    'weight': 500,
     'style': normal
   ),
 

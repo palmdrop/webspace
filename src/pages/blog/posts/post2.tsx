@@ -1,14 +1,10 @@
-
-import Post from '../posts';
-import 'highlight.js/styles/kimbie-dark.css';
+import Post from '../components/post/Post';
+import "highlight.js/styles/kimbie-dark.css";
 
 const metadata = {
   "title": "Test post 2",
-  "keywords": [
-    "tech",
-    "c3"
-  ],
-  "date": "Nov 21, 2021",
+  "keywords": "tech, c3",
+  "date": "Nov 23, 2021",
   "id": 2
 };
 

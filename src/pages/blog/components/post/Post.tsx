@@ -1,5 +1,3 @@
-import './blogPage.scss';
-
 export type PostMetadata = {
   title : string,
   date : string,

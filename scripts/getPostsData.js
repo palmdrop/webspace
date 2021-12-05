@@ -13,16 +13,22 @@ const requiredMetadata = [ 'title', 'keywords', 'date' ];
 const parseMetadata = ( file, metadataLines ) => {
   const metadata = {}
   metadataLines.forEach( line => {
-    const [ name, value ] = line.split( ":" );
+    let [ name, value ] = line.split( ":" );
     if( !name || !value || !allowedMetadata.includes( name ) ) {
       throw new Error( `Malformed metadata field in file ${ file }` );
     }
 
+    name = name.trim()
+
     if( name === 'keywords' ) {
       metadata[ name ] = value.split( ',' ).map(category => category.trim());
-    } else {
-      metadata[ name ] = value.trim();
-    }
+    } else if( name === 'date' ) {
+      if( ( new Date( value ) == 'Invalid Date' ) ) {
+        throw new Error( `Malformed metadata: ${ file } contains an invalid date, ${ value }` );
+      }
+    } 
+
+    metadata[ name ] = value.trim();
   });
 
   requiredMetadata.forEach( name => {
