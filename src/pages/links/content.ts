@@ -112,3 +112,9 @@ links.push(toLink(
   'http://softerdigitalfutures.xyz',
   'Tech', 'Art', 'Blog'
 ));
+links.push(toLink(
+  'Alice Maz',
+  'https://www.alicemaz.com/',
+  'Blog', 'Tech'
+));
+
