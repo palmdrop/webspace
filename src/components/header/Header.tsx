@@ -1,5 +1,6 @@
 import React from 'react'
-import { PageRoute, useNavigation } from '../../App';
+import { Link } from 'react-router-dom';
+import { PageRoute } from '../../App';
 import Bar from '../ornamental/bars/Bar';
 import Title from '../title/Title';
 
@@ -16,12 +17,6 @@ type Props = {
 };
 
 const Header = ( { mainTitle, firstSubtitle, secondSubtitle, mainLevel = 1, subLevel = 5, linkTo, children } : Props ) : JSX.Element => {
-  const navigateTo = useNavigation();
-
-  const handleClick = () : void => {
-    linkTo && navigateTo( linkTo );
-  };
-
   const headerContent = (
     <div>
       <Title 
@@ -64,11 +59,10 @@ const Header = ( { mainTitle, firstSubtitle, secondSubtitle, mainLevel = 1, subL
       className={ `header ${ linkTo ? 'header--link' : '' }` }
     >
       { linkTo ? (
-          <button onClick={ handleClick }>
+          <Link to={ linkTo }>
             { headerContent }
-          </button>
-        ) 
-        : headerContent 
+          </Link>
+        ) : headerContent 
       }
     </header>
   )

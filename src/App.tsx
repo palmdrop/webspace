@@ -5,13 +5,12 @@ import { ErrorBoundary } from 'react-error-boundary';
 import {
   Switch,
   Route,
-  useHistory,
   BrowserRouter as Router,
   Redirect
 } from "react-router-dom";
 
-import { useAppDispatch, useAppSelector } from "./state/store/hooks";
-import { ColorTheme, selectColorTheme, selectNextPageRoute, setColorTheme, setNextPageRoute } from "./state/slices/uiSlice";
+import { useAppSelector } from "./state/store/hooks";
+import { ColorTheme, selectColorTheme } from "./state/slices/uiSlice";
 
 import PageWrapper, { PageProps } from "./pages/PageWrapper";
 
@@ -45,7 +44,6 @@ export type Page = {
   route : PageRoute,
   exactRoute : boolean,
   colorTheme : ColorTheme,
-  scroll : boolean,
   Component : React.FunctionComponent<PageProps>,
 }
 
@@ -55,7 +53,6 @@ export const pages : Page[] = [
     route: PageRoute.self,
     exactRoute: true,
     colorTheme: ColorTheme.swamp,
-    scroll: false,
     Component: AboutPage,
   },
   {
@@ -63,7 +60,6 @@ export const pages : Page[] = [
     route: PageRoute.pieces,
     exactRoute: false,
     colorTheme: ColorTheme.dirty,
-    scroll: false,
     Component: PiecesPage
   },
   {
@@ -71,7 +67,6 @@ export const pages : Page[] = [
     route: PageRoute.blog,
     exactRoute: false,
     colorTheme: ColorTheme.haze,
-    scroll: false,
     Component: BlogPage
   },
   {
@@ -79,7 +74,6 @@ export const pages : Page[] = [
     route: PageRoute.links,
     exactRoute: false,
     colorTheme: ColorTheme.digital,
-    scroll: false,
     Component: LinksPage
   },
   {
@@ -87,7 +81,6 @@ export const pages : Page[] = [
     route: PageRoute.contact,
     exactRoute: true,
     colorTheme: ColorTheme.vapor,
-    scroll: false,
     Component: ContactPage
   },
   {
@@ -95,7 +88,6 @@ export const pages : Page[] = [
     route: PageRoute.root,
     exactRoute: true,
     colorTheme: ColorTheme.horizon,
-    scroll: false,
     Component: MainPage
   }
 ];
@@ -105,33 +97,10 @@ export const routePageMap : Map<string, Page> = new Map(
   pages.map( page => [ page.route, page ] )
 );
 
-// Delay (for animation) before navigating to another page
-export const REDIRECTION_DELAY = 500;
-
-// Navigation hook that encapsulates the actions required to smoothly transition to another page
-// The purpose of this hook is to make it easy for any element to trigger a smooth page transition
-export const useNavigation = () => {
-  const dispatch = useAppDispatch();
-  const history = useHistory();
-
-  const navigateTo = ( route : PageRoute ) => {
-    const page = routePageMap.get( route );
-    page && dispatch( setColorTheme( page.colorTheme ));
-
-    dispatch( setNextPageRoute( route ) );
-    setTimeout( () => {
-      history.push( route );
-    }, REDIRECTION_DELAY );
-  };
-
-  return navigateTo;
-};
-
 export const RedirectNotFound = () => <Redirect to={ PageRoute.notFound } />;
 
 const App = () => {
   const colorTheme = useAppSelector( selectColorTheme );
-  const nextPageRoute = useAppSelector( selectNextPageRoute );
   
   return (
     <div className={ `app app--${ colorTheme }` }>
@@ -152,8 +121,6 @@ const App = () => {
                 <PageWrapper 
                   route={ page.route }
                   colorTheme={ page.colorTheme }
-                  fadeOut={ nextPageRoute !== null && page.route !== nextPageRoute }
-                  scroll={ page.scroll }
                 >
                   <page.Component route={ page.route } />
                 </PageWrapper>

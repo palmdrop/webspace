@@ -6,10 +6,10 @@
   background-color: transparent;
   color: var( --primary-color-300 );
 
-  //border-bottom: 2px solid transparent;
   @include text-shadow( 'button' );
 
   @include font( 'button' );
+
   font-size: 1.0rem;
   letter-spacing: 0.2rem;
 
@@ -17,13 +17,5 @@
 
   &:hover {
     color: var( --primary-color-500 );
-  }
-
-  &--pressed {
-
-  }
-
-  &--pressed:hover {
-
   }
 }

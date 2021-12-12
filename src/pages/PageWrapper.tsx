@@ -6,38 +6,30 @@ import { useAppDispatch } from '../state/store/hooks';
 
 import './PageWrapper.scss';
 
+export type PageProps = {
+  route : PageRoute
+}
+
 type Props = {
   route : PageRoute,
   colorTheme : ColorTheme,
-  fadeOut : boolean,
-  scroll? : boolean,
   children : React.ReactChild | React.ReactChild[] 
 }
 
-const PageWrapper = ( { route, colorTheme, scroll = true, fadeOut, children } : Props ) : JSX.Element => {
+const PageWrapper = ( { route, colorTheme, children } : Props ) : JSX.Element => {
   const dispatch = useAppDispatch();
 
   useEffect( () => {
     dispatch( setNextPageRoute( route ) );
     dispatch( setColorTheme( colorTheme ) );
 
-  }, [ colorTheme, dispatch, route ] );
+  }, [ colorTheme, route, dispatch ] );
 
   return (
-    <div 
-      className={ 
-        `page-wrapper 
-        ${ scroll ? 'page-wrapper--scroll' : '' } 
-        ${ fadeOut ? 'page-wrapper--fade-out' : '' }` 
-      }
-    >
+    <div className="page-wrapper">
       { children }
     </div>
   )
-}
-
-export type PageProps = {
-  route : PageRoute
 }
 
 export default React.memo( PageWrapper );
