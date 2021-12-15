@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react';
 import { LazyLoadImage, ScrollPosition } from 'react-lazy-load-image-component';
 
 import './LazyImage.scss';
@@ -6,11 +6,11 @@ import './LazyImage.scss';
 type Props = {
   src : string,
   alt : string,
-  width? : number,
-  height? : number,
-  scrollPosition? : ScrollPosition,
-  placeholder? : JSX.Element,
-  children? : React.ReactNode
+  width ?: number,
+  height ?: number,
+  scrollPosition ?: ScrollPosition,
+  placeholder ?: JSX.Element,
+  children ?: React.ReactNode
 };
 
 const loadedImages = new Set<string>();
@@ -39,7 +39,7 @@ const LazyImage = ( { src, alt, width, height, scrollPosition, placeholder, chil
       /> 
       { loaded && children }
     </div>
-  )
-}
+  );
+};
 
 export default LazyImage;

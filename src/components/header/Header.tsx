@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { PageRoute } from '../../App';
 import Bar from '../ornamental/bars/Bar';
@@ -8,12 +8,12 @@ import './Header.scss';
 
 type Props = {
   mainTitle : string,
-  firstSubtitle? : string,
-  secondSubtitle? : string,
-  mainLevel? : number,
-  subLevel? : number,
-  linkTo? : PageRoute,
-  children? : React.ReactChild | React.ReactChild[] | never[]
+  firstSubtitle ?: string,
+  secondSubtitle ?: string,
+  mainLevel ?: number,
+  subLevel ?: number,
+  linkTo ?: PageRoute,
+  children ?: React.ReactChild | React.ReactChild[] | never[]
 };
 
 const Header = ( { mainTitle, firstSubtitle, secondSubtitle, mainLevel = 1, subLevel = 5, linkTo, children } : Props ) : JSX.Element => {
@@ -59,13 +59,13 @@ const Header = ( { mainTitle, firstSubtitle, secondSubtitle, mainLevel = 1, subL
       className={ `header ${ linkTo ? 'header--link' : '' }` }
     >
       { linkTo ? (
-          <Link to={ linkTo }>
-            { headerContent }
-          </Link>
-        ) : headerContent 
+        <Link to={ linkTo }>
+          { headerContent }
+        </Link>
+      ) : headerContent 
       }
     </header>
-  )
-}
+  );
+};
 
 export default Header;

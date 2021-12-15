@@ -24,12 +24,12 @@ export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
 
     // Warp amount
     ( frequency : THREE.Vector3 ) => {
-      return ( solarChromeMaxFrequency.length() - frequency.length() ) * random( 7.0, 9.0 ) + 0.5 
+      return ( solarChromeMaxFrequency.length() - frequency.length() ) * random( 7.0, 9.0 ) + 0.5; 
     },
 
     // Octaves 
     () => {
-      return 3
+      return 3;
     },
 
     // Lacunarity
@@ -45,35 +45,35 @@ export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
     // Warp entries
     [
       { 
-        warpFunction : noiseWarp,
+        warpFunction: noiseWarp,
       }, 
       {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
             0.8 * Math.random(), 
             0.8 * Math.random(), 
             0.8 * Math.random() 
           ),
-          falloff : random( 0.5, 1.0 ),
+          falloff: random( 0.5, 1.0 ),
         }
       }
     ]
-  )
-})();
+  );
+} )();
 
 export const SolarChromeGeometryPrefab2 : GeometryPrefab = ( () => {
   const solarChromeMaxFrequency = new THREE.Vector3( 0.4 );
   return generateWarpGeometryPrefab(
     // Geometry
     () => {
-      const geometry = new THREE.TorusBufferGeometry( 1.0, 0.2, 128 * 4, 128 * 4 )
+      const geometry = new THREE.TorusBufferGeometry( 1.0, 0.2, 128 * 4, 128 * 4 );
 
       geometry.applyMatrix4( new THREE.Matrix4().scale( new THREE.Vector3( 
         random( 1.0, 3.0 ),
         random( 1.0, 3.0 ),
         random( 1.0, 3.0 ),
-      )));
+      ) ) );
 
       return geometry;
     },
@@ -89,12 +89,12 @@ export const SolarChromeGeometryPrefab2 : GeometryPrefab = ( () => {
 
     // Warp amount
     ( frequency : THREE.Vector3 ) => {
-      return random( 0.02, 0.05 )
+      return random( 0.02, 0.05 );
     },
 
     // Octaves 
     () => {
-      return 3
+      return 3;
     },
 
     // Lacunarity
@@ -110,22 +110,22 @@ export const SolarChromeGeometryPrefab2 : GeometryPrefab = ( () => {
     // Warp entries
     [
       { 
-        warpFunction : domainWarp,
+        warpFunction: domainWarp,
       }, 
       {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
             0.8 * Math.random(), 
             0.8 * Math.random(), 
             0.8 * Math.random() 
           ),
-          falloff : random( 0.8, 0.8 ),
+          falloff: random( 0.8, 0.8 ),
         }
       }
     ]
-  )
-})();
+  );
+} )();
 
 const solarLandscapePrefabDetail = 228;
 export const FoldedStoneGeometryPrefab : GeometryPrefab = ( () => {
@@ -160,7 +160,7 @@ export const FoldedStoneGeometryPrefab : GeometryPrefab = ( () => {
 
     // Octaves 
     () => {
-      return 3
+      return 3;
     },
 
     // Lacunarity
@@ -176,22 +176,22 @@ export const FoldedStoneGeometryPrefab : GeometryPrefab = ( () => {
     // Warp entries
     [
       { 
-        warpFunction : noiseWarp,
+        warpFunction: noiseWarp,
       }, 
       {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
             0.6 * Math.random(), 
             0.6 * Math.random(), 
             0.6 * Math.random() 
           ),
-          falloff : random( 0.5, 1.0 ),
+          falloff: random( 0.5, 1.0 ),
         }
       }
     ]
-  )
-})();
+  );
+} )();
 
 export const TwistedTorusGeometryPrefab : GeometryPrefab = ( () => {
   const solarChromeMaxFrequency = new THREE.Vector3( 0.30 );
@@ -217,7 +217,7 @@ export const TwistedTorusGeometryPrefab : GeometryPrefab = ( () => {
 
     // Octaves 
     () => {
-      return 3
+      return 3;
     },
 
     // Lacunarity
@@ -233,22 +233,22 @@ export const TwistedTorusGeometryPrefab : GeometryPrefab = ( () => {
     // Warp entries
     [
       { 
-        warpFunction : noiseWarp,
+        warpFunction: noiseWarp,
       }, 
       {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
             0.8 * Math.random(), 
             0.8 * Math.random(), 
             0.8 * Math.random() 
           ),
-          falloff : random( 0.5, 1.2 ),
+          falloff: random( 0.5, 1.2 ),
         }
       }
     ]
-  )
-})();
+  );
+} )();
 
 export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
   const solarChromeMaxFrequency = new THREE.Vector3( 0.45 );
@@ -261,7 +261,7 @@ export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
         random( 0.2, 1.4, ),
         random( 0.2, 1.4, ),
         random( 0.2, 1.4, ),
-      )));
+      ) ) );
 
       return geometry;
     },
@@ -282,7 +282,7 @@ export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
 
     // Octaves 
     () => {
-      return 3
+      return 3;
     },
 
     // Lacunarity
@@ -298,22 +298,22 @@ export const MarbleGeometryPrefab : GeometryPrefab = ( () => {
     // Warp entries
     [
       { 
-        warpFunction : noiseWarp,
+        warpFunction: noiseWarp,
       }, 
       {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
             random( -0.8, 0.8 ),
             random( -0.8, 0.8 ),
             random( -0.8, 0.8 ),
           ),
-          falloff : random( 1.3, 0.3 ),
+          falloff: random( 1.3, 0.3 ),
         }
       }
     ]
-  )
-})();
+  );
+} )();
 
 export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
   const solarChromeMaxFrequency = new THREE.Vector3( 0.25 );
@@ -343,7 +343,7 @@ export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
 
     // Octaves 
     () => {
-      return 3
+      return 3;
     },
 
     // Lacunarity
@@ -359,22 +359,22 @@ export const CurledTubeGeometryPrefab : GeometryPrefab = ( () => {
     // Warp entries
     [
       { 
-        warpFunction : noiseWarp,
+        warpFunction: noiseWarp,
       }, 
       {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
             random( -1.8, 1.8 ),
             random( -1.8, 1.8 ),
             random( -1.8, 1.8 ),
           ),
-          falloff : random( 0.3, 0.45 ),
+          falloff: random( 0.3, 0.45 ),
         }
       }
     ]
-  )
-})();
+  );
+} )();
 
 export const ImprintGeometryPrefab : GeometryPrefab = ( () => {
   const minFrequency = new THREE.Vector3( 0.175, 0.175, 0.175 );
@@ -409,7 +409,7 @@ export const ImprintGeometryPrefab : GeometryPrefab = ( () => {
 
     // Octaves 
     () => {
-      return 3
+      return 3;
     },
 
     // Lacunarity
@@ -425,19 +425,19 @@ export const ImprintGeometryPrefab : GeometryPrefab = ( () => {
     // Warp entries
     [
       { 
-        warpFunction : noiseWarp,
+        warpFunction: noiseWarp,
       }, 
       {
-        warpFunction : twistWarp,
-        args : {
-          twistAmount : new THREE.Vector3( 
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
             0.6 * Math.random(), 
             0.6 * Math.random(), 
             0.6 * Math.random() 
           ),
-          falloff : random( 0.5, 0.7 ),
+          falloff: random( 0.5, 0.7 ),
         }
       }
     ]
-  )
-})();
+  );
+} )();

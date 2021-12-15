@@ -1,12 +1,12 @@
-import * as THREE from 'three'
+import * as THREE from 'three';
 import { random } from '../../../utils/random';
 import { ImprintGeometryPrefab } from '../../prefabs/geometries';
 
-export const createObject = (material: THREE.Material, size : number) : {
+export const createObject = ( material : THREE.Material, size : number ) : {
   mesh : THREE.Mesh,
   updateMesh : ( mesh : THREE.Mesh, time : number, delta : number ) => void,
 } => {
-  const geometry = ImprintGeometryPrefab({});
+  const geometry = ImprintGeometryPrefab( {} );
 
   const numberOfInstances = Math.floor( random( 40, 100 ) );
 
@@ -58,20 +58,20 @@ export const createObject = (material: THREE.Material, size : number) : {
         scale
       );
 
-      (mesh as THREE.InstancedMesh).setMatrixAt( i, matrix );
+      ( mesh as THREE.InstancedMesh ).setMatrixAt( i, matrix );
     }
 
     const averagePosition = positionSum.divideScalar( numberOfInstances );
 
     mesh.position.copy( averagePosition.multiplyScalar( -1 ) );
 
-    (mesh as THREE.InstancedMesh).instanceMatrix.needsUpdate = true
-  }
+    ( mesh as THREE.InstancedMesh ).instanceMatrix.needsUpdate = true;
+  };
 
   updateMesh( instancedObject, 0, 0 );
 
   return {
-    mesh : instancedObject,
+    mesh: instancedObject,
     updateMesh,
-  }
-}
+  };
+};

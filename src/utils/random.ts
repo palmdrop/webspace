@@ -4,9 +4,9 @@ const random = ( min : number, max : number ) : number => {
 
 const randomElement = <T>( array : T[] ) : T => {
   return array[ Math.floor( Math.random() * array.length ) ];
-}
+};
 
 export {
   random,
   randomElement
-}
+};

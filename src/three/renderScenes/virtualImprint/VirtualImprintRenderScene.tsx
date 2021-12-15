@@ -2,22 +2,22 @@ import { random } from 'lodash';
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
-import { AbstractRenderScene } from "../../AbstractRenderScene";
-import { VoidCallback } from "../../core";
+import { AbstractRenderScene } from '../../AbstractRenderScene';
+import { VoidCallback } from '../../core';
 import { SolarChromeGeometryPrefab2 } from '../../prefabs/geometries';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
 import { setUniform } from '../../shader/core';
 import shaderSettings from './shader';
 
 export class VirtualImprintRenderScene extends AbstractRenderScene {
-  private controls? : TrackballControls;
+  private controls ?: TrackballControls;
   private shaderMaterial : THREE.ShaderMaterial;
 
   private cubeCamera : THREE.CubeCamera;
 
   private object : THREE.Mesh;
 
-  constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
+  constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
 
     const spaceSize = 500;
@@ -45,17 +45,17 @@ export class VirtualImprintRenderScene extends AbstractRenderScene {
     space.scale.set( spaceSize, spaceSize, spaceSize );
 
     const object = new THREE.Mesh(
-      SolarChromeGeometryPrefab2({}),
+      SolarChromeGeometryPrefab2( {} ),
       new THREE.MeshPhysicalMaterial( {
-        color : 'white',
-        roughness : 0.1,
-        metalness : 1.0,
+        color: 'white',
+        roughness: 0.1,
+        metalness: 1.0,
 
-        clearcoat : 0.5,
+        clearcoat: 0.5,
 
-        envMap : cubeRenderTarget.texture,
-        envMapIntensity : 1.5,
-      })
+        envMap: cubeRenderTarget.texture,
+        envMapIntensity: 1.5,
+      } )
     );
 
     object.scale.set( objectSize, objectSize, objectSize );
@@ -76,10 +76,10 @@ export class VirtualImprintRenderScene extends AbstractRenderScene {
 
   _createCubeCamera() : [ THREE.CubeCamera, THREE.WebGLCubeRenderTarget ] {
     const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 1024, {
-      format :THREE.RGBFormat,
-      generateMipmaps : true,
-      minFilter : THREE.LinearMipMapLinearFilter
-    });
+      format: THREE.RGBFormat,
+      generateMipmaps: true,
+      minFilter: THREE.LinearMipMapLinearFilter
+    } );
 
     const cubeCamera = new THREE.CubeCamera( 1, 1000, cubeRenderTarget );
 
@@ -101,7 +101,7 @@ export class VirtualImprintRenderScene extends AbstractRenderScene {
     super.render( delta, now );
   }
 
-  resize( width? : number, height? : number, force? : boolean ) : void {
+  resize( width ?: number, height ?: number, force ?: boolean ) : void {
     super.resize( width, height, force );
 
     setUniform( 'viewport', new THREE.Vector2( this.canvas.width, this.canvas.height ), this.shaderMaterial );

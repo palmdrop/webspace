@@ -12,7 +12,7 @@ export const generateWarpGeometryPrefab = (
   
   warpEntries : WarpEntry[],
 
-  outputBoundingBox? : THREE.Box3
+  outputBoundingBox ?: THREE.Box3
 ) : GeometryPrefab => () => {
   const geometry = geometryMaker();
   const frequency = frequencyMaker();
@@ -31,8 +31,8 @@ export const generateWarpGeometryPrefab = (
     warpEntries,
     true,
     outputBoundingBox
-  )
+  );
 
   return geometry;
-}
+};
   

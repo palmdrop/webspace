@@ -3,7 +3,7 @@ import './blogPage.scss';
 export type PostMetadata = {
   title : string,
   date : string,
-  image? : string,
+  image ?: string,
   id : number,
 }
 
@@ -23,6 +23,6 @@ const Post = ( { metadata, children } : PostProps ) => {
       { children }
     </div>
   );
-}
+};
 
 export default Post;

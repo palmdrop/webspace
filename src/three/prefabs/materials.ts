@@ -18,13 +18,13 @@ export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { ge
     metalness: 0.7,
 
     side: THREE.DoubleSide,
-  });
+  } );
 
   const roughnessMap = textureFromSmoothGeometry( 
     geometry,
     ( x, y, z, u, v ) => {
       const n = getNoise3D( { x, y, z }, null, 0.8, 0.5, 1.0 );
-      return new THREE.Color( n, n, n )
+      return new THREE.Color( n, n, n );
     },
     new THREE.Color( 'red' )
   );
@@ -32,8 +32,8 @@ export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { ge
   const metalnessMap = textureFromSmoothGeometry( 
     geometry,
     ( x, y, z, u, v ) => {
-      const n = getNoise3D( { x, y, z }, { x : 100, y : 0, z : 0 }, 1.0, 0.8, 1.0 );
-      return new THREE.Color( n, n, n )
+      const n = getNoise3D( { x, y, z }, { x: 100, y: 0, z: 0 }, 1.0, 0.8, 1.0 );
+      return new THREE.Color( n, n, n );
     },
     new THREE.Color( 'red' )
   );
@@ -52,10 +52,10 @@ export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { ge
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( 0.1 );
     material.needsUpdate = true;
-  });
+  } );
 
   return material;
-}
+};
 
 export const SoftMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
@@ -66,7 +66,7 @@ export const SoftMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : T
     metalness: 0.5,
 
     side: THREE.DoubleSide,
-  });
+  } );
 
   material.envMapIntensity = 0.4;
 
@@ -79,10 +79,10 @@ export const SoftMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : T
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.02, 0.11 ) );
     material.needsUpdate = true;
-  });
+  } );
 
   return material;
-}
+};
 
 export const RoughMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
@@ -93,7 +93,7 @@ export const RoughMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
     metalness: 0.8,
 
     side: THREE.DoubleSide,
-  });
+  } );
   
   material.envMapIntensity = 0.5;
 
@@ -109,10 +109,10 @@ export const RoughMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.2, 0.5 ) );
     material.needsUpdate = true;
-  });
+  } );
 
   return material;
-}
+};
 
 export const GlowingMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
@@ -125,7 +125,7 @@ export const GlowingMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color 
     metalness: 0.7,
 
     side: THREE.DoubleSide,
-  });
+  } );
   
   material.envMapIntensity = 0.5;
 
@@ -141,10 +141,10 @@ export const GlowingMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color 
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.1, 0.5 ) );
     material.needsUpdate = true;
-  });
+  } );
 
   return material;
-}
+};
 
 export const DirtyMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { color : THREE.Color }> = ( {
   color
@@ -155,7 +155,7 @@ export const DirtyMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
     metalness: 0.9,
 
     side: THREE.DoubleSide,
-  });
+  } );
   
   material.envMapIntensity = 0.5;
 
@@ -171,7 +171,7 @@ export const DirtyMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
     material.normalMap = texture;
     material.normalScale = new THREE.Vector2( random( 0.2, 0.6 ) );
     material.needsUpdate = true;
-  });
+  } );
 
   return material;
-}
+};

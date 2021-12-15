@@ -7,8 +7,8 @@ export type Noise = (
   position : Vector3, 
   offset : Vector3 | null | undefined, 
   frequency : number | Vector3,
-  min? : number, 
-  max? : number
+  min ?: number, 
+  max ?: number
 ) => number
 
 export const noise3D = makeNoise3D();
@@ -41,4 +41,4 @@ export const getNoise3D : Noise = (
   }
   const n = ( noise3D( x, y, z ) + 1.0 ) / 2.0;
   return clamp( min + ( max - min ) * n, min, max );
-}
+};

@@ -1,19 +1,19 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from 'react';
 
 export const useMousePosition = () : { x : number, y : number } => {
-  const mousePosition = useRef( { x : 0, y : 0 } );
+  const mousePosition = useRef( { x: 0, y: 0 } );
 
   const handleMouseMove = ( event : MouseEvent ) : void => {
     mousePosition.current.x = event.clientX;
     mousePosition.current.y = event.clientY;
-  }
+  };
 
   useEffect( () => {
     const target = window;
 
     target.addEventListener( 'mousemove', handleMouseMove );
     return () => window.removeEventListener( 'mousemove', handleMouseMove );
-  }, []);
+  }, [] );
 
   return mousePosition.current;
-}
+};

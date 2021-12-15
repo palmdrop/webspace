@@ -13,39 +13,39 @@ export interface AnimationLoop {
 }
 
 export interface Resizer {
-  resize( callback? : ResizeCallback, width? : number, height? : number, force? : boolean ) : void;
+  resize( callback ?: ResizeCallback, width ?: number, height ?: number, force ?: boolean ) : void;
 }
 
 export interface RenderScene extends AnimationLoop {
 
   canvas : HTMLCanvasElement;
-  onLoad? : VoidCallback;
+  onLoad ?: VoidCallback;
 
   render( delta : number, now : number ) : void;
   update( delta : number, now : number ) : void;
 
-  resize( width? : number, height? : number ) : void;
+  resize( width ?: number, height ?: number ) : void;
 
   captureFrame( dataCallback : DataURLCallback ) : void;
   setCaptureFrameResolutionMultiplier( resolutionMultiplier : number ) : void;
 
-  dispose? : () => void;
+  dispose ?: () => void;
 
-  onMouseMove? : ( x : number, y : number, deltaX : number, deltaY : number ) => void,
-  onScroll? : ( deltaY : number ) => void
+  onMouseMove ?: ( x : number, y : number, deltaX : number, deltaY : number ) => void,
+  onScroll ?: ( deltaY : number ) => void
 
-  onUserAdmin? : () => void
+  onUserAdmin ?: () => void
 }
 
 export type RenderSceneConstructor<T extends RenderScene> = 
-  new( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) => T;
+  new( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) => T;
   
 
 /* Helper functions */
 export const createRenderScene = <T extends RenderScene>( 
   renderSceneConstructor : RenderSceneConstructor<T>, 
   canvas : HTMLCanvasElement,
-  onLoad? : VoidCallback
+  onLoad ?: VoidCallback
 ) : T => {
   return new renderSceneConstructor( canvas, onLoad );
-}
+};

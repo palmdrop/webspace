@@ -4,22 +4,22 @@ import useUUID from '../../../hooks/useUUID';
 import './TextInputArea.scss';
 
 type Props = {
-  label? : string | JSX.Element,
+  label ?: string | JSX.Element,
   name : string,
-  defaultValue? : string,
-  onChange? : ( value : string ) => void,
+  defaultValue ?: string,
+  onChange ?: ( value : string ) => void,
 }
 
 const TextInputArea = ( { label, name, defaultValue, onChange } : Props ) => {
   const uuid = useUUID();
-  const [ value, setValue ] = useState( defaultValue ?? "" );
+  const [ value, setValue ] = useState( defaultValue ?? '' );
 
   const handleChange = ( event : React.ChangeEvent<HTMLTextAreaElement> ) => {
     event.preventDefault();
     const value = event.target.value;
     setValue( value );
     onChange?.( value );
-  }
+  };
 
   return (
     <div className="text-input-area">
@@ -40,7 +40,7 @@ const TextInputArea = ( { label, name, defaultValue, onChange } : Props ) => {
       >
       </textarea>
     </div>
-  )
-}
+  );
+};
 
-export default TextInputArea
+export default TextInputArea;

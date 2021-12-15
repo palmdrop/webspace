@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 import { ScrollPosition, trackWindowScroll } from 'react-lazy-load-image-component';
 import LazyImage from '../../components/media/image/LazyImage';
@@ -51,7 +51,7 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
 
       </div>
     );
-  }
+  };
 
   const createMainContent = () : JSX.Element[] => {
     return sections.map( ( section, sectionIndex ) => (
@@ -73,10 +73,10 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
           ) : (
             createLazyImage( contentPiece )
           )
-        ))}
+        ) )}
       </section>
-    ))
-  }
+    ) );
+  };
 
   const createLinks = () : JSX.Element => {
     return (
@@ -96,13 +96,13 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
               >
                 { text }
               </ExternalLink>
-            ))
+            ) )
             }
           </div>
         </GlassCard>
       </div>
-    )
-  }
+    );
+  };
 
   const createCredits = () : JSX.Element => {
     const createCreditsSection = ( creditsSection : CreditsSection, sectionIndex : number ) => {
@@ -123,11 +123,11 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
               >
                 { entry.text }
               </ExternalLink>    
-            ))}
+            ) )}
           </div>
         </div>
-      )
-    } 
+      );
+    }; 
 
     return (
       <div className="about-page__credits">
@@ -146,11 +146,11 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
                 />
               )}
             </>
-          ))}
+          ) )}
         </GlassCard>
       </div>
-    )
-  }
+    );
+  };
 
   const [ mainContent ] = useState( () => createMainContent() );
   const [ linkSection ] = useState( () => createLinks() );
@@ -199,7 +199,7 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
 
       <HomeBar />
     </div>
-  )
-}
+  );
+};
 
 export default React.memo( trackWindowScroll( AboutPage ) );

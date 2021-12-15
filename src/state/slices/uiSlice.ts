@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PageRoute } from "../../App";
-import { RootState } from "../store/store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PageRoute } from '../../App';
+import { RootState } from '../store/store';
 
 export enum ColorTheme {
   horizon = 'horizon',
@@ -9,7 +9,7 @@ export enum ColorTheme {
   vapor = 'vapor',
   haze = 'haze', 
   digital = 'digital'
-};
+}
 
 export interface UIState {
   activeNavBarEntry : number | null,
@@ -19,10 +19,10 @@ export interface UIState {
 }
 
 const initialState : UIState = {
-  activeNavBarEntry : null,
-  colorTheme : ColorTheme.horizon,
-  nextPageRoute : null,
-  activePiece : null,
+  activeNavBarEntry: null,
+  colorTheme: ColorTheme.horizon,
+  nextPageRoute: null,
+  activePiece: null,
 };
 
 export const uiSlice = createSlice( {
@@ -31,20 +31,20 @@ export const uiSlice = createSlice( {
   initialState,
 
   reducers: {
-    setActiveNavBarEntry : ( state, action : PayloadAction<number | null> ) => {
+    setActiveNavBarEntry: ( state, action : PayloadAction<number | null> ) => {
       state.activeNavBarEntry = action.payload;
     },
-    setColorTheme : ( state, action : PayloadAction<ColorTheme> ) => {
+    setColorTheme: ( state, action : PayloadAction<ColorTheme> ) => {
       state.colorTheme = action.payload;
     },
-    setNextPageRoute : ( state, action : PayloadAction<PageRoute | null> ) => {
+    setNextPageRoute: ( state, action : PayloadAction<PageRoute | null> ) => {
       state.nextPageRoute = action.payload;
     },
-    setActivePiece : ( state, action : PayloadAction<number | null> ) => {
+    setActivePiece: ( state, action : PayloadAction<number | null> ) => {
       state.activePiece = action.payload;
     }
   }
-});
+} );
 
 export const { setActiveNavBarEntry, setColorTheme, setNextPageRoute, setActivePiece } = uiSlice.actions;
 

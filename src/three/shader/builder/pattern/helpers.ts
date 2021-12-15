@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { Function, GLSL, GlslType, Uniforms } from "../../core";
-import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from "../utils";
-import { CombinedSource, CustomSource, Domain, DomainWarp, Fog, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource } from "./types";
+import { Function, GLSL, GlslType, Uniforms } from '../../core';
+import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
+import { CombinedSource, CustomSource, Domain, DomainWarp, Fog, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource } from './types';
 
 export const getFunctionName = ( () => {
   let counter = 0;
@@ -9,7 +9,7 @@ export const getFunctionName = ( () => {
     const functionName = name + counter;
     counter++;
     return functionName;
-  }
+  };
 } )();
 
 export const nameFunction = ( func : Function, functionCache : Map<any, FunctionWithName> ) : FunctionWithName => {
@@ -21,7 +21,7 @@ export const nameFunction = ( func : Function, functionCache : Map<any, Function
   functionCache.set( func, data );
 
   return data;
-}
+};
 
 export const buildModification = ( input : GLSL, modifications : Modification | Modification[] ) => {
   if( !Array.isArray( modifications ) ) {
@@ -30,20 +30,20 @@ export const buildModification = ( input : GLSL, modifications : Modification | 
 
   const applySingleModification = ( input : GLSL, kind : string, argument : number ) => {
     switch( kind ) {
-      case 'add'  : return `${ numToGLSL( argument ) } + ${ input }`
-      case 'mult' : return `${ numToGLSL( argument ) } * ${ input }`
-      case 'pow'  : return `pow( ${ input }, ${ numToGLSL( argument ) } )`
-      case 'mod'  : return `mod( ${ input }, ${ numToGLSL( argument ) } )`
+    case 'add' : return `${ numToGLSL( argument ) } + ${ input }`;
+    case 'mult' : return `${ numToGLSL( argument ) } * ${ input }`;
+    case 'pow' : return `pow( ${ input }, ${ numToGLSL( argument ) } )`;
+    case 'mod' : return `mod( ${ input }, ${ numToGLSL( argument ) } )`;
     }
-  }
+  };
 
   let result = '' + input;
   modifications.forEach( ( { kind, argument } ) => {
-    result = `( ${ applySingleModification( result, kind, argument ) } )`
-  });
+    result = `( ${ applySingleModification( result, kind, argument ) } )`;
+  } );
 
   return result;
-}
+};
 
 export const buildSource = ( 
   source : Source, 
@@ -60,27 +60,27 @@ export const buildSource = (
   let func : Function;
   const kind = source.kind;
   switch( kind ) {
-    case 'noise' : func = buildNoiseSource( source as NoiseSource ); break;
-    case 'trig' : func = buildTrigSource( source as TrigSource ); break;
-    case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
-    case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, isMain ); break;
-    case 'texture' : func = buildTextureSource( source as TextureSource, !isMain, uniforms, textureNames, functionCache ); break;
-    case 'custom' : func = buildCustomSource( source as CustomSource ); break;
-    default : throw new Error( `Source kind ${ kind } is not supported` );
+  case 'noise' : func = buildNoiseSource( source as NoiseSource ); break;
+  case 'trig' : func = buildTrigSource( source as TrigSource ); break;
+  case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
+  case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, isMain ); break;
+  case 'texture' : func = buildTextureSource( source as TextureSource, !isMain, uniforms, textureNames, functionCache ); break;
+  case 'custom' : func = buildCustomSource( source as CustomSource ); break;
+  default : throw new Error( `Source kind ${ kind } is not supported` );
   }
 
   if( source.uvOverride ) {
     func.body = `
       point = vec3( vUv, 0 );
       ${ func.body }
-    `
+    `;
   }
 
   const data = { name, func };
   functionCache.set( source, data );
 
   return data;
-}
+};
 
 export const buildNoiseSource = ( noise : NoiseSource ) : Function => {
   const frequency = noise.frequency;
@@ -93,9 +93,9 @@ export const buildNoiseSource = ( noise : NoiseSource ) : Function => {
   const ridge = noise.ridge ?? 1.0;
 
   return {
-    parameters : [ [ 'vec3', 'point' ] ],
-    returnType : 'float',
-    body : `
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: 'float',
+    body: `
       float n = 0.0;
       vec3 f = vec3( ${ frequency.x }, ${ frequency.y }, ${ frequency.z } );
       float a = ${ numToGLSL( amplitude ) };
@@ -123,7 +123,7 @@ export const buildNoiseSource = ( noise : NoiseSource ) : Function => {
       return ${ numToGLSL( amplitude ) } * n / divider;
     `
   };
-}
+};
 
 export const buildTrigSource = ( trig : TrigSource ) : Function => {
   const types = trig.types;
@@ -133,16 +133,16 @@ export const buildTrigSource = ( trig : TrigSource ) : Function => {
   const pow = trig.pow ?? 1.0;
 
   return {
-    parameters : [ [ 'vec3', 'point' ] ],
-    returnType : 'float',
-    body : `
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: 'float',
+    body: `
       float x = ${ numToGLSL( amplitude.x ) } * ${ types.x }( point.x * ${ numToGLSL( frequency.x ) } );
       float y = ${ numToGLSL( amplitude.y ) } * ${ types.y }( point.y * ${ numToGLSL( frequency.y ) } );
       float z = ${ numToGLSL( amplitude.z ) } * ${ types.z }( point.z * ${ numToGLSL( frequency.z ) } );
       return pow( ${ opToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numToGLSL( pow ) } );
     `
-  }
-}
+  };
+};
 
 export const buildCombinedSource = (
   source : CombinedSource, 
@@ -160,9 +160,9 @@ export const buildCombinedSource = (
     }
 
     return `${ numToGLSL( multiplier ) } * ${ name }( point )`;
-  }
+  };
 
-  const subSources : FunctionWithName[] = source.sources.map(subSource => buildSource( subSource, uniforms, textureNames, functionCache, isMain ) );
+  const subSources : FunctionWithName[] = source.sources.map( subSource => buildSource( subSource, uniforms, textureNames, functionCache, isMain ) );
 
   let combinedGLSL = opToGLSL( source.operation, ...subSources.map( ( { name }, index ) => getPart( name, index ) ) );
   if( source.postModifications ) {
@@ -170,13 +170,13 @@ export const buildCombinedSource = (
   }
 
   return {
-    parameters : [ [ 'vec3', 'point' ] ],
-    returnType : 'float',
-    body : `
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: 'float',
+    body: `
       return ${ combinedGLSL };
     `
-  }
-}
+  };
+};
 
 export const buildWarpedSource = ( 
   source : WarpedSource, 
@@ -185,17 +185,17 @@ export const buildWarpedSource = (
   functionCache : FunctionCache, 
   isMain = false 
 ) : Function => {
-  const { name : sourceFunctionName } = buildSource( source.source, uniforms, textureNames, functionCache, isMain );
-  const { name : warpFunctioName } = buildWarpFunction( source.warp, uniforms, textureNames, functionCache );
+  const { name: sourceFunctionName } = buildSource( source.source, uniforms, textureNames, functionCache, isMain );
+  const { name: warpFunctioName } = buildWarpFunction( source.warp, uniforms, textureNames, functionCache );
 
   return {
-    parameters : [ [ 'vec3', 'point' ] ],
-    returnType : 'float',
-    body : `
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: 'float',
+    body: `
       return ${ sourceFunctionName }( ${ warpFunctioName }( point ) );
     `
-  }
-}
+  };
+};
 
 export const buildWarpFunction = ( 
   warp : DomainWarp, 
@@ -213,12 +213,12 @@ export const buildWarpFunction = (
   AXES.forEach( axis => {
     const { name } = buildSource( warp.sources[ axis ], uniforms, textureNames, functionCache );
     helperNames.push( name );
-  });
+  } );
 
   const func : Function = {
-    parameters : [ [ 'vec3', 'point' ] ],
-    returnType : 'vec3',
-    body : `
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: 'vec3',
+    body: `
       vec3 previous = vec3( point );
       for( int i = 0; i < ${ iterations }; i++ ) {
         point.x = point.x + ${ helperNames[ 0 ] }( previous ) * ${ numToGLSL( amount.x ) };
@@ -235,7 +235,7 @@ export const buildWarpFunction = (
   functionCache.set( warp, data );
 
   return data;
-}
+};
 
 const buildTextureSource = ( 
   source : TextureSource, 
@@ -249,10 +249,10 @@ const buildTextureSource = (
 
   let sampleGLSL = `
     vec2 samplePoint = point.xy;
-    ${ source.repeat ? `samplePoint *= ${ variableValueToGLSL( { type : 'vec2', value : source.repeat } ) };` : '' }
+    ${ source.repeat ? `samplePoint *= ${ variableValueToGLSL( { type: 'vec2', value: source.repeat } ) };` : '' }
   `;
   if( convertToFloat ) {
-    const { name : converterFuncName } = nameFunction( source.toFloat ?? defaultTextureToFloatFunction, functionCache );
+    const { name: converterFuncName } = nameFunction( source.toFloat ?? defaultTextureToFloatFunction, functionCache );
     sampleGLSL = `
       ${ sampleGLSL }
       vec4 textureSample = texture2D( ${ source.name }, samplePoint );
@@ -267,49 +267,49 @@ const buildTextureSource = (
 
   textureNames.add( source.name );
   uniforms[ source.name ] = {
-    type : 'sampler2D',
-    value : source.texture
+    type: 'sampler2D',
+    value: source.texture
   };
 
   return {
-    isTexture : true,
-    parameters : [ [ 'vec3', 'point' ] ],
-    returnType : convertToFloat ? 'float' : 'vec4',
-    body : `
+    isTexture: true,
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: convertToFloat ? 'float' : 'vec4',
+    body: `
       ${ sampleGLSL }
       return result;
     `
-  }
-}
+  };
+};
 
 export const buildCustomSource = ( source : CustomSource ) : Function => {
   return {
-    parameters :  [ [ 'vec3', 'point' ] ],
-    returnType : 'float',
-    body : source.body
-  }
-}
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: 'float',
+    body: source.body
+  };
+};
 
 export const defaultTextureToFloatFunction : Function = {
-  parameters : [ [ 'vec4', 'color' ] ],
-  returnType : 'float',
-  body : `
+  parameters: [ [ 'vec4', 'color' ] ],
+  returnType: 'float',
+  body: `
     return ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a;
   `
 };
 
 export const colorToGLSL = ( color : THREE.Color ) => {
   return `vec3( ${ numToGLSL( color.r ) }, ${ numToGLSL( color.g ) }, ${ numToGLSL( color.b ) } )`;
-}
+};
 
 export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionWithName => {
   const nearColorGLSL = colorToGLSL( fog.nearColor );
   const farColorGLSL = colorToGLSL( fog.farColor );
-  console.log( fog.opacity )
+  console.log( fog.opacity );
   const func : Function = {
-    parameters : [ [ 'vec3', 'fragColor' ], [ 'float', 'depth' ] ],
-    returnType : 'vec3',
-    body : `
+    parameters: [ [ 'vec3', 'fragColor' ], [ 'float', 'depth' ] ],
+    returnType: 'vec3',
+    body: `
       ${ fog.opacity === undefined ? `
         if( depth < ${ numToGLSL( fog.near ) } ) return fragColor;
         if( depth > ${ numToGLSL( fog.far ) } ) return ${ farColorGLSL };
@@ -324,7 +324,7 @@ export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionW
       return mix( fragColor, fogColor, factor );
       // return fragColor;
     `
-  }
+  };
 
   const name = getFunctionName( 'fog' );
   const data = { name, func };
@@ -332,13 +332,13 @@ export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionW
   functionCache.set( fog, data );
 
   return data;
-}
+};
 
 // Adapted from https://gist.github.com/983/e170a24ae8eba2cd174f
 export const rgbToHsvFunction : Function = {
-  parameters : [ [ 'vec3', 'c' ] ],
-  returnType : 'vec3',
-  body : `
+  parameters: [ [ 'vec3', 'c' ] ],
+  returnType: 'vec3',
+  body: `
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -347,40 +347,40 @@ export const rgbToHsvFunction : Function = {
     float e = 1.0e-10;
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
   `
-}
+};
 
 // Adapted from https://gist.github.com/983/e170a24ae8eba2cd174f
 export const hsvToRgbFunction : Function = {
-  parameters : [ [ 'vec3', 'c' ] ],
-  returnType : 'vec3',
-  body : `
+  parameters: [ [ 'vec3', 'c' ] ],
+  returnType: 'vec3',
+  body: `
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
   `
-}
+};
 
 // 
 export const isNanFunction : Function = {
-  parameters : [ [ 'float', 'value' ] ],
-  returnType : 'bool',
-  body : `
+  parameters: [ [ 'float', 'value' ] ],
+  returnType: 'bool',
+  body: `
     return ( value < 0.0 || 0.0 < value || value == 0.0 ) ? false : true;
   `
-}
+};
 
 export const isInfFunction : Function = {
-  parameters : [ [ 'float', 'value' ] ],
-  returnType : 'bool',
-  body : `
+  parameters: [ [ 'float', 'value' ] ],
+  returnType: 'bool',
+  body: `
     return (value != 0.0 && value * 2.0 == value) ? true : false;
   `
-}
+};
 
 export const sanitizeFunction : Function = {
-  parameters : [ [ 'float', 'value' ] ],
-  returnType : 'float',
-  body : ` 
+  parameters: [ [ 'float', 'value' ] ],
+  returnType: 'float',
+  body: ` 
     if( isNan( value ) || value < 0.0 ) {
       return 0.0;
     } else if( isInf( value ) || value > 1.0 ) {
@@ -388,15 +388,15 @@ export const sanitizeFunction : Function = {
     }
     return value;
   `
-}
+};
 
 //
 const domainToAttributeConverter : { [ domain in Domain ] : { name : string, type : GlslType } } = {
-  'uv' : { name : 'vUv', type : 'vec2' },
-  'view' : { name : 'vViewPosition', type : 'vec3' },
-  'vertex' : { name : 'vVertexPosition', type : 'vec3' },
-}
+  'uv': { name: 'vUv', type: 'vec2' },
+  'view': { name: 'vViewPosition', type: 'vec3' },
+  'vertex': { name: 'vVertexPosition', type: 'vec3' },
+};
 
 export const domainToAttribute = ( domain : Domain ) => {
   return domainToAttributeConverter[ domain ];
-}
+};

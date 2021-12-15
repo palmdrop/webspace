@@ -1,10 +1,10 @@
-import { AnimationCallback, AnimationLoop, MILLI_SECONDS_PER_SECOND } from "../core";
+import { AnimationCallback, AnimationLoop, MILLI_SECONDS_PER_SECOND } from '../core';
 
 export class SimpleAnimationLoop implements AnimationLoop {
   private onUpdate : AnimationCallback;
-  private running : boolean = false;
-  private time : number = 0;
-  private animationFrameID : number = 0;
+  private running = false;
+  private time = 0;
+  private animationFrameID = 0;
 
   constructor( onUpdate : AnimationCallback ) {
     this.onUpdate = onUpdate;
@@ -25,7 +25,7 @@ export class SimpleAnimationLoop implements AnimationLoop {
       this.animationFrameID = requestAnimationFrame( animate );
 
       this.onUpdate( delta, this.time );
-    }
+    };
 
     requestAnimationFrame( animate );
   }

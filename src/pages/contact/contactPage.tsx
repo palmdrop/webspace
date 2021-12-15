@@ -1,25 +1,25 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { sendFormEmail, isValidEmail } from "../../utils/email";
+import { sendFormEmail, isValidEmail } from '../../utils/email';
 
-import { PageRoute } from "../../App";
-import { PageProps } from "../PageWrapper";
+import { PageRoute } from '../../App';
+import { PageProps } from '../PageWrapper';
 
-import GlassCard from "../../components/cards/glass/GlassCard";
-import Header from "../../components/header/Header";
-import TextInputArea from "../../components/input/area/TextInputArea";
-import TextInputField from "../../components/input/field/TextInputField";
-import SubmitInput from "../../components/input/submit/SubmitInput";
-import HomeBar from "../../components/navigation/home/HomeBar";
-import Paragraph from "../../components/paragraph/Paragraph";
-import ExternalLink from "../../components/link/ExternalLink";
+import GlassCard from '../../components/cards/glass/GlassCard';
+import Header from '../../components/header/Header';
+import TextInputArea from '../../components/input/area/TextInputArea';
+import TextInputField from '../../components/input/field/TextInputField';
+import SubmitInput from '../../components/input/submit/SubmitInput';
+import HomeBar from '../../components/navigation/home/HomeBar';
+import Paragraph from '../../components/paragraph/Paragraph';
+import ExternalLink from '../../components/link/ExternalLink';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle5.svg';
 
 import './contactPage.scss';
-import { githubIconData, IconData, instagramIconData, mailIconData } from "../../assets/external-icons";
-import { useMemoizedDebounce } from "../../hooks/useMemoizedDebounce";
-import StarLoader from "../../components/loader/starLoader/StarLoader";
+import { githubIconData, IconData, instagramIconData, mailIconData } from '../../assets/external-icons';
+import { useMemoizedDebounce } from '../../hooks/useMemoizedDebounce';
+import StarLoader from '../../components/loader/starLoader/StarLoader';
 
 enum Status {
   IDLE,
@@ -29,10 +29,10 @@ enum Status {
   INPUT_ERROR,
 }
 
-const invalidEmailErrorMessage   = "Invalid Email :( ";
-const invalidMessageErrorMessage = "Include some unironic CONTENT before sending";
-const sendFailedMessage = "Email NOT sent. Please try again.";
-const successMessage = "Email sent successfully";
+const invalidEmailErrorMessage = 'Invalid Email :( ';
+const invalidMessageErrorMessage = 'Include some unironic CONTENT before sending';
+const sendFailedMessage = 'Email NOT sent. Please try again.';
+const successMessage = 'Email sent successfully';
 
 const validationDelay = 700;
 
@@ -40,14 +40,14 @@ const icons : IconData[] = [
   instagramIconData,
   githubIconData,
   mailIconData
-]
+];
 
 const ContactPage = ( { route } : PageProps ) : JSX.Element => {
   const formRef = useRef<HTMLFormElement>( null );
 
   // Form content and status
-  const [ email, setEmail ] = useState( "" );
-  const [ message, setMessage ] = useState( "" );
+  const [ email, setEmail ] = useState( '' );
+  const [ message, setMessage ] = useState( '' );
   const [ formStatus, setFormStatus ] = useState( Status.IDLE );
   const [ errorResponseActive, setErrorResponseActive ] = useState( false );
 
@@ -55,15 +55,15 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
   const [ isEmailValid, setIsEmailValid ] = useState<boolean | undefined>( undefined );
 
   // User feedback 
-  const [ errorMessage, setErrorMessage ] = useState( "" );
+  const [ errorMessage, setErrorMessage ] = useState( '' );
 
   const handleSubmit = ( event : React.FormEvent<HTMLFormElement> ) => {
     event.preventDefault();
 
-    validateEmailDebounced.cancel()
+    validateEmailDebounced.cancel();
     const emailValid = validateEmail( email );
 
-    const messageValid = message !== "";
+    const messageValid = message !== '';
 
     // TODO prevent user from sending too many emails, since I have limited supply! 
     if( !messageValid || !emailValid ) {
@@ -86,9 +86,9 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
       }, ( error ) => {
         setFormStatus( Status.SEND_FAILED );
         console.error( error );
-      })
+      } );
     }
-  }
+  };
 
   const validateEmail = useCallback( ( value : string ) => {
     const valid = isValidEmail( value );
@@ -96,24 +96,24 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
     return valid;
   }, [ setIsEmailValid ] );
 
-  const validateEmailDebounced = useMemoizedDebounce( validateEmail, validationDelay, [ validateEmail ] )
+  const validateEmailDebounced = useMemoizedDebounce( validateEmail, validationDelay, [ validateEmail ] );
 
   const handleEmailInputChange = ( value : string ) => {
     setEmail( value );
     setIsEmailValid( undefined ); 
     validateEmailDebounced( value );
-  }
+  };
 
   const handleMessageInputChange = ( value : string ) => {
     setMessage( value );
-  }
+  };
 
   useEffect( () => {
     return () => validateEmailDebounced.cancel();
   }, [ validateEmailDebounced ] );
 
   useEffect( () => {
-    setErrorMessage( "" );
+    setErrorMessage( '' );
     setFormStatus( Status.IDLE );
   }, [ email, message ] );
 
@@ -145,7 +145,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
                 >
                   <img src={ icon.src } alt={ icon.alt } />
                 </ExternalLink>
-              ))}
+              ) )}
             </GlassCard>
           </div>
 
@@ -165,7 +165,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
                 onChange={ handleEmailInputChange }
               />
 
-              { ( email !== "" || formStatus === Status.INPUT_ERROR ) && isEmailValid === false && (
+              { ( email !== '' || formStatus === Status.INPUT_ERROR ) && isEmailValid === false && (
                 <label className="contact-page__invalid-email-message">
                   { invalidEmailErrorMessage }
                 </label>
@@ -211,7 +211,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
 
       <HomeBar />
     </div>
-  )
-}
+  );
+};
 
 export default ContactPage;

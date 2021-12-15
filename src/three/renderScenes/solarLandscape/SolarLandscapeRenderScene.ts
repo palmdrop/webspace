@@ -3,8 +3,8 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 
 import * as dat from 'dat.gui';
 
-import { AbstractRenderScene } from "../../AbstractRenderScene";
-import { VoidCallback } from "../../core";
+import { AbstractRenderScene } from '../../AbstractRenderScene';
+import { VoidCallback } from '../../core';
 
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
@@ -22,10 +22,10 @@ import normalTexturePath from '../../../assets/normal/normal-texture1_x2.jpg';
 import { random } from '../../../utils/random';
 
 export class SolarLandscapeRenderScene extends AbstractRenderScene {
-  private controls? : TrackballControls;
+  private controls ?: TrackballControls;
 
-  private meshes? : THREE.Group;
-  private materials? : THREE.MeshStandardMaterial[];
+  private meshes ?: THREE.Group;
+  private materials ?: THREE.MeshStandardMaterial[];
 
   private rotationSpeed : number;
   private rotationVelocity : THREE.Vector3;
@@ -36,12 +36,12 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   private backgroundColors : THREE.Color[];
 
   private shadowRenderer : ShadowRenderer;
-  private shadowPlane? : THREE.Mesh;
-  private backgroundPlane? : THREE.Mesh;
+  private shadowPlane ?: THREE.Mesh;
+  private backgroundPlane ?: THREE.Mesh;
 
   private gui : dat.GUI;
 
-  constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
+  constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
 
     this.gui = new dat.GUI();
@@ -80,14 +80,14 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
   }
 
   protected createRenderer() {
-    const renderer = new THREE.WebGLRenderer({
-        canvas: this.canvas,
-        powerPreference: 'high-performance',
-        antialias: true,
-        depth: true,
-        stencil: false,
-        alpha: true,
-    });
+    const renderer = new THREE.WebGLRenderer( {
+      canvas: this.canvas,
+      powerPreference: 'high-performance',
+      antialias: true,
+      depth: true,
+      stencil: false,
+      alpha: true,
+    } );
 
     renderer.physicallyCorrectLights = true;
     renderer.toneMapping = THREE.LinearToneMapping;
@@ -115,15 +115,15 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     directionalLight.shadow.mapSize.height = 1028 * 4;
     directionalLight.shadow.bias = -0.0003;
 
-    directionalLight.shadow.camera.left   = -15;
-    directionalLight.shadow.camera.right  = 15;
-    directionalLight.shadow.camera.top    = 15;
+    directionalLight.shadow.camera.left = -15;
+    directionalLight.shadow.camera.right = 15;
+    directionalLight.shadow.camera.top = 15;
     directionalLight.shadow.camera.bottom = -15;
 
     this.shadowRenderer.setLightPosition( directionalLight.position );
     const updateShadowRendererPosition = () => {
       this.shadowRenderer.setLightPosition( directionalLight.position );
-    }
+    };
 
     const dirLightFolder = this.gui.addFolder( 'directionalLight' );
     dirLightFolder.add( directionalLight.position, 'x' ).min( -10 ).max( 10 ).onChange( updateShadowRendererPosition );
@@ -131,20 +131,20 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     dirLightFolder.add( directionalLight.position, 'z' ).min( -10 ).max( 10 ).onChange( updateShadowRendererPosition );
     dirLightFolder.add( directionalLight, 'intensity' ).min( 0.0 ).max( 10 );
     dirLightFolder.addColor( { 
-      color : { 
-        r : directionalLight.color.r * 255,
-        g : directionalLight.color.g * 255,
-        b : directionalLight.color.b * 255
+      color: { 
+        r: directionalLight.color.r * 255,
+        g: directionalLight.color.g * 255,
+        b: directionalLight.color.b * 255
       } 
     }, 'color' ).onChange( ( { r, g, b } ) => {
       directionalLight.color.setRGB( r / 255.0, g / 255.0, b / 255.0 );
-    });
+    } );
     dirLightFolder.add( directionalLight.shadow, 'bias' ).min( -0.0003 ).max( 0.0003 );
 
     const hemisphereLight = new THREE.HemisphereLight( 
       this.backgroundColors[ 0 ],
       this.backgroundColors[ 1 ],
-    0.2 );
+      0.2 );
 
     const hemisphereLightFolder = this.gui.addFolder( 'hemisphereLight' );
     hemisphereLightFolder.add( hemisphereLight, 'intensity' ).min( 0.0 ).max( 2.0 );
@@ -181,11 +181,11 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     
     const fogFolder = this.gui.addFolder( 'fog' );
     fogFolder.add( this.scene.fog, 'near' ).min( 0.0 ).max( 100 ).onChange( ( near ) => {
-    });
+    } );
 
     fogFolder.add( this.scene.fog, 'far' ).min( 0.0 ).max( 100 ).onChange( ( far ) => {
       this.camera.far = far;
-    });
+    } );
 
     // Shadow settings
     const shadowFolder = this.gui.addFolder( 'drop-shadow' );
@@ -195,29 +195,29 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
         .max( max )
         .onChange( ( value ) => {
           this.shadowRenderer.setUniform( uniformName, value );
-        })
-    }
+        } );
+    };
 
     addShadowSetting( 'darkness', -2, 2 );
     addShadowSetting( 'brightness', 0, 2 );
-    addShadowSetting( 'opacity',  -2, 2 );
+    addShadowSetting( 'opacity', -2, 2 );
     addShadowSetting( 'staticAmount', 0, 2 );
 
     ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
       this.scene.environment = dataTextureToEnvironmentMap( this.renderer, hdri );
-    });
+    } );
 
     const envMapIntensity = random( 1.0, 2.0 );
     const setMaterialEnvMapIntensity = ( intensity : number ) => this.materials?.forEach( material => material.envMapIntensity = intensity );
     setMaterialEnvMapIntensity( envMapIntensity );
-    this.gui.add( { envMapIntensity : envMapIntensity }, 'envMapIntensity' ).min( 0.0 ).max( 4.0 )
-    .onChange( setMaterialEnvMapIntensity );
+    this.gui.add( { envMapIntensity: envMapIntensity }, 'envMapIntensity' ).min( 0.0 ).max( 4.0 )
+      .onChange( setMaterialEnvMapIntensity );
 
     this.gui.add( this.renderer, 'toneMappingExposure' ).min( 0.0 ).max( 10.0 );
 
     ASSETHANDLER.onLoad( undefined, () => {
       this.onLoad?.();
-    });
+    } );
 
     // Background shadow
     const createTexturedPlane = ( texture : THREE.Texture, transparent = false ) => {
@@ -227,9 +227,9 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
           map: texture,
           transparent: transparent, 
           blending: THREE.NormalBlending
-        })
+        } )
       );
-    }
+    };
 
     const shadowPlane = createTexturedPlane( this.shadowRenderer.texture, true );
     const planeZ = -5;
@@ -256,7 +256,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
           metalness: 0.5,
           roughness: 0.8,
           envMapIntensity: 0.5,
-        })
+        } )
       );
 
       backgroundPlane.scale.set( 120, 120, 1.0 );
@@ -264,7 +264,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
 
       this.backgroundPlane = backgroundPlane;
       this.scene.add( backgroundPlane );
-    });
+    } );
     
     this.gui.hide();
   }
@@ -305,7 +305,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.rotationVelocity.multiplyScalar( 1.0 - this.rotationFriction );
   }
 
-  resize( width? : number, height? : number ) {
+  resize( width ?: number, height ?: number ) {
     super.resize( width, height );
 
     this.shadowRenderer.setSize( width, height );

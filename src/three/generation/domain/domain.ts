@@ -7,9 +7,9 @@ export type NumberCombiner = ( v1 : number, v2 : number ) => number;
 
 export const combineProbabilityMaps = ( map1 : ProbabilityMap, map2 : ProbabilityMap, combiner : NumberCombiner ) : ProbabilityMap => {
   return ( x, y, z ) => combiner( map1( x, y, z ), map2( x, y, z ) );
-}
+};
 
-export const getRandomPointInDomain = ( domain : Domain, point? : THREE.Vector3 ) => {
+export const getRandomPointInDomain = ( domain : Domain, point ?: THREE.Vector3 ) => {
   if( domain instanceof THREE.Box3 ) {
     const x = random( domain.min.x, domain.max.x );
     const y = random( domain.min.y, domain.max.y );
@@ -32,13 +32,13 @@ export const getRandomPointInDomain = ( domain : Domain, point? : THREE.Vector3 
       ? point.set( x, y, z ) 
       : new THREE.Vector3( x, y, z ).add( domain.center );
   }
-}
+};
 
 export const getWeightedRandomPointInDomain = ( 
   domain : Domain, 
   probabilityMap : ProbabilityMap, 
-  tries : number = 10, 
-  point? : THREE.Vector3 
+  tries = 10, 
+  point ?: THREE.Vector3 
 ) : THREE.Vector3 | undefined => {
   let i = 0;
   if ( !point ) point = new THREE.Vector3();
@@ -46,7 +46,7 @@ export const getWeightedRandomPointInDomain = (
   while( i < tries ) {
     getRandomPointInDomain( domain, point );
     const p = probabilityMap( point.x, point.y, point.z );
-    const r = Math.random()
+    const r = Math.random();
 
     if( r < p ) return point;
 
@@ -54,4 +54,4 @@ export const getWeightedRandomPointInDomain = (
   }
 
   return undefined;
-}
+};

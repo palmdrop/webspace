@@ -11,7 +11,7 @@ const PageDidNotLoadPage = ( { resetErrorBoundary } : FallbackProps ) : JSX.Elem
   const onRetry = () => {
     resetErrorBoundary();
     window.location.reload();
-  }
+  };
 
   return (
     <div className="page-did-not-load-page">
@@ -36,6 +36,6 @@ const PageDidNotLoadPage = ( { resetErrorBoundary } : FallbackProps ) : JSX.Elem
       </main>
     </div>
   );
-}
+};
 
 export default PageDidNotLoadPage;

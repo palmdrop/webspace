@@ -15,7 +15,7 @@ const MainHeader = () => {
     >
       <Obstacle className="header__obstacle" />
     </Header>
-  )
-}
+  );
+};
 
 export default MainHeader;

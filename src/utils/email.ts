@@ -1,9 +1,9 @@
 import emailjs from 'emailjs-com';
 
 const { 
-  REACT_APP_EMAILJS_USER_ID : userID,
-  REACT_APP_EMAILJS_SERVICE_ID : serviceID,
-  REACT_APP_EMAILJS_TEMPLATE_ID : templateID,
+  REACT_APP_EMAILJS_USER_ID: userID,
+  REACT_APP_EMAILJS_SERVICE_ID: serviceID,
+  REACT_APP_EMAILJS_TEMPLATE_ID: templateID,
 } = process.env;
 
 // Thanks to https://stackoverflow.com/a/201378 for regex
@@ -15,7 +15,7 @@ emailjs.init( userID as string );
 
 export const isValidEmail = ( email : string ) => {
   return emailValidationRegex.test( email );
-}
+};
 
 export const sendFormEmail = ( form : HTMLFormElement ) => {
   return emailjs.sendForm( 
@@ -24,5 +24,5 @@ export const sendFormEmail = ( form : HTMLFormElement ) => {
     form,
     userID
   );
-}
+};
 

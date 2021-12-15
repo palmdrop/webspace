@@ -1,10 +1,10 @@
-import React, { Suspense, useCallback, useMemo } from 'react'
+import React, { Suspense, useCallback, useMemo } from 'react';
 
 import {
   Switch,
   Route,
   useHistory
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import { PageRoute, RedirectNotFound } from '../../App';
 import { PageProps } from '../PageWrapper';
@@ -39,7 +39,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
         index={ index }
         onClick={ handlePieceNavigation }
       />
-    )).reverse()
+    ) ).reverse()
   ), [ handlePieceNavigation ] );
 
   return (
@@ -61,7 +61,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
                 handlePieceNavigation={ handlePieceNavigation }
               />
             </Route>
-          ))}
+          ) )}
 
           { /* Default route */ }
           <Route
@@ -90,7 +90,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
                 >
                   { paragraph }
                 </Paragraph>
-              ))}
+              ) )}
 
               { pieceEntries }
             </main>
@@ -102,7 +102,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
         </Switch>
       </Suspense>
     </div>
-  )
-}
+  );
+};
 
 export default PiecesPage;

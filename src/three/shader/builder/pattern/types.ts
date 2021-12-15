@@ -18,17 +18,17 @@ export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture' | 
 
 export type RootSource = {
   kind : SourceKind,
-  uvOverride? : boolean,
+  uvOverride ?: boolean,
 }
 
 export type NoiseSource = RootSource & {
   frequency : THREE.Vector3,
-  amplitude? : number,
-  pow? : number,
-  octaves? : number,
-  persistance? : number,
-  lacunarity? : number,
-  ridge? : number,
+  amplitude ?: number,
+  pow ?: number,
+  octaves ?: number,
+  persistance ?: number,
+  lacunarity ?: number,
+  ridge ?: number,
 }
 
 export type TrigSource = RootSource & {
@@ -37,17 +37,17 @@ export type TrigSource = RootSource & {
     y : Trigonometry,
     z : Trigonometry
   },
-  frequency? : THREE.Vector3,
-  amplitude? : THREE.Vector3,
-  combinationOperation? : Exclude<Operation, 'div'>,
-  pow? : number,
+  frequency ?: THREE.Vector3,
+  amplitude ?: THREE.Vector3,
+  combinationOperation ?: Exclude<Operation, 'div'>,
+  pow ?: number,
 }
 
 export type CombinedSource = RootSource & {
   sources : Source[],
   operation : Operation,
-  multipliers? : number[],
-  postModifications? : Modification | Modification[]
+  multipliers ?: number[],
+  postModifications ?: Modification | Modification[]
 }
 
 export type WarpedSource = RootSource & {
@@ -58,8 +58,8 @@ export type WarpedSource = RootSource & {
 export type TextureSource = RootSource & {
   name : string,
   texture : THREE.Texture,
-  repeat? : THREE.Vector2,
-  toFloat? : Function,
+  repeat ?: THREE.Vector2,
+  toFloat ?: Function,
 }
 
 export type CustomSource = RootSource & {
@@ -75,19 +75,19 @@ export type DomainWarp = {
     y : Source,
     z : Source,
   },
-  amount? : THREE.Vector3,
-  iterations? : number,
+  amount ?: THREE.Vector3,
+  iterations ?: number,
 }
 
 export type ColorMode = 'rgb' | 'hsv';
 
 export type ColorSettings = {
   mode : ColorMode,
-  componentModifications? : {
-    x? : Modification | Modification[],
-    y? : Modification | Modification[],
-    z? : Modification | Modification[],
-    a? : Modification | Modification[],
+  componentModifications ?: {
+    x ?: Modification | Modification[],
+    y ?: Modification | Modification[],
+    z ?: Modification | Modification[],
+    a ?: Modification | Modification[],
   }
 }
 
@@ -96,26 +96,26 @@ export type Fog = {
   farColor : THREE.Color,
   near : number,
   far : number,
-  pow? : number,
-  opacity? : number,
+  pow ?: number,
+  opacity ?: number,
 }
 
 // Settings
 export type PatternShaderSettings = {
   domain : Domain,
-  scale? : number,
-  timeOffset? : THREE.Vector3,
+  scale ?: number,
+  timeOffset ?: THREE.Vector3,
 
   mainSource : Source,
-  domainWarp? : DomainWarp,
+  domainWarp ?: DomainWarp,
 
-  colorSettings? : ColorSettings,
+  colorSettings ?: ColorSettings,
 
-  mask? : Source,
-  alphaMask? : Source,
-  fog? : Fog,
+  mask ?: Source,
+  alphaMask ?: Source,
+  fog ?: Fog,
 
-  seed? : number,
+  seed ?: number,
 
-  forInstancedMesh? : boolean
+  forInstancedMesh ?: boolean
 }

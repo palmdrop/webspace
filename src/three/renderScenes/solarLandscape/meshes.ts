@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { random, randomElement } from "../../../utils/random";
+import { random, randomElement } from '../../../utils/random';
 import { setVertexColors } from '../../geometry/color/color';
 import { textureFromSmoothGeometry } from '../../material/textureFromVertices';
 import { 
@@ -44,9 +44,9 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
   const createMesh = ( numberOfInstances : number ) => {
     const geometry = randomElement( geometryPrefabs )( {} );
     const material = randomElement( materialPrefabs )( { 
-      geometry : geometry,
-      color : new THREE.Color( 'white' )
-    });
+      geometry: geometry,
+      color: new THREE.Color( 'white' )
+    } );
 
     material.dithering = true;
     material.vertexColors = true;
@@ -61,27 +61,27 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     const gf = random( 0.1, 0.5 );
     const bf = random( 0.1, 0.5 );
     setVertexColors( geometry, ( i, x, y, z ) => {
-      const ox = warp * getNoise3D( { x : x + 103, y, z }, null, frequency, -1.0, 1.0 );
-      const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, -1.0, 1.0 );
-      const oz = warp * getNoise3D( { x: x + 131, y : y, z }, null, frequency, -1.0, 1.0 );
+      const ox = warp * getNoise3D( { x: x + 103, y, z }, null, frequency, -1.0, 1.0 );
+      const oy = warp * getNoise3D( { x, y: y + 131, z }, null, frequency, -1.0, 1.0 );
+      const oz = warp * getNoise3D( { x: x + 131, y: y, z }, null, frequency, -1.0, 1.0 );
       return { 
-        r : 1.0 - rf * oz,
-        g : 1.0 - gf * ox,
-        b : 1.0 - bf * oy 
-      }
-    });
+        r: 1.0 - rf * oz,
+        g: 1.0 - gf * ox,
+        b: 1.0 - bf * oy 
+      };
+    } );
 
     const texture = textureFromSmoothGeometry( geometry, ( x, y, z, u, v ) => {
-      const ox = warp * getNoise3D( { x : x + 103, y, z }, null, new THREE.Vector3().copy( frequency ).multiplyScalar( 2.0 ), 0.0, 1.0 );
-      const oy = warp * getNoise3D( { x, y : y + 131, z }, null, frequency, 0.0, 1.0 );
-      const n = getNoise3D( { x: x + ox, y : y + oy, z }, null, frequency, 0.0, 1.0 );
+      const ox = warp * getNoise3D( { x: x + 103, y, z }, null, new THREE.Vector3().copy( frequency ).multiplyScalar( 2.0 ), 0.0, 1.0 );
+      const oy = warp * getNoise3D( { x, y: y + 131, z }, null, frequency, 0.0, 1.0 );
+      const n = getNoise3D( { x: x + ox, y: y + oy, z }, null, frequency, 0.0, 1.0 );
 
       return new THREE.Color( 
         1.0 - 1.0 * ox, // Ambient occlusion
-        0.1 + oy,       // Roughness map
-        0.5 + 0.5 * n   // Metalness map
+        0.1 + oy, // Roughness map
+        0.5 + 0.5 * n // Metalness map
       );
-    }, new THREE.Color());
+    }, new THREE.Color() );
 
     material.roughnessMap = texture;
     material.metalnessMap = texture;
@@ -102,7 +102,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     mesh.receiveShadow = true;
 
     return mesh;
-  }
+  };
 
   const size = 34;
   const minScale = 0.6;
@@ -110,7 +110,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
 
   const domain : Domain = new THREE.Box3( 
     new THREE.Vector3( -size / 2.0, -size / 2, -size / 8.0 ),
-    new THREE.Vector3(  size / 2.0,  size / 2,  size / 8.0 ),
+    new THREE.Vector3( size / 2.0, size / 2, size / 8.0 ),
   );
 
   const tempVector = new THREE.Vector3();
@@ -119,7 +119,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
   const falloff : ProbabilityMap = ( x, y, z ) => {
     const length = tempVector.set( x, y, z ).length();
     return Math.pow( ( size / 2.0 - length ) / ( size / 2.0 ), 0.3 );
-  }
+  };
 
 
   for( let i = 0; i < 6; i++ ) {
@@ -145,7 +145,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
         probabilityMap,
         30
       );
-    }
+    };
 
     const scaleGenerator = ( x : number , y : number, z : number ) => {
       const sx = getNoise3D( tempVector.set( x + 3.1313 * i, y, z ), null, 0.06, 0, 1 );
@@ -157,26 +157,26 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
         mapLinear( Math.pow( sy, 3.0 ), 0, 1.0, minScale, maxScale ),
         mapLinear( Math.pow( sz, 3.0 ), 0, 1.0, minScale, maxScale ),
       );
-    }
+    };
 
 
     for( let j = 0; j < numberOfInstances; j++ ) {
       const position = positionGenerator();
-      if(!position) {
+      if( !position ) {
         j--;
         continue;
       }
 
-      const scale = new THREE.Vector3().copy( scaleGenerator( position.x, position.y, position.z ));
+      const scale = new THREE.Vector3().copy( scaleGenerator( position.x, position.y, position.z ) );
 
 
       const f = 0.05;
       const minRotation = -Math.PI;
       const maxRotation = Math.PI;
       const rotation = new THREE.Euler(
-        getNoise3D( position, { x : 100, y : 0, z : 0 }, f, minRotation, maxRotation ),
-        getNoise3D( position, { x : 0, y : 100, z : 0 }, f, minRotation, maxRotation ),
-        getNoise3D( position, { x : 0, y : 0, z : 100 }, f, minRotation, maxRotation ),
+        getNoise3D( position, { x: 100, y: 0, z: 0 }, f, minRotation, maxRotation ),
+        getNoise3D( position, { x: 0, y: 100, z: 0 }, f, minRotation, maxRotation ),
+        getNoise3D( position, { x: 0, y: 0, z: 100 }, f, minRotation, maxRotation ),
       );
 
       const matrix = new THREE.Matrix4().compose( 
@@ -206,5 +206,5 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
     meshes,
     geometries,
     materials
-  }
-}
+  };
+};

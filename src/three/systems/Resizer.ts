@@ -7,19 +7,19 @@ export class SimpleResizer implements Resizer {
   private renderer : THREE.WebGLRenderer;
   private useDevicePixelRatio : boolean;
 
-  constructor( container : HTMLElement, camera : THREE.PerspectiveCamera, renderer : THREE.WebGLRenderer, useDevicePixelRatio : boolean = false ) {
+  constructor( container : HTMLElement, camera : THREE.PerspectiveCamera, renderer : THREE.WebGLRenderer, useDevicePixelRatio = false ) {
     this.container = container;
     this.camera = camera;
     this.renderer = renderer;
     this.useDevicePixelRatio = useDevicePixelRatio;
   }
 
-  resize( callback? : ResizeCallback, width? : number, height? : number, force : boolean = false ) {
+  resize( callback ?: ResizeCallback, width ?: number, height ?: number, force = false ) {
     if( !width ) width = this.container.clientWidth;
     if( !height ) height = this.container.clientHeight;
 
     // const currentSize = this.renderer.getSize( new THREE.Vector2() );
-    const newSize = new THREE.Vector2(width, height);
+    const newSize = new THREE.Vector2( width, height );
 
     if( this.useDevicePixelRatio ) newSize.multiplyScalar( window.devicePixelRatio );
 
@@ -33,4 +33,4 @@ export class SimpleResizer implements Resizer {
 
     callback && callback( newSize.x, newSize.y );
   }
-};
+}

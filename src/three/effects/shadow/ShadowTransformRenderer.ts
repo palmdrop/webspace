@@ -22,7 +22,7 @@ export class ShadowTransformRenderer {
 
     this.renderTarget = new THREE.WebGLRenderTarget( 
       renderer.domElement.width, renderer.domElement.height, {
-    });
+      } );
 
     this.composer = 
       new EffectComposer( renderer, this.renderTarget );
@@ -68,12 +68,12 @@ export class ShadowTransformRenderer {
     this.shadowTransformPass.uniforms[ name ].value = value;
   }
 
-  setSize( width: number, height : number ) {
+  setSize( width : number, height : number ) {
     this.composer.setSize( width, height );
 
     this.shadowTransformPass.uniforms[ 'viewport' ].value.set(
       width, height
-    )
+    );
   }
 
 }

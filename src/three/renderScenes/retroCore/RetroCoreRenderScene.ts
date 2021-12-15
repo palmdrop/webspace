@@ -4,7 +4,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 // import { SSAARenderPass } from 'three/examples/jsm/postprocessing/SSAARenderPass';
 import { UnrealBloomPass } from '../../effects/unrealBloom/UnrealBloomPass';
 
-import { VoidCallback } from "../../core";
+import { VoidCallback } from '../../core';
 import { AbstractRenderScene } from '../../AbstractRenderScene';
 
 import { ASSETHANDLER } from '../../systems/AssetHandler';
@@ -32,7 +32,7 @@ class BaseRenderer {
     scene : THREE.Scene,
     camera : THREE.Camera,
     renderer : THREE.WebGLRenderer,
-    renderTarget? : THREE.WebGLRenderTarget | undefined | null
+    renderTarget ?: THREE.WebGLRenderTarget | undefined | null
   ) {
     if( renderTarget ) {
       this.renderTarget = renderTarget;
@@ -93,7 +93,7 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
   private rotationAcceleration : THREE.Vector2;
   private rotationFriction : number;
 
-  constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
+  constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
 
     this.baseRenderer = new BaseRenderer(
@@ -131,13 +131,13 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
       this.lights.add( pointLight );
     }
 
-    const ambientLight = new THREE.AmbientLight('#ff6daa', 4.0 );
+    const ambientLight = new THREE.AmbientLight( '#ff6daa', 4.0 );
 
     this.lights.add( ambientLight );
   }
 
   private createMaterials() : void {
-    for( let i = 0; i < 5; i++) {
+    for( let i = 0; i < 5; i++ ) {
       const color = new THREE.Color().setHSL(
         random( 0.3, 0.4 ) + ( random( 0.0, 1.0 ) > 0.8 ? -0.35 : 0.0 ),
         random( 0.5, 1.0 ),
@@ -151,23 +151,23 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
 
 
       const material = new THREE.MeshStandardMaterial( { 
-          color: color,
-          transparent: this.trueTransparency,
-          opacity: random( 0.25, 0.4 ),
+        color: color,
+        transparent: this.trueTransparency,
+        opacity: random( 0.25, 0.4 ),
 
-          metalness: random( 0, 0.8 ),
-          roughness: random( 0.3, 1.0 ),
+        metalness: random( 0, 0.8 ),
+        roughness: random( 0.3, 1.0 ),
 
-          bumpMap: texture,
-          bumpScale: random( 0.02, 0.1 ),
+        bumpMap: texture,
+        bumpScale: random( 0.02, 0.1 ),
 
-          alphaMap: texture,
+        alphaMap: texture,
 
-          side: THREE.DoubleSide,
+        side: THREE.DoubleSide,
 
-          depthTest: this.trueTransparency,
-          depthWrite: this.trueTransparency,
-      });
+        depthTest: this.trueTransparency,
+        depthWrite: this.trueTransparency,
+      } );
 
       this.materials.push( material );
     }
@@ -227,7 +227,7 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
           random( -0.1, 0.1 ),
           random( -0.1, 0.1 ),
         )
-      });
+      } );
     }
 
     const mainObject = new THREE.Mesh(
@@ -248,7 +248,7 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
         random( -0.1, 0.1 ),
         random( -0.1, 0.1 ),
       )
-    });
+    } );
 
     this.sceneContent.add( mainObject );
 
@@ -284,7 +284,7 @@ export class RetroCoreRenderScene extends AbstractRenderScene {
     this.baseRenderer.render( delta, now );
   }
 
-  resize( width? : number, height? : number ) {
+  resize( width ?: number, height ?: number ) {
     super.resize( width, height );
 
     this.baseRenderer.setSize( width ?? this.canvas.width, height ?? this.canvas.height );

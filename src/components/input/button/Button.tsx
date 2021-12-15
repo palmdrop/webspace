@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 
 import './Button.scss';
 
 type Props = {
-  isPressed? : boolean,  
-  onClick? : ( event : React.MouseEvent ) => void,
-  onHover? : ( event : React.MouseEvent ) => void,
-  onLeave? : ( event : React.MouseEvent ) => void,
-  additionalClasses? : string,
-  children? : React.ReactChild | React.ReactChild[] | never[]
+  isPressed ?: boolean,  
+  onClick ?: ( event : React.MouseEvent ) => void,
+  onHover ?: ( event : React.MouseEvent ) => void,
+  onLeave ?: ( event : React.MouseEvent ) => void,
+  additionalClasses ?: string,
+  children ?: React.ReactChild | React.ReactChild[] | never[]
 }
 
 const Button = ( { isPressed = false, onClick, onHover, onLeave, additionalClasses = '', children } : Props ) : JSX.Element => {
@@ -28,7 +28,7 @@ const Button = ( { isPressed = false, onClick, onHover, onLeave, additionalClass
     >
       { children } 
     </button>
-  )
-}
+  );
+};
 
 export default Button;

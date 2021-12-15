@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Card from '../Card';
 
 import './GradientCard.scss';
@@ -12,7 +12,7 @@ const GradientCard = ( { children } : Props ) => {
     <Card additionalClasses="gradient-card" >
       { children }
     </Card>
-  )
-}
+  );
+};
 
 export default GradientCard;

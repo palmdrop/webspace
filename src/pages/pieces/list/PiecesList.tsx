@@ -1,12 +1,12 @@
-import React, { useCallback, useRef, useState } from "react";
-import Button from "../../../components/input/button/Button";
-import { useAnimationFrame } from "../../../hooks/useAnimationFrame";
-import { useMousePosition } from "../../../hooks/useMousePosition";
-import { setActivePiece } from "../../../state/slices/uiSlice";
-import { useAppDispatch } from "../../../state/store/hooks";
-import { insideRect } from "../../../utils/geometry";
-import { PieceEntry } from "../entry/PieceEntry";
-import { PieceData, PieceNavigationFunction } from "../pieces/pieces";
+import React, { useCallback, useRef, useState } from 'react';
+import Button from '../../../components/input/button/Button';
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame';
+import { useMousePosition } from '../../../hooks/useMousePosition';
+import { setActivePiece } from '../../../state/slices/uiSlice';
+import { useAppDispatch } from '../../../state/store/hooks';
+import { insideRect } from '../../../utils/geometry';
+import { PieceEntry } from '../entry/PieceEntry';
+import { PieceData, PieceNavigationFunction } from '../pieces/pieces';
 
 import './PiecesList.scss';
 
@@ -14,18 +14,18 @@ type ListProps = {
   pieces : PieceData[],
   onPieceClick : PieceNavigationFunction,
 
-  scrollSpeed? : number,
-  scrollMaxSpeed? : number,
-  scrollFriction? : number,
-  scrollThresholdSpeed? : number,
+  scrollSpeed ?: number,
+  scrollMaxSpeed ?: number,
+  scrollFriction ?: number,
+  scrollThresholdSpeed ?: number,
 
-  scrollEdgeDamping? : number,
+  scrollEdgeDamping ?: number,
 
-  mousePlateau? : number,
-  mouseScrollSpeed? : number,
+  mousePlateau ?: number,
+  mouseScrollSpeed ?: number,
 
-  touchScrollSpeed? : number,
-  touchScrollThreshold? : number,
+  touchScrollSpeed ?: number,
+  touchScrollThreshold ?: number,
 }
 
 export const PiecesList = ( { 
@@ -46,7 +46,7 @@ export const PiecesList = ( {
   touchScrollThreshold = 0,
 } : ListProps ) : JSX.Element => {
   const mainContainerRef = useRef<HTMLDivElement>( null );
-  const touchPositionRef = useRef<{ x : number, y : number }>( { x : 0, y : 0 } );
+  const touchPositionRef = useRef<{ x : number, y : number }>( { x: 0, y: 0 } );
 
   const scrollVelocity = useRef( 0 );
   const scrollAcceleration = useRef( 0 );
@@ -62,17 +62,17 @@ export const PiecesList = ( {
         index={ index }
         onClick={ onPieceClick }
       />
-    ))
+    ) )
   );
 
   const handleScroll = ( event : React.WheelEvent<HTMLDivElement> ) => {
     scrollAcceleration.current = scrollSpeed * Math.sign( -event.deltaY );
-  }
+  };
 
   const handleTouchStart = ( event : React.TouchEvent<HTMLDivElement> ) => {
     touchPositionRef.current.x = event.touches[ 0 ].clientX;
     touchPositionRef.current.y = event.touches[ 0 ].clientY;
-  }
+  };
 
   const handleTouchMove = ( event : React.TouchEvent<HTMLDivElement> ) => {
     const x = event.touches[ 0 ].clientX;
@@ -88,16 +88,16 @@ export const PiecesList = ( {
 
     touchPositionRef.current.x = x;
     touchPositionRef.current.y = y;
-  }
+  };
 
   const animationCallback = useCallback( ( delta : number, now : number ) => {
     const applyAcceleration = () => {
       scrollVelocity.current += scrollAcceleration.current;        
-    }
+    };
 
     const resetAcceleration = () => {
       scrollAcceleration.current = 0.0;
-    }
+    };
 
     setScrollAmount( scrollAmount => {
       if( !mainContainerRef.current ) return scrollAmount;
@@ -157,7 +157,7 @@ export const PiecesList = ( {
       if( scrollVelocity.current < -scrollMaxSpeed ) scrollVelocity.current = -scrollMaxSpeed;
 
       return scrollAmount + delta * scrollVelocity.current;
-    })
+    } );
   }, [ 
     mousePlateau, 
     mousePosition, 
@@ -187,5 +187,5 @@ export const PiecesList = ( {
         { pieceEntries }
       </div>
     </div>
-  )
-}
+  );
+};

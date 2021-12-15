@@ -1,7 +1,7 @@
 import './NoiseBackground.scss';
 
 type Props = {
-  opacity? : number
+  opacity ?: number
 }
 
 const NoiseBackground = ( { opacity = 0.3 } : Props ) : JSX.Element => {
@@ -12,7 +12,7 @@ const NoiseBackground = ( { opacity = 0.3 } : Props ) : JSX.Element => {
         opacity: opacity
       }}
     />
-  )
-}
+  );
+};
 
 export default NoiseBackground;

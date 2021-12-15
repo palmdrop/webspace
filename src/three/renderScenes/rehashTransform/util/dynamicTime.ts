@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { random } from '../../../../utils/random';
-import { getNoise3D } from "../../../utils/noise";
+import { getNoise3D } from '../../../utils/noise';
 
 export type DeltaTimeProducer = ( actualTime : number ) => number;
 
@@ -52,7 +52,7 @@ export const dynamicTimeFromNoise = (
     );
 
     return n;
-  }
+  };
 
   return new DynamicTime( 0, deltaTimeProducer );
-}
+};

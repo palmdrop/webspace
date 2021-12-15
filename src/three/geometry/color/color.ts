@@ -23,4 +23,4 @@ export const setVertexColors = (
 
     colorAttribute.setXYZ( i, r, g, b );
   }
-}
+};

@@ -4,7 +4,7 @@ import { ShaderChunk } from '../core';
 
 export const random2dChunk : ShaderChunk = {
 
-  content : `
+  content: `
 
     float random2d(vec2 n) { 
       return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
@@ -12,17 +12,17 @@ export const random2dChunk : ShaderChunk = {
 
     `,
   
-  functionSignatures : {
-    'random2d' : {
-      parameters : [ [ 'vec2', 'n' ] ],
-      returnType : 'float',
+  functionSignatures: {
+    'random2d': {
+      parameters: [ [ 'vec2', 'n' ] ],
+      returnType: 'float',
     }
   }
-}
+};
 
 export const simplex2dChunk : ShaderChunk = {
 
-  content : `
+  content: `
 
   // Simplex 2D noise
   //
@@ -57,17 +57,17 @@ export const simplex2dChunk : ShaderChunk = {
 
   `,
 
-  functionSignatures : {
-    'simplex2d' : {
-      parameters : [ [ 'vec2', 'v' ] ],
-      returnType : 'float',
+  functionSignatures: {
+    'simplex2d': {
+      parameters: [ [ 'vec2', 'v' ] ],
+      returnType: 'float',
     }
   }
-}
+};
 
 export const simplex3dChunk : ShaderChunk = {
 
-  content : `
+  content: `
     //	Simplex 3D Noise 
     //	by Ian McEwan, Ashima Arts
     //
@@ -148,10 +148,10 @@ export const simplex3dChunk : ShaderChunk = {
 
     `,
 
-  functionSignatures : {
-    'simplex3d' : {
-      parameters : [ [ 'vec3', 'v' ] ],
-      returnType : 'float',
+  functionSignatures: {
+    'simplex3d': {
+      parameters: [ [ 'vec3', 'v' ] ],
+      returnType: 'float',
     }
   }
-}
+};

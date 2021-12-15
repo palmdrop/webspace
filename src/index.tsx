@@ -10,15 +10,15 @@ import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-      <Provider store={ store }>
-        <App />
-      </Provider>
+    <Provider store={ store }>
+      <App />
+    </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById( 'root' )
 );
 
-console.log("##################")
-console.log("#### OBSCURED ####")
-console.log("##################")
-console.log("#### palmdrop ####")
-console.log("##################")
+console.log( '##################' );
+console.log( '#### OBSCURED ####' );
+console.log( '##################' );
+console.log( '#### palmdrop ####' );
+console.log( '##################' );

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store/store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store/store';
 
 export interface AdminState {
   isAdmin : boolean
@@ -8,8 +8,8 @@ export interface AdminState {
 const isDevelopment : boolean = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 const initialState : AdminState = {
-  isAdmin : isDevelopment
-}
+  isAdmin: isDevelopment
+};
 
 export const adminSlice = createSlice( {
   name: 'admin',
@@ -17,11 +17,11 @@ export const adminSlice = createSlice( {
   initialState,
 
   reducers: {
-    setIsAdmin : ( state, action : PayloadAction<boolean> ) => {
+    setIsAdmin: ( state, action : PayloadAction<boolean> ) => {
       state.isAdmin = action.payload;
     }
   }
-});
+} );
 
 export const { setIsAdmin } = adminSlice.actions;
 

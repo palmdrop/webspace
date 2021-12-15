@@ -5,18 +5,18 @@ import { githubIconData, IconData, instagramIconData, mailIconData } from '../..
 
 import './MainFooter.scss';
 
-const icons: IconData[] = [
+const icons : IconData[] = [
   instagramIconData,
   githubIconData,
   mailIconData
 ];
 
-const MainFooter = (): JSX.Element => {
+const MainFooter = () : JSX.Element => {
   return (
     <footer className="main-footer">
-      {icons.map(({ src, alt, link }, index) => (
+      {icons.map( ( { src, alt, link }, index ) => (
         <ExternalLink 
-          key={`${alt}-${index}`}
+          key={`${ alt }-${ index }`}
           link={ link }
         >
           <SharpDisk
@@ -24,9 +24,9 @@ const MainFooter = (): JSX.Element => {
             <img src={src} alt={alt} />
           </SharpDisk>
         </ExternalLink>
-      ))}
+      ) )}
     </footer>
   );
-}
+};
 
 export default MainFooter;

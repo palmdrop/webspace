@@ -17,17 +17,17 @@ export const generateRoom = () => {
   ) => {
     const displacementAmount = amount * point.y;
 
-    const towardsCenter = { x : -point.x, y : point.y, z : -point.z }
+    const towardsCenter = { x: -point.x, y: point.y, z: -point.z };
 
     const x = point.x + displacementAmount * towardsCenter.x;
     const y = point.y;
     const z = point.z + displacementAmount * towardsCenter.z;
-    return { x, y, z }
-  }
+    return { x, y, z };
+  };
 
   const warpEntries : WarpEntry[] = [
     {
-      warpFunction : transformFunction
+      warpFunction: transformFunction
     }
   ];
 
@@ -52,4 +52,4 @@ export const generateRoom = () => {
   );
 
   return geometry;
-}
+};

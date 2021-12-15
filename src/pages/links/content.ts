@@ -12,7 +12,7 @@ export type Link = {
   text : string,
   url : string,
   category : Category,
-  additionalCategories? : Category[]
+  additionalCategories ?: Category[]
 }
 
 const toLink = ( text : string, url : string, category : Category, ...additionalCategories : Category[] ) => {
@@ -21,8 +21,8 @@ const toLink = ( text : string, url : string, category : Category, ...additional
     url,
     category,
     additionalCategories
-  }
-}
+  };
+};
 
 export const links : Link[] = [
   toLink(
@@ -107,14 +107,14 @@ export const links : Link[] = [
   ),
 ];
 
-links.push(toLink(
+links.push( toLink(
   'Softer',
   'http://softerdigitalfutures.xyz',
   'Tech', 'Art', 'Blog'
-));
-links.push(toLink(
+) );
+links.push( toLink(
   'Alice Maz',
   'https://www.alicemaz.com/',
   'Blog', 'Tech'
-));
+) );
 

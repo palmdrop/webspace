@@ -16,7 +16,7 @@ const SubmitInput = ( { text } : Props ) : JSX.Element => {
         value={ text }
       />
     </div>
-  )
-}
+  );
+};
 
 export default SubmitInput;

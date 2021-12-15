@@ -1,5 +1,5 @@
-import React from "react";
-import Card from "../Card"
+import React from 'react';
+import Card from '../Card';
 
 import './GlassCard.scss';
 
@@ -13,7 +13,7 @@ const GlassCard = ( { children } : Props ) : JSX.Element => {
     <Card additionalClasses="glass-card">
       { children }
     </Card>
-  )
-}
+  );
+};
 
 export default GlassCard;

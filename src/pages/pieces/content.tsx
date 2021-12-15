@@ -1,6 +1,6 @@
 
 export const introduction = {
-  title: "Pieces",
+  title: 'Pieces',
   description: [ 
     `
     This is the place for my experiments with digital and generative art. 
@@ -8,4 +8,4 @@ export const introduction = {
     probably unfinished.
     `
   ]
-}
+};

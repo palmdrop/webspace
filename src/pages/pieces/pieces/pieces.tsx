@@ -1,5 +1,5 @@
-import React from "react";
-import { ColorTheme } from "../../../state/slices/uiSlice";
+import React from 'react';
+import { ColorTheme } from '../../../state/slices/uiSlice';
 
 import retroCoreImage from '../../../assets/content/pieces/retro-core.jpg';
 import solarChromeImage from '../../../assets/content/pieces/solar-chrome.jpg';
@@ -16,11 +16,11 @@ export type PieceData = {
   name : string,
   description : string[],
   tags : string[],
-  image? : string,
+  image ?: string,
 
-  Component: React.LazyExoticComponent<Piece>,
+  Component : React.LazyExoticComponent<Piece>,
 
-  colorTheme? : ColorTheme
+  colorTheme ?: ColorTheme
 }
 
 export type PieceNavigationFunction = ( 
@@ -30,9 +30,9 @@ export type PieceNavigationFunction = (
 
 export const pieces : PieceData[] = [
   {
-    name: "Retro Core",
+    name: 'Retro Core',
     description: [
-      `An exploration of a particular aesthetic idea, involving plays with perspective and depth.`,
+      'An exploration of a particular aesthetic idea, involving plays with perspective and depth.',
       `3D shapes are turned flat using transparency and disabled depth testing,
        Both the inside and the outside of the shapes are rendered. The 
        visible sides blend as the shapes rotate.
@@ -45,8 +45,8 @@ export const pieces : PieceData[] = [
       as we might expect them to be presented.
       `
     ],
-    tags : [
-      "Depth, Geometry"
+    tags: [
+      'Depth, Geometry'
     ],
     image: retroCoreImage,
 
@@ -54,9 +54,9 @@ export const pieces : PieceData[] = [
     colorTheme: ColorTheme.horizon
   },
   {
-    name: "Solar Chrome",
+    name: 'Solar Chrome',
     description: [
-      "Generative geometry is exciting. Chrome is hip and cool -- modern and punk.",
+      'Generative geometry is exciting. Chrome is hip and cool -- modern and punk.',
       `
         For a long time I've been developing techniques based on perlin/simplex noise and domain warping. Combining 
         these techniques with 3D geometry produces interesting shapes. This piece consists of spheres or toruses that are distorted
@@ -67,8 +67,8 @@ export const pieces : PieceData[] = [
         This reveals the underlying, very digital geometry. 
       `
     ],
-    tags : [
-      "Warp, Geometry"
+    tags: [
+      'Warp, Geometry'
     ],
 
     image: solarChromeImage,
@@ -76,17 +76,17 @@ export const pieces : PieceData[] = [
     Component: React.lazy( () => import( './solarChrome/SolarChromePiece' ) ),
   },
   {
-    name: "Solar Landscape",
+    name: 'Solar Landscape',
     description: [
-      "An extension of the Solar Chrome Piece. Experiments with geometry instancing",
+      'An extension of the Solar Chrome Piece. Experiments with geometry instancing',
       `
       I wanted to 1) try to practice generative composition (with varied results) and 2)
       test what was possible in terms of 3D running in the web. I do not recommend running 
       this piece on a mobile device. 
       `,
     ],
-    tags : [
-      "Instancing, Composition"
+    tags: [
+      'Instancing, Composition'
     ],
 
     image: solarLandscapeImage,
@@ -94,16 +94,16 @@ export const pieces : PieceData[] = [
     Component: React.lazy( () => import( './solarLandscape/SolarLandscapePiece' ) ),
   },
   {
-    name: "Virtual Imprint",
+    name: 'Virtual Imprint',
     description: [
-      `First experiments with a custom shader builds for composing complex domain warping patterns.`,
+      'First experiments with a custom shader builds for composing complex domain warping patterns.',
       `I've been working with domain warping for a long time, but only recently using shaders. Since shaders code have some limitations 
       that are not present in "regular" code (like not being able to have loops that iterate a variable number of times), I wanted to
       create a small shader builder library that allows me to work with shaders in a more convenient way.`,
-      `Although please note that the use case of this "library" is highly specific and probably not useful for anyone but me.`
+      'Although please note that the use case of this "library" is highly specific and probably not useful for anyone but me.'
     ],
-    tags : [
-      "Warp, Space"
+    tags: [
+      'Warp, Space'
     ],
 
     image: virtualImprintImage,
@@ -111,9 +111,9 @@ export const pieces : PieceData[] = [
     Component: React.lazy( () => import( './virtualImprint/VirtualImprintPiece' ) ),
   },
   {
-    name: "Rehash Transform",
+    name: 'Rehash Transform',
     description: [
-      `An experiment with instanced geometry, shader builders and fake depth.`,
+      'An experiment with instanced geometry, shader builders and fake depth.',
       `Beyond technique, I wanted to explore abstract visualization of the human mind on the Internet. When interacting with the web,
        we're in a loop of derivation and creation. I'm endlessly fascinated (and horrified) by how we shape the Internet and how it shapes us in a increasingly rapid feedback loop.
        The Internet is a tool, and our minds are extremely adapt at incorporating tools into itself. A physical tool becomes an extension of
@@ -123,14 +123,14 @@ export const pieces : PieceData[] = [
        Images are used as source material for the textures. Some of them you might recognize, one way or another.
       `
     ],
-    tags : [
-      "Web, Mind"
+    tags: [
+      'Web, Mind'
     ],
 
     image: rehashTransformImage,
 
     Component: React.lazy( () => import( './rehashTransform/RehashTransformPiece' ) ),
   },
-]
+];
 
 export const FeaturedPieceIndex = pieces.findIndex( pieceData => pieceData.name === 'Retro Core' );

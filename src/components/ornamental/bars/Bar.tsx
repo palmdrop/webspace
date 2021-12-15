@@ -8,7 +8,7 @@ type Props = {
 const Bar = ( { direction, variant } : Props ) => {
   return (
     <div className={ `bar ${ direction } bar--${ variant }` } />
-  )
-}
+  );
+};
 
 export default Bar;

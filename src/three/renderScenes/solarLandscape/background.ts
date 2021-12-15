@@ -11,7 +11,7 @@ export const createBackground = ( renderer : THREE.WebGLRenderer ) => {
     renderer,
     backgroundMaterial,
     new THREE.WebGLRenderTarget( dimensions.x, dimensions.y, {
-    })
+    } )
   );
   const background = backgroundRenderer.renderTarget.texture;
 
@@ -26,12 +26,12 @@ export const createBackground = ( renderer : THREE.WebGLRenderer ) => {
   backgroundMaterial.uniforms[ 'contrast' ].value = 4.0;
   backgroundMaterial.uniforms[ 'brightness' ].value = 12.2;
 
-  backgroundRenderer.render()
+  backgroundRenderer.render();
   
 
   return {
     background,
     backgroundRenderer,
     backgroundColors
-  }
-}
+  };
+};

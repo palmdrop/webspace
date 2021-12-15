@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 type Props = {
   link : string,
-  onHover? : ( event : React.MouseEvent ) => void,
-  onLeave? : ( event : React.MouseEvent ) => void,
+  onHover ?: ( event : React.MouseEvent ) => void,
+  onLeave ?: ( event : React.MouseEvent ) => void,
   children : React.ReactChild | React.ReactChild[] | never[]
 };
 
@@ -18,7 +18,7 @@ const ExternalLink = ( { link, onHover, onLeave, children } : Props ) : JSX.Elem
     >
       { children }
     </a>
-  )
-}
+  );
+};
 
 export default ExternalLink;

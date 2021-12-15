@@ -14,11 +14,11 @@ const NotFoundPage = () : JSX.Element => {
 
   const onGoBack = () => {
     history.goBack();
-  }
+  };
 
   const onReturnHome = () => {
     history.replace( PageRoute.root );
-  }
+  };
 
   return (
     <div className="not-found-page">
@@ -48,6 +48,6 @@ const NotFoundPage = () : JSX.Element => {
       </main>
     </div>
   );
-}
+};
 
 export default NotFoundPage;

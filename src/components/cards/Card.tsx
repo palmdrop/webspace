@@ -1,7 +1,7 @@
 import './Card.scss';
 
 type Props = {
-  additionalClasses? : string,
+  additionalClasses ?: string,
   children : React.ReactChild | React.ReactChild[] | Element[]
 };
 
@@ -11,7 +11,7 @@ const Card = ( { additionalClasses = '', children } : Props ) => {
       className={ `card ${ additionalClasses }` }>
       { children } 
     </div>
-  )
-}
+  );
+};
 
 export default Card;

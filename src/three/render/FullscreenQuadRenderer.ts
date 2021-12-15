@@ -6,9 +6,9 @@ export const createFullScreenTextureRenderer = (
   renderTarget : THREE.WebGLRenderTarget
 ) => {
   return new FullscreenQuadRenderer( 
-      renderer, 
-      new THREE.MeshBasicMaterial( { map: texture } ), 
-      renderTarget 
+    renderer, 
+    new THREE.MeshBasicMaterial( { map: texture } ), 
+    renderTarget 
   );
 };
 
@@ -24,7 +24,7 @@ export class FullscreenQuadRenderer {
   constructor( 
     renderer : THREE.WebGLRenderer, 
     material : THREE.Material, 
-    renderTarget? : THREE.WebGLRenderTarget
+    renderTarget ?: THREE.WebGLRenderTarget
   ) {
     this.renderer = renderer; 
     this.material = material;
@@ -34,7 +34,7 @@ export class FullscreenQuadRenderer {
     } else {
       const size = this.renderer.getSize( new THREE.Vector2() );
       this.renderTarget = new THREE.WebGLRenderTarget( size.x, size.y, {
-      });
+      } );
     }
 
     this.scene = new THREE.Scene();
@@ -61,9 +61,9 @@ export class FullscreenQuadRenderer {
 
   setSize( width : number, height : number ) {
 
-    this.camera.left   = -width / 2;
-    this.camera.right  =  width / 2;
-    this.camera.top    =  height / 2;
+    this.camera.left = -width / 2;
+    this.camera.right = width / 2;
+    this.camera.top = height / 2;
     this.camera.bottom = -height / 2;
     this.camera.updateProjectionMatrix();
 
@@ -73,9 +73,9 @@ export class FullscreenQuadRenderer {
   }
 
   render() {
-      if( this.renderTarget ) this.renderer.setRenderTarget( this.renderTarget );
-      else                    this.renderer.setRenderTarget( null );
+    if( this.renderTarget ) this.renderer.setRenderTarget( this.renderTarget );
+    else this.renderer.setRenderTarget( null );
 
-      this.renderer.render( this.scene, this.camera );
+    this.renderer.render( this.scene, this.camera );
   }
 }

@@ -10,4 +10,4 @@ export const KawaseBlurPass = KawaseBlurPassGen( {
   EffectComposer, 
   Pass, 
   FullScreenQuad 
-});
+} );

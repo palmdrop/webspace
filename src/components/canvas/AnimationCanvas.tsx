@@ -12,13 +12,13 @@ export type MouseScrollCallback<T extends RenderScene> = ( deltaScroll : number,
 
 type Props<T extends RenderScene> = {
   renderSceneConstructor : RenderSceneConstructor<T>,
-  onLoad? : VoidCallback,
-  onMouseMove? : MouseMoveCallback<T>,
-  onScroll? : MouseScrollCallback<T>,
+  onLoad ?: VoidCallback,
+  onMouseMove ?: MouseMoveCallback<T>,
+  onScroll ?: MouseScrollCallback<T>,
 
-  resizeThrottle? : number,
-  mouseMoveThrottle? : number,
-  scrollThrottle? : number,
+  resizeThrottle ?: number,
+  mouseMoveThrottle ?: number,
+  scrollThrottle ?: number,
 };
 
 const AnimationCanvas = <T extends RenderScene>( { 
@@ -37,7 +37,7 @@ const AnimationCanvas = <T extends RenderScene>( {
   const isAdmin = useAppSelector( selectIsAdmin );
 
   const handleResize = useMemoizedThrottle( () => {
-    renderScene?.resize()
+    renderScene?.resize();
   }, resizeThrottle, [ renderScene ] );
 
   const handleMouseMove = useMemoizedThrottle( ( event : MouseEvent ) => {
@@ -46,7 +46,7 @@ const AnimationCanvas = <T extends RenderScene>( {
     if( mousePosition.current === null ) {
       previousX = event.clientX;
       previousY = event.clientY;
-      mousePosition.current = { x : 0, y : 0 };
+      mousePosition.current = { x: 0, y: 0 };
     } else {
       previousX = mousePosition.current.x;
       previousY = mousePosition.current.y;
@@ -62,7 +62,7 @@ const AnimationCanvas = <T extends RenderScene>( {
   }, mouseMoveThrottle, [ renderScene, onMouseMove ] );
 
   const handleMouseScroll = useMemoizedThrottle( ( event : React.WheelEvent ) => {
-    let deltaScroll = Math.sign( -event.deltaY );
+    const deltaScroll = Math.sign( -event.deltaY );
 
     renderScene && onScroll?.( deltaScroll, renderScene );
   }, scrollThrottle, [ renderScene, onScroll ] );
@@ -73,13 +73,13 @@ const AnimationCanvas = <T extends RenderScene>( {
     onMouseMove && window.addEventListener( 'mousemove', handleMouseMove );
 
     renderScene?.resize();
-  }
+  };
 
   const removeListeners = () : void => {
     window.removeEventListener( 'resize', handleResize );
 
     onMouseMove && window.removeEventListener( 'mousemove', handleMouseMove );
-  }
+  };
 
   const { reloadValue } = useRenderSceneShortcuts( renderScene );
 
@@ -94,17 +94,17 @@ const AnimationCanvas = <T extends RenderScene>( {
       return () => {
         renderScene.stop();
         renderScene.dispose && renderScene.dispose();
-      }
+      };
     }
-  }, [ renderSceneConstructor, onLoad, reloadValue, isAdmin ]);
+  }, [ renderSceneConstructor, onLoad, reloadValue, isAdmin ] );
 
   useLayoutEffect( () => {
-    addListeners()
+    addListeners();
 
     return () => {
       removeListeners();
-    }
-  });
+    };
+  } );
 
   return (
     <canvas
@@ -112,7 +112,7 @@ const AnimationCanvas = <T extends RenderScene>( {
       ref={ canvasRef }
       onWheel={ handleMouseScroll }
     />
-  )
-}
+  );
+};
 
 export default AnimationCanvas;

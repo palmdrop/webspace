@@ -24,5 +24,5 @@ export const createPostProcessing = ( renderer : THREE.WebGLRenderer, scene : TH
 
   return {
     composer
-  }
-}
+  };
+};

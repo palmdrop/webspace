@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
-import { AbstractRenderScene } from "../../AbstractRenderScene";
-import { VoidCallback } from "../../core";
+import { AbstractRenderScene } from '../../AbstractRenderScene';
+import { VoidCallback } from '../../core';
 
 import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHandler';
 
@@ -23,7 +23,7 @@ import {
 import hdriPath from '../../../assets/hdri/decor_shop_1k.hdr';
 
 export class SolarChromeRenderScene extends AbstractRenderScene {
-  private controls? : TrackballControls;
+  private controls ?: TrackballControls;
 
   private object : THREE.Object3D;
 
@@ -44,7 +44,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
   private zoomFriction : number;
   private zoomLimitThreshold : number;
 
-  constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
+  constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
 
     this.zoomSpeed = 0.12;
@@ -65,7 +65,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
       backgroundMaterial,
       new THREE.WebGLRenderTarget( canvas.width, canvas.height, {
 
-      })
+      } )
     );
 
     this.backgroundColors = [
@@ -89,14 +89,14 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
   }
 
   protected createRenderer() {
-    const renderer = new THREE.WebGLRenderer({
-        canvas: this.canvas,
-        powerPreference: 'high-performance',
-        antialias: true,
-        depth: true,
-        stencil: false,
-        alpha: true
-    });
+    const renderer = new THREE.WebGLRenderer( {
+      canvas: this.canvas,
+      powerPreference: 'high-performance',
+      antialias: true,
+      depth: true,
+      stencil: false,
+      alpha: true
+    } );
 
     // enable the physically correct lighting model
     renderer.physicallyCorrectLights = true;
@@ -152,23 +152,23 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     const hemisphereLight = new THREE.HemisphereLight( 
       this.backgroundColors[ 0 ],
       this.backgroundColors[ 1 ],
-    5 );
+      5 );
 
     this.scene.add( directionalLight, hemisphereLight, ambientLight );
 
     ASSETHANDLER.loadHDR( hdriPath, ( hdri ) => {
       this.scene.environment = dataTextureToEnvironmentMap( this.renderer, hdri );
-    });
+    } );
 
     ASSETHANDLER.onLoad( undefined, () => {
       material.needsUpdate = true;
       this.onLoad?.();
-    });
+    } );
 
     return mesh;
   }
 
-  update(delta : number, now : number): void {
+  update( delta : number, now : number ) : void {
     this.controls?.update();
 
     this.object.rotation.y += delta * 0.14;
@@ -207,7 +207,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     }
   }
 
-  resize( width? : number, height? : number ) {
+  resize( width ?: number, height ?: number ) {
     super.resize( width, height );
 
     this.backgroundRenderer.render();

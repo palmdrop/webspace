@@ -27,11 +27,11 @@ const colorAccumulator = ( numberOfColors : number ) => {
       noise = pow( noise, contrast );
 
       color += noise * colors[ ${ i } ];
-    `
+    `;
   }
 
   return chunk;
-}
+};
 
 const fragmentShader = ( numberOfColors : number ) => `
   varying vec2 vUv;
@@ -74,7 +74,7 @@ enum ColorModes {
 }
 
 const createWarpGradientShader = ( 
-  numberOfColors : number = 3
+  numberOfColors = 3
 ) : THREE.Shader => {
 
   return {
@@ -95,13 +95,13 @@ const createWarpGradientShader = (
       'offset': { value: new THREE.Vector2(
         random( -31, 31 ),
         random( -31, 31 ),
-      )}
+      ) }
 
     },
 
     vertexShader: vertexShader,
     fragmentShader: fragmentShader( Math.floor( numberOfColors ) ),
-  }
+  };
 };
 
 export { createWarpGradientShader };

@@ -6,9 +6,9 @@ export const varyColorRGB = ( sourceColor : THREE.Color, red : number, green : n
   color.g += green;
   color.b += blue;
   return color;
-}
+};
 
 export const varyColorHSL = ( sourceColor : THREE.Color, hue : number, saturation : number, luminance : number ) => {
   const color = sourceColor.clone();
   return color.offsetHSL( hue, saturation, luminance );
-}
+};

@@ -1,11 +1,11 @@
 
 import Post from '../posts';
-import "highlight.js/styles/kimbie-dark.css";
+import 'highlight.js/styles/kimbie-dark.css';
 
 const metadata = {
-  "title": "Test post 2",
-  "date": "Nov 21, 2021",
-  "id": 2
+  'title': 'Test post 2',
+  'date': 'Nov 21, 2021',
+  'id': 2
 };
 
 const Post2 = () => {
@@ -28,8 +28,8 @@ const Post2 = () => {
 </code></pre>
 ` } }/>
     </Post>
-  )
-}
+  );
+};
 
 export default Post2;
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { useEffect } from 'react';
 import { PageRoute } from '../App';
 import { ColorTheme, setColorTheme, setNextPageRoute } from '../state/slices/uiSlice';
@@ -29,7 +29,7 @@ const PageWrapper = ( { route, colorTheme, children } : Props ) : JSX.Element =>
     <div className="page-wrapper">
       { children }
     </div>
-  )
-}
+  );
+};
 
 export default React.memo( PageWrapper );

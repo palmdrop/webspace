@@ -1,7 +1,7 @@
 
 type Props = {
-  width? : string,
-  height? : string
+  width ?: string,
+  height ?: string
 }
 
 const Overflow = ( { width = '0', height = '0' } : Props ) : JSX.Element => {
@@ -13,7 +13,7 @@ const Overflow = ( { width = '0', height = '0' } : Props ) : JSX.Element => {
         height: height
       }}
     />
-  )
-}
+  );
+};
 
 export default Overflow;

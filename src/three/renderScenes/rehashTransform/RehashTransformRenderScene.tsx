@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 
-import { AbstractRenderScene } from "../../AbstractRenderScene";
-import { VoidCallback } from "../../core";
+import { AbstractRenderScene } from '../../AbstractRenderScene';
+import { VoidCallback } from '../../core';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
 import { setUniform, UniformObject } from '../../shader/core';
 import { createObject } from './object';
@@ -15,7 +15,7 @@ import shaderSettings from './shader';
 import { DynamicTime, dynamicTimeFromNoise } from './util/dynamicTime';
 
 const maxBoxDimensionSize = ( box : THREE.Box3 ) => {
-  return ([ 'x', 'y', 'z' ] as const).reduce(
+  return ( [ 'x', 'y', 'z' ] as const ).reduce(
     ( maxSize, axis ) => {
       const minValue = box.min[ axis ];
       const maxValue = box.max[ axis ];
@@ -24,10 +24,10 @@ const maxBoxDimensionSize = ( box : THREE.Box3 ) => {
     }, 
     0.0
   );
-}
+};
 
 export class RehashTransformRenderScene extends AbstractRenderScene {
-  private controls? : TrackballControls;
+  private controls ?: TrackballControls;
 
   private envShaderMaterial : THREE.ShaderMaterial;
   private envMaterialSpeed : number;
@@ -45,7 +45,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
   private gui : dat.GUI
 
-  constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
+  constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
 
     this.dynamicTime = dynamicTimeFromNoise(
@@ -83,14 +83,14 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     this.objectShaderMaterial.blending = THREE.NormalBlending;
     this.objectShaderMaterial.transparent = true;
 
-    const { mesh : object, updateMesh } = createObject(
+    const { mesh: object, updateMesh } = createObject(
       this.objectShaderMaterial,
       objectSize
     );
 
     const objectBoundingBox = new THREE.Box3().expandByObject( object );
 
-    let objectMaxDimensionSize = objectSize * maxBoxDimensionSize( objectBoundingBox );
+    const objectMaxDimensionSize = objectSize * maxBoxDimensionSize( objectBoundingBox );
 
     const roomMaxDimensionSize = maxBoxDimensionSize( roomBoundingBox );
 
@@ -105,23 +105,23 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
 
     // Gui
-    this.gui = new dat.GUI()
+    this.gui = new dat.GUI();
     this.gui.hide();
 
     // TODO add env and obj folder
     const objectFolder = this.gui.addFolder( 'object' );
-    objectFolder.add( { speed: this.objectMaterialSpeed }, 'speed', 0.0, 2.0)
+    objectFolder.add( { speed: this.objectMaterialSpeed }, 'speed', 0.0, 2.0 )
       .onChange( value => this.objectMaterialSpeed = value );
 
     const envFolder = this.gui.addFolder( 'environment' );
-    envFolder.add( { speed: this.envMaterialSpeed }, 'speed', 0.0, 2.0)
+    envFolder.add( { speed: this.envMaterialSpeed }, 'speed', 0.0, 2.0 )
       .onChange( value => this.envMaterialSpeed = value );
 
     const addUniformSlider = ( gui : dat.GUI, object : UniformObject, name : string, startValue : number, min : number, max : number, ) => {
       setUniform( name, startValue, object );
-      gui.add( { [name] : startValue }, name, min, max, ( max - min ) / 1000 )
+      gui.add( { [name]: startValue }, name, min, max, ( max - min ) / 1000 )
         .onChange( value => setUniform( name, value, object ) );
-    }
+    };
 
     addUniformSlider( objectFolder, this.objectShaderMaterial, 'frequency', 1.0, 0.0, 30.0 );
     addUniformSlider( objectFolder, this.objectShaderMaterial, 'brightness', 0.8, 0.0, 3.0 );
@@ -137,8 +137,8 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
     // Postprocessing
     const {
-      composer : customComposer,
-      update : updateComposer
+      composer: customComposer,
+      update: updateComposer
     } = getComposer( 
       this.renderer, this.scene, this.camera,
       random( 4.5, 5.5 ) * objectMaxDimensionSize / this.camera.far,
@@ -155,10 +155,10 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
   _createCubeCamera() : [ THREE.CubeCamera, THREE.WebGLCubeRenderTarget ] {
     const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 512, {
-      format :THREE.RGBFormat,
-      generateMipmaps : true,
-      minFilter : THREE.LinearMipMapLinearFilter
-    });
+      format: THREE.RGBFormat,
+      generateMipmaps: true,
+      minFilter: THREE.LinearMipMapLinearFilter
+    } );
 
     const cubeCamera = new THREE.CubeCamera( 1, 10000, cubeRenderTarget );
 
@@ -180,10 +180,10 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
   render( delta : number, now : number ) {
     this.renderer.setRenderTarget( null );
-    this.customComposer.render()
+    this.customComposer.render();
   }
 
-  resize( width? : number, height? : number, force? : boolean ) : void {
+  resize( width ?: number, height ?: number, force ?: boolean ) : void {
     // Workaround for postprocessing pass that seems to disallow automatic resize of canvas
     if( !width || !height ) {
       width = this.canvas.parentElement?.clientWidth;

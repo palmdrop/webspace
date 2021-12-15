@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import { Route, Switch } from "react-router";
-import ExternalLink from "../../components/link/ExternalLink";
-import HomeBar from "../../components/navigation/home/HomeBar";
-import Paragraph from "../../components/paragraph/Paragraph";
-import Title from "../../components/title/Title";
-import { PageProps } from "../PageWrapper";
+import { Suspense } from 'react';
+import { Route, Switch } from 'react-router';
+import ExternalLink from '../../components/link/ExternalLink';
+import HomeBar from '../../components/navigation/home/HomeBar';
+import Paragraph from '../../components/paragraph/Paragraph';
+import Title from '../../components/title/Title';
+import { PageProps } from '../PageWrapper';
 
-import { postsData } from "./posts/data";
+import { postsData } from './posts/data';
 
 import './blogPage.scss';
 
@@ -24,7 +24,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
             >
               <Component />
             </Route>
-          ))}
+          ) )}
 
           <Route
             path={ `${ route }/testing` }
@@ -48,7 +48,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
               <Paragraph>
                 I have yet to build the blog section of this site. Please refer to my old (and unfortunately very inactive) blog: 
                 <ExternalLink link="https://palmdrop.github.io/">
-                  { " palmdrop.github.io " }
+                  { ' palmdrop.github.io ' }
                 </ExternalLink>
               </Paragraph>
             </div>
@@ -58,7 +58,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
         </Switch>
       </Suspense>
     </div>
-  )
-}
+  );
+};
 
 export default BlogPage;

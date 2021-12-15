@@ -1,18 +1,18 @@
-import React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { setActiveNavBarEntry } from "../../../../state/slices/uiSlice";
-import { useAppDispatch } from "../../../../state/store/hooks";
+import { setActiveNavBarEntry } from '../../../../state/slices/uiSlice';
+import { useAppDispatch } from '../../../../state/store/hooks';
 
-import { NavEntry } from "../NavBar";
-import Button from "../../../input/button/Button";
+import { NavEntry } from '../NavBar';
+import Button from '../../../input/button/Button';
 
 import './NavButton.scss';
 
 type Props = {
   navEntry : NavEntry,
-  active? : boolean,
+  active ?: boolean,
   index : number,
 }
 
@@ -32,13 +32,13 @@ const NavButton = ( { navEntry, active, index } : Props ) : JSX.Element => {
     if( active === undefined ) {
       setHovering( true );
     }
-  }
+  };
 
   const handleLeave = ( event : React.MouseEvent ) => {
     if( active === undefined ) {
       setHovering( false );
     }
-  }
+  };
 
   return (
     <li 
@@ -56,7 +56,7 @@ const NavButton = ( { navEntry, active, index } : Props ) : JSX.Element => {
         </Button>
       </Link>
     </li>
-  )
-}
+  );
+};
 
 export default NavButton;

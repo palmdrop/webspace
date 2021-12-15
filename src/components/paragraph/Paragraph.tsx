@@ -1,14 +1,14 @@
-import { ReactChild } from "react";
+import { ReactChild } from 'react';
 
 import './Paragraph.scss';
 
 export enum ParagraphType {
-  normal = "normal",
-  bold = "bold"
-};
+  normal = 'normal',
+  bold = 'bold'
+}
 
 type Props = {
-  type? : ParagraphType,
+  type ?: ParagraphType,
   children : ReactChild | ReactChild[] | never[]
 };
 
@@ -17,7 +17,7 @@ const Paragraph = ( { type = ParagraphType.normal, children } : Props ) : JSX.El
     <p className={ `paragraph paragraph--${ type }` }>
       { children } 
     </p>
-  )
-}
+  );
+};
 
 export default Paragraph;

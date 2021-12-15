@@ -21,11 +21,11 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
       <MainHeader />
 
       <div className="main-page__info">
-      { description.map( ( paragraph, index ) => (
-        <Paragraph key={ `description-${ index }` }>
-          { paragraph }
-        </Paragraph>
-      ))}
+        { description.map( ( paragraph, index ) => (
+          <Paragraph key={ `description-${ index }` }>
+            { paragraph }
+          </Paragraph>
+        ) )}
       </div>
 
       { navBar }
@@ -36,7 +36,7 @@ const MainPage = ( { route } : PageProps ) : JSX.Element => {
 
       <MainFooter />
     </div>
-  )
-}
+  );
+};
 
 export default MainPage;

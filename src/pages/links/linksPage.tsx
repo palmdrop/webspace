@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react';
 import { PageRoute } from '../../App';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
@@ -20,12 +20,12 @@ const LinksPage = ( { route } : PageProps ) => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
 
   const categorizedLinksToSections = useCallback( ( categorizedLinks : { [ title : string ] : Link[] } ) => {
-    const cleanURL = ( url: string ) => {
+    const cleanURL = ( url : string ) => {
       return url
-        .replace(/^(?:https?:\/\/)?(?:www\.)?/i, '') // Remove https and www from link
-        .replace(/\/$/, '') // Remove trailing slash
+        .replace( /^(?:https?:\/\/)?(?:www\.)?/i, '' ) // Remove https and www from link
+        .replace( /\/$/, '' ); // Remove trailing slash
       // Can be done as one regex sure but I do not know regex
-    }
+    };
 
     return Object.entries( categorizedLinks ).map( ( [ title, links ], index ) => (
       <section 
@@ -37,18 +37,18 @@ const LinksPage = ( { route } : PageProps ) => {
           mainLevel={ 3 }
         />
         { links.map( ( link, linkIndex ) => (
-            <ExternalLink
-              key={ `link-${ index }.${ linkIndex }`}
-              link={ link.url }
-            >
-              { link.text }
-              <div>
-                { cleanURL( link.url ) }
-              </div>
-            </ExternalLink>
-        ))}
+          <ExternalLink
+            key={ `link-${ index }.${ linkIndex }`}
+            link={ link.url }
+          >
+            { link.text }
+            <div>
+              { cleanURL( link.url ) }
+            </div>
+          </ExternalLink>
+        ) )}
       </section>
-    ));
+    ) );
   }, [] );
 
   const linkSections = useMemo( () => {
@@ -57,11 +57,11 @@ const LinksPage = ( { route } : PageProps ) => {
     if( activeCategories.size === 0 ) {
       // No filter applied
       links.forEach( link => {
-        if(!categorizedLinks[ link.category ]) categorizedLinks[ link.category ] = [];
+        if( !categorizedLinks[ link.category ] ) categorizedLinks[ link.category ] = [];
 
         const categoryLinks = categorizedLinks[ link.category ];
         categoryLinks.push( link );
-      });
+      } );
 
     } else {
       // Filter applied
@@ -70,7 +70,7 @@ const LinksPage = ( { route } : PageProps ) => {
       const filteredLinks = links.filter( link => 
         activeCategories.has( link.category ) || 
         ( link.additionalCategories && some( link.additionalCategories, category => activeCategories.has( category ) )
-      ));
+        ) );
 
       categorizedLinks[ filteredTitle ] = filteredLinks;
     }
@@ -87,7 +87,7 @@ const LinksPage = ( { route } : PageProps ) => {
       : newActiveCategories.add( category );
 
     setActiveCategories( newActiveCategories );
-  }
+  };
 
   return (
     <div className="links-page">
@@ -127,7 +127,7 @@ const LinksPage = ( { route } : PageProps ) => {
               >
                 { category }
               </Button>
-            ))}
+            ) )}
           </GlassCard>
         </section>
 
@@ -138,7 +138,7 @@ const LinksPage = ( { route } : PageProps ) => {
 
       <HomeBar />
     </div>
-  )
-}
+  );
+};
 
 export default LinksPage;

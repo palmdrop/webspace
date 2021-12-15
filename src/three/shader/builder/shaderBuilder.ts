@@ -1,17 +1,17 @@
-import { Attributes, Functions, Function, GLSL, Imports, Shader, Uniforms, Variable, Constants } from "../core";
-import { arrayToString, variableValueToGLSL } from "./utils";
+import { Attributes, Functions, Function, GLSL, Imports, Shader, Uniforms, Variable, Constants } from '../core';
+import { arrayToString, variableValueToGLSL } from './utils';
 
 export type ShaderSourceData = {
   imports : Imports,
-  constants? : Constants,
-  functions? : Functions,
+  constants ?: Constants,
+  functions ?: Functions,
   main : GLSL,
 }
 
 const importsToGLSL = ( imports : Imports ) => {
   if( !imports ) return '';
   return arrayToString( imports, chunk => `${ chunk.content }\n` );
-}
+};
 
 const constantsToGLSL = ( constants : Constants | undefined ) => {
   if( !constants ) return '';
@@ -19,7 +19,7 @@ const constantsToGLSL = ( constants : Constants | undefined ) => {
     Object.entries( constants ), 
     ( [ name, { type, value } ] ) => `const ${ type } ${ name } = ${ variableValueToGLSL( { type, value } as Variable ) };` 
   );
-}
+};
 
 const uniformsToGLSL = ( uniforms : Uniforms ) => {
   if( !uniforms ) return '';
@@ -27,7 +27,7 @@ const uniformsToGLSL = ( uniforms : Uniforms ) => {
     Object.entries( uniforms ), 
     ( [ name, { type } ] ) => `uniform ${ type } ${ name };`   
   );
-}
+};
 
 const attributesToGLSL = ( attributes : Attributes ) => {
   if( !attributes ) return '';
@@ -35,15 +35,15 @@ const attributesToGLSL = ( attributes : Attributes ) => {
     Object.entries( attributes ), 
     ( [ name, { type } ] ) => `varying ${ type } ${ name };`   
   );
-}
+};
 
 const functionToGLSL = ( name : string, glslFunction : Function ) => {
   return `${ glslFunction.returnType } ${ name }( 
     ${ arrayToString( glslFunction.parameters, ( arg ) => `${ arg[ 0 ] } ${ arg[ 1 ] }`, ',' ) }
   ) {\n
     ${ glslFunction.body }\n
-  }\n`
-}
+  }\n`;
+};
 
 const functionsToGLSL = ( functions : Functions | undefined ) => {
   if( !functions ) return '';
@@ -51,7 +51,7 @@ const functionsToGLSL = ( functions : Functions | undefined ) => {
     Object.entries( functions ), 
     ( [ name, glslFunction ] ) => functionToGLSL( name, glslFunction ), '\n\n' 
   );
-}
+};
 
 export const buildShader = ( 
   attributes : Attributes,
@@ -97,6 +97,6 @@ export const buildShader = (
     uniforms,
     vertexShader,
     fragmentShader
-  }
-}
+  };
+};
 

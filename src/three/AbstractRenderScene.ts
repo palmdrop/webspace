@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 
-import { AnimationLoop, DataURLCallback, RenderScene, Resizer, VoidCallback } from "./core";
+import { AnimationLoop, DataURLCallback, RenderScene, Resizer, VoidCallback } from './core';
 import { SimpleAnimationLoop } from './systems/AnimationLoop';
 import { SimpleResizer } from './systems/Resizer';
 
@@ -12,7 +12,7 @@ type Resizeable = {
 
 export abstract class AbstractRenderScene implements RenderScene {
   canvas : HTMLCanvasElement;
-  onLoad? : VoidCallback;
+  onLoad ?: VoidCallback;
 
   protected loop : AnimationLoop;
   protected resizer : Resizer;
@@ -22,13 +22,13 @@ export abstract class AbstractRenderScene implements RenderScene {
   protected scene : THREE.Scene;
   protected camera : THREE.PerspectiveCamera;
 
-  protected composer? : EffectComposer;
+  protected composer ?: EffectComposer;
 
   protected captureNext : boolean;
   protected captureFrameResolutionMultiplier : number;
-  protected dataCallback? : DataURLCallback;
+  protected dataCallback ?: DataURLCallback;
 
-  constructor( canvas : HTMLCanvasElement, onLoad? : VoidCallback ) {
+  constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     this.canvas = canvas;
     this.onLoad = onLoad;
     this.loop = this.createLoop();
@@ -54,7 +54,7 @@ export abstract class AbstractRenderScene implements RenderScene {
       if( this.captureNext ) {
         this.captureNext = false;
       }
-    });
+    } );
   }
 
   protected createRenderer() : THREE.WebGLRenderer {
@@ -62,7 +62,7 @@ export abstract class AbstractRenderScene implements RenderScene {
       canvas: this.canvas,
       antialias: true,
       alpha: true
-    });
+    } );
 
     renderer.setClearColor( new THREE.Color( '#000000' ), 0.0 );
 
@@ -97,7 +97,7 @@ export abstract class AbstractRenderScene implements RenderScene {
     return new SimpleResizer( this.canvas, this.camera, this.renderer );
   }
 
-  render( delta : number, now : number ): void {
+  render( delta : number, now : number ) : void {
     if( this.composer ) {
       this.composer.render( delta );
     } else {
@@ -105,7 +105,7 @@ export abstract class AbstractRenderScene implements RenderScene {
     }
   }
 
-  abstract update( delta : number, now : number ): void;
+  abstract update( delta : number, now : number ) : void;
 
   protected beforeRender() : void {
     if( this.captureNext && this.dataCallback ) {
@@ -125,18 +125,18 @@ export abstract class AbstractRenderScene implements RenderScene {
     }
   }
 
-  resize( width? : number, height? : number, force? : boolean ) : void {
+  resize( width ?: number, height ?: number, force ?: boolean ) : void {
     this.resizer.resize( ( width : number, height : number ) => {
       this.composer?.setSize( width, height );
       this.resizeables.forEach( resizeable => resizeable.setSize( width, height ) );
     }, width, height, force );
   }
 
-  start(): void {
+  start() : void {
     this.loop.start();
   }
 
-  stop(): void {
+  stop() : void {
     this.loop.stop();
   }
 

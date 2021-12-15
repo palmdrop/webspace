@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
 
-import { getNoise3D, Vector3 } from "../../utils/noise"
+import { getNoise3D, Vector3 } from '../../utils/noise';
 
 const xOffset = new THREE.Vector3( 100.0, 31.0, 51.0 );
 const yOffset = new THREE.Vector3( -31.0, 0.0, 3.0 );
@@ -11,28 +11,28 @@ const tempVector1 = new THREE.Vector3();
 const tempVector2 = new THREE.Vector3();
 const tempEuler = new THREE.Euler();
 
-export type TransformFunctionArgs = { [key: string]: number | THREE.Vector3 };
+export type TransformFunctionArgs = { [key : string] : number | THREE.Vector3 };
 
 export type TransformFunction = ( 
   point : Vector3,
   offset : Vector3 | undefined | null,
   frequency : number | Vector3,
   amount : number,
-  args? : TransformFunctionArgs
+  args ?: TransformFunctionArgs
 ) => Vector3;
 
 
 export const domainWarp : TransformFunction = ( point, offset, frequency, amount, args = {
-  warpFrequency : new THREE.Vector3( 0.3 ),
-  warpAmount : 0.2, 
+  warpFrequency: new THREE.Vector3( 0.3 ),
+  warpAmount: 0.2, 
 } ) => {
   const warpedPoint = noiseWarp( point, null, args.warpFrequency, args.warpAmount as number );
 
   const o = {
-    x : warpedPoint.x - point.x,
-    y : warpedPoint.y - point.y,
-    z : warpedPoint.z - point.z,
-  }
+    x: warpedPoint.x - point.x,
+    y: warpedPoint.y - point.y,
+    z: warpedPoint.z - point.z,
+  };
 
   if( offset ) {
     o.x += offset.x;
@@ -41,7 +41,7 @@ export const domainWarp : TransformFunction = ( point, offset, frequency, amount
   }
 
   return noiseWarp( point, o, frequency, amount );
-}
+};
 
 export const noiseWarp : TransformFunction = ( point, offset, frequency, amount, args = {} ) => {
   const { x, y, z } = point;
@@ -54,15 +54,15 @@ export const noiseWarp : TransformFunction = ( point, offset, frequency, amount,
   }
 
   return {
-    x : x + getNoise3D( sample, xOffset, frequency, -amount, amount ),
-    y : y + getNoise3D( sample, yOffset, frequency, -amount, amount ),
-    z : z + getNoise3D( sample, zOffset, frequency, -amount, amount )
-  }
-}
+    x: x + getNoise3D( sample, xOffset, frequency, -amount, amount ),
+    y: y + getNoise3D( sample, yOffset, frequency, -amount, amount ),
+    z: z + getNoise3D( sample, zOffset, frequency, -amount, amount )
+  };
+};
 
 export const twistWarp : TransformFunction = ( point, offset, frequency, amount, args = {
-  twistAmount : new THREE.Vector3( 0.0, 0.5, 0.0 ),
-  falloff : 0.9,
+  twistAmount: new THREE.Vector3( 0.0, 0.5, 0.0 ),
+  falloff: 0.9,
 } ) => {
   const vector = tempVector1.set( point.x, point.y, point.z );
   tempVector2.copy( tempVector1 );
@@ -83,11 +83,11 @@ export const twistWarp : TransformFunction = ( point, offset, frequency, amount,
     y: tempVector2.y,
     z: tempVector2.z,
   };
-}
+};
 
 export type WarpEntry = {
   warpFunction : TransformFunction,
-  args? : TransformFunctionArgs
+  args ?: TransformFunctionArgs
 }
 
 export const geometryWarp = ( 
@@ -101,9 +101,9 @@ export const geometryWarp = (
 
   warpEntries : WarpEntry[],
 
-  correctOffset : boolean = true,
+  correctOffset = true,
 
-  outputBoundingBox? : THREE.Box3
+  outputBoundingBox ?: THREE.Box3
 ) => {
 
   const noiseOffset = new THREE.Vector3(
@@ -116,11 +116,11 @@ export const geometryWarp = (
   const tempVector = new THREE.Vector3();
 
   const positionAttribute = geometry.attributes.position;
-  for(let k = 0; k < octaves; k++) {
-    for(let i = 0; i < positionAttribute.count; i++ ) {
-      let x = positionAttribute.getX( i );
-      let y = positionAttribute.getY( i );
-      let z = positionAttribute.getZ( i );
+  for( let k = 0; k < octaves; k++ ) {
+    for( let i = 0; i < positionAttribute.count; i++ ) {
+      const x = positionAttribute.getX( i );
+      const y = positionAttribute.getY( i );
+      const z = positionAttribute.getZ( i );
 
       let warp = { x, y, z };
       for( let w = 0; w < warpEntries.length; w++ ) {
@@ -134,7 +134,7 @@ export const geometryWarp = (
 
       positionAttribute.setXYZ( i, warp.x, warp.y, warp.z );
 
-      if(k === octaves - 1 ) {
+      if( k === octaves - 1 ) {
         averageOffset.x += warp.x;
         averageOffset.y += warp.y;
         averageOffset.z += warp.z;
@@ -163,4 +163,4 @@ export const geometryWarp = (
   }
 
   return geometry;
-}
+};

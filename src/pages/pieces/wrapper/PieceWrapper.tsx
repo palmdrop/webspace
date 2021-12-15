@@ -1,29 +1,29 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useHistory } from "react-router";
+import { useHistory } from 'react-router';
 
-import { PageRoute } from "../../../App";
-import { ColorTheme } from "../../../state/slices/uiSlice";
-import { PieceNavigationFunction, pieces } from "../pieces/pieces";
+import { PageRoute } from '../../../App';
+import { ColorTheme } from '../../../state/slices/uiSlice';
+import { PieceNavigationFunction, pieces } from '../pieces/pieces';
 
-import Button from "../../../components/input/button/Button";
-import Bar from "../../../components/ornamental/bars/Bar";
-import GradientBackground from "../../../components/ornamental/gradient/GradientBackground";
-import Paragraph from "../../../components/paragraph/Paragraph";
-import Title from "../../../components/title/Title";
+import Button from '../../../components/input/button/Button';
+import Bar from '../../../components/ornamental/bars/Bar';
+import GradientBackground from '../../../components/ornamental/gradient/GradientBackground';
+import Paragraph from '../../../components/paragraph/Paragraph';
+import Title from '../../../components/title/Title';
 
-import SoftDisk from "../../../components/ornamental/disk/soft/SoftDisk";
-import StarLoader from "../../../components/loader/starLoader/StarLoader";
+import SoftDisk from '../../../components/ornamental/disk/soft/SoftDisk';
+import StarLoader from '../../../components/loader/starLoader/StarLoader';
 
 import './PieceWrapper.scss';
 
 type Props = {
   pieceIndex : number,
-  backgroundColorTheme? : ColorTheme,
-  onLoad? : () => void,
-  showLoadingPage? : boolean,
-  showOverlay? : boolean,
-  handlePieceNavigation? : PieceNavigationFunction
+  backgroundColorTheme ?: ColorTheme,
+  onLoad ?: () => void,
+  showLoadingPage ?: boolean,
+  showOverlay ?: boolean,
+  handlePieceNavigation ?: PieceNavigationFunction
 } 
 
 const PieceWrapper = React.memo( ( { 
@@ -65,7 +65,7 @@ const PieceWrapper = React.memo( ( {
   const handleOverlayFocus = () => {
     cancelFadeOut();
     setOverlayVisible( true );
-  }
+  };
   
   const handleLoad = useCallback( () => {
     setIsLoaded( true );
@@ -74,15 +74,15 @@ const PieceWrapper = React.memo( ( {
 
   const handlePrevious = ( event : React.MouseEvent ) => {
     handlePieceNavigation?.( pieceIndex - 1, event );
-  }
+  };
 
   const handleNext = ( event : React.MouseEvent ) => {
     handlePieceNavigation?.( pieceIndex + 1, event );
-  }
+  };
 
   const handleGoBack = () => {
     history.push( PageRoute.pieces );
-  }
+  };
 
   return (
     <div className={ `piece-wrapper ${ isLoaded ? 'piece-wrapper--loaded' : '' }` }>
@@ -110,17 +110,17 @@ const PieceWrapper = React.memo( ( {
       
       { isLoaded && showOverlay && handlePieceNavigation && (
         <div
-          className={ `piece-wrapper__overlay-icon ${ !overlayVisible ? "piece-wrapper__overlay-icon--visible" : "" }` }
+          className={ `piece-wrapper__overlay-icon ${ !overlayVisible ? 'piece-wrapper__overlay-icon--visible' : '' }` }
           onClick={ handleOverlayFocus }
           onMouseOver={ handleOverlayFocus }
         >
-          { ">" }
+          { '>' }
         </div>
       )}
 
       { ( isLoaded && showOverlay && handlePieceNavigation ) && (
         <div 
-          className={ `piece-wrapper__overlay ${ overlayVisible ? "piece-wrapper__overlay--visible" : "" }` }
+          className={ `piece-wrapper__overlay ${ overlayVisible ? 'piece-wrapper__overlay--visible' : '' }` }
           onMouseOver={ handleOverlayFocus }
           onMouseLeave={ handleOverlayBlur }
         >
@@ -129,7 +129,7 @@ const PieceWrapper = React.memo( ( {
               additionalClasses="piece-wrapper__back-button"
               onClick={ handleGoBack }
             >
-              { "<<< index <<<" }
+              { '<<< index <<<' }
             </Button>
           </nav>
 
@@ -149,7 +149,7 @@ const PieceWrapper = React.memo( ( {
                 additionalClasses="piece-wrapper__previous-button"
                 onClick={ handlePrevious }
               >
-                { "< previous" }
+                { '< previous' }
               </Button>
             )}
             { ( pieceIndex !== pieces.length - 1 ) && (
@@ -157,7 +157,7 @@ const PieceWrapper = React.memo( ( {
                 additionalClasses="piece-wrapper__next-button"
                 onClick={ handleNext }
               >
-                { "next >" }
+                { 'next >' }
               </Button>
             )}
           </nav>
@@ -170,7 +170,7 @@ const PieceWrapper = React.memo( ( {
                 >
                   { paragraph }
                 </Paragraph>
-              ))}
+              ) )}
             </div>
           </section>
           <div className="piece-wrapper__overlay-close">
@@ -178,14 +178,14 @@ const PieceWrapper = React.memo( ( {
               additionalClasses="piece-wrapper__overlay-close-button"
               onClick={ () => setOverlayVisible( false ) }
             >
-              { "<<<" }
+              { '<<<' }
             </Button>
             <SoftDisk />
           </div>
         </div>
       )}
     </div>
-  )
-})
+  );
+} );
 
 export default PieceWrapper;

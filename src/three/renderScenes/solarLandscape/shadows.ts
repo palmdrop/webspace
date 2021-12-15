@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import * as THREE from 'three';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
@@ -23,8 +23,8 @@ export class ShadowRenderer {
     this.renderer = renderer;
     this.scene = scene;
     this.camera = new THREE.OrthographicCamera(
-      -size.x / 2.0,  size.x / 2.0,
-       size.y / 2.0, -size.y / 2.0
+      -size.x / 2.0, size.x / 2.0,
+      size.y / 2.0, -size.y / 2.0
     );
     this._size = size;
 
@@ -35,7 +35,7 @@ export class ShadowRenderer {
     this.renderTarget = new THREE.WebGLRenderTarget( rendererSize.x, rendererSize.y, {
       format: THREE.RGBAFormat,
       stencilBuffer: false
-    })
+    } );
 
     this.composer = new EffectComposer( renderer, this.renderTarget );
     const renderPass = new RenderPass( scene, this.camera );
@@ -75,7 +75,7 @@ export class ShadowRenderer {
     this.camera.lookAt( lookAt );
   }
 
-  setSize( width? : number, height? : number ) {
+  setSize( width ?: number, height ?: number ) {
     if( !width || !height ) {
       const size = this.renderer.getSize( new THREE.Vector2() );
       width = size.x;
@@ -89,11 +89,11 @@ export class ShadowRenderer {
   }
 
   get texture() {
-    return this.renderTarget.texture
+    return this.renderTarget.texture;
   }
 
   get size() {
-    return this._size.clone()
+    return this._size.clone();
   }
 
   getUniform( uniformName : string ) {

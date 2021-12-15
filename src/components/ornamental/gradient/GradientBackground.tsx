@@ -5,7 +5,7 @@ import './GradientBackground.scss';
 const GradientBackground = ( { colorTheme } : { colorTheme : ColorTheme } ) : JSX.Element => {
   return (
     <div className="gradient-background">
-    { Object.values( ColorTheme ).map( colorScheme => (
+      { Object.values( ColorTheme ).map( colorScheme => (
         <div 
           key={ colorScheme }
           className={ 
@@ -13,9 +13,9 @@ const GradientBackground = ( { colorTheme } : { colorTheme : ColorTheme } ) : JS
           }
         />
       )
-    )}
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default GradientBackground;

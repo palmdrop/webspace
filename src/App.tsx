@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense } from 'react';
 
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -7,27 +7,27 @@ import {
   Route,
   BrowserRouter as Router,
   Redirect
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import { useAppSelector } from "./state/store/hooks";
-import { ColorTheme, selectColorTheme } from "./state/slices/uiSlice";
+import { useAppSelector } from './state/store/hooks';
+import { ColorTheme, selectColorTheme } from './state/slices/uiSlice';
 
-import PageWrapper, { PageProps } from "./pages/PageWrapper";
+import PageWrapper, { PageProps } from './pages/PageWrapper';
 
-import NotFoundPage from "./pages/notFound/notFoundPage";
-import PageDidNotLoadPage from "./pages/pageDidNotLoad/pageDidNotLoadPage";
+import NotFoundPage from './pages/notFound/notFoundPage';
+import PageDidNotLoadPage from './pages/pageDidNotLoad/pageDidNotLoadPage';
 
-import GradientBackground from "./components/ornamental/gradient/GradientBackground";
+import GradientBackground from './components/ornamental/gradient/GradientBackground';
 
 import './App.scss';
 
 // Use lazy loading to load most pages
-const MainPage    = React.lazy( () => import( "./pages/main/mainPage" ) );
-const AboutPage   = React.lazy( () => import( "./pages/about/aboutPage" ) );
-const PiecesPage  = React.lazy( () => import( "./pages/pieces/piecesPage" ) );
-const BlogPage    = React.lazy( () => import( "./pages/blog/blogPage" ) );
-const LinksPage   = React.lazy( () => import( "./pages/links/linksPage" ) );
-const ContactPage = React.lazy( () => import( "./pages/contact/contactPage" ) );
+const MainPage = React.lazy( () => import( './pages/main/mainPage' ) );
+const AboutPage = React.lazy( () => import( './pages/about/aboutPage' ) );
+const PiecesPage = React.lazy( () => import( './pages/pieces/piecesPage' ) );
+const BlogPage = React.lazy( () => import( './pages/blog/blogPage' ) );
+const LinksPage = React.lazy( () => import( './pages/links/linksPage' ) );
+const ContactPage = React.lazy( () => import( './pages/contact/contactPage' ) );
 
 export enum PageRoute {
   root = '/',
@@ -112,20 +112,20 @@ const App = () => {
         <Suspense fallback={ null }>
           <Router>
             <Switch>
-            { pages.map( page => (
-              <Route 
-                key={ page.route }
-                path={ page.route }
-                exact={ page.exactRoute }
-              >
-                <PageWrapper 
-                  route={ page.route }
-                  colorTheme={ page.colorTheme }
+              { pages.map( page => (
+                <Route 
+                  key={ page.route }
+                  path={ page.route }
+                  exact={ page.exactRoute }
                 >
-                  <page.Component route={ page.route } />
-                </PageWrapper>
-              </Route>
-            ))}
+                  <PageWrapper 
+                    route={ page.route }
+                    colorTheme={ page.colorTheme }
+                  >
+                    <page.Component route={ page.route } />
+                  </PageWrapper>
+                </Route>
+              ) )}
 
               <Route path={ PageRoute.notFound }>
                 <NotFoundPage />
@@ -138,6 +138,6 @@ const App = () => {
       </ErrorBoundary>
     </div>
   );
-}
+};
 
 export default App;

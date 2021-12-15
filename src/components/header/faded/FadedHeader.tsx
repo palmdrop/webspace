@@ -4,7 +4,7 @@ import './FadedHeader.scss';
 
 type Props = {
   title : string,
-  children? : React.ReactChild | React.ReactChild[] | never[]
+  children ?: React.ReactChild | React.ReactChild[] | never[]
 }
 
 const FadedHeader = ( { title, children } : Props ) : JSX.Element => {
@@ -17,7 +17,7 @@ const FadedHeader = ( { title, children } : Props ) : JSX.Element => {
         { children }
       </Header>
     </div>
-  )
-}
+  );
+};
 
 export default FadedHeader;

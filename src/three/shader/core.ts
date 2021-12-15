@@ -9,20 +9,20 @@ export type Operation = 'mult' | 'div' | 'add' | 'sub' | 'avg';
 
 
 export type FunctionSignature = {
-  parameters : [ GlslType, String ][] // array of parameters
+  parameters : [ GlslType, string ][] // array of parameters
   returnType : GlslType,
 }
 
 export type ShaderChunk = {
   content : string,
-  functionSignatures? : { [ key : string ] : FunctionSignature }
+  functionSignatures ?: { [ key : string ] : FunctionSignature }
 }
 
 
 /* Variables */
 type IVariable<T extends GlslType, V> = {
   type : T,
-  value? : V
+  value ?: V
 }
 
 export type Float = IVariable<'float', number>;
@@ -72,8 +72,8 @@ export type Shader = {
 
 /* Utility */
 export type UniformObject = {
-  uniforms?: { 
-    [uniform: string]: {
+  uniforms ?: { 
+    [uniform : string] : {
       value : any
     }
   }
@@ -93,4 +93,4 @@ export const setUniform = <T>(
   destinationObject.uniforms[ name ].value = value;
 
   return true;
-}
+};

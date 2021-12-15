@@ -3,8 +3,8 @@ import Bar from './Bar';
 import './Bars.scss';
 
 type Props = {
-  amount: number,
-  first?: 'inset' | 'extrude'
+  amount : number,
+  first ?: 'inset' | 'extrude'
 }
 
 const Bars = ( { amount, first = 'extrude' } : Props ) : JSX.Element => {
@@ -17,8 +17,8 @@ const Bars = ( { amount, first = 'extrude' } : Props ) : JSX.Element => {
         // Will be true on even indexes if first == 'extrude', 
         // and true on odd indexes if first == 'inset'
         ( i % 2 === 0 ) === ( first === 'extrude' ) 
-        ? 'extrude' 
-        : 'inset';
+          ? 'extrude' 
+          : 'inset';
 
       bars.push(
         <Bar 
@@ -36,7 +36,7 @@ const Bars = ( { amount, first = 'extrude' } : Props ) : JSX.Element => {
     <div className="bars">
       { createBars() }
     </div>
-  )
-}
+  );
+};
 
 export default Bars;

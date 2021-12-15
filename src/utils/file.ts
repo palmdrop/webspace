@@ -1,6 +1,6 @@
-export const promptDownload = (dataURL : string, name : string) => {
-  var link = document.createElement( 'a' );
+export const promptDownload = ( dataURL : string, name : string ) => {
+  const link = document.createElement( 'a' );
   link.href = dataURL;
   link.download = name;
   link.click();
-}
+};

@@ -21,7 +21,7 @@ export const textureFromSmoothGeometry = (
     data[ stride + 0 ] = Math.floor( color.r * 255 );
     data[ stride + 1 ] = Math.floor( color.g * 255 );
     data[ stride + 2 ] = Math.floor( color.b * 255 );
-  }
+  };
 
   // Set default values
   for( let i = 0; i < size; i++ ) {
@@ -53,4 +53,4 @@ export const textureFromSmoothGeometry = (
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
   return texture;
-}
+};
