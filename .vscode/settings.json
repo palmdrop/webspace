@@ -1,4 +1,8 @@
 {
     "editor.tabSize": 2,
     "editor.renderWhitespace": "trailing",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": ["javascript", "typescript"]
 }

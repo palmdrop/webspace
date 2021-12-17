@@ -1,0 +1,39 @@
+@import '../../../../styles/fonts.scss';
+
+.piece {
+
+  &__settings-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    z-index: 10;
+
+    right: 0;
+    bottom: 0;
+
+    @include font( 'paragraph' );
+
+    color: var( --primary-color-500 );
+
+    label {
+      cursor: pointer;
+      margin: 0.5em;
+      padding: 0.8em;
+      border-radius: 50%;
+
+      // background-color: #444444;
+      backdrop-filter: brightness(600%) invert( 100% );
+      @include font( 'accent' );
+
+      &:hover {
+        backdrop-filter: brightness(500%) invert( 0% );
+        color: var( --foreground-color );
+      }
+    }
+
+    input {
+      display: none;
+    }
+  }
+}

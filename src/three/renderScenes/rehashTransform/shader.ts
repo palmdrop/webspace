@@ -106,18 +106,20 @@ const maskSource1 : Source = {
   `,
 };
 
-const textureSource : Source = {
-  kind: 'texture',
-  name: 't1',
-  texture: ASSETHANDLER.loadTexture( 
-    sourceImage,
-    false, 
-    ( texture ) => {
-      texture.wrapS = THREE.MirroredRepeatWrapping;
-      texture.wrapT = THREE.MirroredRepeatWrapping;
-    } 
-  ),
-  repeat: new THREE.Vector2( 1.2, 1.2 )
+const getTextureSource = ( textureName : string ) : Source => {
+  return {
+    kind: 'texture',
+    name: textureName,
+    texture: ASSETHANDLER.loadTexture( 
+      sourceImage,
+      false, 
+      ( texture ) => {
+        texture.wrapS = THREE.MirroredRepeatWrapping;
+        texture.wrapT = THREE.MirroredRepeatWrapping;
+      } 
+    ),
+    repeat: new THREE.Vector2( 1.2, 1.2 )
+  };
 };
 
 const colorSettings : ColorSettings = {
@@ -149,14 +151,16 @@ const fog : Fog = {
   opacity: random( 0.4, 0.8 ),
 };
 
-export default {
-  domain: 'vertex',
-  scale: 0.010,
-  mainSource: textureSource,
-  domainWarp: source1Warp,
-  mask: maskSource1,
-  alphaMask: Math.random() > 0.5 ? alphaMaskSource : undefined,
-  fog,
-  timeOffset: new THREE.Vector3( 0.05, -0.05, 0.05, ),
-  colorSettings
-} as PatternShaderSettings;
+export default ( mainTextureName : string ) => { 
+  return {
+    domain: 'vertex',
+    scale: 0.010,
+    mainSource: getTextureSource( mainTextureName ),
+    domainWarp: source1Warp,
+    mask: maskSource1,
+    alphaMask: Math.random() > 0.5 ? alphaMaskSource : undefined,
+    fog,
+    timeOffset: new THREE.Vector3( 0.05, -0.05, 0.05, ),
+    colorSettings
+  } as PatternShaderSettings; 
+};

@@ -11,7 +11,7 @@ import { createObject } from './object';
 import { getComposer } from './postprocessing';
 import { generateRoom } from './room';
 
-import shaderSettings from './shader';
+import getShaderSettings from './shader';
 import { DynamicTime, dynamicTimeFromNoise } from './util/dynamicTime';
 
 const maxBoxDimensionSize = ( box : THREE.Box3 ) => {
@@ -25,6 +25,8 @@ const maxBoxDimensionSize = ( box : THREE.Box3 ) => {
     0.0
   );
 };
+
+const MAIN_TEXTURE_NAME = 't1';
 
 export class RehashTransformRenderScene extends AbstractRenderScene {
   private controls ?: TrackballControls;
@@ -62,6 +64,8 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     this.controls = new TrackballControls( this.camera, canvas );
     this.controls.noPan = true;
     this.controls.noRoll = true;
+
+    const shaderSettings = getShaderSettings( MAIN_TEXTURE_NAME );
 
     const alphaMask = shaderSettings.alphaMask;
     shaderSettings.alphaMask = undefined;
@@ -102,7 +106,6 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     this.camera.far = roomScale * 10.0;
 
     this.controls.maxDistance = 1.7 * objectMaxDimensionSize;
-
 
     // Gui
     this.gui = new dat.GUI();
@@ -204,5 +207,32 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
       this.gui.show();
     }
+  }
+
+  updateTexture( dataUrl : string ) {
+    const image = new Image();
+
+    const objectMaterial = this.objectShaderMaterial;
+    const envMaterial = this.envShaderMaterial;
+
+    image.onload = function() {
+      const texture = new THREE.Texture();
+      texture.image = image;
+      texture.needsUpdate = true;
+      texture.wrapS = THREE.MirroredRepeatWrapping;
+      texture.wrapT = THREE.MirroredRepeatWrapping;
+
+      objectMaterial.uniforms[ MAIN_TEXTURE_NAME ].value = texture;
+      envMaterial.uniforms[ MAIN_TEXTURE_NAME ].value = texture;
+
+      objectMaterial.uniformsNeedUpdate = true;
+      envMaterial.uniformsNeedUpdate = true;
+    };
+
+    image.src = dataUrl;
+  }
+
+  dispose() {
+    this.gui.destroy();
   }
 }

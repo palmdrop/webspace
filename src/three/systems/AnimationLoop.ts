@@ -17,6 +17,8 @@ export class SimpleAnimationLoop implements AnimationLoop {
     let then = 0.0;
 
     const animate = ( now : number ) : void => {
+      if( !this.running ) return;
+
       now /= MILLI_SECONDS_PER_SECOND;
       const delta = now - then;
       this.time += delta;
@@ -27,7 +29,7 @@ export class SimpleAnimationLoop implements AnimationLoop {
       this.onUpdate( delta, this.time );
     };
 
-    requestAnimationFrame( animate );
+    this.animationFrameID = requestAnimationFrame( animate );
   }
 
   stop() {

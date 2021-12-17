@@ -16,6 +16,8 @@ type Props<T extends RenderScene> = {
   onMouseMove ?: MouseMoveCallback<T>,
   onScroll ?: MouseScrollCallback<T>,
 
+  renderSceneCallback ?: ( renderScene : T ) => void,
+
   resizeThrottle ?: number,
   mouseMoveThrottle ?: number,
   scrollThrottle ?: number,
@@ -26,6 +28,8 @@ const AnimationCanvas = <T extends RenderScene>( {
   onLoad, 
   onMouseMove,
   onScroll,
+
+  renderSceneCallback,
 
   resizeThrottle = 300,
   mouseMoveThrottle = 100,
@@ -87,6 +91,7 @@ const AnimationCanvas = <T extends RenderScene>( {
     if( canvasRef.current !== null ) {
       const renderScene = createRenderScene( renderSceneConstructor, canvasRef.current, onLoad );
       setRenderScene( renderScene );
+      renderSceneCallback?.( renderScene );
 
       if( isAdmin && renderScene.onUserAdmin ) renderScene.onUserAdmin();
       renderScene.start();
@@ -116,3 +121,4 @@ const AnimationCanvas = <T extends RenderScene>( {
 };
 
 export default AnimationCanvas;
+
