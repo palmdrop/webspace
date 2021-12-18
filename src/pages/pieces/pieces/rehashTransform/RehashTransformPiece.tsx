@@ -8,10 +8,15 @@ import './RehashTransformPiece.scss';
 
 export default ( { onLoad } : PieceProps ) => {
   const [ renderScene, setRenderScene ] = useState<RehashTransformRenderScene | undefined>();
+  const [ imageData, setImageData ] = useState<string | undefined>();
 
   const renderSceneCallback = useCallback( ( renderScene : RehashTransformRenderScene ) => {
     setRenderScene( renderScene );
-  }, [] );
+
+    if ( imageData ) {
+      renderScene?.updateTexture( imageData );
+    }
+  }, [ imageData ] );
 
   const onImageSelected = ( event : React.ChangeEvent<HTMLInputElement> ) => {
     if( !event.target.files ) return;
@@ -22,7 +27,9 @@ export default ( { onLoad } : PieceProps ) => {
     const reader = new FileReader();
     reader.readAsDataURL( imageData );
     reader.onloadend = () => {
-      renderScene?.updateTexture( reader.result as string );
+      const data = reader.result as string;
+      renderScene?.updateTexture( data );
+      setImageData( data );
     };
   };
 

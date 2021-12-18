@@ -50,6 +50,8 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
   constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
 
+    this.captureFrameResolutionMultiplier = 4;
+
     this.dynamicTime = dynamicTimeFromNoise(
       0.3,
       0.0055,
