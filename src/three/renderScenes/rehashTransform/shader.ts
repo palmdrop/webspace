@@ -17,7 +17,7 @@ const images = importAll(
 
 const sourceImage = randomElement( Object.values( images ) );
 
-const noiseSource1 : Source = {
+export const noiseSource1 : Source = {
   kind: 'noise',
   frequency: new THREE.Vector3(
     random( 0.1, 1.0 ),
@@ -39,7 +39,7 @@ const alphaMaskSource : Source = {
     random( 0.6, 1.3 ),
     random( 0.6, 1.3 ),
   ),
-  amplitude: 2.4,
+  amplitude: 3.4,
   pow: 1.1,
   octaves: Math.floor( random( 3, 5 ) ),
   persistance: 0.5,

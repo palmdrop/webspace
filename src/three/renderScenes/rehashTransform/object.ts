@@ -1,21 +1,61 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
 import { ImprintGeometryPrefab } from '../../prefabs/geometries';
+import { createPath } from './paths';
 
-export const createObject = ( material : THREE.Material, size : number ) : {
-  mesh : THREE.Mesh,
-  updateMesh : ( mesh : THREE.Mesh, time : number, delta : number ) => void,
+export const createObject = ( 
+  size : number,
+  instancedMaterial : THREE.Material, 
+  regularMaterial : THREE.Material,
+  roomBoundingBox : THREE.Box3,
+) : {
+  object : THREE.Mesh,
+  lines : THREE.Group,
+  updateMesh : ( time : number, delta : number ) => void,
 } => {
   const geometry = ImprintGeometryPrefab( {} );
 
   const numberOfInstances = Math.floor( random( 40, 100 ) );
+  const numberOfLines = Math.random() > 0.5 
+    ? Math.floor( numberOfInstances / random( 1.0, 2.0 ) )
+    : 0; 
+
+  // Object
 
   const instancedObject = new THREE.InstancedMesh(
     geometry,
-    material,
+    instancedMaterial,
     numberOfInstances
   );
 
+  // Lines
+  const lineArray : THREE.Mesh[] = [];
+  const lines : THREE.Group = new THREE.Group();
+
+  for( let i = 0; i < numberOfLines; i++ ) {
+    const line = createPath(
+      roomBoundingBox,
+      new THREE.Vector3( 
+        random( 30, 60 ),
+        random( 30, 60 ),
+        random( 30, 60 )
+      ),
+      new THREE.Vector3( 
+        random( 0.003, 0.007 ),
+        random( 0.003, 0.007 ),
+        random( 0.003, 0.007 )
+      ),
+      random( 0.02, 1.1 ),
+      regularMaterial,
+      100,
+      300
+    );
+
+    lineArray.push( line );
+    lines.add( line );
+  }
+
+  // Update
   const xSpeed = random( -0.2, 0.2 );
   const ySpeed = random( -0.2, 0.2 );
   const zSpeed = random( -0.2, 0.2 );
@@ -28,21 +68,23 @@ export const createObject = ( material : THREE.Material, size : number ) : {
   const yScale = random( -0.1, 0.1 );
   const zScale = random( -0.1, 0.1 );
   
-  const updateMesh = ( mesh : THREE.Mesh, time : number, delta : number ) => {
+  const offset = random( 1.0, 2.0 );
+  const instancesPerLine = Math.floor( numberOfInstances / numberOfLines );
+
+  const updateMesh = ( time : number, delta : number ) => {
     const positionSum = new THREE.Vector3();
     const position = new THREE.Vector3();
-    
-    for( let i = 0; i < numberOfInstances; i++ ) {
 
-      const rotation = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(
-          time * xSpeed + xRotation * i,
-          time * ySpeed + yRotation * i,
-          time * zSpeed + zRotation * i,
-        )
+    for( let i = 0; i < numberOfInstances; i++ ) {
+      const euler = new THREE.Euler(
+        time * xSpeed + xRotation * i,
+        time * ySpeed + yRotation * i,
+        time * zSpeed + zRotation * i,
       );
 
-      position.add( new THREE.Vector3( 1.5, 0.0, 0.0 ).applyQuaternion( rotation ) );
+      const rotation = new THREE.Quaternion().setFromEuler( euler );
+
+      position.add( new THREE.Vector3( offset, 0.0, 0.0 ).applyQuaternion( rotation ) );
 
       positionSum.add( position );
 
@@ -58,20 +100,31 @@ export const createObject = ( material : THREE.Material, size : number ) : {
         scale
       );
 
-      ( mesh as THREE.InstancedMesh ).setMatrixAt( i, matrix );
+      instancedObject.setMatrixAt( i, matrix );
+
+      // Update line
+      if( i % instancesPerLine === 0 ) {
+        const lineIndex = Math.floor( i / instancesPerLine );
+        if( lineIndex < lineArray.length ) {
+          lineArray[ lineIndex ].rotation.x = euler.x;
+          lineArray[ lineIndex ].rotation.y = euler.y;
+          lineArray[ lineIndex ].rotation.y = euler.z;
+        }
+      }
     }
 
     const averagePosition = positionSum.divideScalar( numberOfInstances );
 
-    mesh.position.copy( averagePosition.multiplyScalar( -1 ) );
+    instancedObject.position.copy( averagePosition.multiplyScalar( -1 ) );
 
-    ( mesh as THREE.InstancedMesh ).instanceMatrix.needsUpdate = true;
+    instancedObject.instanceMatrix.needsUpdate = true;
   };
 
-  updateMesh( instancedObject, 0, 0 );
+  updateMesh( 0, 0 );
 
   return {
-    mesh: instancedObject,
+    object: instancedObject,
+    lines,
     updateMesh,
   };
 };

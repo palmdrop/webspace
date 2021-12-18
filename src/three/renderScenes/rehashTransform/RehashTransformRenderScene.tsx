@@ -37,8 +37,12 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
   private objectShaderMaterial : THREE.ShaderMaterial;
   private objectMaterialSpeed : number;
 
+  private lineShaderMaterial : THREE.ShaderMaterial;
+
   private object : THREE.Mesh;
-  private updateObject : ( mesh : THREE.Mesh, time : number, delta : number ) => void;
+  private lines : THREE.Group;
+  private updateObject : ( time : number, delta : number ) => void;
+
 
   private dynamicTime : DynamicTime;
 
@@ -86,27 +90,40 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     shaderSettings.forInstancedMesh = true;
 
     this.objectShaderMaterial = new THREE.ShaderMaterial( buildPatternShader( shaderSettings ) );
-    this.objectShaderMaterial.blending = THREE.NormalBlending;
-    this.objectShaderMaterial.transparent = true;
+    if( alphaMask ) {
+      this.objectShaderMaterial.blending = THREE.NormalBlending;
+      this.objectShaderMaterial.transparent = true;
+    }
 
-    const { mesh: object, updateMesh } = createObject(
+    shaderSettings.forInstancedMesh = false;
+    this.lineShaderMaterial = new THREE.ShaderMaterial( buildPatternShader( shaderSettings ) );
+    if( alphaMask ) {
+      this.lineShaderMaterial.blending = THREE.NormalBlending;
+      this.lineShaderMaterial.transparent = true;
+    }
+
+    const { 
+      object, 
+      lines,
+      updateMesh 
+    } = createObject(
+      objectSize,
       this.objectShaderMaterial,
-      objectSize
+      this.lineShaderMaterial,
+      roomBoundingBox
     );
 
-    const objectBoundingBox = new THREE.Box3().expandByObject( object );
+    this.lines = lines;
 
+    const objectBoundingBox = new THREE.Box3().expandByObject( object );
     const objectMaxDimensionSize = objectSize * maxBoxDimensionSize( objectBoundingBox );
 
     const roomMaxDimensionSize = maxBoxDimensionSize( roomBoundingBox );
-
     const roomScale = 15.0 * objectMaxDimensionSize / roomMaxDimensionSize;
-
     room.scale.set( roomScale, roomScale, roomScale );
 
     this.camera.position.z = objectMaxDimensionSize * 1.2;
     this.camera.far = roomScale * 10.0;
-
     this.controls.maxDistance = 1.7 * objectMaxDimensionSize;
 
     // Gui
@@ -122,6 +139,10 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     envFolder.add( { speed: this.envMaterialSpeed }, 'speed', 0.0, 2.0 )
       .onChange( value => this.envMaterialSpeed = value );
 
+    const linesFolder = this.gui.addFolder( 'lines' );
+    linesFolder.add( { speed: this.envMaterialSpeed }, 'speed', 0.0, 2.0 )
+      .onChange( value => this.lineShaderMaterial = value );
+
     const addUniformSlider = ( gui : dat.GUI, object : UniformObject, name : string, startValue : number, min : number, max : number, ) => {
       setUniform( name, startValue, object );
       gui.add( { [name]: startValue }, name, min, max, ( max - min ) / 1000 )
@@ -134,11 +155,16 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     addUniformSlider( envFolder, this.envShaderMaterial, 'frequency', 0.1, 0.0, 1.0 );
     addUniformSlider( envFolder, this.envShaderMaterial, 'brightness', 0.6, 0.0, 1.0 );
 
+    addUniformSlider( linesFolder, this.lineShaderMaterial, 'frequency', 1.0, 0.0, 30.0 );
+    addUniformSlider( linesFolder, this.lineShaderMaterial, 'brightness', 0.8, 0.0, 3.0 );
+
     this.object = object;
     this.updateObject = updateMesh;
 
-    this.scene.add( room, object );
+    this.scene.add( room, lines, object );
     this.scene.background = new THREE.Color( 'black' );
+
+    // Paths
 
     // Postprocessing
     const {
@@ -178,8 +204,10 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
     setUniform( 'time', this.envMaterialSpeed * time, this.envShaderMaterial );
     setUniform( 'time', this.objectMaterialSpeed * time, this.objectShaderMaterial );
+    setUniform( 'time', this.objectMaterialSpeed * time, this.lineShaderMaterial );
 
-    this.updateObject( this.object, now, delta );
+    this.updateObject( now, delta );
+    // this.updateLines( now, delta );
     this.updateComposer( delta, now );
   }
 
@@ -216,6 +244,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
     const objectMaterial = this.objectShaderMaterial;
     const envMaterial = this.envShaderMaterial;
+    const lineMaterial = this.lineShaderMaterial;
 
     image.onload = function() {
       const texture = new THREE.Texture();
@@ -226,9 +255,11 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
       objectMaterial.uniforms[ MAIN_TEXTURE_NAME ].value = texture;
       envMaterial.uniforms[ MAIN_TEXTURE_NAME ].value = texture;
+      lineMaterial.uniforms[ MAIN_TEXTURE_NAME ].value = texture;
 
       objectMaterial.uniformsNeedUpdate = true;
       envMaterial.uniformsNeedUpdate = true;
+      lineMaterial.uniformsNeedUpdate = true;
     };
 
     image.src = dataUrl;

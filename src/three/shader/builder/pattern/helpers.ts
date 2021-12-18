@@ -305,7 +305,6 @@ export const colorToGLSL = ( color : THREE.Color ) => {
 export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionWithName => {
   const nearColorGLSL = colorToGLSL( fog.nearColor );
   const farColorGLSL = colorToGLSL( fog.farColor );
-  console.log( fog.opacity );
   const func : GlslFunction = {
     parameters: [ [ 'vec3', 'fragColor' ], [ 'float', 'depth' ] ],
     returnType: 'vec3',
