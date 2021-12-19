@@ -30,16 +30,16 @@ marked.setOptions( {
 } );
 
 const processMetadata = ( posts ) => {
-  return posts.map( ( { metadata, content } ) => {
-    const processedMetadata = { ...metadata };
+  return posts.map( post => {
+    const processedMetadata = { ...post.metadata };
 
     if( processedMetadata.image ) {
-      processedMetadata.image = path.relative( POSTS_PATH, path.join( IMAGES_PATH, metadata.image ) );
+      processedMetadata.image = path.relative( POSTS_PATH, path.join( IMAGES_PATH, post.metadata.image ) );
     }
 
     return {
+      ...post,
       metadata: processedMetadata,
-      content
     };
   } );
 };
@@ -48,7 +48,7 @@ const processMetadata = ( posts ) => {
 const htmlToReactComponent = ( metadata, html ) => {
   return `import Post from '${ RELATIVE_POST_COMPONENT_PATH }';
 ${ config && config[ 'code-theme' ] && (
-`import '${ config[ 'code-theme' ] }';
+    `import '${ config[ 'code-theme' ] }';
 ${ metadata.image ? `import image from '${ metadata.image }';` : '' }`
   ) }
 
@@ -58,7 +58,7 @@ const Post${ metadata.id } = () => {
   return (
     <Post 
       metadata={ metadata }
-      ${ metadata.image ? 'image={ image }' : ''}
+      ${ metadata.image ? 'image={ image }' : '' }
     >
       <div dangerouslySetInnerHTML={ { __html: \`${ html }\` } }/>
     </Post>
@@ -87,6 +87,18 @@ import React from 'react';
 ${ posts.map( ( { metadata } ) => (
     `const Post${ metadata.id } = React.lazy( () => import( './post${ metadata.id }' ) );`
   ) ).join( '\n' ) }
+
+${ posts.map( ( { metadata } ) => {
+    if ( metadata.image ) return `import image${ metadata.id } from '${ metadata.image }';`;
+    return null;
+  } ).filter( line => line ).join( '\n' ) }
+
+export const images : { [id : number] : string } = {
+${ posts.map( ( { metadata } ) => {
+    if ( metadata.image ) return `  ${ metadata.id }: image${ metadata.id },`;
+    return null;
+  } ).filter( line => line ).join( '\n' ) }
+};
 
 export const postsData = [
 ${ posts.map( ( { metadata, snippet } ) => `  {

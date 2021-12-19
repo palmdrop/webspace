@@ -14,11 +14,13 @@ export const allPostsData = ( postsData as unknown as PostData[] )
   } );
 
 export const postDataByCategory = allPostsData.reduce( ( acc, data ) => {
-  const category = data.metadata.keywords[ 0 ];
+  const category = data.metadata.keywords.split( ', ' )[ 0 ];
   if ( !acc[ category ] ) acc[ category ] = [];
   acc[ category ].push( data );
   return acc;
 }, {} as { [category : string] : PostData[] } );
+
+console.log( postDataByCategory );
 
 const months = [
   'jan',

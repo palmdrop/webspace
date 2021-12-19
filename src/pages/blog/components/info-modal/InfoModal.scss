@@ -4,6 +4,8 @@
   right: -0.5em;
   z-index: 1;
 
+  font-size: 1em;
+
   .soft-disk {
     position: absolute;
     transform: translate( -50%, -50% );
@@ -30,7 +32,10 @@
     background-color: var( --accent-color );
 
     border: 2px solid var( --secondary-color );
-    box-shadow: 0px 0px 15px #0007;
+    box-shadow: 0px 0px 15px #0003;
+
+    width: 500px;
+    max-width: 70vw;
 
     h1 {
       font-size: 2rem;

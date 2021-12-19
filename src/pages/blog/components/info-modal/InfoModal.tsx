@@ -40,8 +40,7 @@ const InfoModal = () => {
           A blog by palmdrop. Intended to be my more or less polished thought-dump. Posts may vary in length, quality and content. 
         </Paragraph>
         <Paragraph>
-          I believe in learning in public, and I want to rid myself of the fear of criticism. And finally, I want to inspire more deep thinking, 
-          mostly in myself, but hopefully also in others.
+          I believe in learning in public, and I want to rid myself of the fear of criticism. I also want to force myself to think.
         </Paragraph>
         <Paragraph>
           At the moment, this blog is under construction.

@@ -5,18 +5,19 @@ import HomeBar from '../../components/navigation/home/HomeBar';
 import Title from '../../components/title/Title';
 import { PageProps } from '../PageWrapper';
 
-import { postsData } from './posts/data';
+import { postsData, images } from './posts/data';
 
 import Button from '../../components/input/button/Button';
 import { Link } from 'react-router-dom';
 
-import './blogPage.scss';
 import { allPostsData, categories, formatDate, postDataByCategory } from './blog';
 import { PostData, PostMetadata } from './components/post/Post';
 import Paragraph from '../../components/paragraph/Paragraph';
 import Bar from '../../components/ornamental/bars/Bar';
 import InfoModal from './components/info-modal/InfoModal';
 import { nameToPath } from '../../utils/general';
+
+import './blogPage.scss';
 
 // eslint-disable-next-line react/prop-types
 const BlogPage = ( { route } : PageProps ) : JSX.Element => {
@@ -50,6 +51,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
   ) ), [ route ] );
 
   // TODO react virtualized/window in the future? 
+  // This will also solve issue of lazy-loading images! unmounted dom nodes will not force image to load
   // TODO recalculate based on selected category
   const links = useMemo( () => {
     const createLink = ( { metadata, snippet } : PostData ) => {
@@ -57,18 +59,27 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
         to={ `${ route }/${ nameToPath( metadata.title ) }` }
         className="blog-page__post-link"
       >
-        <div>
-          { metadata.title }
+        <div className='link-content'>
+          <Title
+            text={ metadata.title }
+            level={ 2 } 
+          />
           <span>
             { formatDate( metadata.date ) }
           </span>
         </div>
+        { metadata.image && (
+          <img
+            src={ images[ metadata.id ] }
+            alt={ metadata.title }
+          />
+        )}
         <Paragraph>
           { snippet.trim() }
         </Paragraph>
         <Bar
           direction="horizontal"
-          variant="extrude"
+          variant="inset"
         />
       </Link>;
     };
@@ -95,10 +106,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
                 text="mind fog"
                 level={ 1 }
               />
-              <div className="blog-page__info">
-                <Paragraph>
-                  a blog by palmdrop
-                </Paragraph>
+              <div className='blog-page__info'>
                 <InfoModal />
               </div>
               <Bar

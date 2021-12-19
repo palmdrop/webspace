@@ -82,7 +82,7 @@ const parsePost = ( file, data, index ) => {
  
   return { 
     metadata, 
-    snippet,
+    snippet: snippet.trim(),
     content 
   };
 };
