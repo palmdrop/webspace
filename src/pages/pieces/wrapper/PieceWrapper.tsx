@@ -39,10 +39,10 @@ const PieceWrapper = React.memo( ( {
 } : Props ) => {
   const fadeOutRef = useRef<NodeJS.Timeout | null>( null );
 
+  const [ overlayEnabled, setOverlayEnabled ] = useState( true );
+  const [ overlayVisible, setOverlayVisible ] = useState( true );
   const [ isLoaded, setIsLoaded ] = useState( false );
   const pieceData = useMemo( () => pieces[ pieceIndex ], [ pieceIndex ] );
-
-  const [ overlayVisible, setOverlayVisible ] = useState( true );
 
   const history = useHistory();
 
@@ -60,6 +60,20 @@ const PieceWrapper = React.memo( ( {
       setOverlayVisible( false );
     }, 1500 );
   }, [ setOverlayVisible, cancelFadeOut ] );
+
+  useEffect( () => {
+    const handleKeyPress = ( event : KeyboardEvent ) => {
+      switch( event.key ) {
+      case 'h': setOverlayEnabled( enabled => !enabled ); break;
+      default: break;
+      }
+    };
+
+    window.addEventListener( 'keydown', handleKeyPress );
+    return () => {
+      window.removeEventListener( 'keydown', handleKeyPress );
+    };
+  }, [] );
   
   useEffect( () => {
     if( isLoaded ) {
@@ -109,11 +123,12 @@ const PieceWrapper = React.memo( ( {
         <Suspense fallback={ null }>
           <pieceData.Component 
             onLoad={ handleLoad }
+            overlayEnabled={ showOverlay && overlayEnabled }
           />
         </Suspense>
       </div>
       
-      { isLoaded && showOverlay && handlePieceNavigation && (
+      { isLoaded && showOverlay && overlayEnabled && handlePieceNavigation && (
         <div
           className={ `piece-wrapper__overlay-icon ${ !overlayVisible ? 'piece-wrapper__overlay-icon--visible' : '' }` }
           onClick={ handleOverlayFocus }
@@ -123,7 +138,7 @@ const PieceWrapper = React.memo( ( {
         </div>
       )}
 
-      { ( isLoaded && showOverlay && handlePieceNavigation ) && (
+      { ( isLoaded && showOverlay && overlayEnabled && handlePieceNavigation ) && (
         <div 
           className={ `piece-wrapper__overlay ${ overlayVisible ? 'piece-wrapper__overlay--visible' : '' }` }
           onMouseOver={ handleOverlayFocus }

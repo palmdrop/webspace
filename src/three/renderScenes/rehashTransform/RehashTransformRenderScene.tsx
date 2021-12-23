@@ -49,6 +49,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
   private customComposer : any;
   private updateComposer : ( delta : number, now : number ) => void;
 
+  private guiVisible : boolean;
   private gui : dat.GUI
 
   constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
@@ -127,6 +128,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     this.controls.maxDistance = 1.7 * objectMaxDimensionSize;
 
     // Gui
+    this.guiVisible = false;
     this.gui = new dat.GUI();
     this.gui.hide();
 
@@ -235,6 +237,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
       this.controls.noRoll = false;
       this.controls.maxDistance = Number.POSITIVE_INFINITY;
 
+      this.guiVisible = true;
       this.gui.show();
     }
   }
@@ -267,5 +270,11 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
   dispose() {
     this.gui.destroy();
+  }
+
+  toggleGUI( visible ?: boolean ) {
+    visible = visible ?? !this.guiVisible;
+    visible ? this.gui.show() : this.gui.hide();
+    this.guiVisible = visible;
   }
 }

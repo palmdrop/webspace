@@ -22,6 +22,7 @@ const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
     switch( event.key ) {
     case 'c' : handleCaptureFrame(); break;
     case ' ' : reload(); break;
+    case 'h' : renderScene?.toggleGUI?.(); break;
     }
   }, [ handleCaptureFrame ] );
 

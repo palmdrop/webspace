@@ -9,6 +9,7 @@ import rehashTransformImage from '../../../assets/content/pieces/rehash-transfor
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
+  overlayEnabled ?: boolean,
 };
 
 export type Piece = React.FunctionComponent<PieceProps>;

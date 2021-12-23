@@ -30,6 +30,7 @@ export interface RenderScene extends AnimationLoop {
   setCaptureFrameResolutionMultiplier( resolutionMultiplier : number ) : void;
 
   dispose ?: () => void;
+  toggleGUI ?: ( visible ?: boolean ) => void;
 
   onMouseMove ?: ( x : number, y : number, deltaX : number, deltaY : number ) => void,
   onScroll ?: ( deltaY : number ) => void
