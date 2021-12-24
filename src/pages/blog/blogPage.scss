@@ -29,7 +29,7 @@
     .blog-page__info {
       position: relative;
       top: -24px;
-      right: 5%;
+      right: 4%;
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
@@ -47,7 +47,7 @@
   }
 
   &__post-link {
-    padding-bottom: 1em;
+    padding: 0.5em 0em;
 
     img {
       width: 100%;
@@ -80,6 +80,7 @@
       .title {
         color: var( --foreground-color );
         padding: 0.5em 0.5em;
+        margin: 0.3em 0.0em;
 
         @include font( 'subheading' );
         text-transform: lowercase;
@@ -88,6 +89,13 @@
         font-size: 1.5rem;
 
         filter: drop-shadow( 0px 0px 2px #33333344 );
+
+        transition: 0.3s;
+        border-radius: 1.0em;
+
+        &:hover {
+          background-color: var( --primary-color );
+        }
       }
 
       span {
@@ -102,12 +110,6 @@
         filter: drop-shadow( 0px 0px 2px #33333344 );
       }
 
-      &:hover {
-        // color: var( --foreground-color );
-        background-color: var( --primary-color );
-
-        border-radius: 1.5em;
-      }
 
       span {
         color: var( --secondary-color );

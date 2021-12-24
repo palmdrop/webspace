@@ -17,7 +17,7 @@ $size: 1.0;
       pow( $max-heading-multiplier, 3 ) * $min-font-size * $size
     );
 
-    letter-spacing: 0.4rem;
+    letter-spacing: 0.2rem;
 
     @include font( 'heading' );
   }
@@ -32,7 +32,7 @@ $size: 1.0;
       pow( $max-heading-multiplier, 2.0 ) * $min-font-size * $size
     );
 
-    letter-spacing: 0.3rem;
+    letter-spacing: 0.1rem;
 
     @include font( 'heading' );
   }

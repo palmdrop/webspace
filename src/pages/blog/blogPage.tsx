@@ -116,10 +116,6 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
               <div className="blog-page__categories">
                 { categoryButtons }
               </div>
-              <Bar
-                direction="horizontal"
-                variant="inset"
-              />
               <section
                 className="blog-page__posts"
               >

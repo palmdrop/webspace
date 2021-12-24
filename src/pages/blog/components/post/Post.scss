@@ -1,8 +1,30 @@
+@import '../../../../styles/layout.scss';
+@import '../../../../styles/fonts.scss';
+
 .post {
+  width: 100%;
+  max-width: 750px;
+
+  color: var( --foreground-color );
+
   &__header {
     padding: 0em;
     margin: 0em;
     padding-bottom: 1em;
+
+    &-date {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      @include font( 'paragraph' );
+      text-transform: lowercase;
+      font-size: 1.5rem;
+
+      color: var( --secondary-color );
+
+      filter: drop-shadow( 0px 0px 2px #33333344 );
+    }
 
     img {
       width: 100%;
@@ -14,23 +36,64 @@
     .title {
       padding-left: 0em;
       padding-bottom: 0.5rem;
-      margin-left: -1.0rem;
-      font-size: 5em;
+
+      font-size: 3em;
+      letter-spacing: 0.1em;
+
+      @include medium {
+        font-size: 3.5em;
+      }
+
+      @include large {
+        font-size: 4em;
+      }
     }
 
     div {
-      color: var( --accent-color );
       margin-bottom: 0.5em;
     }
   }
 
+  h1, h2, h3, h4, h5 {
+    color: var( --primary-color );
+  }
+
+
+  p, li, ul {
+    font-size: 1.2rem;
+  }
+
+  .bar {
+    margin-top: 1em;
+  }
+
   footer {
-    padding-top: 5em;
+    padding-top: 1em;
+    font-size: 1.2em;
+
+    h1 {
+      font-size: 1em;
+      text-decoration: underline;
+      letter-spacing: 0.1em;
+      @include font( 'paragraph' );
+    }
+
+    .category {
+      @include font( 'paragraph' );
+      padding: 0.3em;
+    }
   }
 
   &__footer-keywords {
+    padding: 1em 0em;
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    .keyword {
+      @include font( 'paragraph' );
+      padding: 0.3em;
+    }
   }
 }

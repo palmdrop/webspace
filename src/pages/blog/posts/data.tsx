@@ -15,12 +15,12 @@ export const images : { [id : number] : string } = {
 export const postsData = [
   {
     metadata: {'title':'Test post with a long and convoluted title','keywords':'art, c2, c3','date':'Nov 21, 2021','image':'../../../assets/img/rehash-transform/crowd.jpg','id':1},
-    snippet: `With some content`,
+    snippet: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
     Component: Post1
   },
   {
     metadata: {'title':'Test post 2','keywords':'tech, c3','date':'Nov 23, 2021','id':2},
-    snippet: `With some content`,
+    snippet: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
     Component: Post2
   },
   {

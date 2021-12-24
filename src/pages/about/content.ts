@@ -119,12 +119,8 @@ export const creditsSections : CreditsSection[] = [
       },
       {
         text: 'Quicksand',
-        path: 'https://fonts.google.com/specimen/Quicksand'
-      },
-      {
-        text: 'Space Grotesk',
-        path: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap'
-      },
+        path: 'https://www.fontsquirrel.com/fonts/quicksand'
+      }
     ]
   },
   {

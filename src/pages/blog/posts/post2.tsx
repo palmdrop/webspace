@@ -15,7 +15,7 @@ const Post2 = () => {
       metadata={ metadata }
       
     >
-      <div dangerouslySetInnerHTML={ { __html: `<p>With some content</p>
+      <div dangerouslySetInnerHTML={ { __html: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
 <hr>
 <ul>
 <li>item</li>

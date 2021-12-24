@@ -3,6 +3,7 @@ import Button from '../../../../components/input/button/Button';
 import LazyImage from '../../../../components/media/image/LazyImage';
 import Bar from '../../../../components/ornamental/bars/Bar';
 import Title from '../../../../components/title/Title';
+import { formatDate } from '../../blog';
 
 import './Post.scss';
 
@@ -44,7 +45,7 @@ const Header = ( { metadata, imageSrc } : HeaderProps ) => {
         text={ metadata.title }
         level={ 1 }
       />
-      <div>{ metadata.date }</div>
+      <div className='post__header-date'>{ formatDate( metadata.date ) }</div>
       <Bar 
         direction="horizontal"
         variant="inset"
@@ -63,22 +64,29 @@ const Post = ( { metadata, image, children } : PostProps ) : JSX.Element => {
         imageSrc={ image }
       />
       { children }
+      <Bar
+        variant="inset" 
+        direction="horizontal"
+      />
       <footer>
-        <Bar
-          variant="inset" 
-          direction="horizontal"
-        />
-        <div className="post__footer-keywords">
-          { splitKeywords.map( keyword => (
-            <Button
-              key={ keyword }
-              onClick={ () => console.log( keyword ) }
-            >
-              { keyword }
-            </Button>
-          ) ) }
+        <div className="post__footer-category">
+          <h1>Category</h1>
+          <span className="category">{ splitKeywords[ 0 ] }</span>
         </div>
-        
+        <div className="post__footer-keywords">
+          <h1>Keywords</h1>
+          <ul>
+            { splitKeywords.map( keyword => (
+              <li
+                className="keyword"
+                key={ keyword }
+                onClick={ () => console.log( keyword ) }
+              >
+                { keyword }
+              </li>
+            ) ) }
+          </ul>
+        </div>
       </footer>
     </div>
   );

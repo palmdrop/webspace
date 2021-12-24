@@ -25,9 +25,9 @@ import Bar from '../../components/ornamental/bars/Bar';
 
 import './aboutPage.scss';
 
-const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
+const AboutPage = ( { scrollPosition } : PageProps & { scrollPosition : ScrollPosition } ) : JSX.Element => {
 
-  const createLazyImage = ( { src, alt, width, height, link, label } : ImageData ) : JSX.Element => {
+  const createLazyImage = ( { src, alt, width, height, label } : ImageData ) : JSX.Element => {
     return (
       <div 
         key={ src }
@@ -171,7 +171,7 @@ const AboutPage = ( { route, scrollPosition } : PageProps & { scrollPosition : S
       <div className="about-page__content">
         <main>
           <FadedHeader 
-            title="ABOUT"
+            title="About"
           >
             <Obstacle className="faded-header__obstacle" />
           </FadedHeader>
