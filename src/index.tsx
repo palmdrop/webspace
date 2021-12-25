@@ -17,8 +17,12 @@ ReactDOM.render(
   document.getElementById( 'root' )
 );
 
-console.log( '##################' );
-console.log( '#### OBSCURED ####' );
-console.log( '##################' );
-console.log( '#### palmdrop ####' );
-console.log( '##################' );
+console.log( '//  Obscured - A personal webspace' );
+console.log( '//  by palmdrop' );
+console.log( '// ' );
+console.log( '//  This site does not track any of your personal data.' );
+console.log( '//  There are no cookies, no fingerprinting.' );
+console.log( '//  Inspect the complete source code at https://github.com/palmdrop/webspace' );
+console.log( `//  Commit SHA: ${ process.env.REACT_APP_COMMIT_SHA }` );
+
+
