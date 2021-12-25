@@ -1,0 +1,42 @@
+/* Syne */
+/* Credit: https://gitlab.com/bonjour-monde/fonderie/syne-typeface */
+@font-face {
+  font-family: 'SyneRegular';
+  src: url('fonts/syne/Syne-Regular.ttf') format('truetype');
+}
+
+/*
+@font-face {
+  font-family: 'SyneBold';
+  src: url('fonts/syne/Syne-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SyneExtraBold';
+  src: url('fonts/syne/Syne-ExtraBold.ttf') format('truetype');
+}
+*/
+
+@font-face {
+  font-family: 'SyneItalic';
+  src: url('fonts/syne/Syne-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SyneMono';
+  src: url('fonts/syne/SyneMono-Regular.ttf') format('truetype');
+}
+
+/*
+@font-face {
+  font-family: 'SyneTactile';
+  src: url('fonts/syne/SyneTactile-Regular.ttf') format('truetype');
+}
+*/
+
+/* Quicksand */
+/* Credit: https://www.fontsquirrel.com/fonts/quicksand */
+@font-face {
+  font-family: 'QuicksandRegular';
+  src: url('fonts/quicksand/Quicksand-Regular.otf') format('opentype');
+}
