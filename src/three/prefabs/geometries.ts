@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import { random } from '../../utils/random';
-import { domainWarp, noiseWarp, twistWarp } from '../geometry/warp/warp';
+import { distance, domainWarp, noiseWarp, TransformFunction, twistWarp } from '../geometry/warp/warp';
 import { generateWarpGeometryPrefab } from './WarpGeometryPrefab';
 
 import { GeometryPrefab } from './prefabs';
+import { clamp } from 'three/src/math/MathUtils';
+import { smoothStep } from '../../utils/general';
 
 export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
   const solarChromeMaxFrequency = new THREE.Vector3( 0.5 );
@@ -437,6 +439,116 @@ export const ImprintGeometryPrefab : GeometryPrefab = ( () => {
           ),
           falloff: random( 0.5, 0.7 ),
         }
+      }
+    ]
+  );
+} )();
+
+export const FoldedPlaneGeometryPrefab : GeometryPrefab = ( () => {
+  const minFrequency = new THREE.Vector3( 2.3, 2.3, 2.3 );
+  const maxFrequency = new THREE.Vector3( 3.1, 3.1, 3.1 );
+
+  const min = random( 0.0, 0.0 );
+  const max = 1.0;
+  const pow = random( 1.1, 1.3 );
+  const threshold = 0.5;
+
+  const weightedNoiseWarp : TransformFunction = ( point, offset, frequency, amount, args ) => {
+    const distanceFromCenter = distance( point, { x: 0, y: 0, z: 0 } );
+    let scale;
+    if( distanceFromCenter > threshold ) {
+      scale = min;
+    } else {
+      scale = ( max - min ) * Math.pow(
+        smoothStep( ( threshold - distanceFromCenter ) / threshold, 0.0, 1.0 ),
+        pow
+      ) + min;
+    }
+
+    const warpAmount = typeof amount === 'number' ? amount * scale : {
+      x: amount.x * scale,
+      y: amount.y * scale,
+      z: amount.z * scale,
+    };
+
+    return noiseWarp( point, offset, frequency, warpAmount, args );
+  };
+
+  const slowNoiseWarp : TransformFunction = ( point, offset, frequency, amount, args ) => {
+    const frequencyFactor = 0.1;
+    const amountFactor = 0.8;
+
+    const warpFrequency = typeof frequency === 'number' ? frequency * frequencyFactor : {
+      x: frequency.x * frequencyFactor,
+      y: frequency.y * frequencyFactor,
+      z: frequency.z * frequencyFactor,
+    };
+
+    const warpAmount = typeof amount === 'number' ? amount * amountFactor : {
+      x: amount.x * amountFactor,
+      y: amount.y * amountFactor,
+      z: amount.z * amountFactor,
+    };
+    
+    return noiseWarp( point, offset, warpFrequency, warpAmount, args );
+  };
+
+  return generateWarpGeometryPrefab(
+    // Geometry
+    () => {
+      const geometry = new THREE.PlaneBufferGeometry( 1.0, 1.0, 1028, 1028 );
+
+      geometry.applyMatrix4( new THREE.Matrix4().makeScale(
+        0.9,
+        1.0, 
+        1.2
+      ) );
+
+      return geometry;
+    },
+
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( minFrequency.x, maxFrequency.x ),
+        random( minFrequency.y, maxFrequency.y ),
+        random( minFrequency.z, maxFrequency.z )
+      );
+    },
+
+    // Warp amount
+    ( frequency : THREE.Vector3 ) => {
+      // return ( maxFrequency.length() - frequency.length() ) * random( 7.0, 9.0 ) + 0.5; 
+      // return 0.1;
+      return new THREE.Vector3( 
+        random( 0.03, 0.1 ),
+        random( 0.03, 0.1 ),
+        random( 0.3, 0.5 ),
+      );
+    },
+
+    // Octaves 
+    () => {
+      return 3;
+    },
+
+    // Lacunarity
+    () => {
+      return random( 1.9, 2.5 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.4, 0.5 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction: weightedNoiseWarp,
+      }, 
+      {
+        warpFunction: slowNoiseWarp,
       }
     ]
   );

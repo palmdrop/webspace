@@ -39,10 +39,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
   private lineShaderMaterial : THREE.ShaderMaterial;
 
-  private object : THREE.Mesh;
-  private lines : THREE.Group;
   private updateObject : ( time : number, delta : number ) => void;
-
 
   private dynamicTime : DynamicTime;
 
@@ -51,9 +48,11 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
   private guiVisible : boolean;
   private gui : dat.GUI
+  private isAdmin : boolean;
 
   constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
+    this.isAdmin = false;
 
     this.captureFrameResolutionMultiplier = 4;
 
@@ -114,8 +113,6 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
       roomBoundingBox
     );
 
-    this.lines = lines;
-
     const objectBoundingBox = new THREE.Box3().expandByObject( object );
     const objectMaxDimensionSize = objectSize * maxBoxDimensionSize( objectBoundingBox );
 
@@ -160,7 +157,6 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     addUniformSlider( linesFolder, this.lineShaderMaterial, 'frequency', 1.0, 0.0, 30.0 );
     addUniformSlider( linesFolder, this.lineShaderMaterial, 'brightness', 0.8, 0.0, 3.0 );
 
-    this.object = object;
     this.updateObject = updateMesh;
 
     this.scene.add( room, lines, object );
@@ -240,6 +236,8 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
       this.guiVisible = true;
       this.gui.show();
     }
+
+    this.isAdmin = true;
   }
 
   updateTexture( dataUrl : string ) {
@@ -273,6 +271,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
   }
 
   toggleGUI( visible ?: boolean ) {
+    if( !this.isAdmin ) return;
     visible = visible ?? !this.guiVisible;
     visible ? this.gui.show() : this.gui.hide();
     this.guiVisible = visible;

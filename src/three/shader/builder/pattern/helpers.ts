@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GlslFunction, GLSL, GlslType, Uniforms } from '../../core';
 import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
-import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog } from './types';
+import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings } from './types';
 
 export const getFunctionName = ( () => {
   let counter = 0;
@@ -89,8 +89,9 @@ export const buildNoiseSource = ( noise : NoiseSource ) : GlslFunction => {
   const octaves = noise.octaves ?? 1.0;
   const persistance = noise.persistance ?? 0.49;
   const lacunarity = noise.lacunarity ?? 1.97;
-
   const ridge = noise.ridge ?? 1.0;
+
+  const normalize = noise.normalize ?? true;
 
   return {
     parameters: [ [ 'vec3', 'point' ] ],
@@ -119,8 +120,9 @@ export const buildNoiseSource = ( noise : NoiseSource ) : GlslFunction => {
       }
 
       n = sanitize( n );
+      ${ normalize ? 'n /= divider;' : '' }
 
-      return ${ numToGLSL( amplitude ) } * n / divider;
+      return ${ numToGLSL( amplitude ) } * n;
     `
   };
 };
@@ -132,6 +134,12 @@ export const buildTrigSource = ( trig : TrigSource ) : GlslFunction => {
   const combinationOperation = trig.combinationOperation ?? 'mult';
   const pow = trig.pow ?? 1.0;
 
+  const normalize = trig.normalize ?? false;
+
+  const normalizeValue = ( variable : string ) => {
+    return `${ variable } = (${ variable } + 1.0 ) / 2.0;`;
+  };
+
   return {
     parameters: [ [ 'vec3', 'point' ] ],
     returnType: 'float',
@@ -139,7 +147,16 @@ export const buildTrigSource = ( trig : TrigSource ) : GlslFunction => {
       float x = ${ numToGLSL( amplitude.x ) } * ${ types.x }( point.x * ${ numToGLSL( frequency.x ) } );
       float y = ${ numToGLSL( amplitude.y ) } * ${ types.y }( point.y * ${ numToGLSL( frequency.y ) } );
       float z = ${ numToGLSL( amplitude.z ) } * ${ types.z }( point.z * ${ numToGLSL( frequency.z ) } );
-      return pow( ${ opToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numToGLSL( pow ) } );
+
+      ${ normalize ? `
+        ${ normalizeValue( 'x' ) } 
+        ${ normalizeValue( 'y' ) } 
+        ${ normalizeValue( 'z' ) } 
+      ` : '' }
+
+      float v = pow( ${ opToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numToGLSL( pow ) } );
+
+      return v;
     `
   };
 };
@@ -329,6 +346,68 @@ export const buildFog = ( fog : Fog, functionCache : FunctionCache ) : FunctionW
   const data = { name, func };
 
   functionCache.set( fog, data );
+
+  return data;
+};
+
+// Effect implemented with the help of this video: https://www.youtube.com/watch?v=arn_3WzCJQ8
+export const buildSoftParticleTransform = ( 
+  softParticleSettings : SoftParticleSettings, 
+  uniforms : Uniforms,
+  textureNames : Set<string>,
+  functionCache : FunctionCache,
+) => {
+  if( !uniforms ) throw new Error( 'Uniforms cannot be null' );
+  if( functionCache.has( softParticleSettings ) ) return functionCache.get( softParticleSettings ) as FunctionWithName;
+
+  const functionName = getFunctionName( 'softParticle' );
+  const textureName = getFunctionName( 'depthTexture' );
+
+  const camera = softParticleSettings.camera;
+  const nf = camera.far * camera.near;
+  const fSubN = camera.far - camera.near;
+  const f = camera.far;
+
+  const pow = softParticleSettings.pow ?? 1.0;
+  const falloffRange = softParticleSettings.falloffRange ?? 1.0;
+  const smooth = softParticleSettings.smooth ?? true;
+
+  const func : GlslFunction = {
+    parameters: [ [ 'vec4', 'fragColor' ], [ 'vec2', 'uv' ] ],
+    returnType: 'vec4',
+    body: `
+      float nf = ${ numToGLSL( nf ) };
+      float fSubN = ${ numToGLSL( fSubN ) };
+      float f = ${ numToGLSL( f ) };
+
+      float z = texture2D( ${ textureName }, uv).x;
+      float screenDepth = nf / ( fSubN * z - f );
+      float currentDepth = vViewPosition.z;
+
+      float diff = clamp( ( currentDepth - screenDepth ) / ${ numToGLSL( falloffRange ) }, 0.0, 1.0 );
+
+      ${ smooth ? 'diff = smoothstep( 0.0, 1.0, diff );' : '' }
+      ${ pow !== 1.0 ? `diff = pow( diff, ${ numToGLSL( pow ) } );` : '' }
+
+      fragColor.a *= diff;
+
+      return fragColor;
+    `
+  };
+
+  textureNames.add( textureName );
+  uniforms[ textureName ] = {
+    type: 'sampler2D',
+    value: softParticleSettings.depthTexture
+  };
+
+  uniforms[ 'resolution' ] = {
+    type: 'vec2',
+    value: new THREE.Vector2( 0.0, 0.0 )
+  };
+  
+  const data = { name: functionName, func };
+  functionCache.set( softParticleSettings, data );
 
   return data;
 };

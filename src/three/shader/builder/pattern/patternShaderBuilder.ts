@@ -5,7 +5,7 @@ import { simplex3dChunk } from '../../chunk/noise';
 import { Attributes, GLSL, Shader, Uniforms, GlslFunctions, Constants, ShaderChunk } from '../../core';
 import { buildShader } from '../shaderBuilder';
 import { numToGLSL } from '../utils';
-import { buildFog, buildModification, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction } from './helpers';
+import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction } from './helpers';
 import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, PatternShaderSettings } from './types';
 
 // Constants
@@ -170,8 +170,13 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   const seed = settings.seed ?? Math.random() * 10000;
 
   { // Add domain attribute
-    const { name, type } = domainToAttribute( settings.domain );
-    attributes[ name ] = { type };
+    const addDomainAttribute = ( domain : 'view' | 'vertex' ) => {
+      const { name, type } = domainToAttribute( domain );
+      attributes[ name ] = { type };
+    };
+
+    addDomainAttribute( 'view' );
+    addDomainAttribute( 'vertex' );
   }
 
   // Vertex shader
@@ -186,8 +191,8 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
       mat4 modifiedModelViewMatrix = modelViewMatrix;
     ` }
 
-    ${ settings.domain === 'vertex' ? 'vVertexPosition = vec3( modifiedModelMatrix * vec4( position, 1.0 ) );' : '' }
-    ${ settings.domain === 'view' ? 'vViewPosition = vec3( modifiedModelViewMatrix * vec4( position, 1.0 ) );' : '' }
+    vVertexPosition = vec3( modifiedModelMatrix * vec4( position, 1.0 ) );
+    vViewPosition = vec3( modifiedModelViewMatrix * vec4( position, 1.0 ) );
 
     gl_Position = projectionMatrix * modifiedModelViewMatrix * vec4( position, 1.0 );
   `;
@@ -200,6 +205,8 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   const alphaMaskSourceData = settings.alphaMask ? buildSource( settings.alphaMask, uniforms, textureNames, functionCache ) : undefined;
 
   const fogData = settings.fog ? buildFog( settings.fog, functionCache ) : undefined;
+
+  const makeSoftParticle = settings.softParticleSettings ? buildSoftParticleTransform( settings.softParticleSettings, uniforms, textureNames, functionCache ) : undefined;
 
   const fragmentMain : GLSL = `
     ${ settings.domain === 'uv' ? 'vec3 origin = vec3( vUv, 0.0 );' : '' }
@@ -244,6 +251,11 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
     ` : '' }
 
     gl_FragColor *= opacity;
+
+    ${ makeSoftParticle ? `
+      vec2 screenCoords = gl_FragCoord.xy / resolution.xy;
+      gl_FragColor = ${ makeSoftParticle.name }( gl_FragColor, screenCoords );
+    ` : '' }
   `;
   
   // Add functions

@@ -17,10 +17,17 @@ export type TransformFunction = (
   point : Vector3,
   offset : Vector3 | undefined | null,
   frequency : number | Vector3,
-  amount : number,
+  amount : number | Vector3,
   args ?: TransformFunctionArgs
 ) => Vector3;
 
+export const distance = ( point1 : Vector3, point2 : Vector3 ) => {
+  return Math.sqrt(
+    Math.pow( point1.x - point2.x, 2.0 ) +
+    Math.pow( point1.y - point2.y, 2.0 ) +
+    Math.pow( point1.z - point2.z, 2.0 )
+  );
+};
 
 export const domainWarp : TransformFunction = ( point, offset, frequency, amount, args = {
   warpFrequency: new THREE.Vector3( 0.3 ),
@@ -53,10 +60,12 @@ export const noiseWarp : TransformFunction = ( point, offset, frequency, amount,
     sample.z += offset.z;
   }
 
+  const warpAmount = typeof amount === 'number' ? new THREE.Vector3( amount, amount, amount ) : amount;
+
   return {
-    x: x + getNoise3D( sample, xOffset, frequency, -amount, amount ),
-    y: y + getNoise3D( sample, yOffset, frequency, -amount, amount ),
-    z: z + getNoise3D( sample, zOffset, frequency, -amount, amount )
+    x: x + getNoise3D( sample, xOffset, frequency, -warpAmount.x, warpAmount.x ),
+    y: y + getNoise3D( sample, yOffset, frequency, -warpAmount.y, warpAmount.y ),
+    z: z + getNoise3D( sample, zOffset, frequency, -warpAmount.z, warpAmount.z )
   };
 };
 
@@ -94,7 +103,7 @@ export const geometryWarp = (
   geometry : THREE.BufferGeometry,
 
   frequency : number | Vector3,
-  amount : number,
+  amount : number | Vector3,
   octaves : number,
   lacunarity : number,
   persistance : number,
@@ -153,7 +162,13 @@ export const geometryWarp = (
       frequency.z *= lacunarity;
     }
 
-    amount *= persistance;
+    if( typeof amount === 'number' ) {
+      amount *= persistance;
+    } else {
+      amount.x *= persistance;
+      amount.y *= persistance;
+      amount.z *= persistance;
+    }
   }
 
   geometry.computeVertexNormals();

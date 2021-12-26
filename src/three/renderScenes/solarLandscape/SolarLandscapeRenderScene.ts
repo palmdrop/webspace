@@ -246,12 +246,13 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
 
+      const backgroundTexture = ( this.backgroundRenderer?.renderTarget?.texture as THREE.Texture );
       const backgroundPlane = new THREE.Mesh(
         new THREE.PlaneBufferGeometry( 1.0, 1.0, 1, 1 ),
         new THREE.MeshStandardMaterial( {
-          map: this.backgroundRenderer.renderTarget.texture,
-          metalnessMap: this.backgroundRenderer.renderTarget.texture,
-          roughnessMap: this.backgroundRenderer.renderTarget.texture,
+          map: backgroundTexture,
+          metalnessMap: backgroundTexture,
+          roughnessMap: backgroundTexture,
           normalMap: texture,
           normalScale: new THREE.Vector2( 0.5 ),
           metalness: 0.5,

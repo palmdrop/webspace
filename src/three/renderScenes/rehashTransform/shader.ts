@@ -158,7 +158,7 @@ export default ( mainTextureName : string ) => {
     mainSource: getTextureSource( mainTextureName ),
     domainWarp: source1Warp,
     mask: maskSource1,
-    alphaMask: Math.random() > 0.5 ? alphaMaskSource : undefined,
+    // alphaMask: Math.random() > 0.5 ? alphaMaskSource : undefined,
     fog,
     timeOffset: new THREE.Vector3( 0.05, -0.05, 0.05, ),
     colorSettings

@@ -29,6 +29,7 @@ export type NoiseSource = RootSource & {
   persistance ?: number,
   lacunarity ?: number,
   ridge ?: number,
+  normalize ?: boolean,
 }
 
 export type TrigSource = RootSource & {
@@ -41,6 +42,7 @@ export type TrigSource = RootSource & {
   amplitude ?: THREE.Vector3,
   combinationOperation ?: Exclude<Operation, 'div'>,
   pow ?: number,
+  normalize ?: boolean
 }
 
 export type CombinedSource = RootSource & {
@@ -100,6 +102,14 @@ export type Fog = {
   opacity ?: number,
 }
 
+export type SoftParticleSettings = {
+  depthTexture : THREE.DepthTexture,
+  camera : THREE.PerspectiveCamera | THREE.OrthographicCamera,
+  pow ?: number,
+  falloffRange ?: number,
+  smooth ?: boolean,
+}
+
 // Settings
 export type PatternShaderSettings = {
   domain : Domain,
@@ -117,5 +127,7 @@ export type PatternShaderSettings = {
 
   seed ?: number,
 
-  forInstancedMesh ?: boolean
+  forInstancedMesh ?: boolean,
+
+  softParticleSettings ?: SoftParticleSettings
 }

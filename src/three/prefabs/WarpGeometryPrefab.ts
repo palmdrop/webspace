@@ -5,7 +5,7 @@ import { GeometryPrefab } from './prefabs';
 export const generateWarpGeometryPrefab = (
   geometryMaker : () => THREE.BufferGeometry,
   frequencyMaker : () => THREE.Vector3,
-  warpAmountMaker : ( frequency : THREE.Vector3 ) => number,
+  warpAmountMaker : ( frequency : THREE.Vector3 ) => number | THREE.Vector3,
   octavesMaker : () => number,
   lacunarityMaker : () => number,
   persistanceMaker : () => number,

@@ -15,7 +15,7 @@ export const generateRoom = () => {
     frequency,
     amount,
   ) => {
-    const displacementAmount = amount * point.y;
+    const displacementAmount = ( amount as number ) * point.y;
 
     const towardsCenter = { x: -point.x, y: point.y, z: -point.z };
 

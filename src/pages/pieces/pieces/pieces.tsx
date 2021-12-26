@@ -6,6 +6,7 @@ import solarChromeImage from '../../../assets/content/pieces/solar-chrome.jpg';
 import solarLandscapeImage from '../../../assets/content/pieces/solar-landscape-1.jpg';
 import virtualImprintImage from '../../../assets/content/pieces/virtual-imprint.jpg';
 import rehashTransformImage from '../../../assets/content/pieces/rehash-transform.jpg';
+import flatCloudsImage from '../../../assets/content/pieces/flat-clouds.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -132,6 +133,23 @@ export const pieces : PieceData[] = [
     image: rehashTransformImage,
 
     Component: React.lazy( () => import( './rehashTransform/RehashTransformPiece' ) ),
+  },
+  {
+    name: 'Flat Clouds',
+    description: [
+      'Experiment with soft particles, shader builders, and (once again) generative geometry.',
+      `The "soft" aesthetic came as a fairly abstract idea. Sometimes, I feel numb and/or empty. Like
+      I do not think, not in any meaningful way, at least not in that moment. A flat sheet of material. 
+      But something is there, something can emerge, i.e the folds in the sheet.`,
+      'Not sure if this means anything. I decided to leave the idea undeveloped. Felt suiting.'
+    ],
+    tags: [
+      'Warp, Mind'
+    ],
+
+    image: flatCloudsImage,
+
+    Component: React.lazy( () => import( './flatClouds/FlatCloudsPiece' ) ),
   },
 ];
 

@@ -81,7 +81,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
 
     this.resizeables.push( this.backgroundRenderer );
 
-    this.background = this.backgroundRenderer.renderTarget.texture;
+    this.background = ( this.backgroundRenderer.renderTarget?.texture as THREE.Texture );
 
     this.minZ = 0;
     this.maxZ = 0;

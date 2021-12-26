@@ -14,8 +14,7 @@ export const createFullScreenTextureRenderer = (
 
 export class FullscreenQuadRenderer {
   private renderer : THREE.WebGLRenderer;
-  public renderTarget : THREE.WebGLRenderTarget;
-  private material : THREE.Material;
+  public renderTarget : THREE.WebGLRenderTarget | undefined;
   private quad : THREE.Mesh;
 
   private scene : THREE.Scene;
@@ -27,15 +26,17 @@ export class FullscreenQuadRenderer {
     renderTarget ?: THREE.WebGLRenderTarget
   ) {
     this.renderer = renderer; 
-    this.material = material;
 
     if( renderTarget ) {
       this.renderTarget = renderTarget;
-    } else {
+    } 
+
+    /*else {
       const size = this.renderer.getSize( new THREE.Vector2() );
       this.renderTarget = new THREE.WebGLRenderTarget( size.x, size.y, {
       } );
     }
+    */
 
     this.scene = new THREE.Scene();
 
@@ -69,7 +70,7 @@ export class FullscreenQuadRenderer {
 
     this.quad.scale.set( width, height, 1.0 );
 
-    this.renderTarget.setSize( width, height );
+    if( this.renderTarget ) this.renderTarget.setSize( width, height );
   }
 
   render() {

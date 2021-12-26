@@ -175,3 +175,24 @@ export const DirtyMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
 
   return material;
 };
+
+export const FoldedPlaneMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { geometry : THREE.BufferGeometry }> = ( { geometry } ) => {
+  const material = new THREE.MeshStandardMaterial( {
+    color: 'white',
+    roughness: 0.0,
+    metalness: 0.8,
+  } );
+
+  ASSETHANDLER.loadTexture( normalTexturePathX4, false, ( texture ) => {
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.LinearFilter;
+
+    material.normalMap = texture;
+    material.normalScale = new THREE.Vector2( 0.1 );
+    material.needsUpdate = true;
+  } );
+
+  return material;
+};

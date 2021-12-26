@@ -80,7 +80,7 @@ export type UniformObject = {
 
 export const setUniform = <T>( 
   name : string,
-  value : T,
+  value ?: T,
 
   destinationObject ?: { 
     uniforms ?: { 
@@ -94,9 +94,8 @@ export const setUniform = <T>(
     !destinationObject || 
     !destinationObject.uniforms ||
     !destinationObject.uniforms[ name ]
-  ) return false;
+  ) return undefined;
 
-  destinationObject.uniforms[ name ].value = value;
-
-  return true;
+  if( value ) destinationObject.uniforms[ name ].value = value;
+  return destinationObject.uniforms [ name ].value;
 };
