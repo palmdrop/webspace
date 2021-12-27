@@ -118,3 +118,9 @@ links.push( toLink(
   'Blog', 'Tech'
 ) );
 
+links.push(toLink(
+  'Frank Chimero',
+  'https://frankchimero.com/',
+  'Blog', 'Tech'
+));
+

@@ -13,10 +13,10 @@ import './NavButton.scss';
 type Props = {
   navEntry : NavEntry,
   active ?: boolean,
-  index : number,
+  index ?: number,
 }
 
-const NavButton = ( { navEntry, active, index } : Props ) : JSX.Element => {
+const NavButton = ( { navEntry, active, index = 0 } : Props ) : JSX.Element => {
   const dispatch = useAppDispatch();
   // If "undefined" is passed as the active state, the button will handle the state on its own 
   const [ hovering, setHovering ] = useState( false );

@@ -10,6 +10,7 @@
   &--active {
     .button {
       @include font( 'accent' );
+      letter-spacing: 0.28em;
     }
   }
 }

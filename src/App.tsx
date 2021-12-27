@@ -51,6 +51,13 @@ export const PAGE_TITLE = 'Obscured';
 
 export const pages : Page[] = [
   {
+    name: 'Home',
+    route: PageRoute.root,
+    exactRoute: true,
+    colorTheme: ColorTheme.horizon,
+    Component: MainPage
+  },
+  {
     name: 'About',
     route: PageRoute.self,
     exactRoute: true,
@@ -85,13 +92,6 @@ export const pages : Page[] = [
     colorTheme: ColorTheme.vapor,
     Component: ContactPage
   },
-  {
-    name: 'Home',
-    route: PageRoute.root,
-    exactRoute: true,
-    colorTheme: ColorTheme.horizon,
-    Component: MainPage
-  }
 ];
 
 // Also store the page data in a map for easy access using path

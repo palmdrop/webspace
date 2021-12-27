@@ -7,13 +7,30 @@
   @include page();
 
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  .obstacle {
+    position: absolute;
+    z-index: 100;
+
+    width: 440px;
+    max-width: 500px;
+
+    top: 1.5em;
+    left: 45%;
+
+    transform: translate( -100%, 0% );
+
+
+
+    pointer-events: none;
+  }
 
   main {
     width: 100%;
     max-width: 750px;
-    padding-top: 7rem;
+    padding-top: 5rem;
     z-index: 1;
 
     & > .title {

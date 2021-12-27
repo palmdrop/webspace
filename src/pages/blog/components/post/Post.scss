@@ -12,6 +12,23 @@
     margin: 0em;
     padding-bottom: 1em;
 
+    z-index: inherit;
+
+    &-back-arrow {
+      .arrow {
+        position: relative;
+        width: 4em;
+        height: auto;
+
+        padding: 0.2em;
+
+        z-index: 100;
+
+        // Filter created using https://codepen.io/sosuke/pen/Pjoqqp
+        filter: invert(17%) sepia(75%) saturate(4628%) hue-rotate(258deg) brightness(71%) contrast(140%);
+      }
+    }
+
     &-date {
       display: flex;
       flex-direction: row;
@@ -31,6 +48,8 @@
       height: 50vh;
 
       object-fit: cover;
+
+      z-index: 1;
     }
 
     .title {
@@ -68,19 +87,20 @@
   }
 
   footer {
-    padding-top: 1em;
-    font-size: 1.2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.5em;
 
-    h1 {
-      font-size: 1em;
-      text-decoration: underline;
-      letter-spacing: 0.1em;
-      @include font( 'paragraph' );
+    .simple-nav-bar {
+      width: 100%;
     }
 
-    .category {
+    span {
+      padding: 0.4em 0.0em;
       @include font( 'paragraph' );
-      padding: 0.3em;
+
+      color: var( --foreground-color );
     }
   }
 

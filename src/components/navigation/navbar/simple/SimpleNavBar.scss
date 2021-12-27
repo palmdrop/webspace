@@ -1,0 +1,63 @@
+@import '../../../../styles/layout.scss';
+
+.simple-nav-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+
+  .nav-button .button {
+    color: var( --secondary-color );
+  }
+
+  &__main-entry {
+    display: flex;
+    justify-content: center;
+
+    background-color: var( --primary-color );
+    border-radius: 25px;
+    padding: 0.1em 1.0em;
+
+    margin: 0.1em 0.0em;
+
+    &::before, &::after {
+      color: var( --secondary-color );
+      content: '~';
+      padding: 0.25em 0.4em;
+    }
+  }
+
+  &__other-entries {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    li {
+      background-color: var( --primary-color );
+      border-radius: 25px;
+      padding: 0.0em 0.5em;
+      margin: 0.1em 0.1em;
+      width: 100%;
+
+      text-align: center;
+
+      * {
+        font-size: 0.85rem;
+
+        @include medium {
+          font-size: 1.0rem;
+        }
+      }
+    }
+
+    @include medium {
+      flex-direction: row;
+      li {
+        margin: 0.0em 0.1em;
+        width: 100%;
+      }
+    }
+  }
+
+}

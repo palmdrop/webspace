@@ -1,9 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
-import Button from '../../../components/input/button/Button';
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame';
 import { useMousePosition } from '../../../hooks/useMousePosition';
-import { setActivePiece } from '../../../state/slices/uiSlice';
-import { useAppDispatch } from '../../../state/store/hooks';
 import { insideRect } from '../../../utils/geometry';
 import { PieceEntry } from '../entry/PieceEntry';
 import { PieceData, PieceNavigationFunction } from '../pieces/pieces';

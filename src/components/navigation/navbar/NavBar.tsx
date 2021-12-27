@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { useAppSelector } from '../../../state/store/hooks';
 import { selectActiveNavBarEntry } from '../../../state/slices/uiSlice';
@@ -19,14 +18,25 @@ export type NavEntry = {
   onHover ?: NavEntryCallback
 }
 
-type NavEntryCallback = ( entry : NavEntry, index : number, event : React.MouseEvent ) => void;
+export type NavEntryCallback = ( entry : NavEntry, index : number, event : React.MouseEvent ) => void;
 
-type Props = {
-  entries : NavEntry[],
+export type NavBarProps = {
+  currentRoute ?: PageRoute,
+  entries ?: NavEntry[],
+  onClick ?: NavEntryCallback,
 }
 
-const NavBar = ( { entries } : Props ) : JSX.Element => {
+export const useNavEntries = ( currentRoute ?: PageRoute, defaultEntries ?: NavEntry[], onClick ?: NavEntryCallback ) => {
+  return useMemo( () => {
+    return defaultEntries || createNavEntries(
+      pages, currentRoute, onClick
+    );
+  }, [ currentRoute, defaultEntries, onClick ] );
+};
+
+const NavBar = ( { currentRoute, entries, onClick } : NavBarProps ) : JSX.Element => {
   const activeNavBarEntry = useAppSelector( selectActiveNavBarEntry );
+  const allEntries = useNavEntries( currentRoute, entries, onClick );
   
   return (
     <div className="nav-bar">
@@ -39,7 +49,7 @@ const NavBar = ( { entries } : Props ) : JSX.Element => {
         <SoftDisk />
         <GlassCard>
           <ul>
-            { entries.map( ( entry, index ) => (
+            { allEntries.map( ( entry, index ) => (
               <NavButton
                 key={ `${ entry.text }-${ index }` }
                 active={ index === activeNavBarEntry }
@@ -65,7 +75,7 @@ export const createNavEntry = ( page : Page, text ?: string, onClick ?: NavEntry
 };
 
 // Helper function for creating an array of navbar entires
-const createNavEntries = ( 
+export const createNavEntries = ( 
   pages : Page[],
   currentRoute ?: PageRoute, 
   onClick ?: NavEntryCallback, 
@@ -87,24 +97,5 @@ const createNavEntries = (
       onClick,
     } ) );
 };
-
-// Custom hook for creating a navbar and storing the navbar entries
-export const useNavBar = ( 
-  currentRoute ?: PageRoute, 
-  onClick ?: NavEntryCallback,
-) : JSX.Element => {
-
-  // The navbar entires are calculated using a function callback to avoid 
-  // recalculating on each page re-render, and to make memoization possible
-  const [ navEntries ] = useState( () => createNavEntries(
-    pages, currentRoute, onClick
-  ) );
-
-  return (
-    <NavBar
-      entries={ navEntries }
-    />
-  );
-}; 
 
 export default React.memo( NavBar );

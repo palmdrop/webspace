@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
-import Button from '../../../../components/input/button/Button';
-import LazyImage from '../../../../components/media/image/LazyImage';
+import { Link } from 'react-router-dom';
+import { PageRoute } from '../../../../App';
+import SimpleNavBar from '../../../../components/navigation/navbar/simple/SimpleNavBar';
 import Bar from '../../../../components/ornamental/bars/Bar';
 import Title from '../../../../components/title/Title';
 import { formatDate } from '../../blog';
+
+import { ReactComponent as Arrow } from '../../../../assets/svg/arrow.svg';
 
 import './Post.scss';
 
@@ -35,6 +37,12 @@ type HeaderProps = {
 const Header = ( { metadata, imageSrc } : HeaderProps ) => {
   return (
     <header className="post__header">
+      <Link 
+        className="post__header-back-arrow"
+        to={ PageRoute.blog }
+      >
+        <Arrow className="arrow"/>
+      </Link>
       { imageSrc && (
         <img
           src={ imageSrc } 
@@ -45,7 +53,7 @@ const Header = ( { metadata, imageSrc } : HeaderProps ) => {
         text={ metadata.title }
         level={ 1 }
       />
-      <div className='post__header-date'>{ formatDate( metadata.date ) }</div>
+      <div className="post__header-date">{ formatDate( metadata.date ) }</div>
       <Bar 
         direction="horizontal"
         variant="inset"
@@ -55,8 +63,6 @@ const Header = ( { metadata, imageSrc } : HeaderProps ) => {
 };
 
 const Post = ( { metadata, image, children } : PostProps ) : JSX.Element => {
-  const splitKeywords = metadata.keywords.split( ', ' );
-
   return (
     <div className="post">
       <Header 
@@ -69,24 +75,12 @@ const Post = ( { metadata, image, children } : PostProps ) : JSX.Element => {
         direction="horizontal"
       />
       <footer>
-        <div className="post__footer-category">
-          <h1>Category</h1>
-          <span className="category">{ splitKeywords[ 0 ] }</span>
-        </div>
-        <div className="post__footer-keywords">
-          <h1>Keywords</h1>
-          <ul>
-            { splitKeywords.map( keyword => (
-              <li
-                className="keyword"
-                key={ keyword }
-                onClick={ () => console.log( keyword ) }
-              >
-                { keyword }
-              </li>
-            ) ) }
-          </ul>
-        </div>
+        <span>
+          Obscured - blog by palmdrop
+        </span>
+        <SimpleNavBar 
+          mainRoute={ PageRoute.root }
+        />
       </footer>
     </div>
   );

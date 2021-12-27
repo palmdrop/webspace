@@ -1,6 +1,6 @@
 import { postsData } from './posts/data';
 import blogConfig from '../../blog-config.json';
-import { PostData, PostMetadata } from './components/post/Post';
+import { PostData } from './components/post/Post';
 
 export const categories = [ 
   ...blogConfig[ 'categories' ], 
