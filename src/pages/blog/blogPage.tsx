@@ -23,10 +23,15 @@ import { createNavEntries } from '../../components/navigation/navbar/NavBar';
 import { PageRoute, pages } from '../../App';
 
 import './blogPage.scss';
+import Modal from '../../components/modal/Modal';
+import { useSelector } from 'react-redux';
+import { selectIsAdmin } from '../../state/slices/adminSlice';
 
 // eslint-disable-next-line react/prop-types
 const BlogPage = ( { route } : PageProps ) : JSX.Element => {
   const [ activeCategory, setActiveCategory ] = useState<string | null>( null );
+
+  const isAdmin = useSelector( selectIsAdmin );
 
   const categoryButtons = useMemo( () => categories
     .map( ( category, index ) => (
@@ -104,6 +109,24 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
   return (
     <div className='blog-page'>
       <Suspense fallback={ null }>
+        { !isAdmin && (
+          <Modal 
+            open
+            closeOnEscape={ false }
+            closeOnClickOutside={ false }
+          >
+            <Paragraph>
+              This page is a work in progress.
+            </Paragraph>
+            <Link 
+              to={ PageRoute.root }
+            >
+              <div className='link'>
+                Go back
+              </div>
+            </Link>
+          </Modal>
+        ) }
         <Switch>
           { postRoutes }
 

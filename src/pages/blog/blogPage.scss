@@ -10,6 +10,34 @@
   flex-direction: column;
   align-items: center;
 
+  & > .modal {
+    padding: 3em;
+    background-color: var( --primary-color );
+    text-align: center;
+
+    border-radius: 40px;
+    border: 5px solid var( --accent-color );
+
+    box-shadow: 0px 0px 20px #33333388;
+
+    .paragraph {
+      padding: 0em;
+      font-size: 2rem;
+      line-height: 1em;
+    }
+
+    .link {
+      margin-top: 1em;
+      padding: 0.5em;
+      border-radius: 50px;
+      color: var( --foreground-color );
+
+      background-color: var( --accent-color );
+
+      @include font( 'button' );
+    }
+  }
+
   .obstacle {
     position: absolute;
     z-index: 100;

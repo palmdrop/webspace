@@ -11,9 +11,11 @@ enum State {
 
 type Props = {
   open : boolean,
-  onChangeCompleted : ( isOpen : boolean ) => void,
+  onChangeCompleted ?: ( isOpen : boolean ) => void,
   transitionTime ?: number,
   blockEvents ?: boolean,
+  closeOnEscape ?: boolean,
+  closeOnClickOutside ?: boolean,
   children : React.ReactNode,
 }
 
@@ -22,6 +24,8 @@ const Modal = ( {
   onChangeCompleted,
   transitionTime = 300,
   blockEvents = true,
+  closeOnEscape = true,
+  closeOnClickOutside = true,
   children,
 } : Props ) => {
   const rootRef = useRef<HTMLDivElement>( null );
@@ -35,7 +39,7 @@ const Modal = ( {
 
     timerRef.current = setTimeout( () => {
       setState( newState === State.Opening ? State.Open : State.Closed );
-      onChangeCompleted( newState === State.Opening );
+      onChangeCompleted?.( newState === State.Opening );
     }, transitionTime );
   };
 
@@ -45,7 +49,7 @@ const Modal = ( {
     if( open ) {
       const handleKeyPress = ( e : KeyboardEvent ) => {
         if( e.key === 'Escape' ) {
-          changeState( State.Closing );
+          closeOnEscape && changeState( State.Closing );
         }
       };
 
@@ -61,7 +65,7 @@ const Modal = ( {
     const onPress = ( event : MouseEvent | TouchEvent ) => {
       // Clicked outside
       if( rootRef && !rootRef.current?.contains( event.target as Node ) ) {
-        changeState( State.Closing );
+        closeOnClickOutside && changeState( State.Closing );
       }
     };
 
