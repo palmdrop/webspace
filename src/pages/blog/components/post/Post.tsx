@@ -8,6 +8,7 @@ import { formatDate } from '../../blog';
 import { ReactComponent as Arrow } from '../../../../assets/svg/arrow.svg';
 
 import './Post.scss';
+import SoftDisk from '../../../../components/ornamental/disk/soft/SoftDisk';
 
 export type PostMetadata = {
   title : string,
@@ -42,6 +43,7 @@ const Header = ( { metadata, imageSrc } : HeaderProps ) => {
         to={ PageRoute.blog }
       >
         <Arrow className="arrow"/>
+        <div className="arrow-background" />
       </Link>
       { imageSrc && (
         <img

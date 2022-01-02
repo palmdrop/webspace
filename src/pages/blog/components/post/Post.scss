@@ -15,6 +15,12 @@
     z-index: inherit;
 
     &-back-arrow {
+      position: relative;
+      top: 20px;
+      left: -5px;
+
+      transition: 0.5s;
+
       .arrow {
         position: relative;
         width: 4em;
@@ -26,6 +32,26 @@
 
         // Filter created using https://codepen.io/sosuke/pen/Pjoqqp
         filter: invert(17%) sepia(75%) saturate(4628%) hue-rotate(258deg) brightness(71%) contrast(140%);
+      }
+
+      .arrow-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 6em;
+        height: 3.5em;
+
+        background-color: var( --accent-color );
+        border-radius: 50%;
+
+        transform: translate( -12%, -62% );
+
+        box-shadow: 0px 0px 10px #33333374;
+      }
+
+      &:hover {
+        top: 10px;
       }
     }
 
