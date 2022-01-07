@@ -38,11 +38,10 @@ const SimpleNavBar = ( { mainRoute, entries, onClick } : Props ) => {
         { otherEntries.map( ( entry, index ) => (
           <NavButton
             key={ `${ entry.text }-${ index }` }
-            // active={ index === activeNavBarEntry }
             navEntry={ entry }
             index={ index + 1 }
-          /> )
-        )}
+          /> 
+        ) )}
       </ul>
     </div>
   );

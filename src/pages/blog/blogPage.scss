@@ -41,16 +41,15 @@
   .obstacle {
     position: absolute;
     z-index: 100;
+    opacity: 0.9;
 
     width: 440px;
     max-width: 500px;
 
-    top: 1.5em;
-    left: 45%;
+    top: 1.3em;
+    left: 47%;
 
-    transform: translate( -100%, 0% );
-
-
+    transform: translate( -100%, 0% ) rotate( -6deg );
 
     pointer-events: none;
   }

@@ -24,7 +24,7 @@
     &::before, &::after {
       color: var( --secondary-color );
       content: '~';
-      padding: 0.25em 0.4em;
+      padding: 0.45em 0.4em;
     }
   }
 
@@ -38,7 +38,6 @@
       border-radius: 25px;
       padding: 0.0em 0.5em;
       margin: 0.1em 0.1em;
-      width: 100%;
 
       text-align: center;
 
@@ -47,6 +46,13 @@
 
         @include medium {
           font-size: 1.0rem;
+        }
+      }
+
+      .nav-button__link {
+        .button {
+          position: relative;
+          width: 100%;
         }
       }
     }

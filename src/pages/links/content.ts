@@ -124,3 +124,15 @@ links.push(toLink(
   'Blog', 'Tech'
 ));
 
+links.push(toLink(
+  '~javier',
+  'https://tilde.club/~javier/',
+  'Art'
+));
+
+links.push(toLink(
+  'tilde.club',
+  'http://tilde.club/',
+  'Blog', 'Tech'
+));
+

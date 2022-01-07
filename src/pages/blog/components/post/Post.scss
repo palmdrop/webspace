@@ -1,5 +1,7 @@
 @import '../../../../styles/layout.scss';
 @import '../../../../styles/fonts.scss';
+@import '../../../../styles/ornaments.scss';
+@import '../../../../styles/colors.scss';
 
 .post {
   width: 100%;
@@ -31,7 +33,7 @@
         z-index: 100;
 
         // Filter created using https://codepen.io/sosuke/pen/Pjoqqp
-        filter: invert(17%) sepia(75%) saturate(4628%) hue-rotate(258deg) brightness(71%) contrast(140%);
+        filter: invert(17%) sepia(75%) saturate(4628%) hue-rotate(258deg) brightness(71%) contrast(140%) drop-shadow( 0px 0px 3px #cecece22 );
       }
 
       .arrow-background {
@@ -48,6 +50,8 @@
         transform: translate( -12%, -62% );
 
         box-shadow: 0px 0px 10px #33333374;
+
+        @include neumorphic-shadow( 10px, 20%, 'extrude', color( 'secondary', 'haze' ) );
       }
 
       &:hover {

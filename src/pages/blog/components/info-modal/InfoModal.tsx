@@ -9,6 +9,8 @@ import Title from '../../../../components/title/Title';
 import { ReactComponent as CloseIcon } from '../../../../assets/svg/close.svg';
 
 import './InfoModal.scss';
+import { PageRoute } from '../../../../App';
+import { Link } from 'react-router-dom';
 
 const InfoModal = () => {
   const [ active, setActive ] = useState<boolean>( false );
@@ -40,10 +42,13 @@ const InfoModal = () => {
           A blog by palmdrop. Intended to be my more or less polished thought-dump. Posts may vary in length, quality and content. 
         </Paragraph>
         <Paragraph>
-          I believe in learning in public, and I want to rid myself of the fear of criticism. I also want to force myself to think.
+          I believe in learning in public, and I want to rid myself of the fear of criticism. I also want to force myself to think. Therefore this blog. At least it was a good attempt?
         </Paragraph>
         <Paragraph>
-          At the moment, this blog is under construction.
+          <Link 
+            to={PageRoute.self}
+            className='about-link'
+          >More about me.</Link>
         </Paragraph>
       </Modal>
     </div>

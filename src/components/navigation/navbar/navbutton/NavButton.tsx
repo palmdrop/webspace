@@ -45,6 +45,7 @@ const NavButton = ( { navEntry, active, index = 0 } : Props ) : JSX.Element => {
       className={ `nav-button ${ active || hovering ? 'nav-button--active' : '' }` }
     >
       <Link
+        className='nav-button__link'
         to={ navEntry.route }
         onMouseEnter={ handleHover }
         onMouseLeave={ handleLeave }
