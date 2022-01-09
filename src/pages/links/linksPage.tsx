@@ -41,6 +41,7 @@ const LinksPage = ( { route } : PageProps ) => {
           <ExternalLink
             key={ `link-${ index }.${ linkIndex }`}
             link={ link.url }
+            title={ `${ link.text } - ${ link.url }` }
           >
             { link.text }
             <div>
@@ -50,7 +51,7 @@ const LinksPage = ( { route } : PageProps ) => {
         ) )}
       </section>
     ) );
-  }, []);
+  }, [] );
 
   const linkSections = useMemo( () => {
     const categorizedLinks : { [ title : string ] : Link[] } = {};

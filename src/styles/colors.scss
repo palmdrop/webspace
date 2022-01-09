@@ -166,22 +166,22 @@ $gradients: (
 // Converts a color map to css variables
 // This allows for a simple color theme switch when using 
 // the regular css variables instead of the scss variables
-@mixin colorsToCSSVars( $colors, $prefix: 'color' ) {
+@mixin colorsToCSSVars( $colors, $suffix: 'color' ) {
 
   @each $name, $color-or-map in $colors {
 
     @if type-of( $color-or-map ) == color {
 
-      --#{$name}-#{$prefix}: #{$color-or-map};
+      --#{$name}-#{$suffix}: #{$color-or-map};
 
     } @else {
 
       @each $tint, $color in $color-or-map {
         @if $tint == 300 {
-          --#{$name}-#{$prefix}: #{$color};
+          --#{$name}-#{$suffix}: #{$color};
         }
 
-        --#{$name}-#{$prefix}-#{$tint}: #{$color};
+        --#{$name}-#{$suffix}-#{$tint}: #{$color};
       }
     }
   }

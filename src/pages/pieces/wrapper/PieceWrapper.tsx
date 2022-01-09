@@ -1,7 +1,5 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useHistory } from 'react-router';
-
 import { PageRoute } from '../../../App';
 import { ColorTheme } from '../../../state/slices/uiSlice';
 import { PieceNavigationFunction, pieces } from '../pieces/pieces';
@@ -15,10 +13,15 @@ import Title from '../../../components/title/Title';
 import SoftDisk from '../../../components/ornamental/disk/soft/SoftDisk';
 import StarLoader from '../../../components/loader/starLoader/StarLoader';
 
-import './PieceWrapper.scss';
 import { useTitle } from '../../../hooks/useTitle';
+import { InternalLink } from '../../../components/link/InternalLink';
+
+import { nameToPath } from '../../../utils/general';
+
+import './PieceWrapper.scss';
 
 type Props = {
+  baseRoute ?: PageRoute,
   pieceIndex : number,
   backgroundColorTheme ?: ColorTheme,
   onLoad ?: () => void,
@@ -29,6 +32,7 @@ type Props = {
 } 
 
 const PieceWrapper = React.memo( ( { 
+  baseRoute,
   pieceIndex, 
   backgroundColorTheme, 
   onLoad, 
@@ -43,8 +47,6 @@ const PieceWrapper = React.memo( ( {
   const [ overlayVisible, setOverlayVisible ] = useState( true );
   const [ isLoaded, setIsLoaded ] = useState( false );
   const pieceData = useMemo( () => pieces[ pieceIndex ], [ pieceIndex ] );
-
-  const history = useHistory();
 
   useTitle( setPageTitle ? pieceData.name : undefined );
 
@@ -91,16 +93,8 @@ const PieceWrapper = React.memo( ( {
     onLoad?.();
   }, [ setIsLoaded, onLoad ] );
 
-  const handlePrevious = ( event : React.MouseEvent ) => {
-    handlePieceNavigation?.( undefined, pieceIndex - 1, event );
-  };
-
-  const handleNext = ( event : React.MouseEvent ) => {
-    handlePieceNavigation?.( undefined, pieceIndex + 1, event );
-  };
-
-  const handleGoBack = () => {
-    history.push( PageRoute.pieces );
+  const getPieceRoute = ( index : number ) => {
+    return `${ baseRoute }/${ nameToPath( pieces[ index ].name ) }`;
   };
 
   return (
@@ -145,12 +139,12 @@ const PieceWrapper = React.memo( ( {
           onMouseLeave={ handleOverlayBlur }
         >
           <nav className="piece-wrapper__index-back-home">
-            <Button 
-              additionalClasses="piece-wrapper__back-button"
-              onClick={ handleGoBack }
+            <InternalLink 
+              className="piece-wrapper__back-button"
+              to={ PageRoute.pieces }
             >
               { '<<< index <<<' }
-            </Button>
+            </InternalLink>
           </nav>
 
           <Title
@@ -164,21 +158,21 @@ const PieceWrapper = React.memo( ( {
           />
 
           <nav className="piece-wrapper__piece-nav">
-            { ( pieceIndex !== 0 ) && (
-              <Button 
-                additionalClasses="piece-wrapper__previous-button"
-                onClick={ handlePrevious }
+            { ( pieceIndex !== 0 && baseRoute ) && (
+              <InternalLink 
+                className="piece-wrapper__previous-button"
+                to={ getPieceRoute( pieceIndex - 1 ) }
               >
                 { '< previous' }
-              </Button>
+              </InternalLink>
             )}
-            { ( pieceIndex !== pieces.length - 1 ) && (
-              <Button 
-                additionalClasses="piece-wrapper__next-button"
-                onClick={ handleNext }
+            { ( ( pieceIndex !== pieces.length - 1 ) && baseRoute ) && (
+              <InternalLink 
+                className="piece-wrapper__next-button"
+                to={ getPieceRoute( pieceIndex + 1 ) }
               >
                 { 'next >' }
-              </Button>
+              </InternalLink>
             )}
           </nav>
 

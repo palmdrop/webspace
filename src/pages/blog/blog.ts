@@ -43,5 +43,5 @@ export const formatDate = ( dateString : string ) => {
   const month = date.getUTCMonth( );
   const year = date.getUTCFullYear();
 
-  return `${ months[ month - 1 ] } ${ day }, ${ year }`;
+  return `${ months[ month ] } ${ day }, ${ year }`;
 };

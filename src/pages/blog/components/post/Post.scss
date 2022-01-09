@@ -51,7 +51,7 @@
 
         box-shadow: 0px 0px 10px #33333374;
 
-        @include neumorphic-shadow( 10px, 20%, 'extrude', color( 'secondary', 'haze' ) );
+        @include neumorphic-shadow( 8px, 20%, 'extrude', color( 'secondary', 'haze' ) );
       }
 
       &:hover {
@@ -75,26 +75,30 @@
 
     img {
       width: 100%;
-      height: 50vh;
+      min-height: 300px;
+      max-height: 50vh;
 
       object-fit: cover;
 
       z-index: 1;
+
+      border-radius: 20px;
+
+      box-shadow: 0px 0px 10px #8334;
     }
 
     .title {
-      padding-left: 0em;
-      padding-bottom: 0.5rem;
-
       font-size: 3em;
       letter-spacing: 0.1em;
+
+      padding-top: 0.2em;
 
       @include medium {
         font-size: 3.5em;
       }
 
       @include large {
-        font-size: 4em;
+        font-size: 3.7em;
       }
     }
 
@@ -112,8 +116,34 @@
     font-size: 1.2rem;
   }
 
+  p {
+    padding: 0.5em 0.0em;
+    line-height: 1.1em;
+    letter-spacing: -0.01em;
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+
+    color: var( --foreground-color );
+
+    transition: 0.5s;
+
+    &:hover {
+      color: var( --primary-color );
+      text-decoration-thickness: 10px;
+    }
+
+    &:visited {
+      text-decoration-color: var( --primary-color );
+    }
+  }
+
   .bar {
-    margin-top: 1em;
+    padding-bottom: 0em;
+    margin-top: 0.5em;
+    margin-bottom: 0em;
   }
 
   footer {

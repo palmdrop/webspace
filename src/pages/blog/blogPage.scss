@@ -127,7 +127,6 @@
         margin: 0.3em 0.0em;
 
         @include font( 'subheading' );
-        text-transform: lowercase;
         text-decoration: underline;
         text-decoration-color: var( --foreground-color );
         font-size: 1.5rem;

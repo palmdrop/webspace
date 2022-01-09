@@ -1,19 +1,22 @@
+import { Link } from 'react-router-dom';
+import { PageRoute } from '../../../App';
 import Button from '../../../components/input/button/Button';
 import LazyImage from '../../../components/media/image/LazyImage';
 import Bar from '../../../components/ornamental/bars/Bar';
 import { setActivePiece } from '../../../state/slices/uiSlice';
 import { useAppDispatch } from '../../../state/store/hooks';
-import { PieceData, PieceNavigationFunction } from '../pieces/pieces';
+import { nameToPath } from '../../../utils/general';
+import { PieceData } from '../pieces/pieces';
 
 import './PieceEntry.scss';
 
 type EntryProps = {
   piece : PieceData,
+  baseRoute : PageRoute,
   index : number,
-  onClick : PieceNavigationFunction
 }
 
-export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Element => {
+export const PieceEntry = ( { piece, baseRoute, index } : EntryProps ) : JSX.Element => {
   const dispatch = useAppDispatch();
 
   const handleHover = () => {
@@ -22,10 +25,6 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
 
   const handleLeave = () => {
     dispatch( setActivePiece( null ) );
-  };
-
-  const handleClick = ( event : React.MouseEvent ) => {
-    onClick( piece, index, event );
   };
 
   return (
@@ -51,8 +50,9 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
           } )}
         </div>
       }
-      <Button
-        onClick={ handleClick }
+      <Link
+        className="piece-entry__link"
+        to={ `${ baseRoute }/${ nameToPath( piece.name ) }` }
       >
         <>
           { `${ index + 1 }. ${ piece.name }` }
@@ -66,7 +66,7 @@ export const PieceEntry = ( { piece, index, onClick } : EntryProps ) : JSX.Eleme
             />
           )}
         </>
-      </Button>
+      </Link>
 
       <Bar 
         direction='horizontal'

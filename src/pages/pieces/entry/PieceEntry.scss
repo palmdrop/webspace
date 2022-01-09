@@ -32,7 +32,7 @@
     }
   }
 
-  & > .button {
+  &__link {
     position: relative;
     letter-spacing: 0.0em;
 
@@ -40,6 +40,14 @@
     text-align: start;
 
     width: 80vw;
+    
+    @include font( 'button' );
+
+    color: var( --primary-color );
+
+    &:visited {
+      color: var( --primary-color );
+    }
 
     @include medium {
       font-size: 1.8em;
@@ -48,6 +56,7 @@
     &:hover {
       @include font( 'accent' );
       letter-spacing: 0.13em;
+      color: var( --primary-color );
 
       .lazy-image {
         visibility: visible;
@@ -81,5 +90,4 @@
     width: 100%;
     z-index: -2;
   }
-
 }

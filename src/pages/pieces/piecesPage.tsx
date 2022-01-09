@@ -19,15 +19,16 @@ import PieceWrapper from './wrapper/PieceWrapper';
 import { PieceEntry } from './entry/PieceEntry';
 
 import { introduction } from './content';
+import { nameToPath } from '../../utils/general';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 
 import './piecesPage.scss';
-import { nameToPath } from '../../utils/general';
 
 const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
   const history = useHistory();
 
+  // TODO: Make piece buttons regular links
   const handlePieceNavigation : PieceNavigationFunction = useCallback( ( 
     pieceData : PieceData | undefined, 
     index : number, 
@@ -42,9 +43,9 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
     pieces.map( ( piece, index ) => (
       <PieceEntry 
         key={ `${ piece.name }-${ index + 1 }` }
+        baseRoute={ route }
         piece={ piece } 
         index={ index }
-        onClick={ handlePieceNavigation }
       />
     ) ).reverse()
   ), [ handlePieceNavigation ] );
@@ -61,6 +62,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
               exact
             >
               <PieceWrapper
+                baseRoute={ route }
                 pieceIndex={ index }
                 backgroundColorTheme={ piece.colorTheme }
                 showLoadingPage={ true }

@@ -98,7 +98,7 @@
       margin: 0.3em 0.0em;
     }
 
-    .button {
+    .button, .internal-link {
       padding: 0.1em 0em;
       font-size: 1.2em;
 
@@ -107,7 +107,6 @@
         letter-spacing: 0.3em;
       }
     }
-
 
     #{ $root }__index-back-home {
       display: flex;
@@ -126,10 +125,12 @@
       display: flex;
 
       #{ $root }__previous-button {
+        color: var( --primary-color-300 );
       }
 
       #{ $root }__next-button {
         margin-left: auto;
+        color: var( --primary-color-300 );
       }
 
       margin-bottom: 0.75em;
