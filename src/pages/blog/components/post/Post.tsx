@@ -64,6 +64,8 @@ const Header = ( { metadata, imageSrc } : HeaderProps ) => {
 };
 
 const Post = ( { metadata, image, children } : PostProps ) : JSX.Element => {
+  const title = process.env.REACT_APP_BLOG_TITLE ?? 'blog';
+
   return (
     <div className="post">
       <Header 
@@ -77,7 +79,7 @@ const Post = ( { metadata, image, children } : PostProps ) : JSX.Element => {
       />
       <footer>
         <span>
-          Obscured - blog by palmdrop
+          Obscured - { title } - palmdrop
         </span>
         <SimpleNavBar 
           mainRoute={ PageRoute.root }

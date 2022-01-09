@@ -43,13 +43,27 @@
     z-index: 100;
     opacity: 0.9;
 
-    width: 440px;
+    width: 16em;
     max-width: 500px;
 
-    top: 1.3em;
-    left: 47%;
+    top: -9%;
+    left: 53%;
 
-    transform: translate( -100%, 0% ) rotate( -6deg );
+    @include medium {
+      top: 1%;
+      left: 41%;
+
+      width: 18em;
+    }
+
+    @include large {
+      top: 3%;
+      left: 47%;
+
+      width: 20em;
+    }
+
+    transform: translate( -100%, 0% ) rotate( -3deg );
 
     pointer-events: none;
   }
@@ -99,6 +113,9 @@
 
       padding-bottom: 1em;
 
+      color: var( --secondary-color );
+      @include font( 'paragraph' );
+
       @include medium {
         height: 400px;
       }
@@ -108,6 +125,8 @@
       }
 
       object-fit: cover;
+
+      border-radius: 30px 30px 50px 50px;
     }
 
     &:visited {
@@ -193,4 +212,13 @@
     }
   }
 
+  &__header {
+    width: 100%;
+  }
+
+  &__footer {
+    width: 100%;
+
+    padding-top: 3em;
+  }
 }

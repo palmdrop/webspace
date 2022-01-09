@@ -15,6 +15,8 @@ import { Link } from 'react-router-dom';
 const InfoModal = () => {
   const [ active, setActive ] = useState<boolean>( false );
 
+  const title = process.env.REACT_APP_BLOG_TITLE ?? 'blog';
+
   return (
     <div className="info-modal">
       <SoftDisk />
@@ -36,7 +38,7 @@ const InfoModal = () => {
         </Button>
         <Title
           level={ 1 }
-          text="[navigating] mind fog"
+          text={ title }
         />
         <Paragraph>
           A blog by palmdrop. Intended to be my more or less polished thought-dump. Posts may vary in length, quality and content. 

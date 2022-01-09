@@ -7,7 +7,7 @@ const hljs = require( 'highlight.js' );
 const marked = require( 'marked' );
 
 const ASSETS_PATH = 'src/assets/';
-const IMAGES_PATH = `${ ASSETS_PATH }/img`;
+const IMAGES_PATH = `${ ASSETS_PATH }/posts`;
 
 const BLOG_PATH = 'src/pages/blog';
 const POSTS_PATH = `${ BLOG_PATH }/posts`;
@@ -21,6 +21,8 @@ const { getPostsData } = require( './getPostsData' );
 const config = require( CONFIG_PATH );
 
 // Configure syntax highlighting for code blocks
+const markedRenderer = new marked.Renderer();
+
 marked.setOptions( {
   highlight: function( code, lang ) {
     const language = hljs.getLanguage( lang ) ? lang : 'plaintext';
@@ -28,6 +30,10 @@ marked.setOptions( {
   },
   langPrefix: 'hljs language-',
 } );
+
+markedRenderer.link = ( href, title, text ) => {
+  return `<a target="_blank" href="${ href }" rel="noopener noreferrer" title="${ title ?? `${ text } - ${ href }` }">${ text }</a>`;
+};
 
 const processMetadata = ( posts ) => {
   return posts.map( post => {
@@ -72,7 +78,8 @@ export default Post${ metadata.id };
 
 const createPostsHTML = ( posts ) => {
   return posts.map( ( { metadata, content } ) => {
-    const html = marked.parse( content );
+    // const html = marked.parse( content );
+    const html = marked.parse( content, { renderer: markedRenderer } );
     return {
       html: htmlToReactComponent( metadata, html ),
       id: metadata.id
@@ -103,7 +110,7 @@ ${ posts.map( ( { metadata } ) => {
 export const postsData = [
 ${ posts.map( ( { metadata, snippet } ) => `  {
     metadata: ${ JSON.stringify( metadata ).replaceAll( '"', '\'' ) },
-    snippet: \`${ snippet }\`,
+    snippet: '${ snippet }',
     Component: Post${ metadata.id }
   },` ).join( '\n' ) }
 ];

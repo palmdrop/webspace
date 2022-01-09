@@ -54,14 +54,14 @@
     .info-modal__close-button {
       position: absolute;
       right: 5%;
-      top: 8%;
+      top: 10%;
 
       opacity: 0.2;
 
       & > * {
         width: 20px;
 
-        transition: 0.5s;
+        transition: 0.3s;
 
         &:hover {
           transform: scale( 1.2 );

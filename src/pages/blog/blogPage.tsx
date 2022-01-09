@@ -22,16 +22,19 @@ import SimpleNavBar from '../../components/navigation/navbar/simple/SimpleNavBar
 import { createNavEntries } from '../../components/navigation/navbar/NavBar';
 import { PageRoute, pages } from '../../App';
 
-import './blogPage.scss';
 import Modal from '../../components/modal/Modal';
-import { useSelector } from 'react-redux';
-import { selectIsAdmin } from '../../state/slices/adminSlice';
+// import { useSelector } from 'react-redux';
+// import { selectIsAdmin } from '../../state/slices/adminSlice';
+// import { RootState } from '../../state/store/store';
+
+import './blogPage.scss';
 
 // eslint-disable-next-line react/prop-types
 const BlogPage = ( { route } : PageProps ) : JSX.Element => {
   const [ activeCategory, setActiveCategory ] = useState<string | null>( null );
 
-  const isAdmin = useSelector( selectIsAdmin );
+  const title = process.env.REACT_APP_BLOG_TITLE ?? 'blog';
+  const underConstruction = false; // useSelector( ( state : RootState ) => !selectIsAdmin( state ) );
 
   const categoryButtons = useMemo( () => categories
     .map( ( category, index ) => (
@@ -81,7 +84,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
         { metadata.image && (
           <img
             src={ images[ metadata.id ] }
-            alt={ metadata.title }
+            alt={ `Image - ${ metadata.title }` }
           />
         )}
         <Paragraph>
@@ -109,7 +112,7 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
   return (
     <div className='blog-page'>
       <Suspense fallback={ null }>
-        { !isAdmin && (
+        { underConstruction && (
           <Modal 
             open
             closeOnEscape={ false }
@@ -134,13 +137,15 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
             path={ route }
             exact
           >
-            <SimpleNavBar 
-              entries={ navEntries }
-            />
+            <header className="blog-page__header">
+              <SimpleNavBar 
+                entries={ navEntries }
+              />
+            </header>
             <main>
               <Obstacle className='obstacle' />
               <Title
-                text="mind fog"
+                text={ title }
                 level={ 1 }
               />
               <div className='blog-page__info'>
@@ -159,6 +164,11 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
                 { links }
               </section>
             </main>
+            <footer className="blog-page__footer">
+              <SimpleNavBar 
+                entries={ navEntries }
+              />
+            </footer>
           </Route>
         </Switch>
       </Suspense>
