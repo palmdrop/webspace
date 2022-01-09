@@ -3,7 +3,7 @@ import { random } from '../../../utils/random';
 import { ColorSettings, PatternShaderSettings, Source } from '../../shader/builder/pattern/types';
 import { ASSETHANDLER } from '../../systems/AssetHandler';
 
-import t1 from '../../../assets/content/about/retro-diamond.jpg';
+import t1 from '../../../assets/img/virtual-imprint/retro-diamond.jpg';
 
 const noiseSource1 : Source = {
   kind: 'noise',

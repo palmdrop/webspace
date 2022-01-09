@@ -1,6 +1,6 @@
-import retroDiamondPath from '../../assets/content/about/retro-diamond.jpg';
-import threeDMaterialPath from '../../assets/content/about/3d-material.jpg';
-import layeredMaterialPath from '../../assets/content/about/layered-material.jpg';
+import rehashPath from '../../assets/content/about/rehash2.jpg';
+import feedPath from '../../assets/content/about/feed1.jpg';
+import patternPath from '../../assets/content/about/pattern-shape.jpg';
 
 export type ImageData = {
   src : string,
@@ -36,8 +36,8 @@ export const sections : Section[] = [
   {
     content: [
       {
-        src: retroDiamondPath,
-        alt: 'Retro Diamond',
+        src: rehashPath,
+        alt: 'Rehash Transform',
         height: 350,
         label: false,
       },
@@ -59,8 +59,8 @@ export const sections : Section[] = [
       I find generative art an extremely fascinating medium. It's inherently chance-based and living. Generative art can be interactive, adaptable, and organic. The artist can either cherry-pick certain outputs and present them as standalone pieces, or continuously generate new outputs, making the algorithm itself the artwork. 
       `,
       {
-        src: threeDMaterialPath,
-        alt: 'Materials',
+        src: feedPath,
+        alt: 'Feedback loop',
         height: 350,
         label: false,
       },
@@ -79,8 +79,8 @@ export const sections : Section[] = [
       A website of one's own invites more pure digital expression and control.
       `,
       {
-        src: layeredMaterialPath,
-        alt: 'Meditation box',
+        src: patternPath,
+        alt: '3D Patterns',
         height: 350,
         label: false,
       },

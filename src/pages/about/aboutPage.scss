@@ -192,7 +192,7 @@
         a {
           padding: 0em 0.8em;
 
-          @include font( 'paragraph' );
+          @include font( 'button' );
 
           color: var( --primary-color );
         }
@@ -244,7 +244,7 @@
         a {
           padding: 0.5em;
 
-          @include font( 'paragraph' );
+          @include font( 'button' );
 
           font-size: 1.0rem;
 
