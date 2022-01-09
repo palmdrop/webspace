@@ -12,6 +12,7 @@ export const getFunctionName = ( () => {
   };
 } )();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const nameFunction = ( func : GlslFunction, functionCache : Map<any, FunctionWithName> ) : FunctionWithName => {
   if ( functionCache.has( func ) ) return functionCache.get( func ) as FunctionWithName;
 

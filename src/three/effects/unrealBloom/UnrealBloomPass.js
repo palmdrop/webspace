@@ -11,7 +11,6 @@ import {
   ShaderMaterial,
   UniformsUtils,
   Vector2,
-  Vector3,
   WebGLRenderTarget
 } from 'three';
 import { Pass, FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass';

@@ -15,6 +15,7 @@ type WeightedElement<T> = [
 ];
 
 export const weightedRandomElement = <T>( elements : WeightedElement<T>[] ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const sum = elements.reduce( ( acc, [ _, weight ] ) => acc + weight, 0.0 );
   const r = Math.random() * sum;
 

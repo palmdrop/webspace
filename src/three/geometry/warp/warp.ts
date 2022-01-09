@@ -50,6 +50,7 @@ export const domainWarp : TransformFunction = ( point, offset, frequency, amount
   return noiseWarp( point, o, frequency, amount );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const noiseWarp : TransformFunction = ( point, offset, frequency, amount, args = {} ) => {
   const { x, y, z } = point;
 

@@ -45,10 +45,10 @@ export abstract class AbstractRenderScene implements RenderScene {
   }
 
   private createLoop() : AnimationLoop {
-    return new SimpleAnimationLoop( ( now : number, delta : number ) : void => {
+    return new SimpleAnimationLoop( ( delta : number, now : number ) : void => {
       this.beforeRender();
-      this.update( now, delta );
-      this.render( now, delta );
+      this.update( delta, now );
+      this.render( delta, now );
       this.afterRender();
 
       if( this.captureNext ) {
@@ -97,6 +97,7 @@ export abstract class AbstractRenderScene implements RenderScene {
     return new SimpleResizer( this.canvas, this.camera, this.renderer );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render( delta : number, now : number ) : void {
     if( this.composer ) {
       this.composer.render( delta );

@@ -22,7 +22,7 @@ export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { ge
 
   const roughnessMap = textureFromSmoothGeometry( 
     geometry,
-    ( x, y, z, u, v ) => {
+    ( x, y, z ) => {
       const n = getNoise3D( { x, y, z }, null, 0.8, 0.5, 1.0 );
       return new THREE.Color( n, n, n );
     },
@@ -31,7 +31,7 @@ export const SolarChromeMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { ge
 
   const metalnessMap = textureFromSmoothGeometry( 
     geometry,
-    ( x, y, z, u, v ) => {
+    ( x, y, z ) => {
       const n = getNoise3D( { x, y, z }, { x: 100, y: 0, z: 0 }, 1.0, 0.8, 1.0 );
       return new THREE.Color( n, n, n );
     },
@@ -176,7 +176,7 @@ export const DirtyMetalMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { col
   return material;
 };
 
-export const FoldedPlaneMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { geometry : THREE.BufferGeometry }> = ( { geometry } ) => {
+export const FoldedPlaneMaterialPrefab : Prefab<THREE.MeshStandardMaterial, { geometry : THREE.BufferGeometry }> = () => {
   const material = new THREE.MeshStandardMaterial( {
     color: 'white',
     roughness: 0.0,

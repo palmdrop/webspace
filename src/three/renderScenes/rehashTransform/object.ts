@@ -71,6 +71,7 @@ export const createObject = (
   const offset = random( 1.0, 2.0 );
   const instancesPerLine = Math.floor( numberOfInstances / numberOfLines );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateMesh = ( time : number, delta : number ) => {
     const positionSum = new THREE.Vector3();
     const position = new THREE.Vector3();

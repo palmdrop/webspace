@@ -71,7 +71,7 @@ export const createMeshes = ( colors : THREE.Color[] ) => {
       };
     } );
 
-    const texture = textureFromSmoothGeometry( geometry, ( x, y, z, u, v ) => {
+    const texture = textureFromSmoothGeometry( geometry, ( x, y, z ) => {
       const ox = warp * getNoise3D( { x: x + 103, y, z }, null, new THREE.Vector3().copy( frequency ).multiplyScalar( 2.0 ), 0.0, 1.0 );
       const oy = warp * getNoise3D( { x, y: y + 131, z }, null, frequency, 0.0, 1.0 );
       const n = getNoise3D( { x: x + ox, y: y + oy, z }, null, frequency, 0.0, 1.0 );

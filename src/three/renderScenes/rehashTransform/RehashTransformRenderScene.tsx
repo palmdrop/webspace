@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { random } from 'lodash';
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
@@ -43,6 +44,7 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
 
   private dynamicTime : DynamicTime;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private customComposer : any;
   private updateComposer : ( delta : number, now : number ) => void;
 
@@ -129,7 +131,6 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     this.gui = new dat.GUI();
     this.gui.hide();
 
-    // TODO add env and obj folder
     const objectFolder = this.gui.addFolder( 'object' );
     objectFolder.add( { speed: this.objectMaterialSpeed }, 'speed', 0.0, 2.0 )
       .onChange( value => this.objectMaterialSpeed = value );
@@ -205,11 +206,10 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     setUniform( 'time', this.objectMaterialSpeed * time, this.lineShaderMaterial );
 
     this.updateObject( now, delta );
-    // this.updateLines( now, delta );
     this.updateComposer( delta, now );
   }
 
-  render( delta : number, now : number ) {
+  render() {
     this.renderer.setRenderTarget( null );
     this.customComposer.render();
   }

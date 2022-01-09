@@ -14,6 +14,7 @@ export class SimpleResizer implements Resizer {
     this.useDevicePixelRatio = useDevicePixelRatio;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   resize( callback ?: ResizeCallback, width ?: number, height ?: number, force = false ) {
     if( !width ) width = this.container.clientWidth;
     if( !height ) height = this.container.clientHeight;

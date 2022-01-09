@@ -168,6 +168,7 @@ export class SolarChromeRenderScene extends AbstractRenderScene {
     return mesh;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update( delta : number, now : number ) : void {
     this.controls?.update();
 

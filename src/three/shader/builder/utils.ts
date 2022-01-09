@@ -36,6 +36,7 @@ export const opToGLSL = ( operation : Operation, ...args : string[] ) => {
   return result;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const converters : { [ type in GlslType ] : ( value ?: any ) => string } = {
   'float': ( value ?: number ) => !value ? '0.0' : '' + numToGLSL( value ),
   'int': ( value ?: number ) => !value ? '0' : '' + Math.floor( value ),

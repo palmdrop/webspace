@@ -73,6 +73,7 @@ export type Shader = {
 export type UniformObject = {
   uniforms ?: { 
     [uniform : string] : {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value : any
     }
   }
@@ -85,6 +86,7 @@ export const setUniform = <T>(
   destinationObject ?: { 
     uniforms ?: { 
       [uniform : string] : {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         value : any
       }
     } | undefined

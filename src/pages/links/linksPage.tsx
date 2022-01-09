@@ -3,7 +3,6 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { PageRoute } from '../../App';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Header from '../../components/header/Header';
-import { PageProps } from '../PageWrapper';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle6.svg';
 
@@ -17,7 +16,7 @@ import HomeBar from '../../components/navigation/home/HomeBar';
 
 import './linksPage.scss';
 
-const LinksPage = ( { route } : PageProps ) => {
+const LinksPage = () => {
   const [ activeCategories, setActiveCategories ] = useState<Set<Category>>( new Set() );
 
   const categorizedLinksToSections = useCallback( ( categorizedLinks : { [ title : string ] : Link[] } ) => {

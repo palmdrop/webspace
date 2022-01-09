@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { sendFormEmail, isValidEmail } from '../../utils/email';
 
 import { PageRoute } from '../../App';
-import { PageProps } from '../PageWrapper';
 
 import GlassCard from '../../components/cards/glass/GlassCard';
 import Header from '../../components/header/Header';
@@ -43,7 +42,7 @@ const icons : IconData[] = [
   mailIconData
 ];
 
-const ContactPage = ( { route } : PageProps ) : JSX.Element => {
+const ContactPage = () : JSX.Element => {
   const formRef = useRef<HTMLFormElement>( null );
 
   // Form content and status
@@ -82,7 +81,7 @@ const ContactPage = ( { route } : PageProps ) : JSX.Element => {
       // Send email
       sendFormEmail( 
         formRef.current as HTMLFormElement 
-      ).then( ( response ) => {
+      ).then( () => {
         setFormStatus( Status.SEND_SUCCESSFUL );
       }, ( error ) => {
         setFormStatus( Status.SEND_FAILED );

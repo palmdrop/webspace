@@ -100,6 +100,7 @@ export class ShadowRenderer {
     return this.shadowPass.uniforms[ uniformName ]?.value;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setUniform( uniformName : string, value : any ) {
     const uniform = this.shadowPass.uniforms[ uniformName ];
     if( !uniform ) return false;

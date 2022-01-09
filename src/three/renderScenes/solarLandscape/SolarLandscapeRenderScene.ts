@@ -180,7 +180,7 @@ export class SolarLandscapeRenderScene extends AbstractRenderScene {
     this.scene.background = fogColor;
     
     const fogFolder = this.gui.addFolder( 'fog' );
-    fogFolder.add( this.scene.fog, 'near' ).min( 0.0 ).max( 100 ).onChange( ( near ) => {
+    fogFolder.add( this.scene.fog, 'near' ).min( 0.0 ).max( 100 ).onChange( () => {
       return;
     } );
 

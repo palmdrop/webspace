@@ -153,6 +153,7 @@ const buildWarpGLSL = ( domainWarp : DomainWarp | undefined, uniforms : Uniforms
 
 export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader => {
   // Cache and data
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const functionCache : FunctionCache = new Map<any, FunctionWithName>();
   const textureNames = new Set<string>();
   const functions : GlslFunctions = {};

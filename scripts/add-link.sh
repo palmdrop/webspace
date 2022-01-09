@@ -61,8 +61,8 @@ if [ "$confirmation" != "yes" ]; then
   return 0
 fi
 
-echo "links.push(toLink(" >> $LINKS_FILE
+echo "links.push( toLink(" >> $LINKS_FILE
 echo "  '${name}'," >> $LINKS_FILE
 echo "  '${link}'," >> $LINKS_FILE
 echo "  ${combined_categories}" >> $LINKS_FILE
-echo -e "));\n" >> $LINKS_FILE
+echo -e ") );\n" >> $LINKS_FILE

@@ -32,21 +32,6 @@ export const noiseSource1 : Source = {
   ridge: random( 0.3, 1.0 )
 };
 
-const alphaMaskSource : Source = {
-  kind: 'noise',
-  frequency: new THREE.Vector3(
-    random( 0.6, 1.3 ),
-    random( 0.6, 1.3 ),
-    random( 0.6, 1.3 ),
-  ),
-  amplitude: 3.4,
-  pow: 1.1,
-  octaves: Math.floor( random( 3, 5 ) ),
-  persistance: 0.5,
-  lacunarity: 2.2,
-  ridge: random( 0.3, 1.0 )
-};
-
 const source1Warp : DomainWarp = {
   sources: {
     x: noiseSource1,
@@ -158,7 +143,6 @@ export default ( mainTextureName : string ) => {
     mainSource: getTextureSource( mainTextureName ),
     domainWarp: source1Warp,
     mask: maskSource1,
-    // alphaMask: Math.random() > 0.5 ? alphaMaskSource : undefined,
     fog,
     timeOffset: new THREE.Vector3( 0.05, -0.05, 0.05, ),
     colorSettings

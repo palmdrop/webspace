@@ -118,21 +118,21 @@ links.push( toLink(
   'Blog', 'Tech'
 ) );
 
-links.push(toLink(
+links.push( toLink(
   'Frank Chimero',
   'https://frankchimero.com/',
   'Blog', 'Tech'
-));
+) );
 
-links.push(toLink(
+links.push( toLink(
   '~javier',
   'https://tilde.club/~javier/',
   'Art'
-));
+) );
 
-links.push(toLink(
+links.push( toLink(
   'tilde.club',
   'http://tilde.club/',
   'Blog', 'Tech'
-));
+) );
 

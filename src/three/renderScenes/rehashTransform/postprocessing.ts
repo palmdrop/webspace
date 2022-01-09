@@ -10,6 +10,7 @@ export const getComposer = (
   gui : dat.GUI
 ) => {
   const composer = new POSTPROCESSING.EffectComposer( renderer );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const effects : any[] = [];
 
   composer.addPass(
@@ -167,7 +168,7 @@ export const getComposer = (
   effects.forEach( effect => composer.addPass( new POSTPROCESSING.EffectPass( camera, effect ) ) );
 
 
-  const update = ( delta : number, now : number ) => {
+  const update = () => {
     updateFocusDistance?.();
   };
 

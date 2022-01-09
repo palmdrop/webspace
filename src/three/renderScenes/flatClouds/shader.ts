@@ -128,8 +128,6 @@ const alphaMaskSource : CombinedSource = {
   multipliers: [ 1.0, 1.0 ],
 };
 
-// TODO source picker! use that to build more complex sources. For each source, add to picker?
-
 const source1Warp : DomainWarp = {
   sources: {
     x: randomElement( sources ),

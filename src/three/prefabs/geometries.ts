@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as THREE from 'three';
 import { random } from '../../utils/random';
 import { distance, domainWarp, noiseWarp, TransformFunction, twistWarp } from '../geometry/warp/warp';
 import { generateWarpGeometryPrefab } from './WarpGeometryPrefab';
 
 import { GeometryPrefab } from './prefabs';
-import { clamp } from 'three/src/math/MathUtils';
 import { smoothStep } from '../../utils/general';
 
 export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
