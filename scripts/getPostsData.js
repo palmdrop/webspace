@@ -10,8 +10,8 @@ const cliProgress = require( 'cli-progress' );
 
 const POSTS_DATA_DIR_PATH = path.join( __dirname, '../src/posts' );
 
-const allowedMetadata = [ 'title', 'keywords', 'date', 'image' ];
 const requiredMetadata = [ 'title', 'keywords', 'date' ];
+const allowedMetadata = [ 'title', 'keywords', 'date', 'image' ];
 
 const parseMetadata = ( file, metadataLines ) => {
   const metadata = {};
@@ -28,10 +28,13 @@ const parseMetadata = ( file, metadataLines ) => {
     } else if( name === 'date' ) {
       if( ( new Date( value ) == 'Invalid Date' ) ) {
         throw new Error( `Malformed metadata: ${ file } contains an invalid date, ${ value }` );
-      }
-    } 
+      } 
 
-    metadata[ name ] = value.trim();
+      metadata[ name ] = value.trim();
+    } else {
+      metadata[ name ] = value.trim();
+    }
+
   } );
 
   requiredMetadata.forEach( name => {
@@ -43,7 +46,7 @@ const parseMetadata = ( file, metadataLines ) => {
   return metadata;
 };
 
-const parsePost = ( file, data, index ) => {
+const parsePost = ( file, data, index, numberOfPosts ) => {
   // All lines
   const lines = data.split( '\n' );
 
@@ -66,7 +69,7 @@ const parsePost = ( file, data, index ) => {
   );
 
   const metadata = parseMetadata( file, metadataLines );
-  metadata[ 'id' ] = index + 1;
+  metadata[ 'id' ] = numberOfPosts - index;
 
   // Parse snippet
   const snippet = lines.slice(
@@ -111,7 +114,7 @@ const getPostsData = () => new Promise( ( resolve, reject ) => {
         }
 
         posts.push( 
-          parsePost( file, content, index ) 
+          parsePost( file, content, index, files.length ) 
         );
 
         postsLoaded++;

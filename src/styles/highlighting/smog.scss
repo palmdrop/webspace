@@ -1,0 +1,114 @@
+/*
+  Original theme, by palmdrop
+  Very loosely inspired by Github Dark
+*/
+
+code {
+  background: #832b31;
+}
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+  background: #2e191a;
+}
+
+.hljs, code {
+  color: #e8f3ca;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: #5bcc97;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: #ca7676;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  color: #51c2b8;
+}
+
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  color: #51c2b8;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: #57ff7b;
+}
+
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  color: #969e8b;
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  color: #7ee7cd;
+}
+
+.hljs-subst {
+  color: #d9d9c9;
+}
+
+.hljs-section {
+  color: #eb1f1f;
+  font-weight: bold;
+}
+
+.hljs-bullet {
+  color: #60f2ba;
+}
+
+.hljs-emphasis {
+  color: #d9d9c9;
+  font-style: italic;
+}
+
+.hljs-strong {
+  color: #d9d7c9;
+  font-weight: bold;
+}
+
+.hljs-addition {
+  color: #aff5b4;
+  background-color: #033a16;
+}
+
+.hljs-deletion {
+  color: #fffed7;
+  background-color: #67060c;
+}
+
+.hljs-char.escape_,
+.hljs-link,
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-tag {
+}

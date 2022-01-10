@@ -1,5 +1,5 @@
 {
-  "code-theme": "highlight.js/styles/kimbie-dark.css",
+  "code-theme": "src/styles/highlighting/smog.scss",
   "categories": [
     "art",
     "tech",

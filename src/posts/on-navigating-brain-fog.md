@@ -1,7 +1,7 @@
 ---
 title: On Navigating Brain Fog
 keywords: other
-date: Jan 10, 2022
+date: 2022-01-09
 image: on-navigating-brain-fog/main.jpg
 ---
 

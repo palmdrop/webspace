@@ -1,11 +1,13 @@
 import Post from '../components/post/Post';
-import 'highlight.js/styles/kimbie-dark.css';
+import '../../../styles/highlighting/smog.scss';
 import image from '../../../assets/posts/on-navigating-brain-fog/main.jpg';
 
 const metadata = {
   'title': 'On Navigating Brain Fog',
-  'keywords': 'other',
-  'date': 'Jan 10, 2022',
+  'keywords': [
+    'other'
+  ],
+  'date': '2022-01-09',
   'image': '../../../assets/posts/on-navigating-brain-fog/main.jpg',
   'id': 1
 };

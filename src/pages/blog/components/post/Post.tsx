@@ -13,7 +13,7 @@ export type PostMetadata = {
   title : string,
   date : string,
   image ?: string,
-  keywords : string,
+  keywords : string[],
   id : number,
 }
 

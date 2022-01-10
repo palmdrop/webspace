@@ -20,6 +20,10 @@ const RELATIVE_POST_COMPONENT_PATH = path.relative( POSTS_PATH, POST_COMPONENT_P
 const { getPostsData } = require( './getPostsData' );
 const config = require( CONFIG_PATH );
 
+const codeThemePath = ( config && config[ 'code-theme' ] ) 
+  ? path.relative( POSTS_PATH, config[ 'code-theme' ] )
+  : undefined;
+
 // Configure syntax highlighting for code blocks
 const markedRenderer = new marked.Renderer();
 
@@ -34,6 +38,12 @@ marked.setOptions( {
 markedRenderer.link = ( href, title, text ) => {
   return `<a target="_blank" href="${ href }" rel="noopener noreferrer" title="${ title ?? `${ text } - ${ href }` }">${ text }</a>`;
 };
+
+/*
+markedRenderer.image = ( href, title, text ) => {
+
+}
+*/
 
 const processMetadata = ( posts ) => {
   return posts.map( post => {
@@ -53,8 +63,8 @@ const processMetadata = ( posts ) => {
 // TODO fix indentation
 const htmlToReactComponent = ( metadata, html ) => {
   return `import Post from '${ RELATIVE_POST_COMPONENT_PATH }';
-${ config && config[ 'code-theme' ] && (
-    `import '${ config[ 'code-theme' ] }';
+${ codeThemePath && (
+    `import '${ codeThemePath }';
 ${ metadata.image ? `import image from '${ metadata.image }';` : '' }`
   ) }
 
@@ -110,7 +120,7 @@ ${ posts.map( ( { metadata } ) => {
 export const postsData = [
 ${ posts.map( ( { metadata, snippet } ) => `  {
     metadata: ${ JSON.stringify( metadata ).replaceAll( '"', '\'' ) },
-    snippet: '${ snippet }',
+    snippet: \`${ snippet }\`,
     Component: Post${ metadata.id }
   },` ).join( '\n' ) }
 ];

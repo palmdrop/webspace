@@ -97,11 +97,14 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
       </Link>;
     };
 
+    let visiblePosts : PostData[];
     if( activeCategory ) {
-      return postDataByCategory[ activeCategory ] ? postDataByCategory[ activeCategory ].map( createLink ) : [];
+      visiblePosts = postDataByCategory[ activeCategory ] ? postDataByCategory[ activeCategory ] : [];
+    } else {
+      visiblePosts = allPostsData;
     }
 
-    return allPostsData.map( createLink );
+    return visiblePosts.map( createLink );
   }, [ route, activeCategory ] );
 
   const navEntries = useMemo( 

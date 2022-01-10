@@ -8,10 +8,27 @@
   max-width: 750px;
 
   color: var( --foreground-color );
-  // background-color: var( --accent-color );
-  // backdrop-filter: invert( 80% ) brightness( 80% );
+  background-color: var( --accent-color );
   padding: 1em 3em;
   padding-bottom: 2em;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  code {
+    padding: 0.0em 0.1em;
+    @include font( 'button' );
+
+    // background-color: var( --accent-color );
+    // background-color: darkslateblue;
+  }
+
+  pre {
+    code {
+    }
+  }
 
   &__header {
     padding: 0em;
@@ -48,14 +65,12 @@
         width: 6em;
         height: 3.5em;
 
-        background-color: var( --accent-color );
+        background-color: var( --secondary-color );
         border-radius: 50%;
 
         transform: translate( -12%, -62% );
 
         box-shadow: 0px 0px 10px #88888888;
-
-        // @include neumorphic-shadow( 5px, 20%, 'extrude', color( 'secondary', 'haze' ) );
       }
 
       &:hover {
@@ -172,7 +187,7 @@
       padding: 0.4em 0.0em;
       @include font( 'paragraph' );
 
-      opacity: 0.5;
+      opacity: 0.9;
 
       color: var( --foreground-color );
     }

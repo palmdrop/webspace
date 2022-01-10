@@ -10,11 +10,11 @@ export const categories = [
 export const allPostsData = ( postsData as unknown as PostData[] )
   .sort( ( p1, p2 ) => {
     // NOTE: Inefficient to allocate new date object when sorting, especially if number of posts grows large
-    return new Date( p1.metadata.date ).getTime() - new Date( p2.metadata.date ).getTime();
+    return new Date( p2.metadata.date ).getTime() - new Date( p1.metadata.date ).getTime();
   } );
 
 export const postDataByCategory = allPostsData.reduce( ( acc, data ) => {
-  const category = data.metadata.keywords.split( ', ' )[ 0 ];
+  const category = data.metadata.keywords[ 0 ];
   if ( !acc[ category ] ) acc[ category ] = [];
   acc[ category ].push( data );
   return acc;
@@ -38,6 +38,7 @@ const months = [
 ];
 
 export const formatDate = ( dateString : string ) => {
+  console.log( dateString );
   const date = new Date( dateString );
   const day = date.getUTCDate();
   const month = date.getUTCMonth( );
