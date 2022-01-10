@@ -21,10 +21,10 @@
 
     margin: 0.1em 0.0em;
 
-    &::before, &::after {
-      color: var( --secondary-color );
-      content: '~';
-      padding: 0.45em 0.4em;
+    .nav-button__link {
+      .button {
+        width: 700px;
+      }
     }
   }
 

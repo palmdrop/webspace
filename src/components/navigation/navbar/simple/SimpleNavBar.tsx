@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { PageRoute } from '../../../../App';
 import { NavEntry, NavEntryCallback, useNavEntries } from '../NavBar';
 import NavButton from '../navbutton/NavButton';

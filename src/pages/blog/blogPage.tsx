@@ -114,6 +114,11 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
 
   return (
     <div className='blog-page'>
+      <header className="blog-page__header">
+        <SimpleNavBar 
+          entries={ navEntries }
+        />
+      </header>
       <Suspense fallback={ null }>
         { underConstruction && (
           <Modal 
@@ -140,11 +145,6 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
             path={ route }
             exact
           >
-            <header className="blog-page__header">
-              <SimpleNavBar 
-                entries={ navEntries }
-              />
-            </header>
             <main>
               <Obstacle className='obstacle' />
               <Title

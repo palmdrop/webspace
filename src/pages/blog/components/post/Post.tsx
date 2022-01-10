@@ -82,7 +82,7 @@ const Post = ( { metadata, image, children } : PostProps ) : JSX.Element => {
           Obscured - { title } - palmdrop
         </span>
         <SimpleNavBar 
-          mainRoute={ PageRoute.root }
+          mainRoute={ PageRoute.blog }
         />
       </footer>
     </div>
