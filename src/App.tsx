@@ -20,6 +20,7 @@ import PageDidNotLoadPage from './pages/pageDidNotLoad/pageDidNotLoadPage';
 import GradientBackground from './components/ornamental/gradient/GradientBackground';
 
 import './App.scss';
+import { RestoreScroll } from './components/navigation/scroll/RestoreScroll';
 
 // Use lazy loading to load most pages
 const MainPage = React.lazy( () => import( './pages/main/mainPage' ) );

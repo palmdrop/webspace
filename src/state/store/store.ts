@@ -1,11 +1,13 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import adminReducer from '../slices/adminSlice';
+import pagesReducer from '../slices/pagesSlice';
 import uiReducer from '../slices/uiSlice';
 
 export const store = configureStore( {
   reducer: {
     ui: uiReducer,
-    admin: adminReducer
+    admin: adminReducer,
+    pages: pagesReducer
   }
 } );
 

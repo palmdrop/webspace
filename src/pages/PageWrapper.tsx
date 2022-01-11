@@ -1,12 +1,12 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { PageRoute } from '../App';
+import { RestoreScroll } from '../components/navigation/scroll/RestoreScroll';
 import { useTitle } from '../hooks/useTitle';
 import { ColorTheme, setColorTheme } from '../state/slices/uiSlice';
 import { useAppDispatch } from '../state/store/hooks';
 
 import './PageWrapper.scss';
-
 
 export type PageProps = {
   route : PageRoute
@@ -29,6 +29,7 @@ const PageWrapper = ( { title, colorTheme, children } : Props ) : JSX.Element =>
 
   return (
     <div className="page-wrapper">
+      <RestoreScroll />
       { children }
     </div>
   );
