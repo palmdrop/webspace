@@ -1,6 +1,6 @@
 ---
 title: My Take on Domain Warping
-keywords: art
+keywords: generative
 date: 2022-01-10
 image: my-take-on-domain-warping/main.jpg
 ---

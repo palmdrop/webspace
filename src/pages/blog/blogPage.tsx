@@ -164,7 +164,14 @@ const BlogPage = ( { route } : PageProps ) : JSX.Element => {
               <section
                 className="blog-page__posts"
               >
-                { links }
+                { links.length 
+                  ? links 
+                  : (
+                    <Paragraph>
+                      Nothing here yet...
+                    </Paragraph>
+                  )
+                }
               </section>
             </main>
             <footer className="blog-page__footer">

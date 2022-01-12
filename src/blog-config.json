@@ -1,8 +1,8 @@
 {
   "code-theme": "src/styles/highlighting/smog.scss",
   "categories": [
-    "art",
-    "tech",
+    "thoughts",
+    "generative",
     "internet"
   ],
   "default-category": "other"

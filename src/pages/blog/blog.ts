@@ -2,9 +2,10 @@ import { postsData } from './posts/data';
 import blogConfig from '../../blog-config.json';
 import { PostData } from './components/post/Post';
 
+const defaultCategory = blogConfig['default-category'] || 'other';
 export const categories = [ 
   ...blogConfig[ 'categories' ], 
-  ( blogConfig['default-category'] || 'other' ) 
+  defaultCategory 
 ] as const;
 
 export const allPostsData = ( postsData as unknown as PostData[] )
@@ -14,13 +15,13 @@ export const allPostsData = ( postsData as unknown as PostData[] )
   } );
 
 export const postDataByCategory = allPostsData.reduce( ( acc, data ) => {
-  const category = data.metadata.keywords[ 0 ];
+  let category = data.metadata.keywords[ 0 ];
+  if( !categories.includes( category ) ) category = defaultCategory;
+
   if ( !acc[ category ] ) acc[ category ] = [];
   acc[ category ].push( data );
   return acc;
 }, {} as { [category : string] : PostData[] } );
-
-console.log( postDataByCategory );
 
 const months = [
   'jan',
@@ -38,7 +39,6 @@ const months = [
 ];
 
 export const formatDate = ( dateString : string ) => {
-  console.log( dateString );
   const date = new Date( dateString );
   const day = date.getUTCDate();
   const month = date.getUTCMonth( );

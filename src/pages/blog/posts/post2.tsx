@@ -5,7 +5,7 @@ import image from '../../../assets/posts/my-take-on-domain-warping/main.jpg';
 const metadata = {
   'title': 'My Take on Domain Warping',
   'keywords': [
-    'art'
+    'generative'
   ],
   'date': '2022-01-10',
   'image': '../../../assets/posts/my-take-on-domain-warping/main.jpg',

@@ -1,6 +1,6 @@
 ---
 title: On Navigating Brain Fog
-keywords: other
+keywords: first, intro, brain fog
 date: 2022-01-09
 image: on-navigating-brain-fog/main.jpg
 ---

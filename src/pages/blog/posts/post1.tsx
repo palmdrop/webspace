@@ -5,7 +5,9 @@ import image from '../../../assets/posts/on-navigating-brain-fog/main.jpg';
 const metadata = {
   'title': 'On Navigating Brain Fog',
   'keywords': [
-    'other'
+    'first',
+    'intro',
+    'brain fog'
   ],
   'date': '2022-01-09',
   'image': '../../../assets/posts/on-navigating-brain-fog/main.jpg',
