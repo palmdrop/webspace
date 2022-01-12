@@ -2,7 +2,7 @@
 title: My Take on Domain Warping
 keywords: art
 date: 2022-01-10
-image: my-take-on-domain-warping/main.png
+image: my-take-on-domain-warping/main.jpg
 ---
 
 [OLD POST] Domain warping: a procedural method for generating natural-looking patterns and shapes. I've used this technique for a long time, and the results can be beautiful and strangely organic. This post will explore my (slightly different) approach, and some of the images this approached helped produce.
@@ -17,7 +17,7 @@ I mostly work in two dimensions. `x` then becomes `p`, a two-dimensional point. 
 
 Here's a spiral pattern I made using a sawtooth wave (`f(p)`) and a warping function that rotates each input point around origo (`g(p)`).
 
-![spiral](/img/dw/simple1.png)
+![spiral](/img/dw/simple1.jpg)
 
 Possibly hypnotic. If I didn't want you to keep reading I would have made it spin as well. 
 
@@ -57,7 +57,7 @@ We have now warped the domain of `N1` using polar offsets with a max distance of
 
 Here's another image produced with this method. `N1` is a sine function, `N2` is a noise function with a high frequency and `N3` is a noise function with a low frequency.
 
-![Domain warp 1](/img/dw/simple2.png)
+![Domain warp 1](/img/dw/simple2.jpg)
 
 Some areas are less intense, and in these areas, the sine wave is still apparent, but it's been transformed to a curled and folded string. Here, the waveform remains continuous because the noise functions used are fairly smooth. The curl effect is created thanks to the use of polar offsets. However, when the effect becomes more intense (`D(p)` takes on a higher value), the sine wave is transfigured -- it becomes a mess of alien-like scribbles. The overall effect is quite organic, and to me, a lot more visually engaging than plain noise.
 
@@ -81,15 +81,15 @@ There are endless variations to this. You might want to use `NW` as the noise be
 
 Here are a few more images produced with variations of this technique: 
 
-![recursive 2](/img/dw/recursive2.png)
+![recursive 2](/img/dw/recursive2.jpg)
 
 Many layers of noise and domain warping are here combined, and color is introduced.
 
-![recursive 3](/img/dw/recursive3.png)
+![recursive 3](/img/dw/recursive3.jpg)
 
 I do not even remember what's going on here.
 
-![recursive 1](/img/dw/recursive1.png)
+![recursive 1](/img/dw/recursive1.jpg)
 
 And these "glass pearls" are particularly interesting to me. No physics simulations are going on here, no light interactions. The basic pattern is just a sine function combined with some low-frequency Perlin noise. The domain of this pattern is then warped using a grid of fuzzy circles (brighter close to their centers, darker close to the edges). With a few recursions, the sine wave is rotated and scaled multiple times, and hence seem to adopt the shape of the "pearls".
 

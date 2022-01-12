@@ -4,7 +4,7 @@ import React from 'react';
 const Post2 = React.lazy( () => import( './post2' ) );
 const Post1 = React.lazy( () => import( './post1' ) );
 
-import image2 from '../../../assets/posts/my-take-on-domain-warping/main.png';
+import image2 from '../../../assets/posts/my-take-on-domain-warping/main.jpg';
 import image1 from '../../../assets/posts/on-navigating-brain-fog/main.jpg';
 
 export const images : { [id : number] : string } = {
@@ -14,7 +14,7 @@ export const images : { [id : number] : string } = {
 
 export const postsData = [
   {
-    metadata: {'title':'My Take on Domain Warping','keywords':['art'],'date':'2022-01-10','image':'../../../assets/posts/my-take-on-domain-warping/main.png','id':2},
+    metadata: {'title':'My Take on Domain Warping','keywords':['art'],'date':'2022-01-10','image':'../../../assets/posts/my-take-on-domain-warping/main.jpg','id':2},
     snippet: `[OLD POST] Domain warping: a procedural method for generating natural-looking patterns and shapes. I've used this technique for a long time, and the results can be beautiful and strangely organic. This post will explore my (slightly different) approach, and some of the images this approached helped produce.`,
     Component: Post2
   },
