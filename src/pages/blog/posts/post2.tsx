@@ -1,6 +1,6 @@
 import Post from '../components/post/Post';
 import '../../../styles/highlighting/smog.scss';
-import image from '../../../assets/posts/my-take-on-domain-warping/main.jpg';
+import image from '../../../assets/posts/my-take-on-domain-warping.jpg';
 
 const metadata = {
   'title': 'My Take on Domain Warping',
@@ -8,7 +8,7 @@ const metadata = {
     'generative'
   ],
   'date': '2022-01-10',
-  'image': '../../../assets/posts/my-take-on-domain-warping/main.jpg',
+  'image': '../../../assets/posts/my-take-on-domain-warping.jpg',
   'id': 2
 };
 

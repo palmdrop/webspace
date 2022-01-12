@@ -2,7 +2,7 @@
 title: My Take on Domain Warping
 keywords: generative
 date: 2022-01-10
-image: my-take-on-domain-warping/main.jpg
+image: my-take-on-domain-warping.jpg
 ---
 
 [OLD POST] Domain warping: a procedural method for generating natural-looking patterns and shapes. I've used this technique for a long time, and the results can be beautiful and strangely organic. This post will explore my (slightly different) approach, and some of the images this approached helped produce.

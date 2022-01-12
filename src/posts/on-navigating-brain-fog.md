@@ -2,7 +2,7 @@
 title: On Navigating Brain Fog
 keywords: first, intro, brain fog
 date: 2022-01-09
-image: on-navigating-brain-fog/main.jpg
+image: on-navigating-brain-fog.jpg
 ---
 
 The purpose of this blog is intentionally unclear. I want to share thoughts, ideas, and things I create. Most of all, I want to force myself to think and explore more deeply. Time will tell how this goes. Everything is under construction, always.

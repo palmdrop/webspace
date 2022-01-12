@@ -1,6 +1,6 @@
 import Post from '../components/post/Post';
 import '../../../styles/highlighting/smog.scss';
-import image from '../../../assets/posts/on-navigating-brain-fog/main.jpg';
+import image from '../../../assets/posts/on-navigating-brain-fog.jpg';
 
 const metadata = {
   'title': 'On Navigating Brain Fog',
@@ -10,7 +10,7 @@ const metadata = {
     'brain fog'
   ],
   'date': '2022-01-09',
-  'image': '../../../assets/posts/on-navigating-brain-fog/main.jpg',
+  'image': '../../../assets/posts/on-navigating-brain-fog.jpg',
   'id': 1
 };
 
