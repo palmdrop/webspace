@@ -18,7 +18,9 @@ const Post2 = () => {
       metadata={ metadata }
       image={ image }
     >
-      <div dangerouslySetInnerHTML={ { __html: `<p>[OLD POST] Domain warping: a procedural method for generating natural-looking patterns and shapes. I&#39;ve used this technique for a long time, and the results can be beautiful and strangely organic. This post will explore my (slightly different) approach, and some of the images this approached helped produce.</p>
+      <div 
+        className="post__content"
+        dangerouslySetInnerHTML={ { __html: `<p>[OLD POST] Domain warping: a procedural method for generating natural-looking patterns and shapes. I&#39;ve used this technique for a long time, and the results can be beautiful and strangely organic. This post will explore my (slightly different) approach, and some of the images this approached helped produce.</p>
 <hr>
 <p>The traditional implementation of domain warping is introduced perfectly by Inigo Quilez in <a target="_blank" href="https://www.iquilezles.org/www/articles/warp/warp.htm" rel="noopener noreferrer" title="this - https://www.iquilezles.org/www/articles/warp/warp.htm">this</a> blog post. Here&#39;s my summary:</p>
 <p>A domain is the set of all possible input alues for a particular function. When we warp a domain, each input value is mapped to some other input value, before being passed to the function. E.g, we warp the domain of <code>f(x)</code> by inserting another function <code>g(x)</code> like this: <code>f(g(x))</code>. For math heads, this is just function composition, but when this operation is performed in order to deform a 2D or 3D graphical scene or object, the term domain warping is often used instead. It&#39;s more descriptive; spatial warping is what we do.</p>
@@ -67,7 +69,8 @@ const Post2 = () => {
 <p>And these &quot;glass pearls&quot; are particularly interesting to me. No physics simulations are going on here, no light interactions. The basic pattern is just a sine function combined with some low-frequency Perlin noise. The domain of this pattern is then warped using a grid of fuzzy circles (brighter close to their centers, darker close to the edges). With a few recursions, the sine wave is rotated and scaled multiple times, and hence seem to adopt the shape of the &quot;pearls&quot;.</p>
 <p>In a future post, I&#39;ll describe some more of my results. By introducing fractal noise (sometimes called fractal Brownian motion), ridged noise, and more complex function interactions, I rendered images that looked like photographs of microscopic beings or extraterrestrial terrains. </p>
 <p>More soon.</p>
-` } }/>
+` } }
+      />
     </Post>
   );
 };

@@ -21,7 +21,7 @@ These are the techniques I'll cover in this post, roughly in order of increasing
 * Fractal noise (fractal Brownian motion)
 * Dynamic fractal noise
 
-Note: I'm no expert. I will not cover the mathematics of gradient noise. I'm merely documenting my explorations. 
+> Note: I'm no expert. I will not cover the mathematics of gradient noise. I'm merely documenting my explorations. 
 
 ### Setup
 In this post, I'll often compare 1D and 2D representations of various noise variations. Like this:
@@ -42,7 +42,7 @@ Let's get into some variations.
 ## Stretched Noise
 Extremely easy to achieve. Could be used as the basis of a wood or carpet texture, with some creativity. This effect is achieved by having different frequency values for the x and y directions (and z, if you're working in three dimensions). This is a type of domain warping.
 
-![stretched simplex noise](/img/cmn/simplex2D-stretched.png)
+![stretched simplex noise](/img/cmn/simplex2D-stretched.jpg)
 
 Before introducing some simple pseudo-code, let me familiarize you with my syntax. In this post, I'll heavily use lambda expressions. My syntax is the same as the [one used in Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions), i.e `func = (x,y) => x + y` defines a function `func` which takes two arguments and adds them together.
 

@@ -22,7 +22,9 @@ const Post3 = () => {
       metadata={ metadata }
       image={ image }
     >
-      <div dangerouslySetInnerHTML={ { __html: `<p>[OLD POST] Regular gradient noise, such as Perlin and Simplex noise, is extremely useful for procedurally generating textures, flowfields, heightmaps, etc. But a texture or heightmap created using plain noise is rarely that interesting. Often, noise is modified or used in unique, creative ways.</p>
+      <div 
+        className="post__content"
+        dangerouslySetInnerHTML={ { __html: `<p>[OLD POST] Regular gradient noise, such as Perlin and Simplex noise, is extremely useful for procedurally generating textures, flowfields, heightmaps, etc. But a texture or heightmap created using plain noise is rarely that interesting. Often, noise is modified or used in unique, creative ways.</p>
 <hr>
 <p>Frankly, regular noise is boring. Not very visually pleasing. Repetitive. Not even Ken Perlin used Perlin noise without changing it in various ways. This blog post describes some of the ways I&#39;ve been altering the noise functions I work with to achieve more interesting results. In my next post, I will document how I&#39;ve used the techniques from this post and <a target="_blank" href="https://palmdrop.zone/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my previous post - https://palmdrop.zone/blog/my-take-on-domain-warping">my previous post</a> to create quite interesting generative art pieces. </p>
 <p>These are the techniques I&#39;ll cover in this post, roughly in order of increasing enchantment:  </p>
@@ -35,7 +37,9 @@ const Post3 = () => {
 <li>Fractal noise (fractal Brownian motion)</li>
 <li>Dynamic fractal noise</li>
 </ul>
+<blockquote>
 <p>Note: I&#39;m no expert. I will not cover the mathematics of gradient noise. I&#39;m merely documenting my explorations. </p>
+</blockquote>
 <h3 id="setup">Setup</h3>
 <p>In this post, I&#39;ll often compare 1D and 2D representations of various noise variations. Like this:</p>
 <p><img src="/img/cmn/perlin-comparison.jpg" alt="1D Perlin noise"> </p>
@@ -47,7 +51,7 @@ const Post3 = () => {
 <p>Let&#39;s get into some variations. </p>
 <h2 id="stretched-noise">Stretched Noise</h2>
 <p>Extremely easy to achieve. Could be used as the basis of a wood or carpet texture, with some creativity. This effect is achieved by having different frequency values for the x and y directions (and z, if you&#39;re working in three dimensions). This is a type of domain warping.</p>
-<p><img src="/img/cmn/simplex2D-stretched.png" alt="stretched simplex noise"></p>
+<p><img src="/img/cmn/simplex2D-stretched.jpg" alt="stretched simplex noise"></p>
 <p>Before introducing some simple pseudo-code, let me familiarize you with my syntax. In this post, I&#39;ll heavily use lambda expressions. My syntax is the same as the <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions" rel="noopener noreferrer" title="one used in Javascript - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">one used in Javascript</a>, i.e <code>func = (x,y) =&gt; x + y</code> defines a function <code>func</code> which takes two arguments and adds them together.</p>
 <p>Moving on.</p>
 <p>Suppose we have a noise function <code>N</code> which takes a two-dimensional point/vector <code>p</code> as its input. To stretch the noise, we&#39;ll scale the <code>x</code> and <code>y</code> components of <code>p</code> using two scaling values, <code>sx</code> and <code>sy</code>.</p>
@@ -161,7 +165,8 @@ const Post3 = () => {
 <p>Using all these techniques, combined with domain warping, I&#39;ve managed to create extremely interesting shapes and textures. I&#39;ll make a complete post detailing some of these configurations and the output they produced soon. Until then, here&#39;s one of my favorites:</p>
 <p><img src="/img/cmn/showcase.jpg" alt="Bridge"></p>
 <p>Stay safe.</p>
-` } }/>
+` } }
+      />
     </Post>
   );
 };

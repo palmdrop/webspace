@@ -76,7 +76,10 @@ const Post${ metadata.id } = () => {
       metadata={ metadata }
       ${ metadata.image ? 'image={ image }' : '' }
     >
-      <div dangerouslySetInnerHTML={ { __html: \`${ html }\` } }/>
+      <div 
+        className="post__content"
+        dangerouslySetInnerHTML={ { __html: \`${ html }\` } }
+      />
     </Post>
   );
 };
