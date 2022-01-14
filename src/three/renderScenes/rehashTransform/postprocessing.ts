@@ -20,7 +20,7 @@ export const getComposer = (
   {
     const bloomEffect = new POSTPROCESSING.BloomEffect( {
       luminanceThreshold: 0.82,
-      intensity: 2.0,
+      intensity: 1.5,
       kernelSize: POSTPROCESSING.KernelSize.LARGE
     } );
     effects.push( bloomEffect );
@@ -104,7 +104,7 @@ export const getComposer = (
     const toneMappingEffect = new POSTPROCESSING.ToneMappingEffect( {
       mode: POSTPROCESSING.ToneMappingMode.REINHARD2,
       maxLuminance: 16.0,
-      whitePoint: 1.1,
+      whitePoint: 1.25,
       middleGrey: 0.5,
       minLuminance: 0.01,
       averageLuminance: 0.25,

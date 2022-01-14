@@ -16,7 +16,7 @@ export const createObject = (
   const geometry = ImprintGeometryPrefab( {} );
 
   const numberOfInstances = Math.floor( random( 40, 100 ) );
-  const numberOfLines = Math.random() > 0.5 
+  const numberOfLines = Math.random() > 0.75 
     ? Math.floor( numberOfInstances / random( 1.0, 2.0 ) )
     : 0; 
 
