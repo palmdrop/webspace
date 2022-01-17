@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GlslFunction, GLSL, GlslType, Uniforms } from '../../core';
 import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
-import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings } from './types';
+import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction } from './types';
 
 export const getFunctionName = ( () => {
   let counter = 0;
@@ -46,6 +46,27 @@ export const buildModification = ( input : GLSL, modifications : Modification | 
   return result;
 };
 
+// amount
+export const buildAmount = (
+  amount : Amount,
+  uniforms : Uniforms,
+  textureNames : Set<string>,
+  functionCache : FunctionCache
+) => {
+  if( typeof amount === 'number' ) {
+    return numToGLSL( amount );
+  } 
+
+  const functionWithName = buildSource( 
+    amount,
+    uniforms,
+    textureNames,
+    functionCache
+  );
+
+  return functionWithName.name + '( point )'; 
+};
+
 export const buildSource = ( 
   source : Source, 
   uniforms : Uniforms, 
@@ -61,7 +82,7 @@ export const buildSource = (
   let func : GlslFunction;
   const kind = source.kind;
   switch( kind ) {
-  case 'noise' : func = buildNoiseSource( source as NoiseSource ); break;
+  case 'noise' : func = buildNoiseSource( source as NoiseSource, uniforms, textureNames, functionCache ); break;
   case 'trig' : func = buildTrigSource( source as TrigSource ); break;
   case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
   case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, isMain ); break;
@@ -83,7 +104,12 @@ export const buildSource = (
   return data;
 };
 
-export const buildNoiseSource = ( noise : NoiseSource ) : GlslFunction => {
+export const buildNoiseSource = ( 
+  noise : NoiseSource,
+  uniforms : Uniforms, 
+  textureNames : Set<string>, 
+  functionCache : FunctionCache, 
+) : GlslFunction => {
   const frequency = noise.frequency;
   const amplitude = noise.amplitude ?? 1.0;
   const pow = noise.pow ?? 1.0;
@@ -94,36 +120,44 @@ export const buildNoiseSource = ( noise : NoiseSource ) : GlslFunction => {
 
   const normalize = noise.normalize ?? true;
 
+  // TODO figure out way to only evaluate amount ONCE per call instead of each iteration, could be expensive :(
+
   return {
     parameters: [ [ 'vec3', 'point' ] ],
     returnType: 'float',
     body: `
       float n = 0.0;
       vec3 f = vec3( ${ frequency.x }, ${ frequency.y }, ${ frequency.z } );
-      float a = ${ numToGLSL( amplitude ) };
+      float a = ${ buildAmount( amplitude, uniforms, textureNames, functionCache ) };
+
       float divider = 0.0;
+      float power = ${ buildAmount( pow, uniforms, textureNames, functionCache ) };
+      float ridge = ${ buildAmount( ridge, uniforms, textureNames, functionCache ) };
+      float persistance = ${ buildAmount( persistance, uniforms, textureNames, functionCache ) };
+      float lacunarity = ${ buildAmount( lacunarity, uniforms, textureNames, functionCache ) };
+      float amplitude = a;
+
       for( int i = 0; i < ${ Math.floor( octaves ) }; i++ ) {
         vec3 p = point * f;
-        float on = pow( simplex3d( p ), ${ numToGLSL( pow ) });
+        float on = pow( simplex3d( p ), power );
 
         ${ ridge < 1.0 ? `
-          float rt = ${ numToGLSL( ridge ) };
-          if( on > rt ) on = rt - ( on - rt );
-          on /= rt;
+          if( on > ridge ) on = ridge - ( on - ridge );
+          on /= ridge;
         ` : '' }
 
         n += a * on;
 
         divider += a;
 
-        a *= ${ numToGLSL( persistance ) };
-        f *= ${ numToGLSL( lacunarity ) };
+        a *= persistance;
+        f *= lacunarity;
       }
 
       n = sanitize( n );
       ${ normalize ? 'n /= divider;' : '' }
 
-      return ${ numToGLSL( amplitude ) } * n;
+      return amplitude * n;
     `
   };
 };
@@ -225,7 +259,7 @@ export const buildWarpFunction = (
 
   const helperNames : string[] = [];
 
-  const amount = warp.amount ?? new THREE.Vector3( 1.0, 1.0, 1.0 );
+  const amount = warp.amount ?? 1.0;
   const iterations = Math.floor( warp.iterations ?? 1 );
 
   AXES.forEach( axis => {
@@ -233,15 +267,33 @@ export const buildWarpFunction = (
     helperNames.push( name );
   } );
 
+  // Build amount multipliers
+  let amountMultipliers : GLSL[];
+
+  if ( typeof amount === 'number' ) {
+    amountMultipliers = Array( 3 ).fill( buildAmount( amount, uniforms, textureNames, functionCache ) );
+  } else if( Array.isArray( amount ) ) {
+    amountMultipliers = amount.map( a => buildAmount( a, uniforms, textureNames, functionCache ) );
+  } else if( ( amount as Source ).kind ) {
+    amountMultipliers = Array( 3 ).fill( buildAmount( amount as Source, uniforms, textureNames, functionCache ) );
+  } else {
+    const { x, y, z } = amount as THREE.Vector3;
+    amountMultipliers = [
+      numToGLSL( x ),
+      numToGLSL( y ),
+      numToGLSL( z )
+    ];
+  }
+
   const func : GlslFunction = {
     parameters: [ [ 'vec3', 'point' ] ],
     returnType: 'vec3',
     body: `
       vec3 previous = vec3( point );
       for( int i = 0; i < ${ iterations }; i++ ) {
-        point.x = point.x + ${ helperNames[ 0 ] }( previous ) * ${ numToGLSL( amount.x ) };
-        point.y = point.y + ${ helperNames[ 1 ] }( previous ) * ${ numToGLSL( amount.y ) };
-        point.z = point.z + ${ helperNames[ 2 ] }( previous ) * ${ numToGLSL( amount.z ) };
+        point.x = point.x + ${ helperNames[ 0 ] }( previous ) * ${ amountMultipliers[ 0 ] };
+        point.y = point.y + ${ helperNames[ 1 ] }( previous ) * ${ amountMultipliers[ 1 ] };
+        point.z = point.z + ${ helperNames[ 2 ] }( previous ) * ${ amountMultipliers[ 2 ] };
         previous = vec3( point );
       }
       return point;
@@ -308,7 +360,7 @@ export const buildCustomSource = ( source : CustomSource ) : GlslFunction => {
   };
 };
 
-export const defaultTextureToFloatFunction : GlslFunction = {
+export const defaultTextureToFloatFunction : TexelToFloatFunction = {
   parameters: [ [ 'vec4', 'color' ] ],
   returnType: 'float',
   body: `

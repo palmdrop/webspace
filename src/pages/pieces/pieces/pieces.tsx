@@ -151,6 +151,19 @@ export const pieces : PieceData[] = [
 
     Component: React.lazy( () => import( './flatClouds/FlatCloudsPiece' ) ),
   },
+  {
+    name: 'Edge Path',
+    description: [
+      'wip'
+    ],
+    tags: [
+      'Warp, Mind'
+    ],
+
+    image: flatCloudsImage,
+
+    Component: React.lazy( () => import( './edgePath/EdgePathPiece' ) ),
+  },
 ];
 
 export const FeaturedPieceIndex = pieces.findIndex( pieceData => pieceData.name === 'Retro Core' );

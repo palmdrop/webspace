@@ -21,14 +21,16 @@ export type RootSource = {
   uvOverride ?: boolean,
 }
 
+export type Amount = number | Source;
+
 export type NoiseSource = RootSource & {
   frequency : THREE.Vector3,
-  amplitude ?: number,
-  pow ?: number,
+  amplitude ?: Amount,
+  pow ?: Amount,
   octaves ?: number,
-  persistance ?: number,
-  lacunarity ?: number,
-  ridge ?: number,
+  persistance ?: Amount,
+  lacunarity ?: Amount,
+  ridge ?: Amount,
   normalize ?: boolean,
 }
 
@@ -57,11 +59,17 @@ export type WarpedSource = RootSource & {
   warp : DomainWarp,
 }
 
+export type TexelToFloatFunction = GlslFunction & {
+  parameters : [ [ 'vec4', 'color' ] ],
+  returnType : 'float',
+  body : string
+}
+
 export type TextureSource = RootSource & {
   name : string,
-  texture : THREE.Texture,
+  texture : THREE.Texture | null,
   repeat ?: THREE.Vector2,
-  toFloat ?: GlslFunction,
+  toFloat ?: TexelToFloatFunction,
 }
 
 export type CustomSource = RootSource & {
@@ -77,7 +85,7 @@ export type DomainWarp = {
     y : Source,
     z : Source,
   },
-  amount ?: THREE.Vector3,
+  amount ?: Amount | THREE.Vector3 | [ Amount, Amount, Amount ],
   iterations ?: number,
 }
 
