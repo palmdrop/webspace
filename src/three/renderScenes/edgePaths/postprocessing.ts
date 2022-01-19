@@ -27,8 +27,8 @@ export const getPostprocessing = (
 
   // TOOD: Try diff sizes, 10, 100, 1000, diff in x and y
   const sobelPass = new ShaderPass( SobelOperatorShader );
-  sobelPass.uniforms[ 'resolution' ].value.x = Math.pow( 10, Math.floor( Math.random() * 4 ) );
-  sobelPass.uniforms[ 'resolution' ].value.y = Math.pow( 10, Math.floor( Math.random() * 4 ) );
+  sobelPass.uniforms[ 'resolution' ].value.x = Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
+  sobelPass.uniforms[ 'resolution' ].value.y = Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
   composer.addPass( sobelPass );
 
   /*
@@ -44,7 +44,6 @@ export const getPostprocessing = (
 
   const shaderPass = new ShaderPass( shader );
   composer.addPass( shaderPass );
-
 
 
   return { composer, shaderPass };

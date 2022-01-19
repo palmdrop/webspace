@@ -14,7 +14,7 @@ export type Modification = {
   argument : number,
 }
 
-export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture' | 'custom';
+export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture' | 'custom' | 'constant';
 
 export type RootSource = {
   kind : SourceKind,
@@ -23,7 +23,13 @@ export type RootSource = {
 
 export type Amount = number | Source;
 
+export type ConstantSource = RootSource & {
+  kind : 'constant'
+  value : number
+}
+
 export type NoiseSource = RootSource & {
+  kind : 'noise',
   frequency : THREE.Vector3,
   amplitude ?: Amount,
   pow ?: Amount,
@@ -35,6 +41,7 @@ export type NoiseSource = RootSource & {
 }
 
 export type TrigSource = RootSource & {
+  kind : 'trig',
   types : { 
     x : Trigonometry,
     y : Trigonometry,
@@ -48,6 +55,7 @@ export type TrigSource = RootSource & {
 }
 
 export type CombinedSource = RootSource & {
+  kind : 'combined',
   sources : Source[],
   operation : Operation,
   multipliers ?: number[],
@@ -55,6 +63,7 @@ export type CombinedSource = RootSource & {
 }
 
 export type WarpedSource = RootSource & {
+  kind : 'warped',
   source : Source,
   warp : DomainWarp,
 }
@@ -66,6 +75,7 @@ export type TexelToFloatFunction = GlslFunction & {
 }
 
 export type TextureSource = RootSource & {
+  kind : 'texture',
   name : string,
   texture : THREE.Texture | null,
   repeat ?: THREE.Vector2,
@@ -73,11 +83,11 @@ export type TextureSource = RootSource & {
 }
 
 export type CustomSource = RootSource & {
-  kind : string,
+  kind : 'custom',
   body : GLSL
 }
 
-export type Source = NoiseSource | TrigSource | CombinedSource | WarpedSource | TextureSource | CustomSource;
+export type Source = ConstantSource | NoiseSource | TrigSource | CombinedSource | WarpedSource | TextureSource | CustomSource;
 
 export type DomainWarp = {
   sources : {

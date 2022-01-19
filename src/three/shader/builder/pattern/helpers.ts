@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GlslFunction, GLSL, GlslType, Uniforms } from '../../core';
 import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
-import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction } from './types';
+import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction, ConstantSource } from './types';
 
 export const getFunctionName = ( () => {
   let counter = 0;
@@ -82,6 +82,7 @@ export const buildSource = (
   let func : GlslFunction;
   const kind = source.kind;
   switch( kind ) {
+  case 'constant' : func = buildConstantSource( source as ConstantSource ); break;
   case 'noise' : func = buildNoiseSource( source as NoiseSource, uniforms, textureNames, functionCache ); break;
   case 'trig' : func = buildTrigSource( source as TrigSource ); break;
   case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
@@ -102,6 +103,18 @@ export const buildSource = (
   functionCache.set( source, data );
 
   return data;
+};
+
+export const buildConstantSource = (
+  source : ConstantSource,
+) : GlslFunction => {
+  return {
+    parameters: [ [ 'vec3', 'point' ] ],
+    returnType: 'float',
+    body: `
+      return ${ numToGLSL( source.value ) };
+    `
+  };
 };
 
 export const buildNoiseSource = ( 

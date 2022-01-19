@@ -10,26 +10,22 @@ const textureSource : Source = {
     parameters: [ [ 'vec4', 'color' ] ],
     returnType: 'float',
     body: `
-      return 1.5 * ( ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a + 0.0);
+      return 2.5 * ( ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a + 0.0);
+      // return 1.0;
     `
   }
 };
 
 export const noiseSource1 : Source = {
   kind: 'noise',
-  frequency: new THREE.Vector3(
-    random( 1.1, 2.0 ),
-    random( 1.1, 2.0 ),
-    random( 1.1, 2.0 ),
-  ),
-  // amplitude: getTextureSource( 'tDiffuse' ),
+  frequency: new THREE.Vector3( 1.0, 1.0, 1.0 ).multiplyScalar( random( 1.5, 4.0 ) ),
   amplitude: 1.0,
-  pow: 2.0,
-  // TODO note something is off with normalization...
-  octaves: Math.floor( random( 3, 5 ) ),
-  persistance: 0.3,
-  lacunarity: 2.2,
-  ridge: random( 0.5, 0.8 )
+  pow: random( 3.0, 10.0 ),
+  octaves: Math.floor( random( 5, 7 ) ),
+  persistance: 0.5,
+  lacunarity: 2.1,
+  ridge: random( 0.3, 0.5 ),
+  normalize: false,
 };
 
 export const noiseSource2 : Source = {
@@ -39,9 +35,8 @@ export const noiseSource2 : Source = {
     random( 1.1, 2.0 ),
     random( 1.1, 2.0 ),
   ),
-  amplitude: 1.4,
+  amplitude: 1.0,
   pow: 1.0,
-  // TODO note something is off with normalization...
   octaves: Math.floor( random( 3, 5 ) ),
   persistance: 0.2,
   lacunarity: 4.2,
@@ -52,23 +47,44 @@ const warp : DomainWarp = {
   sources: {
     x: noiseSource2,
     y: noiseSource2,
-    z: noiseSource2,
+    z: noiseSource1,
   },
-  /*
-  amount: new THREE.Vector3( 
-    random( -0.3, 0.3 ),
-    random( -0.3, 0.3 ),
-    random( -0.3, 0.3 ),
-  ).multiplyScalar( 10.0 ),
-  */
   amount: [
-    textureSource,
-    textureSource,
-    textureSource,
-    // 0.3,
-    // 0.5,
+    0.001,
+    0.001,
+    {
+      kind: 'combined',
+      sources: [
+        textureSource,
+        {
+          kind: 'constant',
+          value: 1.0
+        }
+      ],
+      operation: 'add',
+      multipliers: [
+        0.11,
+        0.02
+      ],
+    }
   ],
   iterations: Math.floor( random( 2, 4 ) )
+};
+
+const mask = {
+  kind: 'combined',
+  sources: [
+    textureSource,
+    {
+      kind: 'constant',
+      value: 1.0
+    }
+  ],
+  operation: 'add',
+  multipliers: [
+    1.4,
+    0.0
+  ],
 };
 
 const warpedSource : WarpedSource = {
@@ -77,21 +93,27 @@ const warpedSource : WarpedSource = {
   warp,
 };
 
-const colorSettings : ColorSettings = {
+const colorSettings = () : ColorSettings => { return {
   mode: 'hsv',
   componentModifications: {
-    x: [],
+    x: [ 
+      { kind: 'mult', argument: random( 0.3, 0.7 ) },
+      { kind: 'add', argument: random( 0.0, 1.0 ) },
+      // { kind: 'add', argument: random( 0.0, 1.0 ) }
+    ],
     y: [ 
-      { kind: 'mult', argument: 0.5 },
-      { kind: 'add', argument: 0.1 },
+      { kind: 'add', argument: 0.5 },
+      { kind: 'mult', argument: -0.5 },
+      // { kind: 'add', argument: 0.1 },
+      { kind: 'pow', argument: 1.0 },
     ],
     z: [ 
-      { kind: 'mult', argument: 1.0 },
-      { kind: 'add', argument: 0.2 },
-      { kind: 'pow', argument: 0.8 },
+      // { kind: 'mult', argument: 1.5 },
+      // { kind: 'add', argument: 0.0 },
+      { kind: 'pow', argument: 0.5 },
     ],
   }
-};
+}; };
 
 const randomColor = ( brightness : number ) => {
   return new THREE.Color().setHSL( Math.random(), random( 0.1, 0.2 ), brightness );
@@ -113,9 +135,9 @@ export default ( mainTextureName : string ) => {
     mainSource: warpedSource,
     // getTextureSource( mainTextureName ),
     // domainWarp: warp,
-    mask: textureSource,
+    mask: mask,
     // fog,
-    timeOffset: new THREE.Vector3( 0.00, -0.00, 0.05, ),
-    // colorSettings
+    timeOffset: new THREE.Vector3( 0.00, -0.00, 0.02, ),
+    colorSettings: colorSettings()
   } as PatternShaderSettings; 
 };
