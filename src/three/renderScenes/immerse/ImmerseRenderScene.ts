@@ -27,9 +27,7 @@ export class EdgePathRenderScene extends AbstractRenderScene {
   
   private shaderPass : ShaderPass;
   private controls ?: TrackballControls;
-
   private backgroundComposer : EffectComposer;
-  private backgroundScene : THREE.Scene;
 
   private gui : dat.GUI;
 
@@ -49,7 +47,6 @@ export class EdgePathRenderScene extends AbstractRenderScene {
     */
     super( canvas, onLoad );
 
-    this.scene.background = new THREE.Color( 'black' );
     this.controls = new TrackballControls( this.camera, canvas );
     this.gui = new dat.GUI();
 
@@ -87,16 +84,12 @@ export class EdgePathRenderScene extends AbstractRenderScene {
     this.scene.add( this.object, dirLight1, dirLight2, ambientLight );
 
     // Postprocessing
-    this.backgroundScene = new THREE.Scene();
-    this.backgroundScene.background = new THREE.Color( 'black' );
-
     const { 
       composer, 
       shaderPass,
       backgroundComposer
     } = getPostprocessing(
       this.renderer, this.scene, this.camera,
-      this.scene,
       this.gui,
     );
 

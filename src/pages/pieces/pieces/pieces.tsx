@@ -152,7 +152,7 @@ export const pieces : PieceData[] = [
     Component: React.lazy( () => import( './flatClouds/FlatCloudsPiece' ) ),
   },
   {
-    name: 'Edge Path',
+    name: 'Immerse',
     description: [
       'wip'
     ],
@@ -162,7 +162,7 @@ export const pieces : PieceData[] = [
 
     image: flatCloudsImage,
 
-    Component: React.lazy( () => import( './edgePath/EdgePathPiece' ) ),
+    Component: React.lazy( () => import( './immerse/ImmersePiece' ) ),
   },
 ];
 

@@ -5,22 +5,18 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 
 import { SobelOperatorShader } from 'three/examples/jsm/shaders/SobelOperatorShader.js';
-import { DotScreenShader } from 'three/examples/jsm/shaders/DotScreenShader';
 import { ColorCorrectionShader } from 'three/examples/jsm/shaders/ColorCorrectionShader';
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
 
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
 import makeShader from './shader';
 import { KawaseBlurPass } from '../../effects/kawaseBlur/KawaseBlurPass';
-import { addUniformSlider } from '../../shader/core';
-// import { ColorCorrectionShader } from '../../shader/shaders/color/ColorCorrectionShader';
 
 export const getPostprocessing = (
   renderer : THREE.WebGLRenderer,
   scene : THREE.Scene,
   camera : THREE.PerspectiveCamera | THREE.OrthographicCamera,
 
-  backgroundScene : THREE.Scene,
   gui : dat.GUI
 ) => {
   // Background composer
@@ -30,7 +26,7 @@ export const getPostprocessing = (
 
   const backgroundComposer = new EffectComposer( renderer, backgroundRenderTarget );
 
-  const backgroundRenderPass = new RenderPass( backgroundScene, camera );
+  const backgroundRenderPass = new RenderPass( scene, camera );
   backgroundComposer.addPass( backgroundRenderPass );
 
   const kawaseBlurPass = new KawaseBlurPass( { renderer, kernels: [ 1, 1, 2, 3 ] } );
@@ -67,7 +63,6 @@ export const getPostprocessing = (
 
   const shader = buildPatternShader( makeShader() );
   shader.uniforms[ 'frequency' ].value = 1.0;
-  // shader.uniforms[ 'tMask' ].value = backgroundRenderTarget.texture;
 
   const shaderPass = new ShaderPass( shader );
   composer.addPass( shaderPass );
@@ -95,15 +90,6 @@ export const getPostprocessing = (
   ).onChange( value => {
     colorCorrectionPass.uniforms[ 'addRGB' ].value.set( value, value, value );
   } );
-
-
-  /*
-  colorCorrectionPass.uniforms[ 'powRGB' ].value.set( 1.04, 1.04, 1.04 );
-  colorCorrectionPass.uniforms[ 'addRGB' ].value.set( -0.0015, -0.0015, -0.0015 );
-  */
-
-
-
 
   return { composer, backgroundComposer, shaderPass };
 };

@@ -3,10 +3,10 @@ import { random } from '../../../utils/random';
 import { ColorSettings, DomainWarp, PatternShaderSettings, Source, WarpedSource } from '../../shader/builder/pattern/types';
 
 export default () => {
-  const createTextureSource = ( name : string, value : THREE.Texture | null = null ) : Source => { return {
+  const textureSource = {
     kind: 'texture',
-    name: name,
-    texture: value, 
+    name: 'tDiffuse',
+    texture: null, 
     toFloat: {
       parameters: [ [ 'vec4', 'color' ] ],
       returnType: 'float',
@@ -14,9 +14,7 @@ export default () => {
         return ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a;
       `
     }
-  };};
-
-  const textureSource = createTextureSource( 'tDiffuse' );
+  } as Source;
 
   const noiseModifierSource : Source = {
     kind: 'noise',
@@ -129,14 +127,9 @@ export default () => {
         { kind: 'add', argument: 0.1 },
       ],
       z: [ 
-        /*
-        { kind: 'mult', argument: 1.5 },
-        { kind: 'add', argument: 0.2 },
-        { kind: 'pow', argument: 2.0 },
-        */
         { kind: 'mult', argument: -1 },
         { kind: 'add', argument: 1 },
-        { kind: 'mult', argument: 1.4 },
+        { kind: 'mult', argument: 1.3 },
         { kind: 'pow', argument: 2 },
       ],
     }
