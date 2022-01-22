@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as dat from 'dat.gui';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
@@ -11,6 +12,7 @@ import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
 import makeShader from './shader';
 import { KawaseBlurPass } from '../../effects/kawaseBlur/KawaseBlurPass';
+import { addUniformSlider } from '../../shader/core';
 // import { ColorCorrectionShader } from '../../shader/shaders/color/ColorCorrectionShader';
 
 export const getPostprocessing = (
@@ -19,6 +21,7 @@ export const getPostprocessing = (
   camera : THREE.PerspectiveCamera | THREE.OrthographicCamera,
 
   backgroundScene : THREE.Scene,
+  gui : dat.GUI
 ) => {
   // Background composer
   const size = renderer.getSize( new THREE.Vector2() );
@@ -57,17 +60,9 @@ export const getPostprocessing = (
   // TOOD: Try diff sizes, 10, 100, 1000, diff in x and y
   /*
   const sobelPass = new ShaderPass( SobelOperatorShader );
-  sobelPass.uniforms[ 'resolution' ].value.x = Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
-  sobelPass.uniforms[ 'resolution' ].value.y = Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
+  sobelPass.uniforms[ 'resolution' ].value.x = 100; // Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
+  sobelPass.uniforms[ 'resolution' ].value.y = 100; // Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
   composer.addPass( sobelPass );
-  */
-
-  /*
-  const dotScreenShaderPass = new ShaderPass( DotScreenShader );
-  dotScreenShaderPass.uniforms[ 'tSize' ].value.set( 256 * 1, 256 * 1 );
-  dotScreenShaderPass.uniforms[ 'angle' ].value = 2.3;
-  dotScreenShaderPass.uniforms[ 'scale' ].value = 1.4;
-  composer.addPass( dotScreenShaderPass );
   */
 
   const shader = buildPatternShader( makeShader() );
@@ -77,6 +72,37 @@ export const getPostprocessing = (
   const shaderPass = new ShaderPass( shader );
   composer.addPass( shaderPass );
   composer.renderToScreen = true;
+
+  // GUI
+  const feedbackFolder = gui.addFolder( 'feedback' );
+
+  feedbackFolder.add(
+    { pow: colorCorrectionPass.uniforms[ 'powRGB' ].value.x },
+    'pow',
+    0.9,
+    1.5,
+    0.00001,
+  ).onChange( value => {
+    colorCorrectionPass.uniforms[ 'powRGB' ].value.set( value, value, value );
+  } );
+
+  feedbackFolder.add(
+    { add: colorCorrectionPass.uniforms[ 'addRGB' ].value.x },
+    'add',
+    -0.03,
+    0.03,
+    0.00001,
+  ).onChange( value => {
+    colorCorrectionPass.uniforms[ 'addRGB' ].value.set( value, value, value );
+  } );
+
+
+  /*
+  colorCorrectionPass.uniforms[ 'powRGB' ].value.set( 1.04, 1.04, 1.04 );
+  colorCorrectionPass.uniforms[ 'addRGB' ].value.set( -0.0015, -0.0015, -0.0015 );
+  */
+
+
 
 
   return { composer, backgroundComposer, shaderPass };

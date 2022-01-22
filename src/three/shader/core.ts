@@ -101,3 +101,9 @@ export const setUniform = <T>(
   if( value ) destinationObject.uniforms[ name ].value = value;
   return destinationObject.uniforms [ name ].value;
 };
+
+export const addUniformSlider = ( gui : dat.GUI, object : UniformObject, name : string, startValue : number, min : number, max : number, ) => {
+  setUniform( name, startValue, object );
+  gui.add( { [name]: startValue }, name, min, max, ( max - min ) / 1000 )
+    .onChange( value => setUniform( name, value, object ) );
+};

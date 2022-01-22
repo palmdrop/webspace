@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as dat from 'dat.gui';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { AbstractRenderScene } from '../../AbstractRenderScene';
@@ -12,7 +13,6 @@ import n1 from '../../../assets/normal/normal-texture1_x4.jpg';
 import n2 from '../../../assets/normal/normal-texture2.jpg';
 import n3 from '../../../assets/normal/normal-texture3.jpg';
 import n4 from '../../../assets/normal/normal-texture4.jpg';
-import { randomElement } from '../../../utils/random';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 
 const normalTextures = [
@@ -31,6 +31,8 @@ export class EdgePathRenderScene extends AbstractRenderScene {
   private backgroundComposer : EffectComposer;
   private backgroundScene : THREE.Scene;
 
+  private gui : dat.GUI;
+
   constructor( canvas : HTMLCanvasElement, onLoad : VoidCallback | undefined ) {
     // TODO: 
     /*
@@ -42,11 +44,14 @@ export class EdgePathRenderScene extends AbstractRenderScene {
       * TODO: DO I ONLY NEED ONE COMPOSER? SIMPLIFY!
       
       TODO: fast, symmetric movements. Rotating bodies, zooming in and out, etc...
+      TODO: make alive by animating add/pow of feedback effect! i.e breathing by animating pow, increasing add to make environment alive! 
+      think fast, organic movements. semi-random
     */
     super( canvas, onLoad );
 
     this.scene.background = new THREE.Color( 'black' );
     this.controls = new TrackballControls( this.camera, canvas );
+    this.gui = new dat.GUI();
 
     // TODO create clone of object, add to separate scene, create blur background shader, add to background, use for controlling shader
 
@@ -81,7 +86,6 @@ export class EdgePathRenderScene extends AbstractRenderScene {
 
     this.scene.add( this.object, dirLight1, dirLight2, ambientLight );
 
-
     // Postprocessing
     this.backgroundScene = new THREE.Scene();
     this.backgroundScene.background = new THREE.Color( 'black' );
@@ -92,7 +96,8 @@ export class EdgePathRenderScene extends AbstractRenderScene {
       backgroundComposer
     } = getPostprocessing(
       this.renderer, this.scene, this.camera,
-      this.scene
+      this.scene,
+      this.gui,
     );
 
     this.composer = composer;
@@ -115,5 +120,9 @@ export class EdgePathRenderScene extends AbstractRenderScene {
     this.shaderPass.uniforms[ 'time' ].value = now;
 
     this.controls?.update();
+  }
+
+  dispose() {
+    this.gui.destroy();
   }
 }

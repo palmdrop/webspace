@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
-import { ColorSettings, DomainWarp, Fog, PatternShaderSettings, Source, WarpedSource } from '../../shader/builder/pattern/types';
+import { ColorSettings, DomainWarp, PatternShaderSettings, Source, WarpedSource } from '../../shader/builder/pattern/types';
 
 export default () => {
   const createTextureSource = ( name : string, value : THREE.Texture | null = null ) : Source => { return {
@@ -94,7 +94,7 @@ export default () => {
     iterations: Math.floor( random( 2, 4 ) )
   };
 
-  const createMask = () => { return {
+  const mask = {
     kind: 'combined',
     sources: [
       textureSource,
@@ -109,7 +109,7 @@ export default () => {
       // 0.01
       0.4,
     ],
-  };};
+  };
 
   const warpedSource : WarpedSource = {
     kind: 'warped',
@@ -117,7 +117,7 @@ export default () => {
     warp,
   };
 
-  const colorSettings = () : ColorSettings => { return {
+  const colorSettings : ColorSettings = {
     mode: 'hsv',
     componentModifications: {
       x: [ 
@@ -129,19 +129,25 @@ export default () => {
         { kind: 'add', argument: 0.1 },
       ],
       z: [ 
+        /*
         { kind: 'mult', argument: 1.5 },
         { kind: 'add', argument: 0.2 },
         { kind: 'pow', argument: 2.0 },
+        */
+        { kind: 'mult', argument: -1 },
+        { kind: 'add', argument: 1 },
+        { kind: 'mult', argument: 1.4 },
+        { kind: 'pow', argument: 2 },
       ],
     }
-  }; };
+  };
 
   return {
     domain: 'uv',
     scale: 1.0,
     mainSource: warpedSource,
-    mask: createMask(),
+    mask,
     timeOffset: new THREE.Vector3( 0.00, -0.00, 0.02, ),
-    colorSettings: colorSettings()
+    colorSettings
   } as PatternShaderSettings; 
 };
