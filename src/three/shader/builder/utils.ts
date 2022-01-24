@@ -19,11 +19,11 @@ export const opToGLSL = ( operation : Operation, ...args : string[] ) => {
 
   const op = ( () => {
     switch( operation ) {
-    case 'add': return '+';
-    case 'sub': return '-';
-    case 'mult': return '*';
-    case 'div': return '/';
-    case 'avg': return '+';
+      case 'add': return '+';
+      case 'sub': return '-';
+      case 'mult': return '*';
+      case 'div': return '/';
+      case 'avg': return '+';
     }
   } )();
 
@@ -49,4 +49,8 @@ const converters : { [ type in GlslType ] : ( value ?: any ) => string } = {
 
 export const variableValueToGLSL = ( variable : GlslVariable ) => {
   return converters[ variable.type ]( variable.value );
+};
+
+export const variableDefinitionToGLSL = ( name : string, variable : GlslVariable ) => {
+  return `${ variable.type } ${ name }${ variable.value ? ` = ${ variableValueToGLSL( variable ) }` : '' };`;
 };

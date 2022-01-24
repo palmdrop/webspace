@@ -1,8 +1,10 @@
-import { Operation, GlslFunction, Trigonometry, GLSL } from '../../core';
+import { Operation, GlslFunction, Trigonometry, GLSL, GlslVariables } from '../../core';
 
 export type FunctionWithName = {
   name : string,
-  func : GlslFunction
+  func : GlslFunction,
+  globals ?: GlslVariables
+  cached ?: boolean
 }
 
 export type FunctionCache = Map<any, FunctionWithName>;

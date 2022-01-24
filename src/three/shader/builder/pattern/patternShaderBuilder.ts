@@ -259,8 +259,17 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
     ` : '' }
   `;
   
-  // Add functions
-  functionCache.forEach( ( { name, func } ) => functions[ name ] = func );
+  // Add functions and gather global variables
+  let allGlobals = {};
+  functionCache.forEach( ( { name, func, globals } ) => {
+    functions[ name ] = func;
+    if ( globals ) {
+      allGlobals = {
+        ...allGlobals,
+        ...globals
+      };
+    }
+  } );
 
   // Build
   return buildShader(
@@ -273,6 +282,7 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
     {
       imports,
       constants,
+      globals: allGlobals,
       functions,
       main: fragmentMain,
     }

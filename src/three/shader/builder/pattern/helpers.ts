@@ -1,7 +1,9 @@
 import * as THREE from 'three';
-import { GlslFunction, GLSL, GlslType, Uniforms } from '../../core';
+import { GlslFunction, GLSL, GlslType, Uniforms, GlslVariable, GlslVariables } from '../../core';
 import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
 import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction, ConstantSource } from './types';
+
+const functionSplittingRegex = /(.*)(return)(.*);/s;
 
 export const getFunctionName = ( () => {
   let counter = 0;
@@ -31,10 +33,10 @@ export const buildModification = ( input : GLSL, modifications : Modification | 
 
   const applySingleModification = ( input : GLSL, kind : string, argument : number ) => {
     switch( kind ) {
-    case 'add' : return `${ numToGLSL( argument ) } + ${ input }`;
-    case 'mult' : return `${ numToGLSL( argument ) } * ${ input }`;
-    case 'pow' : return `pow( ${ input }, ${ numToGLSL( argument ) } )`;
-    case 'mod' : return `mod( ${ input }, ${ numToGLSL( argument ) } )`;
+      case 'add' : return `${ numToGLSL( argument ) } + ${ input }`;
+      case 'mult' : return `${ numToGLSL( argument ) } * ${ input }`;
+      case 'pow' : return `pow( ${ input }, ${ numToGLSL( argument ) } )`;
+      case 'mod' : return `mod( ${ input }, ${ numToGLSL( argument ) } )`;
     }
   };
 
@@ -73,23 +75,69 @@ export const buildSource = (
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
   isMain = false,
+  cache ?: boolean // If not explicitly set, this function will decide if to cache values or not
 ) : FunctionWithName => {
   if( !uniforms ) throw new Error( 'Uniforms cannot be null' );
-  if( functionCache.has( source ) ) return functionCache.get( source ) as FunctionWithName;
+
+  if( functionCache.has( source ) ) {
+    // Only add a cache if source is used more than once
+    // And then, only add for certain source types (unless specifically specified)
+    cache = cache ?? [ 'noise', 'combined', 'warped' ].includes( source.kind );
+    
+    const functionWithName = functionCache.get( source ) as FunctionWithName;
+
+    if( cache && !functionWithName.cached ) { 
+      const { func, name } = functionWithName;
+
+      const splitBody = func.body.match( functionSplittingRegex ); // Will return the body of the function with the return statement separated
+      if ( !splitBody ) return functionWithName; // NOTE: would probably indicate some form of error...
+
+      functionWithName.cached = true;
+
+      const cacheName = `${ name }Cache`;
+      const cacheInputName = `${ name }Input`;
+      const cacheSetName = `${ name }CacheSet`;
+
+      if( !functionWithName.globals ) functionWithName.globals = {};
+
+      functionWithName.globals = {
+        ...functionWithName.globals,
+        [cacheName]: { type: func.returnType },
+        [cacheInputName]: { type: func.parameters[ 0 ][ 0 ] },
+        [cacheSetName]: { type: 'bool' }
+      } as GlslVariables;
+
+      func.body = `
+        if( ${ cacheSetName } && ${ cacheInputName } == point ) {
+          return ${ cacheName };
+        } 
+
+        ${ cacheInputName } = point;
+        ${ cacheSetName } = true;
+
+        ${ splitBody[ 1 ] }
+        ${ func.returnType } _${ name }Result = ( ${ splitBody[ 3 ] } );
+        ${ cacheName } = _${ name }Result;
+        return _${ name }Result;
+      `;
+    }
+
+    return functionWithName; 
+  }
 
   const name = getFunctionName( 'source' );
 
   let func : GlslFunction;
   const kind = source.kind;
   switch( kind ) {
-  case 'constant' : func = buildConstantSource( source as ConstantSource ); break;
-  case 'noise' : func = buildNoiseSource( source as NoiseSource, uniforms, textureNames, functionCache ); break;
-  case 'trig' : func = buildTrigSource( source as TrigSource ); break;
-  case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
-  case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, isMain ); break;
-  case 'texture' : func = buildTextureSource( source as TextureSource, !isMain, uniforms, textureNames, functionCache ); break;
-  case 'custom' : func = buildCustomSource( source as CustomSource ); break;
-  default : throw new Error( `Source kind ${ kind } is not supported` );
+    case 'constant' : func = buildConstantSource( source as ConstantSource ); break;
+    case 'noise' : func = buildNoiseSource( source as NoiseSource, uniforms, textureNames, functionCache ); break;
+    case 'trig' : func = buildTrigSource( source as TrigSource ); break;
+    case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
+    case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, isMain ); break;
+    case 'texture' : func = buildTextureSource( source as TextureSource, !isMain, uniforms, textureNames, functionCache ); break;
+    case 'custom' : func = buildCustomSource( source as CustomSource ); break;
+    default : throw new Error( `Source kind ${ kind } is not supported` );
   }
 
   if( source.uvOverride ) {
@@ -122,7 +170,7 @@ export const buildNoiseSource = (
   uniforms : Uniforms, 
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
-) : GlslFunction => {
+) : GlslFunction => { // TODO type this more strongly... do not make any GlslFunction, make specifically source function! And add helper func
   const frequency = noise.frequency;
   const amplitude = noise.amplitude ?? 1.0;
   const pow = noise.pow ?? 1.0;
@@ -132,8 +180,6 @@ export const buildNoiseSource = (
   const ridge = noise.ridge ?? 1.0;
 
   const normalize = noise.normalize ?? true;
-
-  // TODO figure out way to only evaluate amount ONCE per call instead of each iteration, could be expensive :(
 
   return {
     parameters: [ [ 'vec3', 'point' ] ],

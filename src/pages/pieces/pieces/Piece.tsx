@@ -4,7 +4,10 @@ import { Piece, PieceProps } from './pieces';
 
 import './pieces.scss';
 
-export const createPiece = <T extends RenderScene>( renderSceneConstructor : RenderSceneConstructor<T> ) : Piece => {
+export const createPiece = <T extends RenderScene>( 
+  renderSceneConstructor : RenderSceneConstructor<T>,
+  animationCanvasArgs : Record<string, unknown> = {}
+) : Piece => {
   return ( { onLoad } : PieceProps ) => {
     const onMouseMove : MouseMoveCallback<T> = ( x, y, deltaX, deltaY, renderScene ) => {
       renderScene.onMouseMove?.( x, y, deltaX, deltaY );
@@ -21,6 +24,7 @@ export const createPiece = <T extends RenderScene>( renderSceneConstructor : Ren
           onMouseMove={ onMouseMove }
           onScroll={ onScroll }
           onLoad={ onLoad }
+          { ...animationCanvasArgs }
         />
       </div>
     );

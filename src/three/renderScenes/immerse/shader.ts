@@ -11,7 +11,13 @@ export default () => {
       parameters: [ [ 'vec4', 'color' ] ],
       returnType: 'float',
       body: `
-        return ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a;
+        float bri = ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a;
+
+        return (
+          bri < 0.8 
+          ? bri
+          : pow( bri, 2.0 )
+        );
       `
     }
   } as Source;
@@ -34,10 +40,12 @@ export default () => {
 
   const noiseSource1 : Source = {
     kind: 'noise',
-    frequency: new THREE.Vector3( 1.0, 1.0, 1.0 ).multiplyScalar( random( 1.5, 4.0 ) ),
+    frequency: new THREE.Vector3( 1.0, 1.0, 1.0 ).multiplyScalar( random( 2.5, 4.0 ) ),
     amplitude: 1.0,
     pow: random( 2.0, 5.0 ),
     octaves: Math.floor( random( 4, 6 ) ),
+    // TODO: modify background with occasional persistance noise as well! let background bubble up into more detail! 
+    // TODO: possibly add this to mask as well!!! 
     persistance: { 
       kind: 'combined',
       sources: [
@@ -67,8 +75,6 @@ export default () => {
       z: noiseSource1,
     },
     amount: [
-      // 0.001,
-      // 0.001,
       random( 0.005, 0.0001 ),
       random( 0.005, 0.0001 ),
       {
@@ -78,14 +84,14 @@ export default () => {
           {
             kind: 'constant',
             value: 1.0
-          }
+          },
+          noiseModifierSource
         ],
         operation: 'add',
         multipliers: [
-          // 0.71,
           random( 0.6, 0.8 ),
-          // 0.08
-          random( 0.05, 0.13 )
+          random( 0.05, 0.13 ),
+          0.02
         ],
       }
     ],
@@ -103,9 +109,8 @@ export default () => {
     ],
     operation: 'add',
     multipliers: [
-      0.6,
-      // 0.01
-      0.4,
+      0.7,
+      0.5,
     ],
   };
 
