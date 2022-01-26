@@ -63,7 +63,15 @@ const getConstants = ( settings : PatternShaderSettings ) : Constants => {
 };
 
 // Color
-const buildFragColorConverterGLSL = ( colorSettings : ColorSettings | undefined, mainFromTexture : boolean, functions : GlslFunctions ) : GLSL => {
+const buildFragColorConverterGLSL = ( 
+  colorSettings : ColorSettings | undefined, 
+  mainFromTexture : boolean, 
+  functions : GlslFunctions,
+  uniforms : Uniforms, 
+  textureNames : Set<string>, 
+  functionCache : FunctionCache, 
+
+) : GLSL => {
   // No color adjustments if settings are absent
   if( !colorSettings ) {
     return mainFromTexture 
@@ -94,7 +102,16 @@ const buildFragColorConverterGLSL = ( colorSettings : ColorSettings | undefined,
     alternative : GLSL,
     passThrough = false,
   ) => {
-    if( modification ) return buildModification( input, modification );
+    if( modification ) {
+      return buildModification( 
+        input, 
+        modification,
+        uniforms,
+        textureNames,
+        functionCache,
+        'samplePoint'
+      );
+    } 
     if( colorMode === 'rgb' || passThrough ) return input;
     return alternative;
   };
@@ -121,8 +138,14 @@ const buildFragColorConverterGLSL = ( colorSettings : ColorSettings | undefined,
   );
 
   const aGLSL = modifications.a 
-    ? buildModification( getComponentGLSL( 'a' ), modifications.a ) 
-    : '1.0';
+    ? buildModification( 
+      getComponentGLSL( 'a' ), 
+      modifications.a,
+      uniforms,
+      textureNames,
+      functionCache,
+      'samplePoint'
+    ) : '1.0';
 
 
   // Build shader code
@@ -200,7 +223,7 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
 
   // Fragment shader
   const warpGLSL = buildWarpGLSL( settings.domainWarp, uniforms, textureNames, functionCache );
-  const toFragColorGLSL = buildFragColorConverterGLSL( settings.colorSettings, mainFromTexture, functions );
+  const toFragColorGLSL = buildFragColorConverterGLSL( settings.colorSettings, mainFromTexture, functions, uniforms, textureNames, functionCache );
   const { name: mainSourceName } = buildSource( settings.mainSource, uniforms, textureNames, functionCache, true );
   const maskSourceData = settings.mask ? buildSource( settings.mask, uniforms, textureNames, functionCache ) : undefined;
   const alphaMaskSourceData = settings.alphaMask ? buildSource( settings.alphaMask, uniforms, textureNames, functionCache ) : undefined;

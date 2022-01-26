@@ -13,7 +13,7 @@ export type Domain = 'uv' | 'vertex' | 'view';
 
 export type Modification = {
   kind : 'add' | 'mult' | 'pow' | 'mod',
-  argument : number,
+  argument : number | Source,
 }
 
 export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture' | 'custom' | 'constant';

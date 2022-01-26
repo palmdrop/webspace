@@ -26,17 +26,28 @@ export const nameFunction = ( func : GlslFunction, functionCache : Map<any, Func
   return data;
 };
 
-export const buildModification = ( input : GLSL, modifications : Modification | Modification[] ) => {
+export const buildModification = ( 
+  input : GLSL, 
+  modifications : Modification | Modification[],
+  uniforms : Uniforms,
+  textureNames : Set<string>,
+  functionCache : FunctionCache,
+  samplePointName : string
+) => {
   if( !Array.isArray( modifications ) ) {
     modifications = [ modifications ];
   }
 
-  const applySingleModification = ( input : GLSL, kind : string, argument : number ) => {
+  const applySingleModification = ( input : GLSL, kind : string, argument : number | Source ) => {
+    const modification = typeof argument === 'number' 
+      ? numToGLSL( argument ) 
+      : `${ buildSource( argument, uniforms, textureNames, functionCache, false ).name }( ${ samplePointName } )`;
+
     switch( kind ) {
-      case 'add' : return `${ numToGLSL( argument ) } + ${ input }`;
-      case 'mult' : return `${ numToGLSL( argument ) } * ${ input }`;
-      case 'pow' : return `pow( ${ input }, ${ numToGLSL( argument ) } )`;
-      case 'mod' : return `mod( ${ input }, ${ numToGLSL( argument ) } )`;
+      case 'add' : return `${ modification } + ${ input }`;
+      case 'mult' : return `${ modification } * ${ input }`;
+      case 'pow' : return `pow( ${ input }, ${ modification } )`;
+      case 'mod' : return `mod( ${ input }, ${ modification } )`;
     }
   };
 
@@ -277,7 +288,14 @@ export const buildCombinedSource = (
 
   let combinedGLSL = opToGLSL( source.operation, ...subSources.map( ( { name }, index ) => getPart( name, index ) ) );
   if( source.postModifications ) {
-    combinedGLSL = buildModification( `( ${ combinedGLSL } )`, source.postModifications );
+    combinedGLSL = buildModification( 
+      `( ${ combinedGLSL } )`, 
+      source.postModifications,
+      uniforms,
+      textureNames,
+      functionCache,
+      'point'
+    );
   }
 
   return {

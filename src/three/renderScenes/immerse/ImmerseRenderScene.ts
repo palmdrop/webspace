@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import * as TWEEN from '@tweenjs/tween.js';
@@ -16,12 +17,14 @@ import n3 from '../../../assets/normal/normal-texture3.jpg';
 import n4 from '../../../assets/normal/normal-texture4.jpg';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { random, randomElement } from '../../../utils/random';
+import { RandomMovement } from '../../generation/movement/RandomMovement';
 
 type MovableObject = THREE.Object3D & {
   velocity ?: THREE.Vector3,
   acceleration ?: THREE.Vector3,
   maxForce ?: number,
-  maxSpeed ?: number
+  maxSpeed ?: number,
+  friction ?: number
 };
 
 const normalTextures = [
@@ -39,12 +42,16 @@ export class EdgePathRenderScene extends AbstractRenderScene {
 
   private mousePosition : THREE.Vector2;
   private tracker : MovableObject;
+
+  private movables : MovableObject[];
   
   private shaderPass : ShaderPass;
   private controls ?: TrackballControls;
   private backgroundComposer : EffectComposer;
 
   private gui : dat.GUI;
+
+  private randoMovement : RandomMovement;
 
   constructor( canvas : HTMLCanvasElement, onLoad : VoidCallback | undefined ) {
     // TODO: 
@@ -59,10 +66,21 @@ export class EdgePathRenderScene extends AbstractRenderScene {
       TODO: fast, symmetric movements. Rotating bodies, zooming in and out, etc...
       TODO: make alive by animating add/pow of feedback effect! i.e breathing by animating pow, increasing add to make environment alive! 
       think fast, organic movements. semi-random
+
+      TODO: methods for organic movement
+        * interests that fain and increase
+        * forces exponential! 
     */
     super( canvas, onLoad );
 
     this.controls = new TrackballControls( this.camera, canvas );
+    this.controls.noPan = true;
+    this.controls.noRoll = true;
+    this.controls.noRotate = true;
+    this.controls.minDistance = 2.0;
+    this.controls.maxDistance = 8.0;
+    this.controls.zoomSpeed = 0.5;
+
     this.gui = new dat.GUI();
 
     this.mousePosition = new THREE.Vector2();
@@ -95,25 +113,41 @@ export class EdgePathRenderScene extends AbstractRenderScene {
     this.object.acceleration = new THREE.Vector3();
     this.object.maxSpeed = 0.2;
     this.object.maxForce = 0.1;
+    this.object.friction = 0.03;
+
+    const trackerMaterial = material.clone();
+    trackerMaterial.color.setColorName( 'grey' );
 
     this.tracker = new THREE.Mesh(
       ImmerseGeometryPrefab( {
         detail: 10,
         warp: 0.5
       } ),
-      material
+      trackerMaterial
     );
 
     this.tracker.position.setFromSpherical( new THREE.Spherical(
-      random( 0.04, 0.1 ),
+      random( 8, 10.1 ),
       random( 0.0, Math.PI * 2 ),
       random( 0.0, Math.PI * 2 )
     ) );
 
+    this.mousePosition.set( this.tracker.position.x, this.tracker.position.y );
+
     this.tracker.velocity = new THREE.Vector3();
     this.tracker.acceleration = new THREE.Vector3();
+    this.tracker.maxSpeed = 0.5;
+    this.tracker.maxForce = 0.01;
+    this.tracker.friction = 0.04;
 
-    this.tracker.scale.set( 0.4, 0.4, 0.4 );
+    this.tracker.scale.set( 1.0, 1.0, 1.0 ).multiplyScalar( random( 0.2, 0.4 ) );
+
+    this.randoMovement = new RandomMovement( {
+      frequency: 0.7,
+      minSpeed: 0.00015,
+      maxSpeed: 0.003,
+      animationSpeed: 0.48
+    } );
 
     const dirLight1 = new THREE.DirectionalLight( '#ff0000', 5.0 );
     dirLight1.position.set( 1, 1, 1 );
@@ -145,6 +179,11 @@ export class EdgePathRenderScene extends AbstractRenderScene {
     this.backgroundComposer = backgroundComposer;
     this.shaderPass = shaderPass;
 
+    this.movables = [
+      this.tracker,
+      this.object
+    ];
+
     this.resizeables.push( this.backgroundComposer );
 
     this.setCaptureFrameResolutionMultiplier( 4 );
@@ -166,16 +205,43 @@ export class EdgePathRenderScene extends AbstractRenderScene {
 
     this.controls?.update();
 
-    /*
-    this.object.rotation.x += this.rotationSpeed.x;
-    this.object.rotation.y += this.rotationSpeed.y;
-    this.object.rotation.z += this.rotationSpeed.z;
-    */
-
-    // TWEEN.update( delta );
     TWEEN.update();
 
+    this._updateObject( delta );
+
     this._updateTracker( delta );
+
+    this._updateMovableObjects( delta, now );
+  }
+
+  _updateObject ( delta : number ) {
+    const centerForce = tempVector
+      .copy( this.object.position )
+      .multiplyScalar( -0.04 * delta );
+
+    if ( centerForce.lengthSq() < 0.000001 ) centerForce.multiplyScalar( 0.0 );
+
+    this.object.acceleration?.add( centerForce );
+
+    // 
+    const repellThreshold = 2.0;
+
+    const trackerRepellForce = tempVector
+      .copy( this.object.position )
+      .sub( this.tracker.position );
+    
+    trackerRepellForce.z = 0.0;
+
+    const distSq = trackerRepellForce.lengthSq();
+
+    if( distSq < ( repellThreshold * repellThreshold ) ) {
+      const scale = 1.0 - Math.sqrt( distSq ) / repellThreshold;
+
+      trackerRepellForce
+        .multiplyScalar( scale * delta * 0.08 );
+
+      this.object.acceleration?.add( trackerRepellForce );
+    }
   }
 
   _updateTracker( delta : number ) {
@@ -193,18 +259,42 @@ export class EdgePathRenderScene extends AbstractRenderScene {
     const trackerGoal = this.camera.position.clone()
       .add( tempVector.multiplyScalar( distance ) );
 
-    const diff = tempVector.copy( trackerGoal ).sub( this.tracker.position );
-    
-    this.tracker.position.lerp( 
-      trackerGoal, 
-      2.0 * delta
-    );
+    const force = tempVector
+      .copy( trackerGoal )
+      .sub( this.tracker.position )
+      .multiplyScalar( 0.1 * delta );
 
-    // TODO add random movement as well!
+    if ( force.lengthSq() < 0.000001 ) force.multiplyScalar( 0.0 );
 
-    this.tracker.rotation.x += diff.x * delta;
-    this.tracker.rotation.y += diff.y * delta;
-    this.tracker.rotation.z += diff.z * delta;
+    this.tracker.acceleration?.add( force );
+  }
+
+  _updateMovableObjects( delta : number, now : number ) {
+    this.movables.forEach( ( object, i ) => {
+      const velocity = object.velocity!;
+      const acceleration = object.acceleration!;
+      const maxSpeed = object.maxSpeed!;
+      const maxForce = object.maxForce!;
+      const friction = object.friction!;
+
+      const randomForce = this.randoMovement.getForce( now + i * 100, tempVector );
+      acceleration.add( randomForce.multiplyScalar( velocity.lengthSq() * delta + 0.1 ) );
+
+      acceleration.clampLength( 0.0, maxForce );
+
+      velocity
+        .add( acceleration )
+        .multiplyScalar( 1.0 - friction )
+        .clampLength( 0.0, maxSpeed );
+
+      object.position.add( velocity );
+
+      acceleration.set( 0, 0, 0 );
+
+      object.rotation.x += velocity.x;
+      object.rotation.y += velocity.y;
+      object.rotation.z += velocity.z;
+    } );
   }
 
   onMouseMove( x : number, y : number ) {

@@ -12,11 +12,13 @@ export default () => {
       returnType: 'float',
       body: `
         float bri = ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a;
+        float dampingThreshold = 0.6;
+        float dampingAmount = 4.0;
 
         return (
-          bri < 0.8 
+          bri < dampingThreshold
           ? bri
-          : pow( bri, 2.0 )
+          : dampingThreshold + pow( bri - dampingThreshold, 3.0 )
         );
       `
     }
@@ -124,7 +126,8 @@ export default () => {
     mode: 'hsv',
     componentModifications: {
       x: [ 
-        { kind: 'mult', argument: 0.3 },
+        // { kind: 'mult', argument: 0.3 },
+        { kind: 'mult', argument: noiseSource1 },
         { kind: 'add', argument: random( -1.0, 1.0 ) }
       ],
       y: [ 
