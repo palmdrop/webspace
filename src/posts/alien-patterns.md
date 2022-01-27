@@ -1,6 +1,6 @@
 ---
 title: Alien Patterns
-keywords: generative, noise, perlin, simplex, procedural, patterns
+keywords: genart, noise, perlin, simplex, procedural, patterns
 date: 2022-01-13
 image: alien-patterns.jpg
 ---

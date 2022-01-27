@@ -5,7 +5,7 @@ import image from '../../../assets/posts/characteristics-of-modified-noise.jpg';
 const metadata = {
   'title': 'Characteristics of Modified Noise',
   'keywords': [
-    'generative',
+    'genart',
     'noise',
     'perlin',
     'simplex',

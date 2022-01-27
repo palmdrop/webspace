@@ -1,6 +1,6 @@
 ---
 title: Characteristics of Modified Noise
-keywords: generative, noise, perlin, simplex, procedural
+keywords: genart, noise, perlin, simplex, procedural
 date: 2022-01-12
 image: characteristics-of-modified-noise.jpg
 ---

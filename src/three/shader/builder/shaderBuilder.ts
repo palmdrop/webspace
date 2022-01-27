@@ -24,7 +24,6 @@ const constantsToGLSL = ( constants : Constants | undefined ) => {
 
 const globalsToGLSL = ( globals : GlslVariables | undefined ) => {
   if( !globals ) return '';
-  console.log( globals );
   return arrayToString( 
     Object.entries( globals ), 
     ( [ name, variable ] ) => variableDefinitionToGLSL( name, variable )

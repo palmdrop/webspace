@@ -5,7 +5,7 @@ import image from '../../../assets/posts/alien-patterns.jpg';
 const metadata = {
   'title': 'Alien Patterns',
   'keywords': [
-    'generative',
+    'genart',
     'noise',
     'perlin',
     'simplex',
