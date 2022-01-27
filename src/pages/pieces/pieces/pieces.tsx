@@ -7,6 +7,7 @@ import solarLandscapeImage from '../../../assets/content/pieces/solar-landscape-
 import virtualImprintImage from '../../../assets/content/pieces/virtual-imprint.jpg';
 import rehashTransformImage from '../../../assets/content/pieces/rehash-transform.jpg';
 import flatCloudsImage from '../../../assets/content/pieces/flat-clouds.jpg';
+import immerseImage from '../../../assets/content/pieces/immerse.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -154,13 +155,13 @@ export const pieces : PieceData[] = [
   {
     name: 'Immerse',
     description: [
-      'wip'
+      'WIP'
     ],
     tags: [
       'Warp, Mind'
     ],
 
-    image: flatCloudsImage,
+    image: immerseImage,
 
     Component: React.lazy( () => import( './immerse/ImmersePiece' ) ),
   },

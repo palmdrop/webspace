@@ -27,9 +27,9 @@ export default () => {
   const noiseModifierSource : Source = {
     kind: 'noise',
     frequency: new THREE.Vector3(
-      random( 1.1, 2.0 ),
-      random( 1.1, 2.0 ),
-      random( 1.1, 2.0 ),
+      random( 1.2, 2.0 ),
+      random( 1.2, 2.0 ),
+      random( 1.2, 2.0 ),
     ),
     amplitude: 1.0,
     pow: 1.0,
@@ -39,10 +39,27 @@ export default () => {
     ridge: random( 0.5, 1.0 )
   };
 
+  /*
+  const lowFrequencyNoise : Source = {
+    kind: 'noise',
+    frequency: new THREE.Vector3(
+      random( 1.2, 2.4 ),
+      random( 1.2, 2.4 ),
+      random( 1.2, 2.4 ),
+    ),
+    amplitude: 10.0,
+    pow: 1.0,
+    octaves: 1.0, // Math.floor( random( 3, 5 ) ),
+    // persistance: 0.4,
+    // lacunarity: 2.2,
+    // ridge: random( 0.5, 1.0 )
+    normalize: false,
+  };
+  */
 
   const noiseSource1 : Source = {
     kind: 'noise',
-    frequency: new THREE.Vector3( 1.0, 1.0, 1.0 ).multiplyScalar( random( 2.5, 4.0 ) ),
+    frequency: new THREE.Vector3( 1.0, 1.0, 1.0 ).multiplyScalar( random( 2.8, 4.0 ) ),
     amplitude: 1.0,
     pow: random( 2.0, 5.0 ),
     octaves: Math.floor( random( 4, 6 ) ),
@@ -60,13 +77,13 @@ export default () => {
       ],
       operation: 'add',
       multipliers: [
-        0.4,
-        0.17,
+        0.35,
+        0.15,
         0.23,
       ],
     },
     lacunarity: random( 1.5, 2.6 ),
-    ridge: random( 0.3, 0.8 ),
+    ridge: random( 0.3, 0.7 ),
     normalize: false,
   };
 
@@ -126,12 +143,14 @@ export default () => {
     mode: 'hsv',
     componentModifications: {
       x: [ 
-        // { kind: 'mult', argument: 0.3 },
         { kind: 'mult', argument: noiseSource1 },
+        // { kind: 'add', argument: lowFrequencyNoise },
         { kind: 'add', argument: random( -1.0, 1.0 ) }
       ],
       y: [ 
-        { kind: 'mult', argument: 0.5 },
+        // { kind: 'mult', argument: 0.5 },
+        { kind: 'mult', argument: textureSource },
+        { kind: 'mult', argument: 2.0 },
         { kind: 'add', argument: 0.1 },
       ],
       z: [ 

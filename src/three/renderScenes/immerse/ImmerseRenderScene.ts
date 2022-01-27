@@ -10,7 +10,6 @@ import { ImmerseGeometryPrefab } from '../../prefabs/geometries';
 import { ASSETHANDLER } from '../../systems/AssetHandler';
 import { getPostprocessing } from './postprocessing';
 
-// TODO find new, better normal texture
 import n1 from '../../../assets/normal/normal-texture1_x4.jpg';
 import n2 from '../../../assets/normal/normal-texture2.jpg';
 import n3 from '../../../assets/normal/normal-texture3.jpg';
@@ -82,8 +81,11 @@ export class EdgePathRenderScene extends AbstractRenderScene {
     this.controls.zoomSpeed = 0.5;
 
     this.gui = new dat.GUI();
+    this.gui.hide();
 
     this.mousePosition = new THREE.Vector2();
+
+    this.camera.position.z = random( 3, 5 );
 
     const geometry = 
       ImmerseGeometryPrefab( {
@@ -305,5 +307,9 @@ export class EdgePathRenderScene extends AbstractRenderScene {
 
   dispose() {
     this.gui.destroy();
+  }
+
+  onUserAdmin() {
+    this.gui.show();
   }
 }
