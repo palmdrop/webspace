@@ -20,17 +20,18 @@ export type ShaderChunk = {
 
 
 /* Variables */
-type IGlslVariable<T extends GlslType, V> = {
-  type : T,
+type IGlslVariable<GlslType, V> = {
+  type : GlslType,
   value ?: V
 }
 
 export type Float = IGlslVariable<'float', number>;
 export type Int = IGlslVariable<'int', number>;
+export type Bool = IGlslVariable<'bool', boolean>;
 export type Vec2 = IGlslVariable<'vec2', THREE.Vector2>;
 export type Vec3 = IGlslVariable<'vec3', THREE.Vector3>;
 export type Vec4 = IGlslVariable<'vec4', THREE.Vector4>;
-export type GlslVariable = Float | Int | Vec2 | Vec3 | Vec4;
+export type GlslVariable = Float | Int | Bool | Vec2 | Vec3 | Vec4;
 
 export type GlslVariables = { [ name : string ] : GlslVariable };
 
@@ -57,7 +58,7 @@ export type Imports = ShaderChunk[] | undefined;
 /* Functions */
 export type GlslFunctionSignatures = { [ name : string ] : GlslFunctionSignature };
 export type GlslFunction = GlslFunctionSignature & {
-  body : GLSL,
+  body : GLSL
 }
 
 export type GlslFunctions = { [ name : string ] : GlslFunction };
@@ -100,4 +101,10 @@ export const setUniform = <T>(
 
   if( value ) destinationObject.uniforms[ name ].value = value;
   return destinationObject.uniforms [ name ].value;
+};
+
+export const addUniformSlider = ( gui : dat.GUI, object : UniformObject, name : string, startValue : number, min : number, max : number, ) => {
+  setUniform( name, startValue, object );
+  gui.add( { [name]: startValue }, name, min, max, ( max - min ) / 1000 )
+    .onChange( value => setUniform( name, value, object ) );
 };

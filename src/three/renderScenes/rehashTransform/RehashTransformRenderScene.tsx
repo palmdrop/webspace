@@ -7,7 +7,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { AbstractRenderScene } from '../../AbstractRenderScene';
 import { VoidCallback } from '../../core';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
-import { setUniform, UniformObject } from '../../shader/core';
+import { addUniformSlider, setUniform, UniformObject } from '../../shader/core';
 import { createObject } from './object';
 import { getComposer } from './postprocessing';
 import { generateRoom } from './room';
@@ -142,12 +142,6 @@ export class RehashTransformRenderScene extends AbstractRenderScene {
     const linesFolder = this.gui.addFolder( 'lines' );
     linesFolder.add( { speed: this.envMaterialSpeed }, 'speed', 0.0, 2.0 )
       .onChange( value => this.lineShaderMaterial = value );
-
-    const addUniformSlider = ( gui : dat.GUI, object : UniformObject, name : string, startValue : number, min : number, max : number, ) => {
-      setUniform( name, startValue, object );
-      gui.add( { [name]: startValue }, name, min, max, ( max - min ) / 1000 )
-        .onChange( value => setUniform( name, value, object ) );
-    };
 
     addUniformSlider( objectFolder, this.objectShaderMaterial, 'frequency', 1.0, 0.0, 30.0 );
     addUniformSlider( objectFolder, this.objectShaderMaterial, 'brightness', 0.8, 0.0, 3.0 );

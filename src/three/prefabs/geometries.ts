@@ -4,7 +4,7 @@ import { random } from '../../utils/random';
 import { distance, domainWarp, noiseWarp, TransformFunction, twistWarp } from '../geometry/warp/warp';
 import { generateWarpGeometryPrefab } from './WarpGeometryPrefab';
 
-import { GeometryPrefab } from './prefabs';
+import { GeometryPrefab, Prefab } from './prefabs';
 import { smoothStep } from '../../utils/general';
 
 export const SolarChromeGeometryPrefab : GeometryPrefab = ( () => {
@@ -549,6 +549,66 @@ export const FoldedPlaneGeometryPrefab : GeometryPrefab = ( () => {
       }, 
       {
         warpFunction: slowNoiseWarp,
+      }
+    ]
+  );
+} )();
+
+export const ImmerseGeometryPrefab : GeometryPrefab<{ detail : number, warp : number }> = ( () => {
+  const minFrequency = new THREE.Vector3( 0.1, 0.1, 0.1 );
+  const maxFrequency = new THREE.Vector3( 0.3, 0.3, 0.3 );
+  return generateWarpGeometryPrefab(
+    // Geometry
+    ( args ) => {
+      return new THREE.SphereBufferGeometry( 1.0, args.detail, args.detail );
+    },
+
+    // Frequency
+    () => {
+      return new THREE.Vector3( 
+        random( minFrequency.x, maxFrequency.x ),
+        random( minFrequency.y, maxFrequency.y ),
+        random( minFrequency.z, maxFrequency.z )
+      );
+    },
+
+    // Warp amount
+    ( frequency : THREE.Vector3, args ) => {
+      return args.warp * (
+        ( maxFrequency.length() - frequency.length() ) * random( 2.0, 5.0 ) + 0.5
+      ); 
+    },
+
+    // Octaves 
+    () => {
+      return 3;
+    },
+
+    // Lacunarity
+    () => {
+      return random( 1.9, 2.5 );
+    },
+
+    // Persistance
+    () => {
+      return random( 0.4, 0.5 );
+    },
+
+    // Warp entries
+    [
+      { 
+        warpFunction: noiseWarp,
+      }, 
+      {
+        warpFunction: twistWarp,
+        args: {
+          twistAmount: new THREE.Vector3( 
+            0.8 * Math.random(), 
+            0.8 * Math.random(), 
+            0.8 * Math.random() 
+          ),
+          falloff: random( 0.5, 1.0 ),
+        }
       }
     ]
   );

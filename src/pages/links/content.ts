@@ -136,3 +136,9 @@ links.push( toLink(
   'Blog', 'Tech'
 ) );
 
+links.push( toLink(
+  'Samuel Brzeski',
+  'https://samuelbrzeski.com/',
+  'Art', 'Tech'
+) );
+

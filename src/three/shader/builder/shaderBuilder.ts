@@ -1,9 +1,10 @@
-import { Attributes, GlslFunctions, GlslFunction, GLSL, Imports, Shader, Uniforms, GlslVariable, Constants } from '../core';
-import { arrayToString, variableValueToGLSL } from './utils';
+import { Attributes, GlslFunctions, GlslFunction, GLSL, Imports, Shader, Uniforms, GlslVariable, Constants, GlslVariables } from '../core';
+import { arrayToString, variableDefinitionToGLSL, variableValueToGLSL } from './utils';
 
 export type ShaderSourceData = {
   imports : Imports,
   constants ?: Constants,
+  globals ?: GlslVariables,
   functions ?: GlslFunctions,
   main : GLSL,
 }
@@ -18,6 +19,15 @@ const constantsToGLSL = ( constants : Constants | undefined ) => {
   return arrayToString( 
     Object.entries( constants ), 
     ( [ name, { type, value } ] ) => `const ${ type } ${ name } = ${ variableValueToGLSL( { type, value } as GlslVariable ) };` 
+  );
+};
+
+const globalsToGLSL = ( globals : GlslVariables | undefined ) => {
+  if( !globals ) return '';
+  console.log( globals );
+  return arrayToString( 
+    Object.entries( globals ), 
+    ( [ name, variable ] ) => variableDefinitionToGLSL( name, variable )
   );
 };
 
@@ -85,6 +95,7 @@ export const buildShader = (
     ${ importsToGLSL( fragmentSourceData.imports ) }
 
     ${ constantsToGLSL( fragmentSourceData.constants ) }
+    ${ globalsToGLSL( fragmentSourceData.globals ) }
 
     ${ functionsToGLSL( fragmentSourceData.functions ) }
 

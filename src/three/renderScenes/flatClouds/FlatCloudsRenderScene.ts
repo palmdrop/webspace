@@ -70,11 +70,11 @@ export class FlatCloudsRenderScene extends AbstractRenderScene {
     this.environmentScene.background = this.scene.background;
 
     for( let i = 0; i < 7; i++ ) {
-      const cloudMaterial = new THREE.ShaderMaterial( 
-        buildPatternShader( 
-          getShaderSettings( this.camera, this.depthPassRenderTarget.depthTexture ) 
-        ) 
+      const shader = buildPatternShader( 
+        getShaderSettings( this.camera, this.depthPassRenderTarget.depthTexture ) 
       );
+
+      const cloudMaterial = new THREE.ShaderMaterial( shader );
       cloudMaterial.transparent = true;
       cloudMaterial.side = THREE.DoubleSide;
 
