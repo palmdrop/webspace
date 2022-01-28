@@ -16,7 +16,6 @@ export const pagesSlice = createSlice( {
 
   reducers: {
     pageDidScroll: ( state, action : PayloadAction<{ location : string, x : number, y : number }> ) => {
-      console.log( action.payload );
       state.scrollPositions[ action.payload.location ] = {
         x: action.payload.x,
         y: action.payload.y,
