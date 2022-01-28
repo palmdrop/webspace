@@ -62,7 +62,7 @@ export default () => {
     frequency: new THREE.Vector3( 1.0, 1.0, 1.0 ).multiplyScalar( random( 2.8, 4.0 ) ),
     amplitude: 1.0,
     pow: random( 2.0, 5.0 ),
-    octaves: Math.floor( random( 4, 6 ) ),
+    octaves: 5.0,
     // TODO: modify background with occasional persistance noise as well! let background bubble up into more detail! 
     // TODO: possibly add this to mask as well!!! 
     persistance: { 
@@ -150,7 +150,7 @@ export default () => {
       y: [ 
         // { kind: 'mult', argument: 0.5 },
         { kind: 'mult', argument: textureSource },
-        { kind: 'mult', argument: 2.0 },
+        { kind: 'mult', argument: random( 1.3, 2.0 ) },
         { kind: 'add', argument: 0.1 },
       ],
       z: [ 

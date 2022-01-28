@@ -151,13 +151,13 @@ export class EdgePathRenderScene extends AbstractRenderScene {
       animationSpeed: 0.48
     } );
 
-    const dirLight1 = new THREE.DirectionalLight( '#ff0000', 5.0 );
+    const dirLight1 = new THREE.DirectionalLight( '#ff0000', 2.5 );
     dirLight1.position.set( 1, 1, 1 );
 
-    const dirLight2 = new THREE.DirectionalLight( '#00ff00', 5.0 );
+    const dirLight2 = new THREE.DirectionalLight( '#00ff00', 2.5 );
     dirLight2.position.set( -1, -1, -2 );
 
-    const ambientLight = new THREE.AmbientLight( 'white', 0.4 );
+    const ambientLight = new THREE.AmbientLight( 'white', 1.2 );
 
     this.scene.add( 
       this.object, 
