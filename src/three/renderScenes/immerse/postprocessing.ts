@@ -57,7 +57,7 @@ export const getPostprocessing = (
   const renderPass = new RenderPass( scene, camera );
   composer.addPass( renderPass );
 
-  if( Math.random() > 1.0 ) {
+  if( Math.random() > 0.75 ) {
     const sobelPass = new ShaderPass( SobelOperatorShader );
     sobelPass.uniforms[ 'resolution' ].value.x = 100;
     sobelPass.uniforms[ 'resolution' ].value.y = 100;

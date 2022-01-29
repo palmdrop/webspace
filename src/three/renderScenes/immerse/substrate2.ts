@@ -164,7 +164,7 @@ export default () => {
           ],
           operation: 'add',
           multipliers: [
-            random( -0.3, 0.3 )
+            random( 0.2, 0.4 )
           ]
         } }
       ],
