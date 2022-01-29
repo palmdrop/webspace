@@ -160,9 +160,7 @@ export const pieces : PieceData[] = [
       'Also, I ported some of my old domain warping blog posts over to this site. Can be found in the blog section.'
     ],
     tags: [
-      'Warp', 
-      'Meditation',
-      'Mind'
+      'Warp, Organic', 
     ],
 
     image: immerseImage,
