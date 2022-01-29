@@ -39,32 +39,12 @@ export default () => {
     ridge: random( 0.5, 1.0 )
   };
 
-  /*
-  const lowFrequencyNoise : Source = {
-    kind: 'noise',
-    frequency: new THREE.Vector3(
-      random( 1.2, 2.4 ),
-      random( 1.2, 2.4 ),
-      random( 1.2, 2.4 ),
-    ),
-    amplitude: 10.0,
-    pow: 1.0,
-    octaves: 1.0, // Math.floor( random( 3, 5 ) ),
-    // persistance: 0.4,
-    // lacunarity: 2.2,
-    // ridge: random( 0.5, 1.0 )
-    normalize: false,
-  };
-  */
-
   const noiseSource1 : Source = {
     kind: 'noise',
     frequency: new THREE.Vector3( 1.0, 1.0, 1.0 ).multiplyScalar( random( 2.8, 4.0 ) ),
     amplitude: 1.0,
     pow: random( 2.0, 5.0 ),
     octaves: 5.0,
-    // TODO: modify background with occasional persistance noise as well! let background bubble up into more detail! 
-    // TODO: possibly add this to mask as well!!! 
     persistance: { 
       kind: 'combined',
       sources: [
@@ -144,11 +124,9 @@ export default () => {
     componentModifications: {
       x: [ 
         { kind: 'mult', argument: noiseSource1 },
-        // { kind: 'add', argument: lowFrequencyNoise },
         { kind: 'add', argument: random( -1.0, 1.0 ) }
       ],
       y: [ 
-        // { kind: 'mult', argument: 0.5 },
         { kind: 'mult', argument: textureSource },
         { kind: 'mult', argument: random( 1.3, 2.0 ) },
         { kind: 'add', argument: 0.1 },

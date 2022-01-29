@@ -139,10 +139,9 @@ export const pieces : PieceData[] = [
     name: 'Flat Clouds',
     description: [
       'Experiment with soft particles, shader builders, and (once again) generative geometry.',
-      `The "soft" aesthetic came as a fairly abstract idea. Sometimes, I feel numb and/or empty. Like
-      I do not think, not in any meaningful way, at least not in that moment. A flat sheet of material. 
-      But something is there, something can emerge, i.e the folds in the sheet.`,
-      'Not sure if this means anything. I decided to leave the idea undeveloped. Felt suiting.'
+      `The "soft" aesthetic came as a fairly abstract idea: sometimes I feel foggy and a bit numb. 
+      Void of thoughts, at least in that moment. A sheet of strange material.`,
+      'Not sure if this means anything. I decided to leave the idea undeveloped. Felt right.'
     ],
     tags: [
       'Warp, Mind'
@@ -155,10 +154,15 @@ export const pieces : PieceData[] = [
   {
     name: 'Immerse',
     description: [
-      'WIP'
+      'Back to domain warping, organic substrate and floating geometries.',
+      `I envisoned something living and breathing emerging in this environment. This gave me the opportunity to once again play with
+      a mix of 2D and 3D. Will probably build on these ideas in the future. I'm also interested in interactivity and procedural animation.`,
+      'Also, I ported some of my old domain warping blog posts over to this site. Can be found in the blog section.'
     ],
     tags: [
-      'Warp, Mind'
+      'Warp', 
+      'Meditation',
+      'Mind'
     ],
 
     image: immerseImage,

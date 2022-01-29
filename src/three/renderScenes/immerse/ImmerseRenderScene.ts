@@ -53,23 +53,6 @@ export class EdgePathRenderScene extends AbstractRenderScene {
   private randoMovement : RandomMovement;
 
   constructor( canvas : HTMLCanvasElement, onLoad : VoidCallback | undefined ) {
-    // TODO: 
-    /*
-      * simple 3d shapes
-      * postprocessing pass with warping shader! 3d geometry controls intensity/character of effect
-      * think concrete specks of moving patterns, the most pronounced where the shape is
-      * a mix of 3d emerging from flat, 2d
-      * 
-      * TODO: DO I ONLY NEED ONE COMPOSER? SIMPLIFY!
-      
-      TODO: fast, symmetric movements. Rotating bodies, zooming in and out, etc...
-      TODO: make alive by animating add/pow of feedback effect! i.e breathing by animating pow, increasing add to make environment alive! 
-      think fast, organic movements. semi-random
-
-      TODO: methods for organic movement
-        * interests that fain and increase
-        * forces exponential! 
-    */
     super( canvas, onLoad );
 
     this.controls = new TrackballControls( this.camera, canvas );
@@ -85,7 +68,7 @@ export class EdgePathRenderScene extends AbstractRenderScene {
 
     this.mousePosition = new THREE.Vector2();
 
-    this.camera.position.z = random( 3, 5 );
+    this.camera.position.z = random( 4, 5 );
 
     const geometry = 
       ImmerseGeometryPrefab( {

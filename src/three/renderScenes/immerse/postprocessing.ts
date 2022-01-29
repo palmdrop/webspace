@@ -10,9 +10,17 @@ import { ColorCorrectionShader } from 'three/examples/jsm/shaders/ColorCorrectio
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
 
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
-import makeShader from './shader';
 import { KawaseBlurPass } from '../../effects/kawaseBlur/KawaseBlurPass';
-import { random } from '../../../utils/random';
+import { random, randomElement } from '../../../utils/random';
+
+
+import substrate1 from './substrate1';
+import substrate2 from './substrate2';
+
+const substrates = [
+  substrate1,
+  substrate2
+];
 
 export const getPostprocessing = (
   renderer : THREE.WebGLRenderer,
@@ -34,8 +42,6 @@ export const getPostprocessing = (
   backgroundComposer.addPass( kawaseBlurPass );
 
   const colorCorrectionPass = new ShaderPass( ColorCorrectionShader );
-  // colorCorrectionPass.uniforms[ 'powRGB' ].value.set( 1.04, 1.04, 1.04 );
-  // colorCorrectionPass.uniforms[ 'addRGB' ].value.set( -0.0015, -0.0015, -0.0015 );
   backgroundComposer.addPass( colorCorrectionPass );
   
   // Copy pass required to make feedback loop happy
@@ -51,15 +57,14 @@ export const getPostprocessing = (
   const renderPass = new RenderPass( scene, camera );
   composer.addPass( renderPass );
 
-  // TOOD: Try diff sizes, 10, 100, 1000, diff in x and y
-  /*
-  const sobelPass = new ShaderPass( SobelOperatorShader );
-  sobelPass.uniforms[ 'resolution' ].value.x = 100; // Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
-  sobelPass.uniforms[ 'resolution' ].value.y = 100; // Math.pow( 10, Math.floor( Math.random() * 3 + 1.0 ) );
-  composer.addPass( sobelPass );
-  */
+  if( Math.random() > 1.0 ) {
+    const sobelPass = new ShaderPass( SobelOperatorShader );
+    sobelPass.uniforms[ 'resolution' ].value.x = 100;
+    sobelPass.uniforms[ 'resolution' ].value.y = 100;
+    composer.addPass( sobelPass );
+  }
 
-  const shader = buildPatternShader( makeShader() );
+  const shader = buildPatternShader( randomElement( substrates )() );
   shader.uniforms[ 'frequency' ].value = 1.0;
 
   const shaderPass = new ShaderPass( shader );
