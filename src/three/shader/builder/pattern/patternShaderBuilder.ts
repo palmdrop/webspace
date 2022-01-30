@@ -1,12 +1,17 @@
 import * as THREE from 'three';
 import { random } from '../../../../utils/random';
 
-import { simplex3dChunk } from '../../chunk/noise';
+import { genericNoise3dChunk, simplex3dChunk } from '../../chunk/noise';
 import { Attributes, GLSL, Shader, Uniforms, GlslFunctions, Constants, ShaderChunk } from '../../core';
 import { buildShader } from '../shaderBuilder';
 import { numToGLSL } from '../utils';
 import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction } from './helpers';
-import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, PatternShaderSettings } from './types';
+import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseFunctionName, PatternShaderSettings } from './types';
+
+const noiseMap : { [key in NoiseFunctionName] : ShaderChunk } = {
+  'simplex3d': simplex3dChunk,
+  'noise3d': genericNoise3dChunk
+};
 
 // Constants
 const REGULAR_OUTPUT = 'n';
@@ -14,7 +19,8 @@ const TEXTURE_OUTPUT = 'color';
 
 // Imports
 const getImports = () : ShaderChunk[] => {
-  return [ simplex3dChunk ];
+  // return [ simplex3dChunk ];
+  return [];
 };
 
 // Uniforms
@@ -70,7 +76,7 @@ const buildFragColorConverterGLSL = (
   uniforms : Uniforms, 
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
-
+  noiseTypes : Set<NoiseFunctionName>
 ) : GLSL => {
   // No color adjustments if settings are absent
   if( !colorSettings ) {
@@ -109,6 +115,7 @@ const buildFragColorConverterGLSL = (
         uniforms,
         textureNames,
         functionCache,
+        noiseTypes,
         'samplePoint'
       );
     } 
@@ -144,6 +151,7 @@ const buildFragColorConverterGLSL = (
       uniforms,
       textureNames,
       functionCache,
+      noiseTypes,
       'samplePoint'
     ) : '1.0';
 
@@ -167,10 +175,16 @@ const buildFragColorConverterGLSL = (
   `;
 };
 
-const buildWarpGLSL = ( domainWarp : DomainWarp | undefined, uniforms : Uniforms, textureNames : Set<string>, functionCache : FunctionCache ) => {
+const buildWarpGLSL = ( 
+  domainWarp : DomainWarp | undefined, 
+  uniforms : Uniforms, 
+  textureNames : Set<string>, 
+  functionCache : FunctionCache,
+  noiseTypes : Set<NoiseFunctionName>
+) => {
   if( !domainWarp ) return '';
 
-  const { name } = buildWarpFunction( domainWarp, uniforms, textureNames, functionCache );
+  const { name } = buildWarpFunction( domainWarp, uniforms, textureNames, functionCache, noiseTypes );
   return `samplePoint = ${ name }( origin );`;
 };
 
@@ -180,6 +194,7 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   const functionCache : FunctionCache = new Map<any, FunctionWithName>();
   const textureNames = new Set<string>();
   const functions : GlslFunctions = {};
+  const noiseTypes : Set<NoiseFunctionName> = new Set<NoiseFunctionName>();
 
   functions[ 'isNan' ] = isNanFunction;
   functions[ 'isInf' ] = isInfFunction;
@@ -222,11 +237,11 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   `;
 
   // Fragment shader
-  const warpGLSL = buildWarpGLSL( settings.domainWarp, uniforms, textureNames, functionCache );
-  const toFragColorGLSL = buildFragColorConverterGLSL( settings.colorSettings, mainFromTexture, functions, uniforms, textureNames, functionCache );
-  const { name: mainSourceName } = buildSource( settings.mainSource, uniforms, textureNames, functionCache, true );
-  const maskSourceData = settings.mask ? buildSource( settings.mask, uniforms, textureNames, functionCache ) : undefined;
-  const alphaMaskSourceData = settings.alphaMask ? buildSource( settings.alphaMask, uniforms, textureNames, functionCache ) : undefined;
+  const warpGLSL = buildWarpGLSL( settings.domainWarp, uniforms, textureNames, functionCache, noiseTypes );
+  const toFragColorGLSL = buildFragColorConverterGLSL( settings.colorSettings, mainFromTexture, functions, uniforms, textureNames, functionCache, noiseTypes );
+  const { name: mainSourceName } = buildSource( settings.mainSource, uniforms, textureNames, functionCache, noiseTypes, true );
+  const maskSourceData = settings.mask ? buildSource( settings.mask, uniforms, textureNames, functionCache, noiseTypes ) : undefined;
+  const alphaMaskSourceData = settings.alphaMask ? buildSource( settings.alphaMask, uniforms, textureNames, functionCache, noiseTypes ) : undefined;
 
   const fogData = settings.fog ? buildFog( settings.fog, functionCache ) : undefined;
 
@@ -294,12 +309,14 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
     }
   } );
 
+  noiseTypes.forEach( type => imports.push( noiseMap[ type ] ) );
+
   // Build
   return buildShader(
     attributes,
     uniforms,
     {
-      imports,
+      imports: [],
       main: vertexMain,
     },
     {

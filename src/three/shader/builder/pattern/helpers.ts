@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { GlslFunction, GLSL, GlslType, Uniforms, GlslVariable, GlslVariables } from '../../core';
+import { GlslFunction, GLSL, GlslType, Uniforms, GlslVariables } from '../../core';
 import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
-import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction, ConstantSource } from './types';
+import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction, ConstantSource, NoiseFunctionName } from './types';
 
 const functionSplittingRegex = /(.*)(return)(.*);/s;
 
@@ -32,6 +32,7 @@ export const buildModification = (
   uniforms : Uniforms,
   textureNames : Set<string>,
   functionCache : FunctionCache,
+  noiseTypes : Set<NoiseFunctionName>,
   samplePointName : string
 ) => {
   if( !Array.isArray( modifications ) ) {
@@ -41,7 +42,7 @@ export const buildModification = (
   const applySingleModification = ( input : GLSL, kind : string, argument : number | Source ) => {
     const modification = typeof argument === 'number' 
       ? numToGLSL( argument ) 
-      : `${ buildSource( argument, uniforms, textureNames, functionCache, false ).name }( ${ samplePointName } )`;
+      : `${ buildSource( argument, uniforms, textureNames, functionCache, noiseTypes, false ).name }( ${ samplePointName } )`;
 
     switch( kind ) {
       case 'add' : return `${ modification } + ${ input }`;
@@ -64,7 +65,8 @@ export const buildAmount = (
   amount : Amount,
   uniforms : Uniforms,
   textureNames : Set<string>,
-  functionCache : FunctionCache
+  functionCache : FunctionCache,
+  noiseTypes : Set<NoiseFunctionName>,
 ) => {
   if( typeof amount === 'number' ) {
     return numToGLSL( amount );
@@ -74,7 +76,8 @@ export const buildAmount = (
     amount,
     uniforms,
     textureNames,
-    functionCache
+    functionCache,
+    noiseTypes,
   );
 
   return functionWithName.name + '( point )'; 
@@ -85,6 +88,7 @@ export const buildSource = (
   uniforms : Uniforms, 
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
+  noiseTypes : Set<NoiseFunctionName>,
   isMain = false,
   cache ?: boolean // If not explicitly set, this function will decide if to cache values or not
 ) : FunctionWithName => {
@@ -142,10 +146,10 @@ export const buildSource = (
   const kind = source.kind;
   switch( kind ) {
     case 'constant' : func = buildConstantSource( source as ConstantSource ); break;
-    case 'noise' : func = buildNoiseSource( source as NoiseSource, uniforms, textureNames, functionCache ); break;
+    case 'noise' : func = buildNoiseSource( source as NoiseSource, uniforms, textureNames, functionCache, noiseTypes ); break;
     case 'trig' : func = buildTrigSource( source as TrigSource ); break;
-    case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, isMain ); break;
-    case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, isMain ); break;
+    case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, noiseTypes, isMain ); break;
+    case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, noiseTypes, isMain ); break;
     case 'texture' : func = buildTextureSource( source as TextureSource, !isMain, uniforms, textureNames, functionCache ); break;
     case 'custom' : func = buildCustomSource( source as CustomSource ); break;
     default : throw new Error( `Source kind ${ kind } is not supported` );
@@ -181,6 +185,7 @@ export const buildNoiseSource = (
   uniforms : Uniforms, 
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
+  noiseTypes : Set<NoiseFunctionName>,
 ) : GlslFunction => { // TODO type this more strongly... do not make any GlslFunction, make specifically source function! And add helper func
   const frequency = noise.frequency;
   const amplitude = noise.amplitude ?? 1.0;
@@ -192,24 +197,28 @@ export const buildNoiseSource = (
 
   const normalize = noise.normalize ?? true;
 
+  const noiseFunctionName = noise.noiseFunctionName ?? 'simplex3d';
+
+  noiseTypes.add( noiseFunctionName );
+
   return {
     parameters: [ [ 'vec3', 'point' ] ],
     returnType: 'float',
     body: `
       float n = 0.0;
       vec3 f = vec3( ${ frequency.x }, ${ frequency.y }, ${ frequency.z } );
-      float a = ${ buildAmount( amplitude, uniforms, textureNames, functionCache ) };
+      float a = ${ buildAmount( amplitude, uniforms, textureNames, functionCache, noiseTypes ) };
 
       float divider = 0.0;
-      float power = ${ buildAmount( pow, uniforms, textureNames, functionCache ) };
-      float ridge = ${ buildAmount( ridge, uniforms, textureNames, functionCache ) };
-      float persistance = ${ buildAmount( persistance, uniforms, textureNames, functionCache ) };
-      float lacunarity = ${ buildAmount( lacunarity, uniforms, textureNames, functionCache ) };
+      float power = ${ buildAmount( pow, uniforms, textureNames, functionCache, noiseTypes ) };
+      float ridge = ${ buildAmount( ridge, uniforms, textureNames, functionCache, noiseTypes ) };
+      float persistance = ${ buildAmount( persistance, uniforms, textureNames, functionCache, noiseTypes ) };
+      float lacunarity = ${ buildAmount( lacunarity, uniforms, textureNames, functionCache, noiseTypes ) };
       float amplitude = a;
 
       for( int i = 0; i < ${ Math.floor( octaves ) }; i++ ) {
         vec3 p = point * f;
-        float on = pow( simplex3d( p ), power );
+        float on = pow( ${ noiseFunctionName }( p ), power );
 
         ${ ridge < 1.0 ? `
           if( on > ridge ) on = ridge - ( on - ridge );
@@ -271,6 +280,7 @@ export const buildCombinedSource = (
   uniforms : Uniforms, 
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
+  noiseTypes : Set<NoiseFunctionName>,
   isMain = false 
 ) : GlslFunction => {
   const getPart = ( name : string, index : number ) => {
@@ -284,7 +294,7 @@ export const buildCombinedSource = (
     return `${ numToGLSL( multiplier ) } * ${ name }( point )`;
   };
 
-  const subSources : FunctionWithName[] = source.sources.map( subSource => buildSource( subSource, uniforms, textureNames, functionCache, isMain ) );
+  const subSources : FunctionWithName[] = source.sources.map( subSource => buildSource( subSource, uniforms, textureNames, functionCache, noiseTypes, isMain ) );
 
   let combinedGLSL = opToGLSL( source.operation, ...subSources.map( ( { name }, index ) => getPart( name, index ) ) );
   if( source.postModifications ) {
@@ -294,6 +304,7 @@ export const buildCombinedSource = (
       uniforms,
       textureNames,
       functionCache,
+      noiseTypes,
       'point'
     );
   }
@@ -312,10 +323,11 @@ export const buildWarpedSource = (
   uniforms : Uniforms, 
   textureNames : Set<string>, 
   functionCache : FunctionCache, 
+  noiseTypes : Set<NoiseFunctionName>,
   isMain = false 
 ) : GlslFunction => {
-  const { name: sourceFunctionName } = buildSource( source.source, uniforms, textureNames, functionCache, isMain );
-  const { name: warpFunctioName } = buildWarpFunction( source.warp, uniforms, textureNames, functionCache );
+  const { name: sourceFunctionName } = buildSource( source.source, uniforms, textureNames, functionCache, noiseTypes, isMain );
+  const { name: warpFunctioName } = buildWarpFunction( source.warp, uniforms, textureNames, functionCache, noiseTypes );
 
   return {
     parameters: [ [ 'vec3', 'point' ] ],
@@ -330,7 +342,8 @@ export const buildWarpFunction = (
   warp : DomainWarp, 
   uniforms : Uniforms, 
   textureNames : Set<string>,
-  functionCache : FunctionCache 
+  functionCache : FunctionCache,
+  noiseTypes : Set<NoiseFunctionName>
 ) : FunctionWithName => {
   if( functionCache.has( warp ) ) return functionCache.get( warp ) as FunctionWithName;
 
@@ -340,7 +353,7 @@ export const buildWarpFunction = (
   const iterations = Math.floor( warp.iterations ?? 1 );
 
   AXES.forEach( axis => {
-    const { name } = buildSource( warp.sources[ axis ], uniforms, textureNames, functionCache );
+    const { name } = buildSource( warp.sources[ axis ], uniforms, textureNames, functionCache, noiseTypes );
     helperNames.push( name );
   } );
 
@@ -348,11 +361,11 @@ export const buildWarpFunction = (
   let amountMultipliers : GLSL[];
 
   if ( typeof amount === 'number' ) {
-    amountMultipliers = Array( 3 ).fill( buildAmount( amount, uniforms, textureNames, functionCache ) );
+    amountMultipliers = Array( 3 ).fill( buildAmount( amount, uniforms, textureNames, functionCache, noiseTypes ) );
   } else if( Array.isArray( amount ) ) {
-    amountMultipliers = amount.map( a => buildAmount( a, uniforms, textureNames, functionCache ) );
+    amountMultipliers = amount.map( a => buildAmount( a, uniforms, textureNames, functionCache, noiseTypes ) );
   } else if( ( amount as Source ).kind ) {
-    amountMultipliers = Array( 3 ).fill( buildAmount( amount as Source, uniforms, textureNames, functionCache ) );
+    amountMultipliers = Array( 3 ).fill( buildAmount( amount as Source, uniforms, textureNames, functionCache, noiseTypes ) );
   } else {
     const { x, y, z } = amount as THREE.Vector3;
     amountMultipliers = [

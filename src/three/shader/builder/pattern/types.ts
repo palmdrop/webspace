@@ -11,6 +11,8 @@ export type FunctionCache = Map<any, FunctionWithName>;
 
 export type Domain = 'uv' | 'vertex' | 'view';
 
+export type NoiseFunctionName = 'noise3d' | 'simplex3d';
+
 export type Modification = {
   kind : 'add' | 'mult' | 'pow' | 'mod',
   argument : number | Source,
@@ -40,6 +42,8 @@ export type NoiseSource = RootSource & {
   lacunarity ?: Amount,
   ridge ?: Amount,
   normalize ?: boolean,
+
+  noiseFunctionName ?: NoiseFunctionName
 }
 
 export type TrigSource = RootSource & {
@@ -138,6 +142,7 @@ export type PatternShaderSettings = {
 
   mainSource : Source,
   domainWarp ?: DomainWarp,
+  noiseFunction ?: NoiseFunctionName,
 
   colorSettings ?: ColorSettings,
 

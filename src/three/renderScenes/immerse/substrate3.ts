@@ -13,7 +13,7 @@ export default () => {
       body: `
         float bri = ( color.r * 0.3 + color.g * 0.6 + color.b * 0.1 ) * color.a;
         float dampingThreshold = 0.5;
-        float dampingAmount = 4.0;
+        float dampingAmount = 3.0;
 
         return (
           bri < dampingThreshold
@@ -32,11 +32,12 @@ export default () => {
       random( 2.2, 4.0 ),
     ),
     amplitude: 1.0,
-    pow: 1.0,
+    pow: 3.0,
     octaves: Math.floor( random( 3, 5 ) ),
-    persistance: 0.4,
+    persistance: 0.3,
     lacunarity: 5.2,
-    ridge: 0.4
+    ridge: 0.8,
+    noiseFunctionName: 'noise3d'
   };
 
   const maskNoiseSource : Source = {
@@ -46,18 +47,19 @@ export default () => {
     amplitude: 1.3,
     pow: 1.0,
     octaves: 4,
-    persistance: 0.4,
+    persistance: 0.7,
     lacunarity: 2.2,
-    ridge: 0.5,
-    normalize: false
+    ridge: 0.4,
+    normalize: false,
+    noiseFunctionName: 'noise3d'
   };
 
   const noiseSource1 : Source = {
     kind: 'noise',
     frequency: new THREE.Vector3( 1.0, 1.0, 1.0 )
       .multiplyScalar( random( 2.5, 5.0 ) ),
-    amplitude: 0.7,
-    pow: 2.0,
+    amplitude: 0.8,
+    pow: 3.0,
     octaves: 5.0,
     persistance: { 
       kind: 'combined',
@@ -71,30 +73,15 @@ export default () => {
       ],
       operation: 'add',
       multipliers: [
-        -0.35,
+        0.35,
         0.55,
         -0.3,
       ],
     },
-    lacunarity: {
-      kind: 'combined',
-      sources: [
-        textureSource,
-        {
-          kind: 'constant',
-          value: 1.0
-        },
-        noiseModifierSource,
-      ],
-      operation: 'add',
-      multipliers: [
-        0.1,
-        2.2,
-        0.01
-      ]
-    },
+    lacunarity: 2.2,
     ridge: random( 0.3, 0.6 ),
     normalize: false,
+    noiseFunctionName: 'noise3d'
   };
 
   const warp : DomainWarp = {
@@ -110,11 +97,18 @@ export default () => {
         kind: 'combined',
         sources: [
           textureSource,
+          {
+            kind: 'constant',
+            value: 1.0
+          },
+          noiseModifierSource
         ],
         operation: 'add',
         multipliers: [
           0.2,
-        ]
+          0.0,
+          0.0
+        ],
       }
     ],
     iterations: 3.0
@@ -128,7 +122,7 @@ export default () => {
     ],
     operation: 'add',
     multipliers: [
-      0.8,
+      1.9,
       0.5,
     ],
   };
@@ -175,7 +169,7 @@ export default () => {
     scale: 1.0,
     mainSource: warpedSource,
     mask,
-    timeOffset: new THREE.Vector3( 0.00, -0.00, 0.02, ),
+    timeOffset: new THREE.Vector3( 0.00, -0.00, 0.01, ),
     colorSettings
   } as PatternShaderSettings; 
 };
