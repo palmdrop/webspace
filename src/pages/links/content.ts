@@ -142,3 +142,9 @@ links.push( toLink(
   'Art', 'Tech'
 ) );
 
+links.push( toLink(
+  'Internet Walks',
+  'https://internetwalks.com',
+  'Art'
+) );
+
