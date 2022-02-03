@@ -185,8 +185,58 @@ float noise3d(vec3 x) {
 
   functionSignatures: {
     'noise3d': {
-      parameters: [ [ 'vec3', 'v' ] ],
+      parameters: [ [ 'vec3', 'x' ] ],
       returnType: 'float',
+    }
+  }
+};
+
+// Adapted from https://www.shadertoy.com/view/flSGDK
+export const voronoi3dChunk : ShaderChunk = {
+  content: `
+float hash(float x) { return fract(x + 1.3215f * 1.8152f); }
+
+float hash3(vec3 a) { return fract((hash(a.z * 42.8883f) + hash(a.y * 36.9125f) + hash(a.x * 65.4321f)) * 291.1257f); }
+
+vec3 rehash3(float x) { return vec3(hash(((x + 0.5283f) * 59.3829f) * 274.3487f), hash(((x + 0.8192f) * 83.6621f) * 345.3871f), hash(((x + 0.2157f) * 36.6521f) * 458.3971f)); }
+
+float sqr(float x) {return x*x;}
+float fastdist(vec3 a, vec3 b) { return sqr(b.x - a.x) + sqr(b.y - a.y) + sqr(b.z - a.z); }
+
+float eval(float x, float y, float z) {
+    vec4 p[27];
+    for (int _x = -1; _x < 2; _x++) for (int _y = -1; _y < 2; _y++) for(int _z = -1; _z < 2; _z++) {
+        vec3 _p = vec3(floor(x), floor(y), floor(z)) + vec3(_x, _y, _z);
+        float h = hash3(_p);
+        p[(_x + 1) + ((_y + 1) * 3) + ((_z + 1) * 3 * 3)] = vec4((rehash3(h) + _p).xyz, h);
+    }
+    float m = 9999.9999f;
+    //float w = 0.0f;
+    for (int i = 0; i < 27; i++) {
+        float d = fastdist(vec3(x, y, z), p[i].xyz);
+        if(d < m) { 
+          m = d; 
+          // w = p[i].w; 
+        }
+    }
+    // return vec2(m, w);
+    return m;
+}
+
+float voronoi3d( vec3 p )
+{
+    // vec2 n = eval( p.x, p.y, p.z );
+    float n = eval( p.x, p.y, p.z );
+    // return 1.0 - sqrt( n.x );
+    return sqrt(n);
+}
+  
+  `,
+
+  functionSignatures: {
+    'voronoi3d': {
+      parameters: [ [ 'vec3', 'p' ] ],
+      returnType: 'float'
     }
   }
 };

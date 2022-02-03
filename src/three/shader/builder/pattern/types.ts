@@ -11,7 +11,7 @@ export type FunctionCache = Map<any, FunctionWithName>;
 
 export type Domain = 'uv' | 'vertex' | 'view';
 
-export type NoiseFunctionName = 'noise3d' | 'simplex3d';
+export type NoiseFunctionName = 'noise3d' | 'simplex3d' | 'voronoi3d';
 
 export type Modification = {
   kind : 'add' | 'mult' | 'pow' | 'mod',

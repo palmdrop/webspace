@@ -17,11 +17,13 @@ import { random, randomElement } from '../../../utils/random';
 import substrate1 from './substrate1';
 import substrate2 from './substrate2';
 import substrate3 from './substrate3';
+import substrate4 from './substrate4';
 
 const substrates = [
   substrate1,
   substrate2,
-  substrate3
+  substrate3,
+  substrate4
 ];
 
 export const getPostprocessing = (
