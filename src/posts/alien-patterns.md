@@ -11,7 +11,7 @@ image: alien-patterns.jpg
 
 In this post, I will shed light on my general process, and showcase some of the pieces I've created. Domain warping and modified noise have been prominent tools of mine for a long while now, and I've developed a little experimental library with loads of components that I routinely use in my generative works. Most of these components can be found in [this](https://github.com/palmdrop/sandbox) repository. The repository, however, is mostly my generative playground and might not e that easy to navigate. I wish you all the luck. I'll try to link to the appropriate files and packages whenever possible.
 
-Before moving on, please read [my post about domain warping](https://palmdrop.zone/blog/my-take-on-domain-warping) and [my post about modified noise](https://palmdrop.zone/blog/characteristics-of-modified-noise). This post heavily builds on the techniques described there.
+Before moving on, please read [my post about domain warping](https://palmdrop.site/blog/my-take-on-domain-warping) and [my post about modified noise](https://palmdrop.site/blog/characteristics-of-modified-noise). This post heavily builds on the techniques described there.
 
 Below are a few sample images, produced using the process I will describe:
 
@@ -40,7 +40,7 @@ These are the function's I'll be using:
 pow(heightmap, exponent)
 ```
 
-See "Powered noise" in [my previous post](https://palmdrop.zone/blog/characteristics-of-modified-noise).
+See "Powered noise" in [my previous post](https://palmdrop.site/blog/characteristics-of-modified-noise).
 
 ```javascript
 add(heightmap1, heightmap2)
@@ -78,7 +78,7 @@ getNoise()
 
 which returns a new noise function (with a unique seed) every time it's called. In all examples, this noise will be simplex noise.
 
-I will also be using a `warp` function which uses the `domainWarp` function from [my post about domain warping](https://palmdrop.zone/blog/my-take-on-domain-warping). This function will take a heightmap, warp its domain, and return the new, warped heightmap.
+I will also be using a `warp` function which uses the `domainWarp` function from [my post about domain warping](https://palmdrop.site/blog/my-take-on-domain-warping). This function will take a heightmap, warp its domain, and return the new, warped heightmap.
 
 ```javascript
 warp(source, angleFunction, distFunction, maxDist)

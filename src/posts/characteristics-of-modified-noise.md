@@ -9,7 +9,7 @@ image: characteristics-of-modified-noise.jpg
 
 ---
 
-Frankly, regular noise is boring. Not very visually pleasing. Repetitive. Not even Ken Perlin used Perlin noise without changing it in various ways. This blog post describes some of the ways I've been altering the noise functions I work with to achieve more interesting results. In my next post, I will document how I've used the techniques from this post and [my previous post](https://palmdrop.zone/blog/my-take-on-domain-warping) to create quite interesting generative art pieces. 
+Frankly, regular noise is boring. Not very visually pleasing. Repetitive. Not even Ken Perlin used Perlin noise without changing it in various ways. This blog post describes some of the ways I've been altering the noise functions I work with to achieve more interesting results. In my next post, I will document how I've used the techniques from this post and [my previous post](https://palmdrop.site/blog/my-take-on-domain-warping) to create quite interesting generative art pieces. 
 
 These are the techniques I'll cover in this post, roughly in order of increasing enchantment:  
 

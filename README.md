@@ -1,7 +1,7 @@
 # OBSCURED - PERSONAL WEBSPACE
 [<img alt="Deployed with FTP Deploy Action" src="https://img.shields.io/badge/Deployed With-FTP DEPLOY ACTION-%3CCOLOR%3E?style=for-the-badge&color=2b9348">](https://github.com/SamKirkland/FTP-Deploy-Action)
 
-**Live at** [palmdrop.zone](https://palmdrop.zone)
+**Live at** [palmdrop.site](https://palmdrop.site)
 
 ![Obscured - main page](/images/example/main-page.png)
 
@@ -21,7 +21,7 @@ The complete source code is published here for all to see. Feel free to glean wh
 
 The contents of [my old (and short-lived) blog](https://palmdrop.github.io) will eventually be moved here.
 
-**Generative art** can mostly be found under ["Pieces"](https://palmdrop.zone/pieces). Recently, I've mostly been experimenting with 3D.
+**Generative art** can mostly be found under ["Pieces"](https://palmdrop.site/pieces). Recently, I've mostly been experimenting with 3D.
 
 ## README/Blog backlog
 Things I'd like to document.

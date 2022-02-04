@@ -28,7 +28,7 @@ const Post4 = () => {
         dangerouslySetInnerHTML={ { __html: `<p>[OLD POST] Combining domain warping and modified noise functions can produce extremely detailed and varied alien-like textures and shapes. This post is a peek into how I&#39;ve been using these techniques to create pieces of generative art.</p>
 <hr>
 <p>In this post, I will shed light on my general process, and showcase some of the pieces I&#39;ve created. Domain warping and modified noise have been prominent tools of mine for a long while now, and I&#39;ve developed a little experimental library with loads of components that I routinely use in my generative works. Most of these components can be found in <a target="_blank" href="https://github.com/palmdrop/sandbox" rel="noopener noreferrer" title="this - https://github.com/palmdrop/sandbox">this</a> repository. The repository, however, is mostly my generative playground and might not e that easy to navigate. I wish you all the luck. I&#39;ll try to link to the appropriate files and packages whenever possible.</p>
-<p>Before moving on, please read <a target="_blank" href="https://palmdrop.zone/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my post about domain warping - https://palmdrop.zone/blog/my-take-on-domain-warping">my post about domain warping</a> and <a target="_blank" href="https://palmdrop.zone/blog/characteristics-of-modified-noise" rel="noopener noreferrer" title="my post about modified noise - https://palmdrop.zone/blog/characteristics-of-modified-noise">my post about modified noise</a>. This post heavily builds on the techniques described there.</p>
+<p>Before moving on, please read <a target="_blank" href="https://palmdrop.site/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my post about domain warping - https://palmdrop.site/blog/my-take-on-domain-warping">my post about domain warping</a> and <a target="_blank" href="https://palmdrop.site/blog/characteristics-of-modified-noise" rel="noopener noreferrer" title="my post about modified noise - https://palmdrop.site/blog/characteristics-of-modified-noise">my post about modified noise</a>. This post heavily builds on the techniques described there.</p>
 <p>Below are a few sample images, produced using the process I will describe:</p>
 <p><img src="/img/alien/valleys4.jpg" alt="Example 1"></p>
 <p><img src="/img/alien/neon5.jpg" alt="Example 2"></p>
@@ -46,7 +46,7 @@ const Post4 = () => {
 <p>These are the function&#39;s I&#39;ll be using:</p>
 <pre><code class="hljs language-javascript"><span class="hljs-title function_">pow</span>(heightmap, exponent)
 </code></pre>
-<p>See &quot;Powered noise&quot; in <a target="_blank" href="https://palmdrop.zone/blog/characteristics-of-modified-noise" rel="noopener noreferrer" title="my previous post - https://palmdrop.zone/blog/characteristics-of-modified-noise">my previous post</a>.</p>
+<p>See &quot;Powered noise&quot; in <a target="_blank" href="https://palmdrop.site/blog/characteristics-of-modified-noise" rel="noopener noreferrer" title="my previous post - https://palmdrop.site/blog/characteristics-of-modified-noise">my previous post</a>.</p>
 <pre><code class="hljs language-javascript"><span class="hljs-title function_">add</span>(heightmap1, heightmap2)
 </code></pre>
 <p>and</p>
@@ -65,7 +65,7 @@ const Post4 = () => {
 <pre><code class="hljs language-javascript"><span class="hljs-title function_">getNoise</span>()
 </code></pre>
 <p>which returns a new noise function (with a unique seed) every time it&#39;s called. In all examples, this noise will be simplex noise.</p>
-<p>I will also be using a <code>warp</code> function which uses the <code>domainWarp</code> function from <a target="_blank" href="https://palmdrop.zone/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my post about domain warping - https://palmdrop.zone/blog/my-take-on-domain-warping">my post about domain warping</a>. This function will take a heightmap, warp its domain, and return the new, warped heightmap.</p>
+<p>I will also be using a <code>warp</code> function which uses the <code>domainWarp</code> function from <a target="_blank" href="https://palmdrop.site/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my post about domain warping - https://palmdrop.site/blog/my-take-on-domain-warping">my post about domain warping</a>. This function will take a heightmap, warp its domain, and return the new, warped heightmap.</p>
 <pre><code class="hljs language-javascript"><span class="hljs-title function_">warp</span>(source, angleFunction, distFunction, maxDist)
     <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> 
         <span class="hljs-title function_">source</span>(<span class="hljs-title function_">domainWarp</span>(p, angleFunction, distFunction, maxDist))
