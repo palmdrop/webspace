@@ -35,7 +35,6 @@ const normalTextures = [
 
 const tempVector = new THREE.Vector3();
 
-
 export class EdgePathRenderScene extends AbstractRenderScene {
   private object : MovableObject;
 

@@ -167,6 +167,19 @@ export const pieces : PieceData[] = [
 
     Component: React.lazy( () => import( './immerse/ImmersePiece' ) ),
   },
+  {
+    name: 'Substrate',
+    description: [
+      'WIP'
+    ],
+    tags: [
+      'Warp, Organic', 
+    ],
+
+    image: immerseImage,
+
+    Component: React.lazy( () => import( './substrate/SubstratePiece' ) )
+  },
 ];
 
 export const FeaturedPieceIndex = pieces.findIndex( pieceData => pieceData.name === 'Retro Core' );
