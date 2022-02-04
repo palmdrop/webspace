@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { random } from '../../../../utils/random';
 
-import { genericNoise3dChunk, simplex3dChunk, voronoi3dChunk } from '../../chunk/noise';
+import { fastVoronoi3dChunk, genericNoise3dChunk, simplex3dChunk, voronoi3dChunk } from '../../chunk/noise';
 import { Attributes, GLSL, Shader, Uniforms, GlslFunctions, Constants, ShaderChunk } from '../../core';
 import { buildShader } from '../shaderBuilder';
 import { numToGLSL } from '../utils';
@@ -11,7 +11,8 @@ import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modificatio
 const noiseMap : { [key in NoiseFunctionName] : ShaderChunk } = {
   'simplex3d': simplex3dChunk,
   'noise3d': genericNoise3dChunk,
-  'voronoi3d': voronoi3dChunk
+  'voronoi3d': voronoi3dChunk,
+  'fastVoronoi3d': fastVoronoi3dChunk
 };
 
 // Constants
