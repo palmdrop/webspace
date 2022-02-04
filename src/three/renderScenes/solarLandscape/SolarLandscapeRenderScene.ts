@@ -11,7 +11,7 @@ import { ASSETHANDLER, dataTextureToEnvironmentMap } from '../../systems/AssetHa
 import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { varyColorHSL } from '../../utils/color';
 
-import hdriPath from '../../../assets/hdri/decor_shop_4k.hdr';
+import hdriPath from '../../../assets/hdri/decor_shop_1k.hdr';
 
 import { createMeshes } from './meshes';
 import { createBackground } from './background';
