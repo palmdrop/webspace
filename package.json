@@ -33,11 +33,13 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "serve": "^12.0.1",
+    "swr": "^1.2.1",
     "three": "^0.131.3",
     "three-kawase-blur": "github:ycw/three-kawase-blur",
     "typescript": "^4.3.5",
     "uuid": "^8.3.2",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "wrangler": "^0.0.15"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -71,6 +73,7 @@
     ]
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^3.3.1",
     "@types/dat.gui": "^0.7.7",
     "@types/jest": "^26.0.24",
     "@types/lodash.debounce": "^4.0.6",
