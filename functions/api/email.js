@@ -1,6 +1,6 @@
 // Tutorial: https://developers.cloudflare.com/pages/tutorials/build-an-api-with-workers
 
-export const onRequestPost = async ( context ) => {
+export const onRequestPost = async ( context, other ) => {
   const {
     request,
     env,
@@ -11,9 +11,11 @@ export const onRequestPost = async ( context ) => {
   const secret = await env.TESTING.get( 'data' );
   const postData = {
     message: 'Hello world!',
-    request,
+    // request,
     secret,
-    params,
+    // params,
+    context,
+    other,
   };
 
   return new Response( 
