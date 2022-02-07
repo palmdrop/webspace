@@ -11,7 +11,7 @@ export const onRequestPost = async ( context ) => {
   const postData = {
     message: 'Hello world!',
     request,
-    SECRET: env.TESTING.get( 'data' )
+    SECRET: await env.TESTING.get( 'data' )
   };
 
   return new Response( 
