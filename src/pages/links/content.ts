@@ -148,3 +148,15 @@ links.push( toLink(
   'Art'
 ) );
 
+links.push( toLink(
+  'HTML Quine',
+  'https://secretgeek.github.io/html_wysiwyg/html.html',
+  'Tech', 'Art'
+) );
+
+links.push( toLink(
+  'UbuWeb',
+  'https://ubu.com/',
+  'Art', 'Politics'
+) );
+
