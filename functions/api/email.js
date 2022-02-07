@@ -11,11 +11,11 @@ export const onRequestPost = async ( context, other ) => {
   const secret = await env.TESTING.get( 'data' );
   const postData = {
     message: 'Hello world!',
-    // request,
+    request,
     secret,
-    // params,
-    context,
+    params,
     other,
+    data
   };
 
   return new Response( 
@@ -29,3 +29,4 @@ export const onRequestPost = async ( context, other ) => {
 };
 
 export const onRequestGet = onRequestPost;
+export const onRequestPut = onRequestPost;

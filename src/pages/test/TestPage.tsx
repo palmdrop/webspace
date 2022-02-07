@@ -2,7 +2,7 @@ import React from 'react';
 
 async function testFunction() {
   const res = await fetch( '/api/email', {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'accept': 'application/json',
       'Content-Type': 'application/json'
