@@ -9,14 +9,17 @@ export const onRequestPost = async ( context, other ) => {
   } = context;
   
   const secret = await env.TESTING.get( 'data' );
+  const res = await request.json();
   const postData = {
     message: 'Hello world!',
     request,
     secret,
     params,
     other,
-    data
+    data,
+    res
   };
+
 
   return new Response( 
     JSON.stringify( postData ),
