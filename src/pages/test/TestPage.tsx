@@ -5,7 +5,10 @@ async function testFunction() {
     method: 'POST',
     headers: {
       'accept': 'application/json'
-    }
+    },
+    body: JSON.stringify( {
+      data: `I'm palmdrop, now is ${ Date.now().toLocaleString() }`
+    } )
   } );
   const json = await res.json();
   return json;

@@ -7,7 +7,8 @@ export const onRequestPost = async ( context ) => {
   } = context;
 
   const postData = {
-    message: 'Hello world!'
+    message: 'Hello world!',
+    request: data
   };
 
   return new Response( 
