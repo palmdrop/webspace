@@ -1,18 +1,34 @@
+import React from 'react';
 import useSWR from 'swr';
 
-const TestPage = () => {
-  const { data, error } = useSWR( '/api/email' );
+async function testFunction() {
+  const res = await fetch( '/api/email', {
+    method: 'POST',
+    /*
+    headers: {
+      // 'accept': 'application/json'
+    }
+    */
+  } );
+  const json = await res.json();
+  return json;
+}
 
-  console.log( data );
-  console.log( error );
+const TestPage = () => {
+  // const { data, error } = useSWR( '/api/email' );
+  React.useEffect( () => {
+    testFunction().then( result => {
+      console.log( 'Fetch succeeded' );
+      console.log( result );
+    } ).catch( error => {
+      console.log( 'Fetch failed' );
+      console.error( error );
+    } );
+  }, [] );
 
   return (
     <div>
       Test page
-
-      { data }
-      { error }
-
     </div>
   );
 };
