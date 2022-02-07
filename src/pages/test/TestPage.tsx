@@ -4,7 +4,8 @@ async function testFunction() {
   const res = await fetch( '/api/email', {
     method: 'POST',
     headers: {
-      'accept': 'application/json'
+      'accept': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify( {
       data: `I'm palmdrop, now is ${ Date.now().toLocaleString() }`
