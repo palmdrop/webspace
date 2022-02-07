@@ -1,3 +1,5 @@
+// Tutorial: https://developers.cloudflare.com/pages/tutorials/build-an-api-with-workers
+
 export const onRequestPost = async ( context ) => {
   const {
     request,
@@ -8,7 +10,8 @@ export const onRequestPost = async ( context ) => {
 
   const postData = {
     message: 'Hello world!',
-    request: data
+    request,
+    SECRET: env.TESTING.get( 'data' )
   };
 
   return new Response( 
