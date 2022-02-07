@@ -294,7 +294,9 @@ export const buildCombinedSource = (
     return `${ numToGLSL( multiplier ) } * ${ name }( point )`;
   };
 
-  const subSources : FunctionWithName[] = source.sources.map( subSource => buildSource( subSource, uniforms, textureNames, functionCache, noiseTypes, isMain ) );
+  const subSources : FunctionWithName[] = source.sources.map( 
+    subSource => buildSource( subSource, uniforms, textureNames, functionCache, noiseTypes, false ) 
+  );
 
   let combinedGLSL = opToGLSL( source.operation, ...subSources.map( ( { name }, index ) => getPart( name, index ) ) );
   if( source.postModifications ) {
