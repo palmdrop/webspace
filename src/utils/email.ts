@@ -18,12 +18,26 @@ export const isValidEmail = ( email : string ) => {
   return emailValidationRegex.test( email );
 };
 
-export const sendFormEmail = ( form : HTMLFormElement ) => {
+// export const sendFormEmail = ( form : HTMLFormElement ) => {
+export const sendFormEmail = ( email : string, message : string ) => {
+  /*
   return emailjs.sendForm( 
     serviceID as string,
     templateID as string,
     form,
     userID
   );
+  */
+  return fetch( '/api/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify( {
+      email, 
+      message
+    } )
+  } );
 };
 

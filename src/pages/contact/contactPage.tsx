@@ -80,13 +80,19 @@ const ContactPage = () : JSX.Element => {
       setFormStatus( Status.SEND_PENDING );
       // Send email
       sendFormEmail( 
-        formRef.current as HTMLFormElement 
-      ).then( () => {
-        setFormStatus( Status.SEND_SUCCESSFUL );
-      }, ( error ) => {
-        setFormStatus( Status.SEND_FAILED );
-        console.error( error );
-      } );
+        // formRef.current as HTMLFormElement 
+        email,
+        message
+      ).then( ( result ) => {
+        console.log( result );
+        /*
+        if( status === 200 ) {
+          setFormStatus( Status.SEND_SUCCESSFUL );
+        } else {
+          setFormStatus( Status.SEND_FAILED );
+        }
+        */
+      } ).catch( error => console.log( error ) );
     }
   };
 
