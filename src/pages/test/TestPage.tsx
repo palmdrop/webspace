@@ -2,13 +2,13 @@ import React from 'react';
 
 async function testFunction() {
   const res = await fetch( '/api/email', {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'accept': 'application/json',
-      'Content-Type': 'application/json'
+      'content-type': 'application/json'
     },
     body: JSON.stringify( {
-      data: `I'm palmdrop, now is ${ Date.now().toLocaleString() }`
+      content: 'post this please'
     } )
   } );
   const json = await res.json();
