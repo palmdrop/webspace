@@ -8,11 +8,12 @@ export const onRequestPost = async ( context ) => {
     data
   } = context;
   
-  // const secret = await env.TESTING.get( 'data' );
+  const secret = await env.TESTING.get( 'data' );
   const postData = {
     message: 'Hello world!',
     request,
-    // secret,
+    secret,
+    params,
   };
 
   return new Response( 
