@@ -6,7 +6,18 @@ export const onRequestPost = async ( context ) => {
     data
   } = context;
 
-  return new Response( 'Hello world!' );
+  const postData = {
+    message: 'Hello world!'
+  };
+
+  return new Response( 
+    JSON.stringify( postData ),
+    {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+  );
 };
 
 export const onRequestGet = onRequestPost;
