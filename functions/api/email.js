@@ -7,11 +7,12 @@ export const onRequestPost = async ( context ) => {
     params,
     data
   } = context;
-
+  
+  // const secret = await env.TESTING.get( 'data' );
   const postData = {
     message: 'Hello world!',
     request,
-    SECRET: await env.TESTING.get( 'data' )
+    // secret,
   };
 
   return new Response( 
