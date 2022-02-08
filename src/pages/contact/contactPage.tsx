@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { sendFormEmail, isValidEmail } from '../../utils/email';
+import { sendEmail, isValidEmail } from '../../utils/email';
 
 import { PageRoute } from '../../App';
 
@@ -79,7 +79,7 @@ const ContactPage = () : JSX.Element => {
     } else if( messageValid && emailValid ) {
       setFormStatus( Status.SEND_PENDING );
       // Send email
-      sendFormEmail( 
+      sendEmail( 
         email,
         message
       ).then( ( result ) => {
