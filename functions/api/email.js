@@ -1,6 +1,3 @@
-// Tutorial: https://developers.cloudflare.com/pages/tutorials/build-an-api-with-workers
-// emailjs public api: https://www.emailjs.com/docs/rest-api/send/
-
 export const onRequestPost = async ( context ) => {
   const {
     request,
@@ -28,22 +25,23 @@ export const onRequestPost = async ( context ) => {
     }
   };
 
-  let result = await fetch( 'https://api.emailjs.com/api/v1.0/email/send', {
-    method: 'POST',
-    body: JSON.stringify( data ),
-    headers: {
-      'accept': 'application/json',
-      'content-type': 'application/json'
-    },
-  } );
+  let result;
 
-  const response = {
-    status: result,
-    data,
-  };
+  try {
+    result = await fetch( 'https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      body: JSON.stringify( data ),
+      headers: {
+        'accept': 'application/json',
+        'content-type': 'application/json'
+      },
+    } );
+  } catch ( error ) {
+    result = error;
+  }
 
   return new Response( 
-    JSON.stringify( response ),
+    JSON.stringify( result.status ),
     null,
     2
   );
