@@ -18,7 +18,7 @@ export const isValidEmail = ( email : string ) => {
   return emailValidationRegex.test( email );
 };
 
-export const sendFormEmail = ( email : string, message : string ) => {
+export const sendEmail = ( email : string, message : string ) => {
   return fetch( '/api/email', {
     method: 'POST',
     headers: {
