@@ -26,23 +26,27 @@ export const onRequestPost = async ( context ) => {
     }
   };
 
-  let result;
 
-  try {
-    result = await fetch( 'https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      body: JSON.stringify( data ),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    } );
-  } catch ( error ) {
-    result = error;
-  }
+  let result = await fetch( 'https://api.emailjs.com/api/v1.0/email/send', {
+    method: 'POST',
+    body: JSON.stringify( data ),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+  } );
+
+  const response = {
+    status: result,
+    email,
+    message,
+    serviceID,
+    templateID,
+    userID
+  };
 
   return new Response( 
-    result.status,
+    JSON.stringify( response ),
     {
       headers: {
         'Content-Type': 'application/json'
