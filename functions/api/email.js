@@ -15,11 +15,13 @@ export const onRequestPost = async ( context ) => {
   const userID = await env.EMAILJS.get( 'USER_ID' );
   const templateID = await env.EMAILJS.get( 'TEMPLATE_ID' );
   const serviceID = await env.EMAILJS.get( 'SERVICE_ID' );
+  const accessToken = await env.EMAILJS.get( 'ACCESS_TOKEN' );
 
   const data = {
     service_id: serviceID,
     template_id: templateID,
     user_id: userID,
+    accessToken,
     template_params: {
       'user_email': email,
       'message': message
