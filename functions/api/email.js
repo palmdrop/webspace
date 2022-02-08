@@ -49,10 +49,7 @@ export const onRequestPost = async ( context ) => {
 
   return new Response( 
     JSON.stringify( response ),
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+    null,
+    2
   );
 };
