@@ -21,6 +21,7 @@ import GradientBackground from './components/ornamental/gradient/GradientBackgro
 
 import './App.scss';
 import { RestoreScroll } from './components/navigation/scroll/RestoreScroll';
+import TestPage from './pages/test/TestPage';
 
 // Use lazy loading to load most pages
 const MainPage = React.lazy( () => import( './pages/main/mainPage' ) );
@@ -129,6 +130,10 @@ const App = () => {
                   </PageWrapper>
                 </Route>
               ) )}
+
+              <Route path={ '/testing' }>
+                <TestPage />
+              </Route>
 
               <Route path={ PageRoute.notFound }>
                 <NotFoundPage />
