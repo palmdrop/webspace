@@ -27,6 +27,7 @@ export const onRequestPost = async ( context ) => {
   };
 
 
+  /*
   let result = await fetch( 'https://api.emailjs.com/api/v1.0/email/send', {
     method: 'POST',
     body: JSON.stringify( data ),
@@ -35,9 +36,10 @@ export const onRequestPost = async ( context ) => {
       'Content-Type': 'application/json'
     },
   } );
+  */
 
   const response = {
-    status: result,
+    // status: result,
     email,
     message,
     serviceID,
