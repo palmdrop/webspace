@@ -16,17 +16,13 @@ export const onRequestPost = async ( context ) => {
     message
   } = await request.json();
 
-  // const res = await request.json();
   const data = {
-    type: 'POST',
-    data: {
-      service_id: serviceID,
-      template_id: templateID,
-      user_id: userID,
-      template_params: {
-        'user_email': email,
-        'message': message
-      }
+    service_id: serviceID,
+    template_id: templateID,
+    user_id: userID,
+    template_params: {
+      'user_email': email,
+      'message': message
     }
   };
 
@@ -34,6 +30,7 @@ export const onRequestPost = async ( context ) => {
 
   try {
     result = await fetch( 'https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
       body: JSON.stringify( data ),
       headers: {
         'Accept': 'application/json',
@@ -44,11 +41,8 @@ export const onRequestPost = async ( context ) => {
     result = error;
   }
 
-  result.email = email;
-  result.message = message;
-
   return new Response( 
-    JSON.stringify( result ),
+    result.status,
     {
       headers: {
         'Content-Type': 'application/json'
