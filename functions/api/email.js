@@ -6,15 +6,15 @@ export const onRequestPost = async ( context ) => {
     request,
     env,
   } = context;
-  
-  const userID = await env.EMAILJS.get( 'USER_ID' );
-  const templateID = await env.EMAILJS.get( 'TEMPLATE_ID' );
-  const serviceID = await env.EMAILJS.get( 'SERVICE_ID' );
 
   const { 
     email,
     message
   } = await request.json();
+  
+  const userID = await env.EMAILJS.get( 'USER_ID' );
+  const templateID = await env.EMAILJS.get( 'TEMPLATE_ID' );
+  const serviceID = await env.EMAILJS.get( 'SERVICE_ID' );
 
   const data = {
     service_id: serviceID,
@@ -26,25 +26,18 @@ export const onRequestPost = async ( context ) => {
     }
   };
 
-
-  /*
   let result = await fetch( 'https://api.emailjs.com/api/v1.0/email/send', {
     method: 'POST',
     body: JSON.stringify( data ),
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'accept': 'application/json',
+      'content-type': 'application/json'
     },
   } );
-  */
 
   const response = {
-    // status: result,
-    email,
-    message,
-    serviceID,
-    templateID,
-    userID
+    status: result,
+    data,
   };
 
   return new Response( 

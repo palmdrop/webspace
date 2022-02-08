@@ -84,7 +84,6 @@ const ContactPage = () : JSX.Element => {
         email,
         message
       ).then( ( result ) => {
-        console.log( result );
         /*
         if( status === 200 ) {
           setFormStatus( Status.SEND_SUCCESSFUL );
@@ -92,7 +91,12 @@ const ContactPage = () : JSX.Element => {
           setFormStatus( Status.SEND_FAILED );
         }
         */
-      } ).catch( error => console.log( error ) );
+        return result.json();
+      } ).then(
+        json => console.log( json )
+      ).catch( 
+        error => console.log( error ) 
+      );
     }
   };
 
