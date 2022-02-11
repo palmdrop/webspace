@@ -7,7 +7,8 @@ import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBu
 import { setUniform } from '../../shader/core';
 
 // import createSubstrateSettings from './growthSubstrate';
-import createSubstrateSettings from './substrate';
+// import createSubstrateSettings from './substrate';
+import createSubstrateSettings from './dreamSubstrate';
 
 export class SubstarteRenderScene extends AbstractRenderScene {
   private targetA : THREE.WebGLRenderTarget;

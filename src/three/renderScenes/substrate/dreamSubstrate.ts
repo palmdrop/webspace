@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
-import { ColorSettings, CombinedSource, DomainWarp, PatternShaderSettings, Source, WarpedSource } from '../../shader/builder/pattern/types';
+import { ColorSettings, DomainWarp, PatternShaderSettings, Source } from '../../shader/builder/pattern/types';
 
 export default () => {
   const textureSource = {
@@ -31,41 +31,43 @@ export default () => {
   const noiseSource1 : Source = {
     kind: 'noise',
     frequency: new THREE.Vector3( 1.0, 1.0, 1.0 )
-      .multiplyScalar( random( 0.5, 1.0 ) ),
+      .multiplyScalar( random( 0.5, 2.0 ) ),
     amplitude: 1.0,
-    pow: 4,
+    pow: 4.5,
     octaves: 5.0,
     persistance: 0.5,
-    lacunarity: {
-      kind: 'combined',
-      sources: [
-        textureSource,
-        {
-          kind: 'constant',
-          value: 1.0,
-        }
-      ],
-      operation: 'add',
-      multipliers: [
-        -0.00,
-        2.5
-      ]
-    },
+    lacunarity: 2.5,
     ridge: 0.3,
     // random( 0.3, 0.6 ),
     normalize: false,
   };
 
+  const remappedNoise = {
+    kind: 'combined',
+    sources: [
+      noiseSource1,
+      {
+        kind: 'constant',
+        value: 1.0,
+      }
+    ],
+    operation: 'add',
+    multipliers: [
+      1.0,
+      -0.5
+    ]
+  };
+
   const warp = {
     kind: 'warp',
     sources: {
-      x: noiseSource1,
-      y: noiseSource1,
+      x: remappedNoise,
+      y: remappedNoise,
       z: textureSource,
     },
     amount: [
-      0.01,
-      0.01,
+      random( -0.01, 0.01 ),
+      random( -0.01, 0.01 ),
       1.9,
     ],
     iterations: 1
@@ -87,6 +89,7 @@ export default () => {
       z: [ 
         { kind: 'mult', argument: -1 },
         { kind: 'add', argument: 1 },
+        { kind: 'mult', argument: 1.1 },
         { kind: 'pow', argument: 1.5 },
         { kind: 'pow', argument: {
           kind: 'combined',
@@ -100,15 +103,10 @@ export default () => {
 
   return {
     domain: 'uv',
-    // scale: random( 2.0, 8.0 ),
     scale: 1.0,
-    // mainSource: warpedSource,
     mainSource: noiseSource1,
     domainWarp: warp,
-    // mask,
-    // timeOffset: new THREE.Vector3( 0.05, -0.05, 0.05 ),
-    // TODO add time offset in x and y as well for strange shifting effects
-    timeOffset: new THREE.Vector3( 0.0, -0.0, -1.1 ),
+    timeOffset: new THREE.Vector3( 0.0, -0.0, random( 0.7, 1.1 ) ),
     colorSettings
   } as PatternShaderSettings; 
 };
