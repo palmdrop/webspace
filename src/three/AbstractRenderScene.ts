@@ -109,7 +109,7 @@ export abstract class AbstractRenderScene implements RenderScene {
   abstract update( delta : number, now : number ) : void;
 
   protected beforeRender() : void {
-    if( this.captureNext && this.dataCallback ) {
+    if( this.captureNext && this.dataCallback && this.captureFrameResolutionMultiplier !== 1.0 ) {
       this.canvas.width *= this.captureFrameResolutionMultiplier;
       this.canvas.height *= this.captureFrameResolutionMultiplier;
       this.resize( this.canvas.width, this.canvas.height );
@@ -120,9 +120,11 @@ export abstract class AbstractRenderScene implements RenderScene {
     if( this.captureNext && this.dataCallback ) {
       this.dataCallback( this.canvas.toDataURL( 'image/url' ) );
 
-      this.canvas.width /= this.captureFrameResolutionMultiplier;
-      this.canvas.height /= this.captureFrameResolutionMultiplier;
-      this.resize( this.canvas.width, this.canvas.height );
+      if ( this.captureFrameResolutionMultiplier !== 1.0 ) {
+        this.canvas.width /= this.captureFrameResolutionMultiplier;
+        this.canvas.height /= this.captureFrameResolutionMultiplier;
+        this.resize( this.canvas.width, this.canvas.height );
+      }
     }
   }
 

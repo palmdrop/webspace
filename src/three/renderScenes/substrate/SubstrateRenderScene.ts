@@ -6,7 +6,8 @@ import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
 import { setUniform } from '../../shader/core';
 
-import createSubstrateSettings from './growthSubstrate';
+// import createSubstrateSettings from './growthSubstrate';
+import createSubstrateSettings from './substrate';
 
 export class SubstarteRenderScene extends AbstractRenderScene {
   private targetA : THREE.WebGLRenderTarget;
@@ -24,6 +25,7 @@ export class SubstarteRenderScene extends AbstractRenderScene {
 
   constructor( canvas : HTMLCanvasElement, onLoad ?: VoidCallback ) {
     super( canvas, onLoad );
+    this.setCaptureFrameResolutionMultiplier( 1.0 );
 
     this.substrateShader = buildPatternShader( createSubstrateSettings() );
 
