@@ -6,9 +6,17 @@ import { FullscreenQuadRenderer } from '../../render/FullscreenQuadRenderer';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
 import { setUniform } from '../../shader/core';
 
-// import createSubstrateSettings from './growthSubstrate';
-// import createSubstrateSettings from './substrate';
-import createSubstrateSettings from './dreamSubstrate';
+import createGrowth from './growthSubstrate';
+import createPattern from './patternSubstrate';
+import createDream from './dreamSubstrate';
+import { randomElement } from '../../../utils/random';
+// import createSubstrateSettings from './susbstrate';
+
+const substrates = [
+  createGrowth,
+  createPattern,
+  createDream
+];
 
 export class SubstarteRenderScene extends AbstractRenderScene {
   private targetA : THREE.WebGLRenderTarget;
@@ -28,7 +36,9 @@ export class SubstarteRenderScene extends AbstractRenderScene {
     super( canvas, onLoad );
     this.setCaptureFrameResolutionMultiplier( 1.0 );
 
-    this.substrateShader = buildPatternShader( createSubstrateSettings() );
+    this.substrateShader = buildPatternShader( 
+      randomElement( substrates )()
+    );
 
     this.targetA = new THREE.WebGLRenderTarget(
       canvas.width, canvas.height, {

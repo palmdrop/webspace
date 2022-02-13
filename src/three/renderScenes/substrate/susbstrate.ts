@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
 import { ColorSettings, DomainWarp, PatternShaderSettings, Source } from '../../shader/builder/pattern/types';
-import { GLSL } from '../../shader/core';
 
 export default () => {
   const textureSource = {
@@ -32,44 +31,42 @@ export default () => {
   const noiseSource1 : Source = {
     kind: 'noise',
     frequency: new THREE.Vector3( 1.0, 1.0, 1.0 )
-      .multiplyScalar( random( 0.5, 2.0 ) ),
+      .multiplyScalar( random( 3, 6.0 ) ),
     amplitude: 1.0,
-    pow: 4.5,
+    pow: 4,
     octaves: 5.0,
     persistance: 0.5,
-    lacunarity: 2.5,
+    lacunarity: {
+      kind: 'combined',
+      sources: [
+        textureSource,
+        {
+          kind: 'constant',
+          value: 1.0,
+        }
+      ],
+      operation: 'add',
+      multipliers: [
+        -0.00,
+        2.5
+      ]
+    },
     ridge: 0.3,
     // random( 0.3, 0.6 ),
     normalize: false,
   };
 
-  const remappedNoise = {
-    kind: 'combined',
-    sources: [
-      noiseSource1,
-      {
-        kind: 'constant',
-        value: 1.0,
-      }
-    ],
-    operation: 'add',
-    multipliers: [
-      1.0,
-      -0.5
-    ]
-  };
-
   const warp = {
     kind: 'warp',
     sources: {
-      x: remappedNoise,
-      y: remappedNoise,
+      x: noiseSource1,
+      y: noiseSource1,
       z: textureSource,
     },
     amount: [
-      random( -0.01, 0.01 ),
-      random( -0.01, 0.01 ),
-      1.9,
+      0.01,
+      0.01,
+      0.3,
     ],
     iterations: 1
   } as DomainWarp;
@@ -78,42 +75,39 @@ export default () => {
     mode: 'hsv',
     componentModifications: {
       x: [ 
-        { kind: 'mult', argument: noiseSource1 },
-        { kind: 'mult', argument: 0.3 },
+        { kind: 'mult', argument: 1.1 },
         { kind: 'add', argument: random( -1.0, 1.0 ) }
       ],
       y: [ 
         { kind: 'mult', argument: 0.2 },
         { kind: 'add', argument: 0.1 },
-        { kind: 'pow', argument: textureSource },
       ],
       z: [ 
-        { kind: 'mult', argument: -1 },
-        { kind: 'add', argument: 1 },
-        { kind: 'mult', argument: 1.1 },
-        { kind: 'pow', argument: 1.5 },
-        { kind: 'pow', argument: {
-          kind: 'combined',
-          sources: [ textureSource, { kind: 'constant', value: 1.0 } ],
-          operation: 'add',
-          multipliers: [ -1.0, 1.2 ]
-        } }
       ],
     }
   };
 
-  const postGLSL : GLSL = `
-    vec4 previous = texture2D( tDiffuse, vUv );
-    gl_FragColor.rgb = mix(gl_FragColor.rgb, previous.rgb, ${ random( 0.1, 0.7 ) } );
-  `;
-
   return {
     domain: 'uv',
-    scale: 1.0 + ( Math.random() < 0.2 ? random( -0.1, 0.1 ) : 0.0 ),
-    mainSource: noiseSource1,
+    scale: 1.0,
+    // mainSource: warpedSource,
+    mainSource: {
+      kind: 'combined',
+      sources: [
+        noiseSource1, 
+        textureSource
+      ],
+      operation: 'add',
+      multipliers: [
+        1.0,
+        0.0
+      ]
+    },
     domainWarp: warp,
-    timeOffset: new THREE.Vector3( 0.0, -0.0, random( 0.7, 1.1 ) ),
-    colorSettings,
-    postGLSL
+    // mask,
+    // timeOffset: new THREE.Vector3( 0.05, -0.05, 0.05 ),
+    // TODO add time offset in x and y as well for strange shifting effects
+    timeOffset: new THREE.Vector3( 0.0, -0.0, -0.07 ),
+    // colorSettings
   } as PatternShaderSettings; 
 };

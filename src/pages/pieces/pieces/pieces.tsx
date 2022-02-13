@@ -170,10 +170,13 @@ export const pieces : PieceData[] = [
   {
     name: 'Substrate',
     description: [
-      'WIP'
+      'Feedback experimentation. Old domain warping techniques complemented with feedback.',
+      'Each frame affects how the warp will be applied on the next frame. This sketch contains a couple of randomized sub-sketches. Try refreshing (or pressing SPACE) a couple of times.',
+      'When experimenting, a lot of the results were extremely chaotic and unstructured, but always contained surprising variety. I had to reduce the influence of the previous frames to achieve coherence.',
+      'But I do enjoy when the piece partly breaks into flickering glitches.'
     ],
     tags: [
-      'Warp, Organic', 
+      'Warp, Feedback', 
     ],
 
     image: immerseImage,

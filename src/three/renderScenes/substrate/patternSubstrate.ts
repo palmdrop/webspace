@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
-import { ColorSettings, CombinedSource, DomainWarp, PatternShaderSettings, Source, WarpedSource } from '../../shader/builder/pattern/types';
+import { ColorSettings, DomainWarp, PatternShaderSettings, Source } from '../../shader/builder/pattern/types';
+import { GLSL } from '../../shader/core';
 
 export default () => {
   const textureSource = {
@@ -31,7 +32,7 @@ export default () => {
   const noiseSource1 : Source = {
     kind: 'noise',
     frequency: new THREE.Vector3( 1.0, 1.0, 1.0 )
-      .multiplyScalar( random( 0.5, 1.0 ) ),
+      .multiplyScalar( random( 2.0, 2.5 ) ),
     amplitude: 1.0,
     pow: 4,
     octaves: 5.0,
@@ -48,11 +49,10 @@ export default () => {
       operation: 'add',
       multipliers: [
         -0.00,
-        2.5
+        2.1
       ]
     },
-    ridge: 0.3,
-    // random( 0.3, 0.6 ),
+    ridge: random( 0.3, 0.8 ),
     normalize: false,
   };
 
@@ -75,7 +75,8 @@ export default () => {
     mode: 'hsv',
     componentModifications: {
       x: [ 
-        { kind: 'mult', argument: noiseSource1 },
+        { kind: 'add', argument: noiseSource1 },
+        { kind: 'mult', argument: textureSource },
         { kind: 'mult', argument: 0.3 },
         { kind: 'add', argument: random( -1.0, 1.0 ) }
       ],
@@ -96,19 +97,20 @@ export default () => {
         } }
       ],
     }
-  };
+  }; 
+
+  const postGLSL : GLSL = `
+    vec4 previous = texture2D( tDiffuse, vUv );
+    gl_FragColor.rgb = mix(gl_FragColor.rgb, previous.rgb, 0.5);
+  `;
 
   return {
     domain: 'uv',
-    // scale: random( 2.0, 8.0 ),
-    scale: 1.0,
-    // mainSource: warpedSource,
+    scale: random( 1.5, 5 ),
     mainSource: noiseSource1,
     domainWarp: warp,
-    // mask,
-    // timeOffset: new THREE.Vector3( 0.05, -0.05, 0.05 ),
-    // TODO add time offset in x and y as well for strange shifting effects
-    timeOffset: new THREE.Vector3( 0.0, -0.0, -1.1 ),
-    colorSettings
+    timeOffset: new THREE.Vector3( 0.0, 0.0, -1.1 ),
+    colorSettings,
+    postGLSL
   } as PatternShaderSettings; 
 };

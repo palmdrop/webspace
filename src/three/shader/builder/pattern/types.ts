@@ -154,5 +154,7 @@ export type PatternShaderSettings = {
 
   forInstancedMesh ?: boolean,
 
-  softParticleSettings ?: SoftParticleSettings
+  softParticleSettings ?: SoftParticleSettings,
+
+  postGLSL ?: GLSL
 }
