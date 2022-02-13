@@ -248,6 +248,8 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
 
   const makeSoftParticle = settings.softParticleSettings ? buildSoftParticleTransform( settings.softParticleSettings, uniforms, textureNames, functionCache ) : undefined;
 
+  const postGLSL = settings.postGLSL ?? '';
+
   const fragmentMain : GLSL = `
     ${ settings.domain === 'uv' ? 'vec3 origin = vec3( vUv, 0.0 );' : '' }
     ${ settings.domain === 'view' ? 'vec3 origin = vec3( vViewPosition );' : '' }
@@ -296,6 +298,8 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
       vec2 screenCoords = gl_FragCoord.xy / resolution.xy;
       gl_FragColor = ${ makeSoftParticle.name }( gl_FragColor, screenCoords );
     ` : '' }
+
+    ${ postGLSL }
   `;
   
   // Add functions and gather global variables

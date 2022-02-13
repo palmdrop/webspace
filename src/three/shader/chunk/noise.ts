@@ -203,17 +203,20 @@ vec3 rehash3(float x) { return vec3(hash(((x + 0.5283f) * 59.3829f) * 274.3487f)
 float sqr(float x) {return x*x;}
 float fastdist(vec3 a, vec3 b) { return sqr(b.x - a.x) + sqr(b.y - a.y) + sqr(b.z - a.z); }
 
-float eval(float x, float y, float z) {
+float eval(vec3 P) {
+    float x = floor(P.x);
+    float y = floor(P.y);
+    float z = floor(P.z);
     vec4 p[27];
     for (int _x = -1; _x < 2; _x++) for (int _y = -1; _y < 2; _y++) for(int _z = -1; _z < 2; _z++) {
-        vec3 _p = vec3(floor(x), floor(y), floor(z)) + vec3(_x, _y, _z);
+        vec3 _p = vec3(x, y, z) + vec3(_x, _y, _z);
         float h = hash3(_p);
         p[(_x + 1) + ((_y + 1) * 3) + ((_z + 1) * 3 * 3)] = vec4((rehash3(h) + _p).xyz, h);
     }
     float m = 9999.9999f;
     //float w = 0.0f;
     for (int i = 0; i < 27; i++) {
-        float d = fastdist(vec3(x, y, z), p[i].xyz);
+        float d = fastdist(P, p[i].xyz);
         if(d < m) { 
           m = d; 
           // w = p[i].w; 
@@ -226,7 +229,7 @@ float eval(float x, float y, float z) {
 float voronoi3d( vec3 p )
 {
     // vec2 n = eval( p.x, p.y, p.z );
-    float n = eval( p.x, p.y, p.z );
+    float n = eval( p );
     // return 1.0 - sqrt( n.x );
     return sqrt(n);
 }

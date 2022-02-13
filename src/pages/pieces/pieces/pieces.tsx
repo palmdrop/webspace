@@ -8,6 +8,7 @@ import virtualImprintImage from '../../../assets/content/pieces/virtual-imprint.
 import rehashTransformImage from '../../../assets/content/pieces/rehash-transform.jpg';
 import flatCloudsImage from '../../../assets/content/pieces/flat-clouds.jpg';
 import immerseImage from '../../../assets/content/pieces/immerse.jpg';
+import substrateImage from '../../../assets/content/pieces/substrate.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -166,6 +167,22 @@ export const pieces : PieceData[] = [
     image: immerseImage,
 
     Component: React.lazy( () => import( './immerse/ImmersePiece' ) ),
+  },
+  {
+    name: 'Substrate',
+    description: [
+      'Feedback experimentation. Old domain warping techniques complemented with feedback.',
+      'Each frame affects how the warp will be applied on the next frame. This sketch contains a couple of randomized sub-sketches. Try refreshing (or pressing SPACE) a couple of times.',
+      'When experimenting, a lot of the results were extremely chaotic and unstructured, but always contained surprising variety. I had to reduce the influence of the previous frames to achieve coherence.',
+      'But I do enjoy when the piece partly breaks into flickering glitches.'
+    ],
+    tags: [
+      'Warp, Feedback', 
+    ],
+
+    image: substrateImage,
+
+    Component: React.lazy( () => import( './substrate/SubstratePiece' ) )
   },
 ];
 
