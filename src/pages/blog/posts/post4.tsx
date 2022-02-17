@@ -1,19 +1,18 @@
 import Post from '../components/post/Post';
 import '../../../styles/highlighting/smog.scss';
-import image from '../../../assets/posts/alien-patterns.jpg';
+import image from '../../../assets/posts/characteristics-of-modified-noise.jpg';
 
 const metadata = {
-  'title': 'Alien Patterns',
+  'title': 'Characteristics of Modified Noise',
   'keywords': [
     'genart',
     'noise',
     'perlin',
     'simplex',
-    'procedural',
-    'patterns'
+    'procedural'
   ],
-  'date': '2022-01-13',
-  'image': '../../../assets/posts/alien-patterns.jpg',
+  'date': '2022-01-12',
+  'image': '../../../assets/posts/characteristics-of-modified-noise.jpg',
   'id': 4
 };
 
@@ -25,175 +24,147 @@ const Post4 = () => {
     >
       <div 
         className="post__content"
-        dangerouslySetInnerHTML={ { __html: `<p>[OLD POST] Combining domain warping and modified noise functions can produce extremely detailed and varied alien-like textures and shapes. This post is a peek into how I&#39;ve been using these techniques to create pieces of generative art.</p>
+        dangerouslySetInnerHTML={ { __html: `<p>[OLD POST] Regular gradient noise, such as Perlin and Simplex noise, is extremely useful for procedurally generating textures, flowfields, heightmaps, etc. But a texture or heightmap created using plain noise is rarely that interesting. Often, noise is modified or used in unique, creative ways.</p>
 <hr>
-<p>In this post, I will shed light on my general process, and showcase some of the pieces I&#39;ve created. Domain warping and modified noise have been prominent tools of mine for a long while now, and I&#39;ve developed a little experimental library with loads of components that I routinely use in my generative works. Most of these components can be found in <a target="_blank" href="https://github.com/palmdrop/sandbox" rel="noopener noreferrer" title="this - https://github.com/palmdrop/sandbox">this</a> repository. The repository, however, is mostly my generative playground and might not e that easy to navigate. I wish you all the luck. I&#39;ll try to link to the appropriate files and packages whenever possible.</p>
-<p>Before moving on, please read <a target="_blank" href="https://palmdrop.site/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my post about domain warping - https://palmdrop.site/blog/my-take-on-domain-warping">my post about domain warping</a> and <a target="_blank" href="https://palmdrop.site/blog/characteristics-of-modified-noise" rel="noopener noreferrer" title="my post about modified noise - https://palmdrop.site/blog/characteristics-of-modified-noise">my post about modified noise</a>. This post heavily builds on the techniques described there.</p>
-<p>Below are a few sample images, produced using the process I will describe:</p>
-<p><img src="/img/alien/valleys4.jpg" alt="Example 1"></p>
-<p><img src="/img/alien/neon5.jpg" alt="Example 2"></p>
-<p><img src="/img/alien/brain5.jpg" alt="Example 3"></p>
-<p>More samples can be found in the <a target="_blank" href="https://github.com/palmdrop/sandbox/tree/main/output" rel="noopener noreferrer" title="repository - https://github.com/palmdrop/sandbox/tree/main/output">repository</a> or on <a target="_blank" href="https://www.instagram.com/palmdrop/" rel="noopener noreferrer" title="my instagram - https://www.instagram.com/palmdrop/">my instagram</a>.</p>
-<p>In this post, I&#39;ll cover the following topics:</p>
+<p>Frankly, regular noise is boring. Not very visually pleasing. Repetitive. Not even Ken Perlin used Perlin noise without changing it in various ways. This blog post describes some of the ways I&#39;ve been altering the noise functions I work with to achieve more interesting results. In my next post, I will document how I&#39;ve used the techniques from this post and <a target="_blank" href="https://palmdrop.site/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my previous post - https://palmdrop.site/blog/my-take-on-domain-warping">my previous post</a> to create quite interesting generative art pieces. </p>
+<p>These are the techniques I&#39;ll cover in this post, roughly in order of increasing enchantment:  </p>
 <ul>
-<li>General process</li>
-<li>Texture pieces</li>
-<li>Alien shapes</li>
-<li>Adding color</li>
+<li>Stretched noise</li>
+<li>Modulo noise</li>
+<li>Powered noise </li>
+<li>Noise combinations</li>
+<li>Ridged noise</li>
+<li>Fractal noise (fractal Brownian motion)</li>
+<li>Dynamic fractal noise</li>
 </ul>
-<p>&quot;General process&quot; will detail the steps I go through when creating images like those above. &quot;Texture pieces&quot; will describe a few specific designs, that I call &quot;patterns&quot;. &quot;Alien shapes&quot; will introduce warped shapes which can be used to mask certain parts of the texture. Finally, I&#39;ll briefly discuss one method for adding color.</p>
-<p>In the pseudo-code for this post, I&#39;ll be using a set of functions that are based on my previous posts. In those posts, I mostly dealt with noise functions, however, in this post I will abstract this to any function which takes a two-dimensional point as input and returns a floating-point value between 0.0 and 1.0. Such a function could be referred to as a &quot;heightmap&quot;. </p>
-<p>These are the function&#39;s I&#39;ll be using:</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">pow</span>(heightmap, exponent)
+<blockquote>
+<p>Note: I&#39;m no expert. I will not cover the mathematics of gradient noise. I&#39;m merely documenting my explorations. </p>
+</blockquote>
+<h3 id="setup">Setup</h3>
+<p>In this post, I&#39;ll often compare 1D and 2D representations of various noise variations. Like this:</p>
+<p><img src="/img/cmn/perlin-comparison.jpg" alt="1D Perlin noise"> </p>
+<p>That was Perlin noise. I&#39;d like to note that I mostly use <a target="_blank" href="https://en.wikipedia.org/wiki/Simplex_noise" rel="noopener noreferrer" title="Simplex noise - https://en.wikipedia.org/wiki/Simplex_noise">Simplex noise</a> instead, to avoid the directional artifacts that emerge when the frequency of Perlin noise is increased. Simplex noise does not suffer from the same artifacts and has some additional benefits (which I will not cover here). </p>
+<p>Below you&#39;ll see a comparison of high-frequency Perlin noise vs high-frequency simplex noise. A clear differenc, no? </p>
+<p><img src="/img/cmn/perlin2D-high.jpg" alt="2D perlin noise with high frequency">
+<img src="/img/cmn/simplex2D-high.jpg" alt="2d simplex noise with high frequency"></p>
+<p>Also, unless I say otherwise, assume the output of the noise is in the range of 0.0 to 1.0.</p>
+<p>Let&#39;s get into some variations. </p>
+<h2 id="stretched-noise">Stretched Noise</h2>
+<p>Extremely easy to achieve. Could be used as the basis of a wood or carpet texture, with some creativity. This effect is achieved by having different frequency values for the x and y directions (and z, if you&#39;re working in three dimensions). This is a type of domain warping.</p>
+<p><img src="/img/cmn/simplex2D-stretched.jpg" alt="stretched simplex noise"></p>
+<p>Before introducing some simple pseudo-code, let me familiarize you with my syntax. In this post, I&#39;ll heavily use lambda expressions. My syntax is the same as the <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions" rel="noopener noreferrer" title="one used in Javascript - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">one used in Javascript</a>, i.e <code>func = (x,y) =&gt; x + y</code> defines a function <code>func</code> which takes two arguments and adds them together.</p>
+<p>Moving on.</p>
+<p>Suppose we have a noise function <code>N</code> which takes a two-dimensional point/vector <code>p</code> as its input. To stretch the noise, we&#39;ll scale the <code>x</code> and <code>y</code> components of <code>p</code> using two scaling values, <code>sx</code> and <code>sy</code>.</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-title function_">N</span>(<span class="hljs-title function_">vec2</span>(p.<span class="hljs-property">x</span> * sx, p.<span class="hljs-property">y</span> * sy))
 </code></pre>
-<p>See &quot;Powered noise&quot; in <a target="_blank" href="https://palmdrop.site/blog/characteristics-of-modified-noise" rel="noopener noreferrer" title="my previous post - https://palmdrop.site/blog/characteristics-of-modified-noise">my previous post</a>.</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">add</span>(heightmap1, heightmap2)
+<p>One issue with this is that you can only scale along the axes, not in an arbitrary direction. This could be solved with some additional vector math, or by rotating the entire domain with some angle. However, I&#39;ll not cover that here.</p>
+<p>Instead, on to more interesting stuff.</p>
+<h2 id="modulus-noise">Modulus noise</h2>
+<p>Not that groundbreaking. The idea is that we apply a modulus operator to the output of the noise function. With a modulus value of 0.5, the output will effectively &quot;wrap around&quot; if it exceeds 0.5. However, the new output will be in the range of 0.0 to 0.5. Therefore, I always use a modulus value of 1.0 and increase the amplitude of the noise function to get the same effect. E.g, scale with 2.0 and wrap at 1.0, and the result will be equal to a wrap at 0.5, with the exception that the output range remains 0.0 to 1.0.</p>
+<p>If we have a noise function <code>N</code> and a multiplier <code>k</code>, we might then define a new noise function like this:</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-title function_">mod</span>(<span class="hljs-title function_">N</span>(p) * k, <span class="hljs-number">1.0</span>)
 </code></pre>
-<p>and</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">mult</span>(heightmap1, heightmap2)
+<p>An additional benefit with this method is that if <code>k</code> is an integer value, the modified noise function will &quot;wrap around&quot; <code>k</code> times. Easy to control. </p>
+<p>Here&#39;s an example:</p>
+<p><img src="/img/cmn/simplex2D-modded.jpg" alt="Modded simplex noise"></p>
+<p>Some of you might see the similarity to metaballs. The math is completely different, but the visual result is quite similar. </p>
+<h2 id="powered-noise">Powered noise</h2>
+<p>Again, quite simple -- just apply the pow operator to the noise output. As long as the noise is in the range of 0.0 and 1.0, this operation will preserve that range. If <code>f(x)</code> is a straight line with an angle of 45 degrees, one can visualize the effect as follows:</p>
+<p><img src="/img/cmn/graphs.jpg" alt="Pow visualization"></p>
+<p>And these are the same operations applied to noise:</p>
+<p><img src="/img/cmn/simplex2D-pow-high.jpg" alt="High powered simplex noise">
+<img src="/img/cmn/simplex2D-pow-low.jpg" alt="Low powered simplex noise"></p>
+<p>Not that fascinating, but useful. You might want to use noise to generate random islands (say, every value above 0.5 is land, the rest is water). A bigger exponent will produce smaller islands, a smaller exponent will produce bigger islands.</p>
+<p>Below is some simple pseudo-code using an exponent <code>k</code>:</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-title function_">pow</span>(<span class="hljs-title function_">N</span>(p), k)
 </code></pre>
-<p>See &quot;Noise combinations&quot;.</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">ridge</span>(heightmap, threshold)
+<p>The more interesting results appear when you understand that <code>k</code> doesn&#39;t have to be constant -- <code>k</code> can be scaled using another noise function. The effect now varies across space.</p>
+<p><img src="/img/cmn/simplex2D-pow-variable.jpg" alt="Variable powered simplex noise"></p>
+<p>High-frequency noise is used as the base, low-frequency noise as the exponent scaling function. If <code>k</code> is our exponent and <code>S</code> is the scaling function, we get this pseudo code:</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-title function_">pow</span>(<span class="hljs-title function_">N</span>(p), k * <span class="hljs-title function_">S</span>(p))
 </code></pre>
-<p>See &quot;Ridged noise&quot;.</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">fractal</span>(heightmapList, frequency, lacunarity, persistance)
+<p>Perhaps you could use this to create a set of archipelagos.</p>
+<h2 id="noise-combinations">Noise combinations</h2>
+<p>The result of multiple noise functions can easily be combined using regular binary operators, such as adding, multiplying, subtracting, or dividing (although dividing might cause unpredictable output intervals and division with zero problems). </p>
+<p>One simple way to combine two noise functions is to multiply the results together. This produces something similar to powered noise, but with a less organic feel. Here&#39;s low-frequency noise and high-frequency noise combined.</p>
+<p><img src="/img/cmn/simplex2D-combined.jpg" alt="Combined simplex noise"></p>
+<p>If we have two noise functions <code>N1</code> and <code>N2</code> they can be combined as follows:</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N3</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-title function_">N1</span>(p) * <span class="hljs-title function_">N2</span>(p)
 </code></pre>
-<p>See &quot;Fractal noise&quot;.</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">dynamicFractal</span>(heightmapList, frequency, lacunarity, persistence, scalingHeightmap)
+<p>Adding or subtracting could be done as well. When adding multiple noise functions together, while changing the amplitude and frequency, one gets something called fractal noise. More on that later.</p>
+<h2 id="ridged-noise">Ridged noise</h2>
+<p>Ridged noise is often used to create mountainous terrain (especially when combined with fractal noise). One creates ridged noise by &quot;inverting&quot; all noise values that exceeds some threshold. However, we invert around said threshold. Not clear? This means that as soon as the slope reaches a certain point, it&#39;s forced to immediately start going down again, which causes a sharp spike. This will become more clear when you read the pseudo-code.</p>
+<p>Here&#39;s 1D ridged noise, which should communicate the idea: </p>
+<p><img src="/img/cmn/simplex1D-ridged.jpg" alt="1D ridged simplex noise"></p>
+<p>While regular noise might be useful for generating smooth hills, this type of noise is more suited for generating mountainous terrain (or generally sharp textures). </p>
+<p>How to calculate a ridged noise value? Say <code>t</code> is our threshold and <code>n</code> is the value we&#39;d like to apply the operation to. Then, if <code>n &gt; t</code> we calculate how much <code>n</code> exceeds <code>t</code> with, i.e <code>n - t</code>. We then subtract this value from the threshold. The resulting expression becomes <code>t - (n - t)</code> (which of course could be simplified, but I prefer it this way since it clearly communicates the idea). </p>
+<p>This only works if <code>t</code> is no less than 0.5 (for noise functions returning values between 0.0 and 1.0). If <code>t</code> is smaller, the operation might return a negative value. My solution to this is to simply invert negative values. This might still cause issues if <code>t</code> is even smaller: by negating the result, the new value could once again be greater than <code>t</code>. If that case, the operation could be applied continuously until the result is in the range of 0.0 and <code>t</code>.</p>
+<p>This is my solution in pseudo code, using a noise function <code>N</code> and a threshold <code>t</code>:</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> 
+    n = <span class="hljs-title function_">N</span>(p)
+    <span class="hljs-keyword">while</span> n &gt; t
+          n = t - (n - t)
+          <span class="hljs-keyword">if</span> n &lt; <span class="hljs-number">0</span>
+            n = -n
+    <span class="hljs-keyword">return</span> n / t
 </code></pre>
-<p>I will also assume the existence of a function</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">getNoise</span>()
+<p>The last division makes sure the return value is in the range of 0.0 and 1.0. </p>
+<p>However, I recommend constraining <code>t</code> to a range of 0.5 to 1.0, to prevent strange visual effects with downwards spikes as well as upwards (unless this is what you want).</p>
+<p>Anyway, here&#39;s 2D ridged simplex noise. </p>
+<p><img src="/img/cmn/simplex2D-ridged-high.jpg" alt="2D ridged simplex noise"></p>
+<p>Ridged noise can also be combined with powered noise, to amplify the &quot;ridges&quot;. Here are two examples:</p>
+<p><img src="/img/cmn/simplex2D-ridged-pow.jpg" alt="2D ridged simplex noise">
+<img src="/img/cmn/simplex2D-ridged-pow2.jpg" alt="2D ridged simplex noise"></p>
+<h2 id="frequency-modulation">Frequency modulation</h2>
+<p>This is a type of domain warping. Normally, the frequency of a noise function is constant, but here, a second function scales the frequency differently depending on the position. </p>
+<p>Consider a noise function <code>N</code> and a scaling function <code>S</code>. We get</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-title function_">N</span>(p * <span class="hljs-title function_">S</span>(p))
 </code></pre>
-<p>which returns a new noise function (with a unique seed) every time it&#39;s called. In all examples, this noise will be simplex noise.</p>
-<p>I will also be using a <code>warp</code> function which uses the <code>domainWarp</code> function from <a target="_blank" href="https://palmdrop.site/blog/my-take-on-domain-warping" rel="noopener noreferrer" title="my post about domain warping - https://palmdrop.site/blog/my-take-on-domain-warping">my post about domain warping</a>. This function will take a heightmap, warp its domain, and return the new, warped heightmap.</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">warp</span>(source, angleFunction, distFunction, maxDist)
-    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> 
-        <span class="hljs-title function_">source</span>(<span class="hljs-title function_">domainWarp</span>(p, angleFunction, distFunction, maxDist))
+<p>One thing to note about this is that positions far away from origo will be affected more than positions closer to the origo. E.g, if <code>p</code> is at a distance of 2.0 from origo, multiplying by 3.0 will translate it to a distance of 6.0 from origo. However, if <code>p</code> is at a distance of 10.0 from origo, multiplying with 3.0 will translate to a distance of 30.0. A change of 4.0 versus 20.0 units. The effect is hence more acute farther from origo. </p>
+<p><img src="/img/cmn/simplex2D-frequency-mod.jpg" alt="2D frequency modulated simplex noise"></p>
+<p>Frequency modulation is a bit hard to work with since the effect is different depending on the distance from origo. But I&#39;ve successfully used it in the past, to a limited extent. <a target="_blank" href="https://www.instagram.com/p/CApnNi9n0nF/" rel="noopener noreferrer" title="This old Instagram post - https://www.instagram.com/p/CApnNi9n0nF/">This old Instagram post</a> uses this technique (here, origo is in the center of the image).</p>
+<h2 id="fractal-noise-fractal-brownian-motion">Fractal noise (fractal Brownian motion)</h2>
+<p>Once again, Inigo Quilez has a great <a target="_blank" href="https://www.iquilezles.org/www/articles/fbm/fbm.htm" rel="noopener noreferrer" title="blog post - https://www.iquilezles.org/www/articles/fbm/fbm.htm">blog post</a> on the subject, which goes into a lot more detail than I will. I recommend reading it.</p>
+<p>Just let me summarize: Fractal noise is many layers of noise, or octaves, added together. For each octave, the frequency is typically increased and the amplitude decreased. This way, each subsequent octave has less influence over the overall output but provides more fine detail. </p>
+<p>The &quot;lacunarity&quot; of fractal noise is the frequency multiplier. For each new octave, we multiply the base frequency with this value. The &quot;persistence&quot; is the same thing, but for amplitude. </p>
+<p>Say we have a list of noise functions <code>LN</code>, a base frequency of <code>f</code>, a lacunarity of <code>L</code> and a persistance of <code>P</code>, this is how I typically create fractal noise:</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span>
+    sum = <span class="hljs-number">0.0</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">0.</span>.. (<span class="hljs-variable constant_">LN</span>.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>)] 
+        N = <span class="hljs-variable constant_">LN</span>[i]
+        frequency = f * <span class="hljs-title function_">pow</span>(L, i)
+        amplitude = <span class="hljs-number">1.0</span> * <span class="hljs-title function_">pow</span>(P, i)
+        sum += <span class="hljs-title function_">N</span>(p * frequency) * amplitude
+    <span class="hljs-keyword">return</span> sum
 </code></pre>
-<h2 id="general-process">General process</h2>
-<p>The goal of my process is often to achieve a high degree of complexity and variation. To do this, it&#39;s vital to create a sufficiently interesting <code>base pattern</code>, or <code>base</code>. This is what the entire texture will build on.</p>
-<p>The <code>base</code> is created using a combination of noise functions, domain-warped noise, and/or <a target="_blank" href="https://github.com/palmdrop/sandbox/blob/main/src/sampling/heightMap/modified/FractalHeightMap.java" rel="noopener noreferrer" title="fractal noise - https://github.com/palmdrop/sandbox/blob/main/src/sampling/heightMap/modified/FractalHeightMap.java">fractal noise</a> (sometimes <a target="_blank" href="https://github.com/palmdrop/sandbox/blob/main/src/sampling/heightMap/modified/DynamicFractalHeightMap.java" rel="noopener noreferrer" title="&quot;dynamic fractal noise&quot; - https://github.com/palmdrop/sandbox/blob/main/src/sampling/heightMap/modified/DynamicFractalHeightMap.java">&quot;dynamic fractal noise&quot;</a>). </p>
-<p>Sometimes, the <code>base</code> is warped further using another noise function, a set of shapes, and so on. The result of this is the <code>texture</code>. The <code>texture</code> and the <code>base</code> are sometimes the same. Do not think about that too much.</p>
-<p>Afterward, recursive domain warping is applied to the <code>texture</code>. Often, the <code>texture</code> is used to warp itself for 1 to 3 iterations. There are endless variations on how this can be done.</p>
-<p>The result of this often produces an interesting black-and-white texture. Color will be discussed in the final part of this post.</p>
-<p>All of this will hopefully become more clear when I get into the next section.</p>
-<h2 id="texture-pieces">Texture Pieces</h2>
-<p>For the sake of example, and because it tends to produce interesting pieces, the textures I&#39;ll go all feature prominent use of ridged noise. Let&#39;s start with the &quot;Fabric texture&quot;.</p>
-<h3 id="fabric-pattern">Fabric Pattern</h3>
-<p><img src="/img/alien/surface2.jpg" alt="Fabric pattern"></p>
-<p>Although not exactly like fabric, this pattern tears in an organic way when zoomed in. This is how it&#39;s made:</p>
-<p>The <code>base</code> is fractal noise based on powered ridged noise. This can be created using a function that returns a new modified noise function each time you call it, like this:</p>
-<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">RN</span> = <span class="hljs-function">() =&gt;</span> 
-    R = <span class="hljs-title function_">ridge</span>(<span class="hljs-title function_">getNoise</span>(), <span class="hljs-number">0.3</span>)
-    <span class="hljs-keyword">return</span> <span class="hljs-title function_">pow</span>(R, <span class="hljs-number">0.2</span>)
+<p>Here, we iterate over the indices of <code>LN</code> and retrieve each noise function. Then we calculate the frequency and amplitude of the current octave. E.g, if <code>L = 2.0</code>, the first iteration we get <code>frequency = f * 2.0^0 = f * 1.0</code>, the second we get <code>frequency = f * 2.0^1.0 = f * 2.0</code>, the third we get <code>frequency = f * 2.0^2 = f * 4.0</code> and so on. A common value for <code>L</code> is 2.0 and a common value for <code>P</code> is 0.5. That means that for each iteration, the frequency doubles, and the amplitude is halved. This ensures that the details are increased while the influence over the general shape is reduced. Here are some examples in 1D and 2D:</p>
+<p><img src="/img/cmn/fractal-noise1D.jpg" alt="1D fractal noise">
+<img src="/img/cmn/fractal-noise2D.jpg" alt="2D fractal noise"></p>
+<p>The first one already is a lot more mountain-like than regular noise. However, we can combine fractal noise with ridged noise to amplify the effect. Simply use the same method as the one described above, but let <code>LN</code> be a list of ridged noise functions. </p>
+<p><img src="/img/cmn/ridged-fractal-noise1D.jpg" alt="1D ridged fractal noise">
+<img src="/img/cmn/ridged-fractal-noise2D.jpg" alt="2D ridged fractal noise"></p>
+<p>The 2D example doesn&#39;t look very mountain-like, but when rendered in 3D one can embody the true mountain essence. I once again urge you to read <a target="_blank" href="https://www.iquilezles.org/www/articles/fbm/fbm.htm" rel="noopener noreferrer" title="Inigo Quilez post - https://www.iquilezles.org/www/articles/fbm/fbm.htm">Inigo Quilez post</a>.</p>
+<p>An additional note: a side effect of combining noise functions in this way is that the return values no longer will be in the range of 0 to 1.0. I often calculate the maximum value possible and divide by this to normalize the results. </p>
+<p>In my next post, I&#39;ll go through some exciting results I&#39;ve achieved when combining fractal noise and domain warping. </p>
+<h2 id="dynamic-fractal-noise">Dynamic fractal noise</h2>
+<p>This is a variation on regular fractal noise. Perhaps there is a name for this already. The idea is that the lacunarity and persistence don&#39;t have to be the same everywhere. With regular fractal noise, the level of detail is constant, which will make the terrain equally rough in all places. But if we vary the persistence, some areas would be more smooth and others rougher. The lacunarity could also be varied, however, this creates almost the same effect as frequency modulation (essentially, you create layers of frequency-modulated noise).</p>
+<p>Let&#39;s take the same code as with regular fractal noise, but introduce a scaling noise <code>S</code> which will be used to vary the persistence. We get</p>
+<pre><code class="hljs language-javascript"><span class="hljs-variable constant_">N2</span> = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span>
+    sum = <span class="hljs-number">0.0</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">0</span> ... <span class="hljs-variable constant_">LN</span>.<span class="hljs-property">length</span>] 
+        N = <span class="hljs-variable constant_">LN</span>[i]
+        frequency = f * <span class="hljs-title function_">pow</span>(L, i)
+        amplitude = <span class="hljs-number">1.0</span> * <span class="hljs-title function_">pow</span>(P * <span class="hljs-title function_">S</span>(p), i)
+        sum += <span class="hljs-title function_">N</span>(p * frequency) * amplitude
+    <span class="hljs-keyword">return</span> sum
 </code></pre>
-<p>This produces ridged noise with amplified ridges. Use the function to create a list <code>LN</code> with nine elements of powered ridged noise. These elements can then be combined using the <code>fractal</code> function described above:</p>
-<pre><code class="hljs language-javascript">base = <span class="hljs-title function_">fractal</span>(<span class="hljs-variable constant_">LN</span>, <span class="hljs-number">0.005</span>, <span class="hljs-number">1.8</span>, <span class="hljs-number">0.5</span>)
-</code></pre>
-<p>This is the result:</p>
-<p><img src="/img/alien/fabric-base.jpg" alt="Fabric pattern base"></p>
-<p>Next, recursive domain warping is applied. Each iteration, the domain warp is applied to the <code>base</code>, and the result is stored in the <code>texture</code> variable. The <code>iterations</code> variable controls the number of iterations. This is my implementation:</p>
-<pre><code class="hljs language-javascript"><span class="hljs-title function_">recursiveWarp</span>(base, iterations)
-    texture = base
-
-    <span class="hljs-keyword">for</span>(i <span class="hljs-keyword">in</span> [<span class="hljs-number">0</span>, ...(iterations - <span class="hljs-number">1</span>)])
-        texture = <span class="hljs-title function_">warp</span>(base, texture, texture, <span class="hljs-number">50</span>)
-
-    <span class="hljs-keyword">return</span> texture
-</code></pre>
-<p><code>texture</code> is drawn to the screen. This is done by translating each pixel to a two-dimensional point, which is used as input to <code>texture</code>. The return value, a value between 0.0 and 1.0, is then translated to a greyscale color. </p>
-<p>This is one iteration:</p>
-<p><img src="/img/alien/fabric-one-iteration.jpg" alt="Fabric one iteration"></p>
-<p>And this is two iterations, with increased warp amount (maxDist):</p>
-<p><img src="/img/alien/fabric-two-iterations.jpg" alt="Fabric two iterations"></p>
-<p>The banner image of this section uses three iterations. Of course, there are endless variations to this. If you want to see my implementation, <a target="_blank" href="https://github.com/palmdrop/sandbox/blob/main/src/sampling/patterns/FabricSurfacePattern.java" rel="noopener noreferrer" title="here&#39;s a link - https://github.com/palmdrop/sandbox/blob/main/src/sampling/patterns/FabricSurfacePattern.java">here&#39;s a link</a>. </p>
-<h3 id="navel-pattern">Navel Pattern</h3>
-<p><img src="/img/alien/valleys1.jpg" alt="Navel pattern"></p>
-<p>The implementation of this pattern is quite similar to the previous one. It&#39;s also based on a list of ridge noise functions, <code>LN</code>, created using the function <code>RN</code>, described previously. However, we also create a scaling heightmap called <code>controller</code> using <code>RN</code>, i.e </p>
-<pre><code class="hljs language-javascript">controller = <span class="hljs-title function_">RN</span>()
-</code></pre>
-<p>Then, a dynamic fractal heightmap is created (instead of a regular fractal one):</p>
-<pre><code class="hljs language-javascript">base = <span class="hljs-title function_">dynamicFractal</span>(<span class="hljs-variable constant_">LN</span>, <span class="hljs-number">0.005</span>, <span class="hljs-number">1.8</span>, <span class="hljs-number">0.5</span>, controller)
-</code></pre>
-<p>The <code>controller</code> varies the persistence of each octave. The resulting <code>base</code> looks like this:</p>
-<p><img src="/img/alien/navel-base.jpg" alt="Navel base"></p>
-<p>Then, the domain is warped recursively in the same way as the previous pattern:</p>
-<pre><code class="hljs language-javascript">texture = <span class="hljs-title function_">recursiveWarp</span>(base, iterations)
-</code></pre>
-<p>This is one iteration:</p>
-<p><img src="/img/alien/navel-one-iteration.jpg" alt="Navel one iteration"></p>
-<p>And this is a variation with higher frequency and two iterations: </p>
-<p><img src="/img/alien/navel-two-iterations.jpg" alt="Navel two iterations"></p>
-<p>Once again, the banner image for this section used three iterations. Three iterations seem to be the sweet spot. A great deal of detail is achieved while preserving structure. </p>
-<p>This pattern has an interesting variation. By &quot;inverting&quot; the return value of the <code>controller</code>, we get more detail at the thin black lines instead of the brighter areas.</p>
-<pre><code class="hljs language-javascript">controller = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span>
-    N = <span class="hljs-title function_">RN</span>()
-    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title function_">N</span>(p)
-</code></pre>
-<p>Using this setup, I created this piece:</p>
-<p><img src="/img/alien/valleys3.jpg" alt="Inverted navel piece"></p>
-<p>The code for the navel pattern can be found <a target="_blank" href="https://github.com/palmdrop/sandbox/blob/main/src/sampling/patterns/NavelFabricPattern.java" rel="noopener noreferrer" title="here - https://github.com/palmdrop/sandbox/blob/main/src/sampling/patterns/NavelFabricPattern.java">here</a>, and the variation described above can be found <a target="_blank" href="https://github.com/palmdrop/sandbox/blob/main/src/sampling/patterns/WakePattern.java" rel="noopener noreferrer" title="here - https://github.com/palmdrop/sandbox/blob/main/src/sampling/patterns/WakePattern.java">here</a>.</p>
-<h3 id="spire-pattern">Spire pattern</h3>
-<p><img src="/img/alien/neon2.jpg" alt="Spire pattern"></p>
-<p>Again, this pattern builds on the previous one. I do love ridged fractal noise, it provides the perfect foundation for highly varied patterns. In the piece above, I added color using the technique which will be discussed in the last section of this post.</p>
-<p>Once more, <code>RN</code> is used to create a <code>controller</code> and a list of eight modified ridged noise functions. These are then combined to create the <code>base</code>, like so:</p>
-<pre><code class="hljs language-javascript">base = <span class="hljs-title function_">dynamicFractal</span>(<span class="hljs-variable constant_">LN</span>, <span class="hljs-number">0.003</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">1.0</span>, controller)
-</code></pre>
-<p>The slightly altered frequency, lacunarity, and persistence create this:</p>
-<p><img src="/img/alien/spire-base.jpg" alt="Spire base"></p>
-<p>This <code>base</code> has a lot more fine detail than the previous ones, and the amount of detail varies a lot in different areas. This gives the resulting pattern a great variety of texture characteristics. </p>
-<p>Like before, the next step is domain warping. For this pattern, one iteration is usually enough, since we already have a lot of detail. I apply the domain warping slightly differently, which is what gives this pattern a different character than the navel pattern. Instead of letting <code>texture</code> control both the rotation and the amount, only the rotation is varied, while the amount is constant. </p>
-<pre><code class="hljs language-javascript">texture = <span class="hljs-title function_">warp</span>(base, base, <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-number">1.0</span>, <span class="hljs-number">100</span>)
-</code></pre>
-<p>where <code>(p) =&gt; 1.0</code> is a function that takes a point and always returns 1.0. </p>
-<p><img src="/img/alien/spire-one-iteration.jpg" alt="Spire one iteration"></p>
-<p>The fascinating part about this pattern is the long &quot;spires&quot;, i.e the long sharp lines. However, the result also has a lot of different textures baked in. Take the banner image of this section. You get strange, smooth bulbs:</p>
-<p><img src="/img/alien/spire-zoom1.jpg" alt="Spire zoom 1"></p>
-<p>You get the curled warp of &quot;typical&quot; domain warping:</p>
-<p><img src="/img/alien/spire-zoom2.jpg" alt="Spire zoom 2"></p>
-<p>And you get these long, sharp spires that spear the overall pattern:</p>
-<p><img src="/img/alien/spire-zoom3.jpg" alt="Spire zoom 3"></p>
-<p>Of course, it&#39;s also possible to do multiple iterations of domain warping with this pattern as well, but we might produce a lot of chaos. Just for show, this is the spire pattern with two iterations and an increased amount of warping:</p>
-<p><img src="/img/alien/spire-two-iterations.jpg" alt="Spire two iterations"></p>
-<p>Like the surface of some planet.</p>
-<hr>
-<p>These were only a few patterns, all using ridged noise. With other noise functions and other ways of modifying noise, there are of course endless variations to this. Some of which I&#39;ve explored in the past. Many of which I will never find time for.</p>
-<h2 id="alien-shapes">Alien shapes</h2>
-<p><img src="/img/alien/o6.jpg" alt="Circle"></p>
-<p>Domain warping can also be used to produce interesting shapes, that in turn can be used to confine the patterns described above to a specific area. I&#39;ll demonstrate with a simple circle function:</p>
-<p><img src="/img/alien/circle.jpg" alt="Circle"></p>
-<p>Let&#39;s use one of the previously described patterns to warp the domain of this circle function. This will produce a distorted shape which can then be used to mask a specific part of a pattern. </p>
-<p><img src="/img/alien/warped-circle.jpg" alt="Warped circle"></p>
-<p>However, the sharp edges produce an unnatural result. I prefer to use a circle function with faded edges instead. Something like this:</p>
-<p><img src="/img/alien/faded-circle.jpg" alt="Faded circle"></p>
-<p>which produces the following effect when warped using the <code>base</code> of the previously describe spire pattern:</p>
-<p><img src="/img/alien/warped-faded-circle.jpg" alt="Warped faded circle"></p>
-<p>This is already quite interesting. However, this can be improved further. Take a <code>base</code> pattern and warp the circle shape using it. The warped circle will now blend well together with that base pattern and can be used to confine the final pattern to the area of the shape. </p>
-<p>say we have a base pattern <code>P</code>, for example, the base of the spire pattern. We also have a blurred circle function <code>C</code>. We now create a warped circle function, <code>S</code>:</p>
-<pre><code class="hljs language-javascript">S = <span class="hljs-title function_">domainWarp</span>(C, P, <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-number">1.0</span>, <span class="hljs-number">50</span>)
-</code></pre>
-<p>We then combine <code>S</code> with our general base pattern <code>P</code> to mask this area:</p>
-<pre><code class="hljs language-javascript">base = <span class="hljs-title function_">mult</span>(S, P)
-</code></pre>
-<p>Using this as <code>base</code>, we perform the same process as described under &quot;General process&quot;, i.e we distort the base using recursive domain warping. This is a possible result:</p>
-<p><img src="/img/alien/warped-faded-circle-two-iterations.jpg" alt="Warped faded circle, two iterations"></p>
-<p>An alien hairball. Very cool. I used this technique, with some variations, to produce a series of pieces called &quot;digital objects&quot; or just &quot;objects.&quot; <a target="_blank" href="https://www.instagram.com/p/CF2F_l4HlYu/?utm_source=ig_web_copy_link" rel="noopener noreferrer" title="This - https://www.instagram.com/p/CF2F_l4HlYu/?utm_source=ig_web_copy_link">This</a>, <a target="_blank" href="https://www.instagram.com/p/CF84oDLnxFb/?utm_source=ig_web_copy_link" rel="noopener noreferrer" title="this - https://www.instagram.com/p/CF84oDLnxFb/?utm_source=ig_web_copy_link">this</a> and <a target="_blank" href="https://www.instagram.com/p/CF9eVrJHlQZ/?utm_source=ig_web_copy_link" rel="noopener noreferrer" title="this - https://www.instagram.com/p/CF9eVrJHlQZ/?utm_source=ig_web_copy_link">this</a> are a few examples. </p>
-<h2 id="adding-color">Adding color</h2>
-<p>Most often, I work in <a target="_blank" href="https://en.wikipedia.org/wiki/HSL_and_HSV" rel="noopener noreferrer" title="HSV space - https://en.wikipedia.org/wiki/HSL_and_HSV">HSV space</a>, which means that I have one channel for controlling hue (the color nuance), one channel for controlling saturation (the richness of the color), and one channel for controlling brightness (which should be self-explanatory). </p>
-<p>Imagine having an <code>HSV</code> function that takes three floating-point values, one for hue, one for saturation, and one for brightness, and converts them to an RGB value which can be displayed on the screen. We&#39;ll use three different functions to vary the value of H, S, and V across space: using <code>H</code>, <code>S</code> and <code>V</code> (functions that take a point and returns a value between 0.0 and 1.0) we create a coloring function <code>C</code>:</p>
-<pre><code class="hljs language-javascript">C = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> 
-    <span class="hljs-title function_">HSV</span>(<span class="hljs-title function_">H</span>(p), <span class="hljs-title function_">S</span>(p), <span class="hljs-title function_">V</span>(p))
-</code></pre>
-<p>Often, brightness, or <code>V</code>, controls most of the general look of the resulting pattern. <code>S</code> can influence the richness of an area, but changes in saturation are not as apparent as changes in brightness. <code>H</code> can really affect the character of the piece.</p>
-<p>We now want to apply color to a pattern <code>P</code>. I often let <code>V = P</code>, since this will influence the piece the most. For the sake of simplicity, let <code>S</code> be constant: <code>S = (p) =&gt; 1.0</code>. Now, say we want the hue to be different for different areas of the image. One solution is to let <code>H</code> be some low-frequency noise. However, if <code>H</code> is not somehow related to <code>P</code>, the hue will seem disconnected from the rest of the pattern. And if <code>H = P</code>, then the hue will vary in the same way as the brightness, which is not that interesting. </p>
-<p>My solution is this: Say <code>N</code> is a low-frequency noise function. Do not use this for <code>H</code> directly, but first warp <code>N</code> using <code>P</code>. For example:</p>
-<pre><code class="hljs language-javascript">H = <span class="hljs-title function_">domainWarp</span>(N, P, <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> <span class="hljs-number">1.0</span>, <span class="hljs-number">100</span>)
-</code></pre>
-<p>Now, the color will vary slowly, but also follow the general shape of the pattern. I used this technique when adding color to the banner image for the Spire pattern, and this piece as well:</p>
-<p><img src="/img/alien/neon4.jpg" alt="Neon colors"></p>
-<hr>
-<p>That was all I had to say. Hope this post proves useful. Feel free to scavenge the <a target="_blank" href="https://github.com/palmdrop/sandbox" rel="noopener noreferrer" title="repository - https://github.com/palmdrop/sandbox">repository</a> and steal anything you find useful. Give me credit if you think the code is worth it. </p>
-<p>Stay inside.</p>
+<p>The only difference is the line that calculates the amplitude. One thing worth noting is that the areas with less detail will often have lower general amplitude since the amplitude of all octaves is scaled equally. It&#39;s of course also possible to have different scaling functions for different octaves.</p>
+<p>Anyway, here&#39;s 1D dynamic fractal noise. Note that the lower area is a lot smoother than the peaks. This is also clearly visible in the 2D representation.</p>
+<p><img src="/img/cmn/dynamic-fractal-noise1D.jpg" alt="1D dynamic fractal noise">
+<img src="/img/cmn/dynamic-fractal-noise2D.jpg" alt="2D dynamic fractal noise"></p>
+<p>Using all these techniques, combined with domain warping, I&#39;ve managed to create extremely interesting shapes and textures. I&#39;ll make a complete post detailing some of these configurations and the output they produced soon. Until then, here&#39;s one of my favorites:</p>
+<p><img src="/img/cmn/showcase.jpg" alt="Bridge"></p>
+<p>Stay safe.</p>
 ` } }
       />
     </Post>
