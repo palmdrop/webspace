@@ -160,3 +160,9 @@ links.push( toLink(
   'Art', 'Politics'
 ) );
 
+links.push( toLink(
+  '~palmdrop',
+  'https://tilde.town/~palmdrop',
+  'Blog'
+) );
+
