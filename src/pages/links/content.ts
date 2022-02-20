@@ -172,3 +172,9 @@ links.push( toLink(
   'Art'
 ) );
 
+links.push( toLink(
+  'Hypercard Simulator',
+  'https://hypercardsimulator.com',
+  'Tech', 'Other'
+) );
+
