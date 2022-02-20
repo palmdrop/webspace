@@ -16,7 +16,9 @@
   }
 
   main {
-    width: calc( min( 48ch, 90vw ) );
+    // width: calc( min( 55ch, 95vw ) );
+    width: 60ch;
+    max-width: 100%;
 
     padding-top: 5em;
     justify-self: center;
@@ -26,7 +28,6 @@
       position: relative;
 
       .title {
-
       }
 
       &__obstacle {

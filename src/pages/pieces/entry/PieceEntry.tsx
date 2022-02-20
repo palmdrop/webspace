@@ -3,6 +3,7 @@ import { PageRoute } from '../../../App';
 import Button from '../../../components/input/button/Button';
 import LazyImage from '../../../components/media/image/LazyImage';
 import Bar from '../../../components/ornamental/bars/Bar';
+import Paragraph from '../../../components/paragraph/Paragraph';
 import { setActivePiece } from '../../../state/slices/uiSlice';
 import { useAppDispatch } from '../../../state/store/hooks';
 import { nameToPath } from '../../../utils/general';
@@ -32,7 +33,7 @@ export const PieceEntry = ( { piece, baseRoute, index } : EntryProps ) : JSX.Ele
       onMouseEnter={ handleHover }
       onMouseLeave={ handleLeave }
     >
-      { 
+      { /*
         <div className="piece-entry__tags">
           { piece.tags.map( ( tag, index ) => {
             let tagText = tag;
@@ -49,23 +50,26 @@ export const PieceEntry = ( { piece, baseRoute, index } : EntryProps ) : JSX.Ele
             );
           } )}
         </div>
-      }
+        */ }
       <Link
         className="piece-entry__link"
         to={ `${ baseRoute }/${ nameToPath( piece.name ) }` }
       >
-        <>
-          { `${ index + 1 }. ${ piece.name }` }
+        <div>
+          <h2>{ `${ index + 1 }. ${ piece.name }` }</h2>
+          <Paragraph>
+            { piece.description[ 0 ] }
+          </Paragraph>
+        </div>
 
-          { piece.image && (
-            <LazyImage 
-              src={ piece.image }
-              alt={ '' }
-              height={ 200 }
-              placeholder={ <div></div> }
-            />
-          )}
-        </>
+        { piece.image && (
+          <LazyImage 
+            src={ piece.image }
+            alt={ '' }
+            height={ 230 }
+            placeholder={ <div></div> }
+          />
+        )}
       </Link>
 
       <Bar 

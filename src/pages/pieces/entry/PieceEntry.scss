@@ -4,7 +4,8 @@
 @import '../../../styles/fonts.scss';
 
 .piece-entry {
-  padding: 1.0em 0.0em;
+  padding-top: 1em;
+  padding-bottom: 0.0em;
   position: relative;
 
   z-index: 1;
@@ -36,12 +37,27 @@
     position: relative;
     letter-spacing: 0.0em;
 
-    font-size: 1.4em;
-    text-align: start;
+    div {
+      h2 {
+        font-size: 1.0em;
+        padding-bottom: 0.3em;
+        @include font( 'button' );
+      }
 
-    width: 80vw;
-    
-    @include font( 'button' );
+      p {
+        font-size: 0.9rem;
+      }
+    }
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @include medium {
+      flex-direction: row;
+    }
+
+    width: 100%;
 
     color: var( --primary-color );
 
@@ -54,33 +70,35 @@
     }
 
     &:hover {
-      @include font( 'accent' );
-      letter-spacing: 0.13em;
-      color: var( --primary-color );
-
-      .lazy-image {
-        visibility: visible;
+      div h2 {
+        @include font( 'accent' );
+        letter-spacing: 0.17em;
+        color: var( --primary-color );
       }
     }
 
     .lazy-image {
-      position: absolute;
       z-index: -1;
-
-      visibility: hidden;
       opacity: 1.0;
 
-      left: 6em;
-      transform: translate( 0%, -50% ) scale( 0.65 );
+      padding-left: 0.2em;
 
-      @include medium {
-        left: 8em;
-        transform: translate( 0%, -50% ) scale( 1.1 );
-      }
+      * {
+        // max-width: 95vw;
+        width: 95vw;
+        height: 200px;
+        border-radius: 1em;
 
-      @include large {
-        left: 10em;
-        transform: translate( 0%, -50% ) scale( 1.3 );
+        object-fit: cover;
+
+        @include small {
+          height: 250px;
+        }
+
+        @include medium {
+          width: unset;
+          max-width: 95vw;
+        }
       }
     }
   }
