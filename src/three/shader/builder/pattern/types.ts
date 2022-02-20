@@ -114,7 +114,8 @@ export type ColorSettings = {
     y ?: Modification | Modification[],
     z ?: Modification | Modification[],
     a ?: Modification | Modification[],
-  }
+  },
+  backgroundColor ?: THREE.Color
 }
 
 export type Fog = {

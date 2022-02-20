@@ -9,6 +9,7 @@ import rehashTransformImage from '../../../assets/content/pieces/rehash-transfor
 import flatCloudsImage from '../../../assets/content/pieces/flat-clouds.jpg';
 import immerseImage from '../../../assets/content/pieces/immerse.jpg';
 import substrateImage from '../../../assets/content/pieces/substrate.jpg';
+import rhizomeImage from '../../../assets/content/pieces/rhizome.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -183,6 +184,21 @@ export const pieces : PieceData[] = [
     image: substrateImage,
 
     Component: React.lazy( () => import( './substrate/SubstratePiece' ) )
+  },
+  {
+    name: 'Rhizome',
+    description: [
+      'Rhizome -  all references to Deleuze a bit of a meme, but the underlying structure of this piece rhizomatic nontheless',
+      'Exploring some more substrate configurations, along with a space colonization algorithm that grows a rhizome-like structure to fill an area.',
+      'The structure is submerged in a "fog", causuing it to fade out as it moves further away from the viewer. I\'m imagining a structure like this one growing out of the background of a future web space of mine.'
+    ],
+    tags: [
+      'Warp, Feedback', 
+    ],
+
+    image: rhizomeImage,
+
+    Component: React.lazy( () => import( './rhizome/RhizomePiece' ) )
   },
 ];
 

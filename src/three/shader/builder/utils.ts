@@ -17,6 +17,23 @@ export const numToGLSL = ( n : number ) => {
 export const opToGLSL = ( operation : Operation, ...args : string[] ) => {
   if( args.length === 0 ) return '';
 
+  if( operation === 'pow' ) {
+    if( args.length === 1 ) return args[ 0 ];
+
+    let result = '';
+    let end = '';
+    for( let i = 0; i < args.length; i++ ) {
+      if( i < args.length - 1 ) {
+        result += `pow(${ args[ i ] }, `;
+        end += ')';
+      } else {
+        result += `${ args[ i ] }`;
+      }
+    }
+
+    return `( ${ result + end } )`;
+  }
+
   const op = ( () => {
     switch( operation ) {
       case 'add': return '+';

@@ -298,7 +298,7 @@ vec4 Cellular_weight_samples( vec4 samples )
 //	Speed up by using 2x2x2 search window instead of 3x3x3
 //	produces range of 0.0->1.0
 //
-float voronoi3d(vec3 P)
+float fastVoronoi3d(vec3 P)
 {
     //	establish our grid cell and unit position
     vec3 Pi = floor(P);
@@ -344,7 +344,7 @@ float voronoi3d(vec3 P)
     vec4 d2 = dx2 * dx2 + dy2 * dy2 + dz2 * dz2;
     d1 = min(d1, d2);
     d1.xy = min(d1.xy, d1.wz);
-    return min(d1.x, d1.y) * ( 9.0 / 12.0 );	//	scale return value from 0.0->1.333333 to 0.0->1.0  	(2/3)^2 * 3  == (12/9) == 1.333333
+    return 2.0 * min(d1.x, d1.y) * ( 9.0 / 12.0 );	//	scale return value from 0.0->1.333333 to 0.0->1.0  	(2/3)^2 * 3  == (12/9) == 1.333333
 }
     
   `,

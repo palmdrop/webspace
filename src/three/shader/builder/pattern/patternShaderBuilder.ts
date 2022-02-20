@@ -5,7 +5,7 @@ import { fastVoronoi3dChunk, genericNoise3dChunk, simplex3dChunk, voronoi3dChunk
 import { Attributes, GLSL, Shader, Uniforms, GlslFunctions, Constants, ShaderChunk } from '../../core';
 import { buildShader } from '../shaderBuilder';
 import { numToGLSL } from '../utils';
-import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction } from './helpers';
+import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction, colorToGLSL } from './helpers';
 import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseFunctionName, PatternShaderSettings } from './types';
 
 const noiseMap : { [key in NoiseFunctionName] : ShaderChunk } = {
@@ -297,6 +297,17 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
     ${ makeSoftParticle ? `
       vec2 screenCoords = gl_FragCoord.xy / resolution.xy;
       gl_FragColor = ${ makeSoftParticle.name }( gl_FragColor, screenCoords );
+    ` : '' }
+
+    ${ settings?.colorSettings?.backgroundColor ? `
+      gl_FragColor = vec4(
+        mix(
+          ${ colorToGLSL( settings.colorSettings.backgroundColor ) },
+          gl_FragColor.rgb, 
+          gl_FragColor.a
+        ),
+        1.0
+      );
     ` : '' }
 
     ${ postGLSL }

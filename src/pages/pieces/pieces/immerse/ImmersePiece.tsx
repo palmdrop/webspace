@@ -1,10 +1,8 @@
-import { EdgePathRenderScene } from '../../../../three/renderScenes/immerse/ImmerseRenderScene';
+import { ImmerseRenderScene } from '../../../../three/renderScenes/immerse/ImmerseRenderScene';
 import { createPiece } from '../Piece';
 
-
-
 export default createPiece( 
-  EdgePathRenderScene,
+  ImmerseRenderScene,
   {
     mouseMoveThrottle: 20
   },

@@ -1,14 +1,34 @@
 import * as THREE from 'three';
 import { random } from '../../../utils/random';
+import { getNoise3D, Noise } from '../../utils/noise';
 
 export type Domain = THREE.Box3 | THREE.Sphere;
 export type ProbabilityMap = ( x : number, y : number, z : number ) => number;
 export type NumberCombiner = ( v1 : number, v2 : number ) => number;
 
+// Probability maps
+export const uniformProbabilityMap = ( probability : number ) : ProbabilityMap => {
+  return () => probability;
+};
+
+export const noiseProbabilityMap = ( 
+  frequency : number,
+  min : number,
+  max : number
+) : ProbabilityMap => {
+  const offset = new THREE.Vector3().random().multiplyScalar( 100 );
+  return ( x, y, z ) => (
+    getNoise3D( { x, y, z }, offset, frequency, min, max )
+  );
+};
+
+
+// Util
 export const combineProbabilityMaps = ( map1 : ProbabilityMap, map2 : ProbabilityMap, combiner : NumberCombiner ) : ProbabilityMap => {
   return ( x, y, z ) => combiner( map1( x, y, z ), map2( x, y, z ) );
 };
 
+// Points
 export const getRandomPointInDomain = ( domain : Domain, point ?: THREE.Vector3 ) => {
   if( domain instanceof THREE.Box3 ) {
     const x = random( domain.min.x, domain.max.x );
@@ -54,4 +74,25 @@ export const getWeightedRandomPointInDomain = (
   }
 
   return undefined;
+};
+
+export const getWeightedRandomPointsInDomain = (
+  domain : Domain,
+  probabilityMap : ProbabilityMap,
+  numberOfPoints : number,
+  tries = 10,
+) : THREE.Vector3[] => {
+  const points : THREE.Vector3[] = [];  
+
+  for( let i = 0; i < numberOfPoints; i++ ) {
+    const point = getWeightedRandomPointInDomain(
+      domain,
+      probabilityMap,
+      tries
+    );
+
+    point && points.push( point );
+  }
+
+  return points;
 };

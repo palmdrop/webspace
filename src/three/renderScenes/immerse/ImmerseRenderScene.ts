@@ -35,7 +35,7 @@ const normalTextures = [
 
 const tempVector = new THREE.Vector3();
 
-export class EdgePathRenderScene extends AbstractRenderScene {
+export class ImmerseRenderScene extends AbstractRenderScene {
   private object : MovableObject;
 
   private mousePosition : THREE.Vector2;

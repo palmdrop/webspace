@@ -5,7 +5,7 @@ export type GLSL = string;
 export type GlslType = 'float' | 'int' | 'bool' | 'vec2' | 'vec3' | 'vec4' | 'sampler2D';
 
 export type Trigonometry = 'sin' | 'cos' | 'tan';
-export type Operation = 'mult' | 'div' | 'add' | 'sub' | 'avg';
+export type Operation = 'mult' | 'div' | 'add' | 'sub' | 'avg' | 'pow';
 
 
 export type GlslFunctionSignature = {

@@ -106,7 +106,7 @@ export default () => {
 
   return {
     domain: 'uv',
-    scale: random( 1.5, 5 ),
+    scale: Math.floor( random( 1.5, 6 ) ),
     mainSource: noiseSource1,
     domainWarp: warp,
     timeOffset: new THREE.Vector3( 0.0, 0.0, -1.1 ),
