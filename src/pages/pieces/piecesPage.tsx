@@ -18,7 +18,6 @@ import { PieceData, PieceNavigationFunction, pieces } from './pieces/pieces';
 import PieceWrapper from './wrapper/PieceWrapper';
 import { PieceEntry } from './entry/PieceEntry';
 
-import { introduction } from './content';
 import { nameToPath } from '../../utils/general';
 
 import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
@@ -89,18 +88,16 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
 
             <main>
               <FadedHeader
-                title={ introduction.title }
+                title="Pieces"
               >
                 <Obstacle className="faded-header__obstacle" />
               </FadedHeader>
 
-              { introduction.description.map( ( paragraph, index ) => (
-                <Paragraph
-                  key={`paragraph-${ index }` }
-                >
-                  { paragraph }
-                </Paragraph>
-              ) )}
+              <Paragraph>
+                This is the place for my experiments with digital and generative art. 
+                I present my work as-is -- living and buggy. <em>Most are heavy on the graphics card. 
+                Mobile users be warned.</em>
+              </Paragraph>
 
               { pieceEntries }
             </main>
