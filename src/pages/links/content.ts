@@ -178,3 +178,9 @@ links.push( toLink(
   'Tech', 'Other'
 ) );
 
+links.push( toLink(
+  'Feral File',
+  'https://feralfile.com',
+  'Art'
+) );
+
