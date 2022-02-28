@@ -1,6 +1,7 @@
 import React from 'react';
 
 async function testFunction() {
+  /*
   const res = await fetch( '/api/email', {
     method: 'POST',
     headers: {
@@ -12,7 +13,16 @@ async function testFunction() {
     } )
   } );
   const json = await res.json();
-  return json;
+  */
+  // return json;
+  const res = await fetch( '/api/guys', {
+    method: 'GET',
+    headers: {
+      'accept': 'application/json'
+    }
+  } );
+  const text = await res.json();
+  return text;
 }
 
 const TestPage = () => {
