@@ -83,7 +83,7 @@
     &--visible {
       opacity: 1;
       transform: translateX( 0 );
-      pointer-events: all;
+      pointer-events: auto;
     }
 
     padding: 1.0em;
@@ -178,19 +178,17 @@
         content: '';
         position: absolute;
         height: 130%;
+        pointer-events: none;
       }
 
       width: 100%;
 
-      div {
-        // width: 30ch;
-
-        .paragraph {
-        }
+      a {
+        text-decoration: underline;
       }
     }
 
-    &:before {
+    &:after {
       content: '';
       position: absolute;
       top: 0;

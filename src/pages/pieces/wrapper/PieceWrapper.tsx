@@ -2,7 +2,7 @@ import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } fr
 
 import { PageRoute } from '../../../App';
 import { ColorTheme } from '../../../state/slices/uiSlice';
-import { PieceNavigationFunction, pieces } from '../pieces/pieces';
+import { pieces } from '../pieces/pieces';
 
 import Button from '../../../components/input/button/Button';
 import Bar from '../../../components/ornamental/bars/Bar';
@@ -28,7 +28,6 @@ type Props = {
   showLoadingPage ?: boolean,
   showOverlay ?: boolean,
   setPageTitle ?: boolean,
-  handlePieceNavigation ?: PieceNavigationFunction
 } 
 
 const PieceWrapper = React.memo( ( { 
@@ -39,7 +38,6 @@ const PieceWrapper = React.memo( ( {
   showLoadingPage = false,
   showOverlay = false,
   setPageTitle = false,
-  handlePieceNavigation
 } : Props ) => {
   const fadeOutRef = useRef<NodeJS.Timeout | null>( null );
 
@@ -66,8 +64,8 @@ const PieceWrapper = React.memo( ( {
   useEffect( () => {
     const handleKeyPress = ( event : KeyboardEvent ) => {
       switch( event.key ) {
-      case 'h': setOverlayEnabled( enabled => !enabled ); break;
-      default: break;
+        case 'h': setOverlayEnabled( enabled => !enabled ); break;
+        default: break;
       }
     };
 
@@ -122,7 +120,7 @@ const PieceWrapper = React.memo( ( {
         </Suspense>
       </div>
       
-      { isLoaded && showOverlay && overlayEnabled && handlePieceNavigation && (
+      { isLoaded && showOverlay && overlayEnabled && (
         <div
           className={ `piece-wrapper__overlay-icon ${ !overlayVisible ? 'piece-wrapper__overlay-icon--visible' : '' }` }
           onClick={ handleOverlayFocus }
@@ -132,7 +130,7 @@ const PieceWrapper = React.memo( ( {
         </div>
       )}
 
-      { ( isLoaded && showOverlay && overlayEnabled && handlePieceNavigation ) && (
+      { isLoaded && showOverlay && overlayEnabled && (
         <div 
           className={ `piece-wrapper__overlay ${ overlayVisible ? 'piece-wrapper__overlay--visible' : '' }` }
           onMouseOver={ handleOverlayFocus }

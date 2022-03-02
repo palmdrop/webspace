@@ -33,11 +33,16 @@
     }
   }
 
-  &__link {
+  a {
+    text-decoration: underline;
+  }
+
+  &__container {
     position: relative;
     letter-spacing: 0.0em;
 
     div {
+
       h2 {
         font-size: 1.0em;
         padding-bottom: 0.3em;

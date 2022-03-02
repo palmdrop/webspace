@@ -14,7 +14,7 @@ import HomeBar from '../../components/navigation/home/HomeBar';
 import FadedHeader from '../../components/header/faded/FadedHeader';
 import Paragraph from '../../components/paragraph/Paragraph';
 
-import { PieceData, PieceNavigationFunction, pieces } from './pieces/pieces';
+import { pieces } from './pieces/pieces';
 import PieceWrapper from './wrapper/PieceWrapper';
 import { PieceEntry } from './entry/PieceEntry';
 
@@ -25,19 +25,6 @@ import { ReactComponent as Obstacle } from '../../assets/svg/obstacle4.svg';
 import './piecesPage.scss';
 
 const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
-  const history = useHistory();
-
-  // TODO: Make piece buttons regular links
-  const handlePieceNavigation : PieceNavigationFunction = useCallback( ( 
-    pieceData : PieceData | undefined, 
-    index : number, 
-    event : React.MouseEvent,
-  ) : void => {
-    event.preventDefault();
-    pieceData = pieceData || pieces[ index ];
-    history.push( `${ route }/${ nameToPath( pieceData.name ) }` );
-  }, [ history, route ] );
-
   const pieceEntries = useMemo( () => (
     pieces.map( ( piece, index ) => (
       <PieceEntry 
@@ -47,7 +34,7 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
         index={ index }
       />
     ) ).reverse()
-  ), [ handlePieceNavigation ] );
+  ), [] );
 
   return (
     <div className="pieces-page" >
@@ -67,7 +54,6 @@ const PiecesPage = ( { route } : PageProps ) : JSX.Element => {
                 showLoadingPage={ true }
                 showOverlay={ true }
                 setPageTitle={ true }
-                handlePieceNavigation={ handlePieceNavigation }
               />
             </Route>
           ) )}

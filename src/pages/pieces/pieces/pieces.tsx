@@ -1,5 +1,7 @@
 import React from 'react';
 import { ColorTheme } from '../../../state/slices/uiSlice';
+import Paragraph from '../../../components/paragraph/Paragraph';
+import ExternalLink from '../../../components/link/ExternalLink';
 
 import retroCoreImage from '../../../assets/content/pieces/retro-core.jpg';
 import solarChromeImage from '../../../assets/content/pieces/solar-chrome.jpg';
@@ -10,6 +12,7 @@ import flatCloudsImage from '../../../assets/content/pieces/flat-clouds.jpg';
 import immerseImage from '../../../assets/content/pieces/immerse.jpg';
 import substrateImage from '../../../assets/content/pieces/substrate.jpg';
 import rhizomeImage from '../../../assets/content/pieces/rhizome.jpg';
+import slicesImage from '../../../assets/content/pieces/slices.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -19,7 +22,7 @@ export type PieceProps = {
 export type Piece = React.FunctionComponent<PieceProps>;
 export type PieceData = {
   name : string,
-  description : string[],
+  description : ( string | JSX.Element )[],
   tags : string[],
   image ?: string,
 
@@ -27,12 +30,6 @@ export type PieceData = {
 
   colorTheme ?: ColorTheme
 }
-
-export type PieceNavigationFunction = ( 
-  pieceData : PieceData | undefined,
-  index : number, 
-  event : React.MouseEvent,
-) => void;
 
 export const pieces : PieceData[] = [
   {
@@ -199,6 +196,28 @@ export const pieces : PieceData[] = [
     image: rhizomeImage,
 
     Component: React.lazy( () => import( './rhizome/RhizomePiece' ) )
+  },
+  {
+    name: 'Slices',
+    description: [
+      <Paragraph key={0}>
+        Experiment with 3D CSS, photography and spaces. Located externally, will be opened in an iframe.
+        If you prefer, visit the actual page at <ExternalLink link="https://palmdrop.github.io/slices">
+          palmdrop.github.io
+        </ExternalLink>
+      </Paragraph>,
+      `I've been thinking about interfaces, what they are, what they are doing to us, and what they could be. 
+      There will probably be a blog post on this subject at some point.`,
+      'Until then, here\'s an interface for viewing image fragments, or slices. Based on a long-form low-energy photo project I\'ve been working on.',
+      'You can right-click and save any image you see.'
+    ],
+    tags: [
+      'Photography, CSS', 
+    ],
+
+    image: slicesImage,
+
+    Component: React.lazy( () => import( './slices/SlicesPiece' ) )
   },
 ];
 

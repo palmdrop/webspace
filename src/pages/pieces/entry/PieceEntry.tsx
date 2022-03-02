@@ -18,6 +18,8 @@ type EntryProps = {
 }
 
 export const PieceEntry = ( { piece, baseRoute, index } : EntryProps ) : JSX.Element => {
+  const linkPath = `${ baseRoute }/${ nameToPath( piece.name ) }`;
+
   const dispatch = useAppDispatch();
 
   const handleHover = () => {
@@ -51,26 +53,33 @@ export const PieceEntry = ( { piece, baseRoute, index } : EntryProps ) : JSX.Ele
           } )}
         </div>
         */ }
-      <Link
-        className="piece-entry__link"
-        to={ `${ baseRoute }/${ nameToPath( piece.name ) }` }
+      <div
+        className="piece-entry__container"
       >
         <div>
-          <h2>{ `${ index + 1 }. ${ piece.name }` }</h2>
-          <Paragraph>
-            { piece.description[ 0 ] }
-          </Paragraph>
+          <Link to={ linkPath }>
+            <h2>{ `${ index + 1 }. ${ piece.name }` }</h2>
+          </Link> 
+          { typeof piece.description[ 0 ] === 'string' ? (
+            <Paragraph>
+              { piece.description[ 0 ] }
+            </Paragraph>
+          ) : (
+            piece.description[ 0 ]
+          )}
         </div>
 
         { piece.image && (
-          <LazyImage 
-            src={ piece.image }
-            alt={ '' }
-            height={ 230 }
-            placeholder={ <div></div> }
-          />
+          <Link to={ linkPath }>
+            <LazyImage 
+              src={ piece.image }
+              alt={ '' }
+              height={ 230 }
+              placeholder={ <div></div> }
+            />
+          </Link>
         )}
-      </Link>
+      </div>
 
       <Bar 
         direction='horizontal'
