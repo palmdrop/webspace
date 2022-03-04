@@ -56,7 +56,7 @@ export const sections : Section[] = [
       I've been working with generative art for many years now. At first, it was a way of learning programming and algorithms. Then, it grew into a more serious artistic expression. I still haven't really found my style or niche. I hope to change that.
       `,
       `
-      I find generative art an extremely fascinating medium. It's inherently chance-based and living. Generative art can be interactive, adaptable, and organic. The artist can either cherry-pick certain outputs and present them as standalone pieces, or continuously generate new outputs, making the algorithm itself the artwork. 
+      Generative art is extremely fascinating to me. It's inherently chance-based and alive. Generative art can be interactive, adaptable, organic. The artist can either cherry-pick certain outputs and present them as standalone pieces, or continuously generate new outputs, making the algorithm itself the artwork. 
       `,
       {
         src: feedPath,
@@ -67,13 +67,13 @@ export const sections : Section[] = [
     ]
   },
   {
-    title: 'Politics and Philosophy',
+    title: 'Viewpoint',
     content: [
       `
-      Although I'm not particularly well-read, politics and philosophy are important to me. I think we need to be conscious of the underlying ideology when using digital tools and inhabiting digital spaces. I too have a Google, Facebook, and Instagram account, but making these platforms our default -- or only -- experience of the Internet is dangerous. These spaces are not our own. They are formed to best fit a capitalist mode of production. They not only gather our data to best serve us personalized ads, but they also conduct social engineering and subtle behavioral conditioning. This is no secret nor accident. 
+      I think we need to be conscious of the underlying ideology when using digital tools and inhabiting digital spaces. I too have a Google, Facebook, and Instagram account, but making these platforms our default -- or only -- experience of the Internet is dangerous. These spaces are not our own. They are formed to best fit a capitalist mode of production. They not only gather our data to best serve us personalized ads, but they also conduct social engineering and subtle behavioral conditioning. This is no secret nor accident. 
       `,
       `
-      Transitioning away from this is a slow process, especially for artists. NFT:s seem hot right now, but they have other problems -- environmental, conceptual, and community-related. 
+      Transitioning away from this is a slow process, especially for artists. Crypto and NFT:s may seem hot right now, but they suffer from inherent problems -- environmental, conceptual, and community-related. 
       `,
       `
       A website of one's own invites more pure digital expression and control.
