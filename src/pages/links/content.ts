@@ -190,3 +190,9 @@ links.push( toLink(
   'Tech'
 ) );
 
+links.push( toLink(
+  'Cyberpunk Prophecies',
+  'https://tilde.town/~vilmibm/cbprop.pdf',
+  'Art'
+) );
+
