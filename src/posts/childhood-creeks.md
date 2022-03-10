@@ -78,11 +78,14 @@ But I still miss it. I do believe part of us are wired around nature. We feel at
 
 Recently, I've had a desire to explore again. Mostly the city, but nearby nature as well. However, there's another aspect to it now. I have a hard time envisioning myself exploring the city or nearby nature without a camera. Without documentation. Without the idea of sharing my findings in the back of my mind.
 
-....???
+Maybe this is an unavoidable shift. I'm a lot more intertwined now. Aware of my connection to other, of my place in the city, on the internet. I'm just sad that so much has gone from experience to aesthetics.
 
+---
 
-  * strong believer in us being connected to nature -- we are used to it. Our brains are wired around it.
-      * feelings of being at rest, at home
-      * the deep forest 
+I was inspired to write this piece after I read [a lesson about swamps for tables in 35 parts](https://tilde.town/~vilmibm/swamp/) by *vilmibm*. I applaud his resistance, however minor, and I wonder why my friends and I didn't even consider it. Why we saw unwanted change, change we didn't understand, and didn't even formulate the idea of resisting.
 
-[inspiration - swamps](https://tilde.town/~vilmibm/swamp/)
+I'm glad I'm more aware of this option, now. Resisting societal shifts, and shifts within myself. It sometimes feel pointless and hopeless but I intend to power through these surges of apathy. I'm feeling such a surge this very moment, but I'll keep writing these words.
+
+---
+
+I haven't thought about this part of my childhood in a while, not properly. It felt good to return. It felt like I was re-asserting something that belonged to me. Refreshed the memory of an experience.
