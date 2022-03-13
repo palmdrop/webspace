@@ -196,3 +196,9 @@ links.push( toLink(
   'Art'
 ) );
 
+links.push( toLink(
+  'Ayatgali Tuleubek',
+  'https://www.ayatgali.com/',
+  'Art'
+) );
+
