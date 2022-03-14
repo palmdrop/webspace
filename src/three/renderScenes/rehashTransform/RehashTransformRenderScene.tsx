@@ -7,7 +7,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { AbstractRenderScene } from '../../AbstractRenderScene';
 import { VoidCallback } from '../../core';
 import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBuilder';
-import { addUniformSlider, setUniform, UniformObject } from '../../shader/core';
+import { addUniformSlider, setUniform } from '../../shader/core';
 import { createObject } from './object';
 import { getComposer } from './postprocessing';
 import { generateRoom } from './room';

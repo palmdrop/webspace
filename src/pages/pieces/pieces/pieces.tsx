@@ -13,6 +13,7 @@ import immerseImage from '../../../assets/content/pieces/immerse.jpg';
 import substrateImage from '../../../assets/content/pieces/substrate.jpg';
 import rhizomeImage from '../../../assets/content/pieces/rhizome.jpg';
 import slicesImage from '../../../assets/content/pieces/slices.jpg';
+import skewBulbsImage from '../../../assets/content/pieces/skew-bulbs.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -218,6 +219,20 @@ export const pieces : PieceData[] = [
     image: slicesImage,
 
     Component: React.lazy( () => import( './slices/SlicesPiece' ) )
+  },
+  {
+    name: 'Skew Bulbs',
+    description: [
+      'Experiment with trigonometric functions (sin, cos) in combination with noise. I also implemented a method of converting these domain warp experiments to normal maps using an additional shader step.',
+      'In this piece, the pattern is first rendered as a normal map, then as a diffusion map (i.e, just color). These maps are applied to a three.js material that is then rendered with a few rotating lights.'
+    ],
+    tags: [
+      'Warp, Trigometry', 
+    ],
+
+    image: skewBulbsImage,
+
+    Component: React.lazy( () => import( './skewBulbs/SkewBulbsPiece' ) )
   },
 ];
 

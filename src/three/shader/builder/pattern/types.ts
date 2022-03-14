@@ -46,6 +46,12 @@ export type NoiseSource = RootSource & {
   noiseFunctionName ?: NoiseFunctionName
 }
 
+type AmountVector = {
+  x : Amount,
+  y : Amount,
+  z : Amount
+};
+
 export type TrigSource = RootSource & {
   kind : 'trig',
   types : { 
@@ -53,10 +59,10 @@ export type TrigSource = RootSource & {
     y : Trigonometry,
     z : Trigonometry
   },
-  frequency ?: THREE.Vector3,
-  amplitude ?: THREE.Vector3,
+  frequency ?: THREE.Vector3 | AmountVector,
+  amplitude ?: THREE.Vector3 | AmountVector,
   combinationOperation ?: Exclude<Operation, 'div'>,
-  pow ?: number,
+  pow ?: Amount,
   normalize ?: boolean
 }
 
@@ -135,6 +141,11 @@ export type SoftParticleSettings = {
   smooth ?: boolean,
 }
 
+export type NormalMapConverterSettings = {
+  offset : number,
+  strength : number
+}
+
 // Settings
 export type PatternShaderSettings = {
   domain : Domain,
@@ -143,6 +154,7 @@ export type PatternShaderSettings = {
 
   mainSource : Source,
   domainWarp ?: DomainWarp,
+  ditherAmount ?: number,
   noiseFunction ?: NoiseFunctionName,
 
   colorSettings ?: ColorSettings,
@@ -156,6 +168,7 @@ export type PatternShaderSettings = {
   forInstancedMesh ?: boolean,
 
   softParticleSettings ?: SoftParticleSettings,
+  normalMapConverterSettings ?: NormalMapConverterSettings,
 
   postGLSL ?: GLSL
 }

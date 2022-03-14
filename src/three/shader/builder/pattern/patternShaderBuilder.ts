@@ -5,7 +5,7 @@ import { fastVoronoi3dChunk, genericNoise3dChunk, simplex3dChunk, voronoi3dChunk
 import { Attributes, GLSL, Shader, Uniforms, GlslFunctions, Constants, ShaderChunk } from '../../core';
 import { buildShader } from '../shaderBuilder';
 import { numToGLSL } from '../utils';
-import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction, colorToGLSL } from './helpers';
+import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction, colorToGLSL, buildSourceToNormalMapFunction, buildDitheringFunction } from './helpers';
 import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseFunctionName, PatternShaderSettings } from './types';
 
 const noiseMap : { [key in NoiseFunctionName] : ShaderChunk } = {
@@ -243,12 +243,26 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   const { name: mainSourceName } = buildSource( settings.mainSource, uniforms, textureNames, functionCache, noiseTypes, true );
   const maskSourceData = settings.mask ? buildSource( settings.mask, uniforms, textureNames, functionCache, noiseTypes ) : undefined;
   const alphaMaskSourceData = settings.alphaMask ? buildSource( settings.alphaMask, uniforms, textureNames, functionCache, noiseTypes ) : undefined;
+  const sourceToNormalMap = settings.normalMapConverterSettings ? buildSourceToNormalMapFunction( settings.normalMapConverterSettings, mainSourceName, uniforms, functionCache ) : undefined;
 
   const fogData = settings.fog ? buildFog( settings.fog, functionCache ) : undefined;
 
   const makeSoftParticle = settings.softParticleSettings ? buildSoftParticleTransform( settings.softParticleSettings, uniforms, textureNames, functionCache ) : undefined;
 
   const postGLSL = settings.postGLSL ?? '';
+
+  let ditheringFunctionName : string | undefined = undefined;
+  if ( settings.ditherAmount ) {
+    if ( !noiseTypes.has( 'simplex3d' ) || !noiseTypes.has( 'noise3d' ) ) {
+      noiseTypes.add( 'noise3d' );
+    }
+    
+    ditheringFunctionName = buildDitheringFunction(
+      settings.ditherAmount ?? 0,
+      noiseTypes.has( 'noise3d' ) ? 'noise3d' : 'simplex3d',
+      functionCache
+    ).name; 
+  }
 
   const fragmentMain : GLSL = `
     ${ settings.domain === 'uv' ? 'vec3 origin = vec3( vUv, 0.0 );' : '' }
@@ -264,14 +278,30 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
 
     ${ warpGLSL }
 
-    ${ !mainFromTexture ? 
-    `float n = ${ mainSourceName }( samplePoint * frequency );
-       n = sanitize( n );` : 
-    `vec4 color = ${ mainSourceName }( samplePoint * frequency );
-      `
+    ${ !sourceToNormalMap ? ( `
+      // Regular sampling
+      ${ !mainFromTexture ? `
+        float n = ${ mainSourceName }( samplePoint * frequency );
+        n = sanitize( n );
+      ` : `
+        // TODO: Fix this, doesn't seem to work...? color is not used elsewhere?
+        vec4 color = ${ mainSourceName }( samplePoint * frequency );
+      ` }
+
+      ${ toFragColorGLSL } 
+    ` ) : ( `
+      // Sample for normal map
+      gl_FragColor.rgb = ${ sourceToNormalMap.name }( samplePoint * frequency );
+      gl_FragColor.a = 1.0; 
+    ` ) }
+
+    ${ ditheringFunctionName ? `
+      gl_FragColor.r += ${ ditheringFunctionName }( samplePoint + vec3( 1.0, 0.0, 0.0 ));
+      gl_FragColor.g += ${ ditheringFunctionName }( samplePoint + vec3( 0.0, 1.0, 0.0 ));
+      gl_FragColor.b += ${ ditheringFunctionName }( samplePoint + vec3( 0.0, 0.0, 1.0 ));
+    ` : ''
 }
 
-    ${ toFragColorGLSL } 
     ${ maskSourceData ? 
     `gl_FragColor = vec4( gl_FragColor.rgb * ${ maskSourceData.name }( samplePoint * frequency ), gl_FragColor.a );` 
     : '' 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GlslFunction, GLSL, GlslType, Uniforms, GlslVariables } from '../../core';
 import { AXES, opToGLSL, numToGLSL, variableValueToGLSL } from '../utils';
-import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction, ConstantSource, NoiseFunctionName } from './types';
+import { CombinedSource, Domain, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseSource, Source, TextureSource, TrigSource, WarpedSource, CustomSource, Fog, SoftParticleSettings, Amount, TexelToFloatFunction, ConstantSource, NoiseFunctionName, NormalMapConverterSettings } from './types';
 
 const functionSplittingRegex = /(.*)(return)(.*);/s;
 
@@ -147,7 +147,7 @@ export const buildSource = (
   switch( kind ) {
     case 'constant' : func = buildConstantSource( source as ConstantSource ); break;
     case 'noise' : func = buildNoiseSource( source as NoiseSource, uniforms, textureNames, functionCache, noiseTypes ); break;
-    case 'trig' : func = buildTrigSource( source as TrigSource ); break;
+    case 'trig' : func = buildTrigSource( source as TrigSource, uniforms, textureNames, functionCache, noiseTypes ); break;
     case 'combined' : func = buildCombinedSource( source as CombinedSource, uniforms, textureNames, functionCache, noiseTypes, isMain ); break;
     case 'warped' : func = buildWarpedSource( source as WarpedSource, uniforms, textureNames, functionCache, noiseTypes, isMain ); break;
     case 'texture' : func = buildTextureSource( source as TextureSource, !isMain, uniforms, textureNames, functionCache ); break;
@@ -241,7 +241,13 @@ export const buildNoiseSource = (
   };
 };
 
-export const buildTrigSource = ( trig : TrigSource ) : GlslFunction => {
+export const buildTrigSource = ( 
+  trig : TrigSource,
+  uniforms : Uniforms, 
+  textureNames : Set<string>, 
+  functionCache : FunctionCache, 
+  noiseTypes : Set<NoiseFunctionName>,
+) : GlslFunction => {
   const types = trig.types;
   const frequency = trig.frequency ?? new THREE.Vector3( 0.0 );
   const amplitude = trig.amplitude ?? new THREE.Vector3( 1.0, 1.0, 1.0 );
@@ -251,16 +257,36 @@ export const buildTrigSource = ( trig : TrigSource ) : GlslFunction => {
   const normalize = trig.normalize ?? false;
 
   const normalizeValue = ( variable : string ) => {
-    return `${ variable } = (${ variable } + 1.0 ) / 2.0;`;
+    return `${ variable } = (${ variable } + a${ variable } ) / ( 2.0 * a${ variable } );`;
   };
 
   return {
     parameters: [ [ 'vec3', 'point' ] ],
     returnType: 'float',
     body: `
-      float x = ${ numToGLSL( amplitude.x ) } * ${ types.x }( point.x * ${ numToGLSL( frequency.x ) } );
-      float y = ${ numToGLSL( amplitude.y ) } * ${ types.y }( point.y * ${ numToGLSL( frequency.y ) } );
-      float z = ${ numToGLSL( amplitude.z ) } * ${ types.z }( point.z * ${ numToGLSL( frequency.z ) } );
+      ${ ( frequency as THREE.Vector3 ).isVector3 ? `
+        float fx = ${ numToGLSL( frequency.x as number ) };
+        float fy = ${ numToGLSL( frequency.y as number ) };
+        float fz = ${ numToGLSL( frequency.z as number ) };
+      ` : `
+        float fx = ${ buildAmount( frequency.x, uniforms, textureNames, functionCache, noiseTypes ) };
+        float fy = ${ buildAmount( frequency.y, uniforms, textureNames, functionCache, noiseTypes ) };
+        float fz = ${ buildAmount( frequency.z, uniforms, textureNames, functionCache, noiseTypes ) };
+      ` }
+
+      ${ ( amplitude as THREE.Vector3 ).isVector3 ? `
+        float ax = ${ numToGLSL( amplitude.x as number ) };
+        float ay = ${ numToGLSL( amplitude.y as number ) };
+        float az = ${ numToGLSL( amplitude.z as number ) };
+      ` : `
+        float ax = ${ buildAmount( amplitude.x, uniforms, textureNames, functionCache, noiseTypes ) };
+        float ay = ${ buildAmount( amplitude.y, uniforms, textureNames, functionCache, noiseTypes ) };
+        float az = ${ buildAmount( amplitude.z, uniforms, textureNames, functionCache, noiseTypes ) };
+      ` }
+
+      float x = ax * ${ types.x }( point.x * fx );
+      float y = ay * ${ types.y }( point.y * fy );
+      float z = az * ${ types.z }( point.z * fz );
 
       ${ normalize ? `
         ${ normalizeValue( 'x' ) } 
@@ -268,7 +294,8 @@ export const buildTrigSource = ( trig : TrigSource ) : GlslFunction => {
         ${ normalizeValue( 'z' ) } 
       ` : '' }
 
-      float v = pow( ${ opToGLSL( combinationOperation, 'x', 'y', 'z' ) }, ${ numToGLSL( pow ) } );
+      float p = ${ buildAmount( pow, uniforms, textureNames, functionCache, noiseTypes ) };
+      float v = pow( ${ opToGLSL( combinationOperation, 'x', 'y', 'z' ) }, p );
 
       return v;
     `
@@ -548,11 +575,84 @@ export const buildSoftParticleTransform = (
 
   uniforms[ 'resolution' ] = {
     type: 'vec2',
-    value: new THREE.Vector2( 0.0, 0.0 )
+    value: new THREE.Vector2()
   };
   
   const data = { name: functionName, func };
   functionCache.set( softParticleSettings, data );
+
+  return data;
+};
+
+// convert to normal map
+// based on https://www.shadertoy.com/view/3sSSW1
+// TODO create type with settings, allow to change offset, normalStrength,etc
+export const buildSourceToNormalMapFunction = (
+  settings : NormalMapConverterSettings,
+  mainSourceName : string,
+  uniforms : Uniforms,
+  // textureNames : Set<string>,
+  functionCache : FunctionCache,
+) => {
+
+  uniforms[ 'resolution' ] = {
+    type: 'vec2',
+    value: new THREE.Vector2()
+  };
+
+  const func : GlslFunction = {
+    parameters: [ [ 'vec3', 'samplePoint' ] ],
+    returnType: 'vec3',
+    body: `
+      vec3 s = vec3( 1.0 / resolution.xy, 1.0 );
+
+      float p = ${ mainSourceName }( samplePoint );
+      float h1 = ${ mainSourceName }( 
+        samplePoint + s * vec3( ${ settings.offset }, 0.0, 0.0 )
+      );
+      float v1 = ${ mainSourceName }(
+        samplePoint + s * vec3( 0.0, ${ settings.offset }, 0.0 )
+      );
+
+      vec2 n = (p - vec2( h1, v1 ) );
+      n *= ${ numToGLSL( settings.strength ) };
+      n += 0.5;
+
+      return vec3( n.x, n.y, 1.0 );
+    `
+  };
+
+  const functionName = getFunctionName( 'toNormalMap' );
+
+  const data = { name: functionName, func };
+  functionCache.set( functionName, data );
+
+  return data;
+};
+
+export const buildDitheringFunction = ( 
+  ditheringAmount : number,
+  noiseFunctionName : string,
+  functionCache : FunctionCache,
+) => {
+  const func : GlslFunction = {
+    parameters: [ [ 'vec3', 'samplePoint' ] ],
+    returnType: 'float',
+    body: `
+      float s1 = ${ numToGLSL( ditheringAmount ) } * ${ noiseFunctionName }( samplePoint * 13021.18 );
+      float s2 = ${ numToGLSL( ditheringAmount ) } * ${ noiseFunctionName }( samplePoint * 31021.18 );
+      return ( s1 + s2 ) / 2.0;
+    `
+  };
+
+  const functionName = getFunctionName( 'dither' );
+
+  const data = {
+    name: functionName,
+    func
+  };
+
+  functionCache.set( functionName, data );
 
   return data;
 };

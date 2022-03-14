@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
 import * as TWEEN from '@tweenjs/tween.js';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { AbstractRenderScene } from '../../AbstractRenderScene';
 import { VoidCallback } from '../../core';
