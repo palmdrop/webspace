@@ -1,3 +1,4 @@
+# NOTE: Action no longer used since automatic deploy using cloudflare pages
 on:
   push:
     branches: 

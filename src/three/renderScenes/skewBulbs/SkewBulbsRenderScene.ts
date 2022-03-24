@@ -38,7 +38,6 @@ export class SkewLinesRenderScene extends AbstractRenderScene {
     this.setCaptureFrameResolutionMultiplier( 2.0 );
 
     const shaderSettings = randomElement( substrates )();
-    console.log( shaderSettings );
 
     this.normalMapShader = buildPatternShader( 
       shaderSettings
