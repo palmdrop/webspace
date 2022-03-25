@@ -39,6 +39,7 @@ export default () => {
     combinationOperation: 'add',
     pow: Math.random() > 0.5 ? random( 0.5, 1.0 ) : 1.0,
     normalize: true,
+    ditheringAmount: 0.1 / 255
   };
 
   const modifier2 : Source = {

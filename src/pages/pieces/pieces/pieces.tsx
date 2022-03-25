@@ -14,6 +14,7 @@ import substrateImage from '../../../assets/content/pieces/substrate.jpg';
 import rhizomeImage from '../../../assets/content/pieces/rhizome.jpg';
 import slicesImage from '../../../assets/content/pieces/slices.jpg';
 import skewBulbsImage from '../../../assets/content/pieces/skew-bulbs.jpg';
+import noiseConstructImage from '../../../assets/content/pieces/noise-construct.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -233,6 +234,20 @@ export const pieces : PieceData[] = [
     image: skewBulbsImage,
 
     Component: React.lazy( () => import( './skewBulbs/SkewBulbsPiece' ) )
+  },
+  {
+    name: 'Noise Construct',
+    description: [
+      'Experiment with domain warping and intense dithering -- blue noise.',
+      'Strange mix of clearly digital static and organic underlying structures.',
+    ],
+    tags: [
+      'Warp, Noise', 
+    ],
+
+    image: noiseConstructImage,
+
+    Component: React.lazy( () => import( './noiseConstruct/NoiseConstructPiece' ) )
   },
 ];
 

@@ -7,13 +7,13 @@ import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBu
 import { setUniform } from '../../shader/core';
 
 import { random, randomElement } from '../../../utils/random';
-import substrate1 from './substrate';
+import substrate from './substrate';
 
 const substrates = [
-  substrate1
+  substrate
 ];
 
-export class SkewLinesRenderScene extends AbstractRenderScene {
+export class NoiseConstructRenderScene extends AbstractRenderScene {
   private normalMapQuadRenderer : FullscreenQuadRenderer;
   private normalMapRenderTarget : THREE.WebGLRenderTarget;
   private normalMapShader : THREE.Shader;
