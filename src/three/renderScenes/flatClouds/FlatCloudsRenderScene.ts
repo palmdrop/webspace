@@ -151,7 +151,7 @@ export class FlatCloudsRenderScene extends AbstractRenderScene {
 
     this.materials.forEach( material => {
       setUniform( 'time', now, material );
-      setUniform( 'resolution', undefined, material )
+      setUniform( 'viewport', undefined, material )
         ?.set( this.canvas.width, this.canvas.height );
     } );
 

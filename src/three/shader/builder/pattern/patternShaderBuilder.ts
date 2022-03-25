@@ -5,8 +5,15 @@ import { fastVoronoi3dChunk, genericNoise3dChunk, simplex3dChunk, voronoi3dChunk
 import { Attributes, GLSL, Shader, Uniforms, GlslFunctions, Constants, ShaderChunk } from '../../core';
 import { buildShader } from '../shaderBuilder';
 import { numToGLSL } from '../utils';
-import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction, colorToGLSL, buildSourceToNormalMapFunction, buildDitheringFunction } from './helpers';
+import { buildFog, buildModification, buildSoftParticleTransform, buildSource, buildWarpFunction, domainToAttribute, hsvToRgbFunction, isInfFunction, isNanFunction, rgbToHsvFunction, sanitizeFunction, colorToGLSL, buildSourceToNormalMapFunction, createDitheringTexture, addDithering } from './helpers';
 import { ColorSettings, DomainWarp, FunctionCache, FunctionWithName, Modification, NoiseFunctionName, PatternShaderSettings } from './types';
+
+import ditheringTexture from '../../../../assets/noise/blue/LDR_RGBA_7.png';
+
+// NOTE: hard coded for now. Fix at some point
+const ditheringTextureDimensions = new THREE.Vector2(
+  128, 128
+);
 
 const noiseMap : { [key in NoiseFunctionName] : ShaderChunk } = {
   'simplex3d': simplex3dChunk,
@@ -34,7 +41,7 @@ const getAttributes = () : Attributes => {
 };
 
 // Uniforms
-const getUniforms = () : Uniforms => {
+const getUniforms = ( onLoad ?: () => void ) : Uniforms => {
   return {
     'opacity': { 
       value: 1.0, 
@@ -56,6 +63,14 @@ const getUniforms = () : Uniforms => {
       type: 'float',
       value: 0.1,
     },
+    'tDithering': {
+      type: 'sampler2D',
+      value: createDitheringTexture( ditheringTexture, onLoad )
+    },
+    'ditheringTextureDimensions': {
+      type: 'vec2',
+      value: ditheringTextureDimensions
+    }
   };
 };
 
@@ -189,7 +204,7 @@ const buildWarpGLSL = (
   return `samplePoint = ${ name }( origin );`;
 };
 
-export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader => {
+export const buildPatternShader = ( settings : PatternShaderSettings, onLoad ?: () => void ) : Shader => {
   // Cache and data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const functionCache : FunctionCache = new Map<any, FunctionWithName>();
@@ -204,7 +219,7 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
   /* GLSL Construction */
   const imports = getImports();
   const attributes = getAttributes();
-  const uniforms = getUniforms();
+  const uniforms = getUniforms( onLoad );
   const constants = getConstants( settings );
   const mainFromTexture = settings.mainSource.kind === 'texture';
   const seed = settings.seed ?? Math.random() * 10000;
@@ -251,19 +266,6 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
 
   const postGLSL = settings.postGLSL ?? '';
 
-  let ditheringFunctionName : string | undefined = undefined;
-  if ( settings.ditherAmount ) {
-    if ( !noiseTypes.has( 'simplex3d' ) || !noiseTypes.has( 'noise3d' ) ) {
-      noiseTypes.add( 'noise3d' );
-    }
-    
-    ditheringFunctionName = buildDitheringFunction(
-      settings.ditherAmount ?? 0,
-      noiseTypes.has( 'noise3d' ) ? 'noise3d' : 'simplex3d',
-      functionCache
-    ).name; 
-  }
-
   const fragmentMain : GLSL = `
     ${ settings.domain === 'uv' ? 'vec3 origin = vec3( vUv, 0.0 );' : '' }
     ${ settings.domain === 'view' ? 'vec3 origin = vec3( vViewPosition );' : '' }
@@ -295,11 +297,10 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
       gl_FragColor.a = 1.0; 
     ` ) }
 
-    ${ ditheringFunctionName ? `
-      gl_FragColor.r += ${ ditheringFunctionName }( samplePoint + vec3( 1.0, 0.0, 0.0 ));
-      gl_FragColor.g += ${ ditheringFunctionName }( samplePoint + vec3( 0.0, 1.0, 0.0 ));
-      gl_FragColor.b += ${ ditheringFunctionName }( samplePoint + vec3( 0.0, 0.0, 1.0 ));
-    ` : ''
+    
+    ${ settings.ditherAmount 
+    ? addDithering( settings.ditherAmount, 'gl_FragColor', 'rgb', settings.ditheringFrequency )
+    : ''
 }
 
     ${ maskSourceData ? 
@@ -325,7 +326,7 @@ export const buildPatternShader = ( settings : PatternShaderSettings ) : Shader 
     gl_FragColor *= opacity;
 
     ${ makeSoftParticle ? `
-      vec2 screenCoords = gl_FragCoord.xy / resolution.xy;
+      vec2 screenCoords = gl_FragCoord.xy / viewport.xy;
       gl_FragColor = ${ makeSoftParticle.name }( gl_FragColor, screenCoords );
     ` : '' }
 

@@ -23,6 +23,8 @@ export type SourceKind = 'noise' | 'trig' | 'combined' | 'warped' | 'texture' | 
 export type RootSource = {
   kind : SourceKind,
   uvOverride ?: boolean,
+  ditheringAmount ?: number,
+  ditheringFrequency ?: number
 }
 
 export type Amount = number | Source;
@@ -154,7 +156,6 @@ export type PatternShaderSettings = {
 
   mainSource : Source,
   domainWarp ?: DomainWarp,
-  ditherAmount ?: number,
   noiseFunction ?: NoiseFunctionName,
 
   colorSettings ?: ColorSettings,
@@ -162,6 +163,9 @@ export type PatternShaderSettings = {
   mask ?: Source,
   alphaMask ?: Source,
   fog ?: Fog,
+
+  ditherAmount ?: number,
+  ditheringFrequency ?: number,
 
   seed ?: number,
 

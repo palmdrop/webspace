@@ -145,7 +145,8 @@ export class SkewLinesRenderScene extends AbstractRenderScene {
 
   resize( width ?: number, height ?: number ) : void {
     super.resize( width, height );
-    setUniform( 'resolution', new THREE.Vector2( this.canvas.width, this.canvas.height ), this.normalMapShader );
+    setUniform( 'viewport', new THREE.Vector2( this.canvas.width, this.canvas.height ), this.normalMapShader );
+    setUniform( 'viewport', new THREE.Vector2( this.canvas.width, this.canvas.height ), this.diffuseMapShader );
   }
 
 

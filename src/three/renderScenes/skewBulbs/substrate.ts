@@ -16,7 +16,7 @@ export default () => {
     lacunarity: 2.2,
     ridge: 0.5,
     normalize: false,
-    noiseFunctionName: 'simplex3d'
+    noiseFunctionName: 'simplex3d',
   };
 
   const modifier1 : TrigSource = {
@@ -38,7 +38,7 @@ export default () => {
     },
     combinationOperation: 'add',
     pow: Math.random() > 0.5 ? random( 0.5, 1.0 ) : 1.0,
-    normalize: true
+    normalize: true,
   };
 
   const modifier2 : Source = {
@@ -53,7 +53,8 @@ export default () => {
     lacunarity: 2.2,
     ridge: modifier1,
     normalize: true,
-    noiseFunctionName: 'simplex3d'
+    noiseFunctionName: 'simplex3d',
+    ditheringAmount: 0.1 / 255
   };
 
   const mainSource : TrigSource = {
@@ -117,7 +118,7 @@ export default () => {
     },
     combinationOperation: 'avg',
     pow: 2.0,
-    normalize: true
+    normalize: true,
   };
 
   const warp = {
@@ -127,9 +128,9 @@ export default () => {
       z: modifier1,
     },
     amount: [
-      random( 0.03, 0.10 ),
-      random( 0.03, 0.10 ),
-      random( 0.05, 0.07 ),
+      random( 0.03, 0.05 ),
+      random( 0.03, 0.05 ),
+      random( 0.03, 0.07 ),
     ],
     iterations: 3.0
   };
@@ -161,12 +162,12 @@ export default () => {
     scale: 1.0,
     mainSource: mainSource,
     domainWarp: warp,
-    ditherAmount: 0.007,
     timeOffset: new THREE.Vector3( random( -0.01, 0.01 ), random( -0.01, 0.01 ), random( -0.01, -0.03 ) ),
     normalMapConverterSettings: {
       offset: 1,
       strength: 10.0
     },
-    colorSettings
+    colorSettings,
+    ditherAmount: 1.0 / 255,
   } as PatternShaderSettings; 
 };

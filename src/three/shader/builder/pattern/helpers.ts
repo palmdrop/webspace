@@ -26,6 +26,20 @@ export const nameFunction = ( func : GlslFunction, functionCache : Map<any, Func
   return data;
 };
 
+export const createDitheringTexture = ( ditheringImagePath : string, onLoad ?: ( texture : THREE.Texture ) => void ) => {
+  const texture = new THREE.TextureLoader().load(
+    ditheringImagePath,
+    onLoad
+  );
+
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.minFilter = THREE.NearestFilter;
+  texture.magFilter = THREE.NearestFilter;
+
+  return texture;
+};
+
 export const buildModification = ( 
   input : GLSL, 
   modifications : Modification | Modification[],
@@ -160,6 +174,19 @@ export const buildSource = (
       point = vec3( vUv, 0 );
       ${ func.body }
     `;
+  }
+
+  // TODO: add support for dithering texture sources
+  if ( source.ditheringAmount && source.kind !== 'texture' ) {
+    const splitBody = func.body.match( functionSplittingRegex ); // Will return the body of the function with the return statement separated
+    if ( splitBody ) {
+      func.body = `
+        ${ splitBody[ 1 ] }
+        float _toDither = ( ${ splitBody[ 3 ] });
+        ${ addDithering( source.ditheringAmount, '_toDither', 'float', source.ditheringFrequency ) }
+        return _toDither;
+      `;
+    }
   }
 
   const data = { name, func };
@@ -573,7 +600,7 @@ export const buildSoftParticleTransform = (
     value: softParticleSettings.depthTexture
   };
 
-  uniforms[ 'resolution' ] = {
+  uniforms[ 'viewport' ] = {
     type: 'vec2',
     value: new THREE.Vector2()
   };
@@ -595,16 +622,11 @@ export const buildSourceToNormalMapFunction = (
   functionCache : FunctionCache,
 ) => {
 
-  uniforms[ 'resolution' ] = {
-    type: 'vec2',
-    value: new THREE.Vector2()
-  };
-
   const func : GlslFunction = {
     parameters: [ [ 'vec3', 'samplePoint' ] ],
     returnType: 'vec3',
     body: `
-      vec3 s = vec3( 1.0 / resolution.xy, 1.0 );
+      vec3 s = vec3( 1.0 / viewport.xy, 1.0 );
 
       float p = ${ mainSourceName }( samplePoint );
       float h1 = ${ mainSourceName }( 
@@ -625,33 +647,6 @@ export const buildSourceToNormalMapFunction = (
   const functionName = getFunctionName( 'toNormalMap' );
 
   const data = { name: functionName, func };
-  functionCache.set( functionName, data );
-
-  return data;
-};
-
-export const buildDitheringFunction = ( 
-  ditheringAmount : number,
-  noiseFunctionName : string,
-  functionCache : FunctionCache,
-) => {
-  const func : GlslFunction = {
-    parameters: [ [ 'vec3', 'samplePoint' ] ],
-    returnType: 'float',
-    body: `
-      float s1 = ${ numToGLSL( ditheringAmount ) } * ${ noiseFunctionName }( samplePoint * 13021.18 );
-      float s2 = ${ numToGLSL( ditheringAmount ) } * ${ noiseFunctionName }( samplePoint * 31021.18 );
-      return ( s1 + s2 ) / 2.0;
-    `
-  };
-
-  const functionName = getFunctionName( 'dither' );
-
-  const data = {
-    name: functionName,
-    func
-  };
-
   functionCache.set( functionName, data );
 
   return data;
@@ -722,4 +717,29 @@ const domainToAttributeConverter : { [ domain in Domain ] : { name : string, typ
 
 export const domainToAttribute = ( domain : Domain ) => {
   return domainToAttributeConverter[ domain ];
+};
+
+//
+export const addDithering = ( 
+  amount : number, 
+  inputVariable : string,
+  mode : 'float' | 'rgb',
+  frequency ?: number 
+) : GLSL => {
+  return `
+    vec2 ditheringCoord = gl_FragCoord.xy / ditheringTextureDimensions + vec2(fract(time * 13.41), fract(time * 3.451));
+    ${ frequency !== undefined 
+    ? `ditheringCoord *= ${ numToGLSL( frequency ) };`
+    : ''
+}
+    vec3 ditheringValue = ${ numToGLSL( amount ) } * texture( 
+      tDithering, 
+      ditheringCoord
+    ).rgb;
+
+    ${ mode === 'float'
+    ? `${ inputVariable } += ditheringValue.r;`
+    : `${ inputVariable }.rgb += ditheringValue;`
+}
+  `;
 };
