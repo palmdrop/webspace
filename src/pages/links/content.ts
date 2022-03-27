@@ -201,3 +201,9 @@ links.push( toLink(
   'https://www.ayatgali.com/',
   'Art'
 ) );
+links.push( toLink(
+  'Romain Fontaine',
+  'https://www.romain-fontaine.com/',
+  'Art', 'Tech'
+) );
+
