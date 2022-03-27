@@ -67,8 +67,8 @@ export default () => {
       z: modifier2,
     },
     amount: [
-      random( 0.4, 0.4 ),
-      random( 0.4, 0.4 ),
+      random( -0.8, 0.8 ),
+      random( -0.8, 0.8 ),
       random( 0.3, 0.7 ),
     ],
     iterations: 3.0
@@ -103,10 +103,6 @@ export default () => {
     mainSource: mainSource,
     domainWarp: warp,
     timeOffset: new THREE.Vector3( random( -0.01, 0.01 ), random( -0.01, 0.01 ), random( -0.01, -0.03 ) ),
-    normalMapConverterSettings: {
-      offset: 1,
-      strength: 10.0
-    },
     colorSettings,
   } as PatternShaderSettings; 
 };

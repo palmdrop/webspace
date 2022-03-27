@@ -7,13 +7,15 @@ import { buildPatternShader } from '../../shader/builder/pattern/patternShaderBu
 import { setUniform } from '../../shader/core';
 
 import { random, randomElement } from '../../../utils/random';
-import substrate from './substrate';
+import columns from './columns';
+import grid from './grid';
 
 const substrates = [
-  substrate
+  columns,
+  grid
 ];
 
-export class NoiseConstructRenderScene extends AbstractRenderScene {
+export class MedusaNetworkRenderScene extends AbstractRenderScene {
   private diffuseMapQuadRenderer : FullscreenQuadRenderer;
   private diffuseMapRenderTarget : THREE.WebGLRenderTarget;
   private diffuseMapShader : THREE.Shader;

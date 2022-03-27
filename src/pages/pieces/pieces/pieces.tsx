@@ -15,6 +15,7 @@ import rhizomeImage from '../../../assets/content/pieces/rhizome.jpg';
 import slicesImage from '../../../assets/content/pieces/slices.jpg';
 import skewBulbsImage from '../../../assets/content/pieces/skew-bulbs.jpg';
 import noiseConstructImage from '../../../assets/content/pieces/noise-construct.jpg';
+import medusaNetworkImage from '../../../assets/content/pieces/medusa-network.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -248,6 +249,21 @@ export const pieces : PieceData[] = [
     image: noiseConstructImage,
 
     Component: React.lazy( () => import( './noiseConstruct/NoiseConstructPiece' ) )
+  },
+  {
+    name: 'Medusa Network',
+    description: [
+      'Building on previous sketch: using static in combination with organic effects, here also adding grids/columns.',
+      'Reminded me of snakes or jellyfish, hence "Medusa". Quite enjoying this aesthetic: the mix of glitchy, digital effects and life like movements.',
+      'The blue noise also adds a pleasant texture.'
+    ],
+    tags: [
+      'Warp, Noise', 
+    ],
+
+    image: medusaNetworkImage,
+
+    Component: React.lazy( () => import( './medusaNetwork/MedusaNetworkPiece' ) )
   },
 ];
 

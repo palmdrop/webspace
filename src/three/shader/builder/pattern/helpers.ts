@@ -261,7 +261,7 @@ export const buildNoiseSource = (
       }
 
       n = sanitize( n );
-      ${ normalize ? 'n /= divider;' : '' }
+      ${ normalize ? 'if( divider != 0.0 ) { n /= divider; }' : '' }
 
       return amplitude * n;
     `
@@ -284,7 +284,9 @@ export const buildTrigSource = (
   const normalize = trig.normalize ?? false;
 
   const normalizeValue = ( variable : string ) => {
-    return `${ variable } = (${ variable } + a${ variable } ) / ( 2.0 * a${ variable } );`;
+    return `if( a${ variable } != 0.0 ) { 
+      ${ variable } = (${ variable } + a${ variable } ) / ( 2.0 * a${ variable } ); 
+    }`;
   };
 
   return {
