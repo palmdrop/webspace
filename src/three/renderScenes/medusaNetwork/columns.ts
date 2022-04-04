@@ -134,7 +134,7 @@ export default () => {
       z: Math.random() > 0.3 
         ? [ 
           { kind: 'mult', argument: 1.0 },
-          { kind: 'add', argument: 0.0 },
+          { kind: 'add', argument: 0.001 },
           { kind: 'pow', argument: random( 0.1, 1.3 ) }
         ]
         : [

@@ -207,3 +207,27 @@ links.push( toLink(
   'Art', 'Tech'
 ) );
 
+links.push( toLink(
+  'Tante',
+  'https://tante.cc/category/writing/english/',
+  'Blog', 'Tech'
+) );
+
+links.push( toLink(
+  'TWOMUCH',
+  'https://twomuch.studio/',
+  'Tech', 'Art'
+) );
+
+links.push( toLink(
+  'Revision.io',
+  'https://revision.io/',
+  'Tech'
+) );
+
+links.push( toLink(
+  'Low-tech magazine',
+  'https://solar.lowtechmagazine.com/',
+  'Tech'
+) );
+
