@@ -41,8 +41,6 @@ export class MedusaNetworkRenderScene extends AbstractRenderScene {
       { ...shaderSettings, normalMapConverterSettings: undefined }
     );
 
-    console.log( this.diffuseMapShader.fragmentShader );
-
     this.diffuseMapRenderTarget = new THREE.WebGLRenderTarget(
       canvas.width, canvas.height, {}
     );
