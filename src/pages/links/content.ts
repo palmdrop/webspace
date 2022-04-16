@@ -231,3 +231,21 @@ links.push( toLink(
   'Tech'
 ) );
 
+links.push( toLink(
+  'booktwo',
+  'https://booktwo.org/',
+  'Blog', 'Tech', 'Art'
+) );
+
+links.push( toLink(
+  'Stephan Tillmans',
+  'https://www.stephantillmans.com/',
+  'Art'
+) );
+
+links.push( toLink(
+  'Most Dismal Swamp',
+  'https://www.mostdismalswamp.com',
+  'Art'
+) );
+
