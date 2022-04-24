@@ -20,9 +20,9 @@ const useRenderSceneShortcuts = ( renderScene : RenderScene | null ) => {
     if( event.type !== 'keydown' ) return;
 
     switch( event.key ) {
-    case 'c' : handleCaptureFrame(); break;
-    case ' ' : reload(); break;
-    case 'h' : renderScene?.toggleGUI?.(); break;
+      case 'c' : handleCaptureFrame(); break;
+      case ' ' : reload(); break;
+      case 'h' : renderScene?.toggleGUI?.(); break;
     }
   }, [ handleCaptureFrame ] );
 

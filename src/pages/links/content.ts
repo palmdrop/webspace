@@ -249,3 +249,39 @@ links.push( toLink(
   'Art'
 ) );
 
+links.push( toLink(
+  'Still here',
+  'https://still-here.net/',
+  'Art'
+) );
+
+links.push( toLink(
+  'Folder One',
+  'https://folder-one.eu/',
+  'Art', 'Tech'
+) );
+
+links.push( toLink(
+  'Analfapedia',
+  'https://analfapedia.org',
+  'Tech', 'Art'
+) );
+
+links.push( toLink(
+  'Will Baker',
+  'https://willbaker.info/',
+  'Blog', 'Art'
+) );
+
+links.push( toLink(
+  'A Million Years of Sleep',
+  'https://amillionyearsofsleep.com/',
+  'Art', 'Blog'
+) );
+
+links.push( toLink(
+  'Consume Digest Produce',
+  'https://consumedigestproduce.us/',
+  'Tech', 'Other'
+) );
+
