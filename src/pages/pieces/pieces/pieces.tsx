@@ -16,6 +16,7 @@ import slicesImage from '../../../assets/content/pieces/slices.jpg';
 import skewBulbsImage from '../../../assets/content/pieces/skew-bulbs.jpg';
 import noiseConstructImage from '../../../assets/content/pieces/noise-construct.jpg';
 import medusaNetworkImage from '../../../assets/content/pieces/medusa-network.jpg';
+import blockDissolveImage from '../../../assets/content/pieces/block-dissolve.jpg';
 
 export type PieceProps = { 
   onLoad : ( () => void ) | undefined,
@@ -264,6 +265,20 @@ export const pieces : PieceData[] = [
     image: medusaNetworkImage,
 
     Component: React.lazy( () => import( './medusaNetwork/MedusaNetworkPiece' ) )
+  },
+  {
+    name: 'Block Dissolve',
+    description: [
+      'Mix of previous techniques. Two different kinds of feedback passes combined.',
+      'Most of my recent experiments have been based on the same core domain warping and noise modification technique. This one also incorporates the effects used in "Immerse" and "Substrate"'
+    ],
+    tags: [
+      'Warp, Noise, Feedback', 
+    ],
+
+    image: blockDissolveImage,
+
+    Component: React.lazy( () => import( './blockDissolve/BlockDissolvePiece' ) )
   },
 ];
 

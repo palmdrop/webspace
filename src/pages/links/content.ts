@@ -291,3 +291,27 @@ links.push( toLink(
   'Blog', 'Art'
 ) );
 
+links.push( toLink(
+  'Fletcher Bach',
+  'https://fletcherbach.com/',
+  'Blog', 'Art', 'Tech'
+) );
+
+links.push( toLink(
+  'Out4Pizza',
+  'https://www.out4pizza.com/',
+  'Art'
+) );
+
+links.push( toLink(
+  'The Art of Fiction - Don DeLillo',
+  'https://www.theparisreview.org/interviews/1887/the-art-of-fiction-no-135-don-delillo?fbclid=IwAR2J4PD2lRgCgvAUU9dv_8phhhZt1RRPKZu_SOnKIxXBai2LljwBwTfNRnk',
+  'Art'
+) );
+
+links.push( toLink(
+  'xxiivv webring',
+  'https://webring.xxiivv.com/',
+  'Blog', 'Tech'
+) );
+

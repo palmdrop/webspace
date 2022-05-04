@@ -173,11 +173,11 @@ const buildFragColorConverterGLSL = (
 
 
   // Build shader code
+  const sanitizeHSV = colorSettings.sanitizeHSV ?? false;
 
   return `
     ${ mainFromTexture && colorMode === 'hsv' ? 
-    `${ TEXTURE_OUTPUT } = vec4( rgbToHsv( ${ TEXTURE_OUTPUT }.rgb ), ${ TEXTURE_OUTPUT }.a );` : '' 
-}
+    `${ TEXTURE_OUTPUT } = vec4( rgbToHsv( ${ TEXTURE_OUTPUT }.rgb ), ${ TEXTURE_OUTPUT }.a );` : '' }
 
     float x = ${ xGLSL };
     float y = ${ yGLSL };
@@ -186,7 +186,7 @@ const buildFragColorConverterGLSL = (
 
     ${ colorMode === 'rgb' ? 
     'gl_FragColor = vec4( vec3( x, y, z ) * brightness, a );' :
-    'gl_FragColor = vec4( hsvToRgb( vec3( x, y, z ) ) * brightness, a );'
+    `gl_FragColor = vec4( hsvToRgb( vec3( x, y, z ), ${ sanitizeHSV } ) * brightness, a );`
 }
   `;
 };

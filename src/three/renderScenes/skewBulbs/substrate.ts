@@ -9,7 +9,7 @@ export default () => {
     frequency: new THREE.Vector3(
       1.0, 1.0, 1.0
     ).multiplyScalar( random( 10.0, 50.0 ) ),
-    amplitude: 1.0,
+    amplitude: 0.5,
     pow: 2.0,
     octaves: Math.floor( random( 4, 5 ) ),
     persistance: 0.5,
@@ -33,8 +33,8 @@ export default () => {
     },
     amplitude: {
       x: 1.1,
-      y: Math.random() > 0.5 ? Math.pow( random( 0.0, 2.0 ), 3.0 ) : 0.0,
-      z: 2.0
+      y: Math.random() > 0.5 ? Math.pow( random( 0.0, 1.0 ), 3.0 ) : 0.0,
+      z: 1.0
     },
     combinationOperation: 'add',
     pow: Math.random() > 0.5 ? random( 0.5, 1.0 ) : 1.0,
@@ -47,7 +47,7 @@ export default () => {
     frequency: new THREE.Vector3(
       1.0, 1.0, 1.0
     ).multiplyScalar( random( 5.0, 10.0 ) ),
-    amplitude: random( 3, 6 ),
+    amplitude: random( 1, 3 ),
     pow: 2.0,
     octaves: Math.floor( random( 4, 5 ) ),
     persistance: 0.5,

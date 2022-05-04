@@ -55,7 +55,7 @@ export default () => {
     persistance: 0.5,
     lacunarity: 2.1,
     ridge: mainSource,
-    normalize: true,
+    normalize: false,
     noiseFunctionName: 'simplex3d',
     ditheringAmount: 1.1 / 255
   };

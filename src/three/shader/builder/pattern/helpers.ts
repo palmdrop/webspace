@@ -260,10 +260,11 @@ export const buildNoiseSource = (
         f *= lacunarity;
       }
 
-      n = sanitize( n );
       ${ normalize ? 'if( divider != 0.0 ) { n /= divider; }' : '' }
 
-      return amplitude * n;
+      n = sanitize( n );
+
+      return n * amplitude;
     `
   };
 };
@@ -671,9 +672,14 @@ export const rgbToHsvFunction : GlslFunction = {
 
 // Adapted from https://gist.github.com/983/e170a24ae8eba2cd174f
 export const hsvToRgbFunction : GlslFunction = {
-  parameters: [ [ 'vec3', 'c' ] ],
+  parameters: [ [ 'vec3', 'c' ], [ 'bool', 'sanitize' ] ],
   returnType: 'vec3',
   body: `
+    if(sanitize) {
+      c.x = clamp(c.x, -255.0, 255.0);
+      c.y = clamp(c.y, -255.0, 255.0);
+      c.z = clamp(c.z, -255.0, 255.0);
+    }
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);

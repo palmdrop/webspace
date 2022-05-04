@@ -123,7 +123,8 @@ export type ColorSettings = {
     z ?: Modification | Modification[],
     a ?: Modification | Modification[],
   },
-  backgroundColor ?: THREE.Color
+  backgroundColor ?: THREE.Color,
+  sanitizeHSV ?: boolean
 }
 
 export type Fog = {
