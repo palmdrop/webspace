@@ -1,0 +1,3 @@
+[submodule "hypervivid"]
+	path = hypervivid
+	url = https://github.com/palmdrop/hypervivid

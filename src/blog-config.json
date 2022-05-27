@@ -1,9 +1,0 @@
-{
-  "code-theme": "src/styles/highlighting/smog.scss",
-  "categories": [
-    "words",
-    "genart",
-    "web"
-  ],
-  "default-category": "other"
-}

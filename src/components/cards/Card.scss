@@ -1,7 +1,0 @@
-@import '../../styles/colors.scss';
-@import '../../styles/layout.scss';
-@import '../../styles/ornaments.scss';
-
-.card {
-  @include box-shadow( 'simple-soft' );
-}

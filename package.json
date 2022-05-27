@@ -1,96 +1,20 @@
 {
-  "name": "webspace",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.6.1",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "@tweenjs/tween.js": "^18.6.4",
-    "cli-progress": "^3.9.1",
-    "dat.gui": "^0.7.7",
-    "endent": "^2.1.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-react": "^7.27.1",
-    "fast-simplex-noise": "^4.0.0",
-    "follow-redirects": "^1.14.7",
-    "highlight.js": "^11.3.1",
-    "lodash.debounce": "^4.0.8",
-    "lodash.throttle": "^4.1.1",
-    "marked": "^4.0.10",
-    "nanoid": "^3.1.31",
-    "node-sass": "^6.0.1",
-    "postcss": "^8.2.13",
-    "postprocessing": "^6.23.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-error-boundary": "^3.1.3",
-    "react-lazy-load-image-component": "^1.5.1",
-    "react-redux": "^7.2.4",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
-    "serve": "^12.0.1",
-    "swr": "^1.2.1",
-    "three": "^0.131.3",
-    "three-kawase-blur": "github:ycw/three-kawase-blur",
-    "typescript": "^4.3.5",
-    "uuid": "^8.3.2",
-    "web-vitals": "^1.1.2",
-    "wrangler": "^0.0.15"
-  },
+  "name": "hypervivid-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "hypervivid/src/app.html",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build-posts": "node scripts/createPostsComponents.js",
-    "lint": "npx eslint ./src --fix",
-    "serve": "npx serve -s build",
-    "build-serve": "npm run build && npm run serve"
+    "build": "cd hypervivid && npm run build && cp -r build ../build"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "no-control-regex": 0
-    }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palmdrop/webspace.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "author": "",
+  "license": "ISC",
+  "types": "./hypervivid/src/app.d.ts",
+  "bugs": {
+    "url": "https://github.com/palmdrop/webspace/issues"
   },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^3.3.1",
-    "@types/dat.gui": "^0.7.7",
-    "@types/jest": "^26.0.24",
-    "@types/lodash.debounce": "^4.0.6",
-    "@types/lodash.throttle": "^4.1.6",
-    "@types/marked": "^4.0.1",
-    "@types/node": "^12.20.19",
-    "@types/react": "^17.0.19",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-lazy-load-image-component": "^1.5.2",
-    "@types/react-router-dom": "^5.1.8",
-    "@types/three": "^0.131.0",
-    "@types/tweenjs": "^1.0.4",
-    "@types/uuid": "^8.3.1",
-    "@types/webpack-env": "^1.16.3",
-    "@types/webpack-sources": "^3.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.5.0",
-    "@typescript-eslint/parser": "^5.5.0",
-    "eslint": "^7.11.0",
-    "eslint-plugin-react": "^7.27.1"
-  }
+  "homepage": "https://github.com/palmdrop/webspace#readme"
 }
