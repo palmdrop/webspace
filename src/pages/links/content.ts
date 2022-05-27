@@ -315,3 +315,9 @@ links.push( toLink(
   'Blog', 'Tech'
 ) );
 
+links.push( toLink(
+  'constraint.systems',
+  'https://constraint.systems/',
+  'Art', 'Tech'
+) );
+
