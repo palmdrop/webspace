@@ -1,6 +1,8 @@
 # OBSCURED - PERSONAL WEBSPACE
 
-**Live at** [palmdrop.site](https://palmdrop.site)
+**RETIRED IN FAVOR OF MY [NEW SITE PROJECT](https://github.com/palmdrop/hypervivid)**
+
+However, site can still be found [here.](https://webspace.pages.dev/)
 
 ![Obscured - main page](/images/example/main-page.png)
 
